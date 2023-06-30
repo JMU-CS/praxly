@@ -1,0 +1,54 @@
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.output, .error {
+    box-sizing: border-box;
+    background: #d9dbda;
+    margin: 10px;
+    height: 10vh;
+}
+
+main {
+    display: flex;
+    height: 60vh;
+    width: 95vw;
+    
+}
+
+.resizeBar {
+    width: 5px;
+    cursor: col-resize;
+    background-color: #7e0eff;
+}
+
+#blocklyDiv {
+    flex: 1;
+
+}
+
+ 
+.codeEditor {
+    flex: 1;
+    
+}
+
+
+
+
+
+.menuButtons {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+   
+  }
+  
+  .menuButtons li {
+    float: right;
+  }

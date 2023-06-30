@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Praxly</title>
+    
+    
+
+
+  
+  <script type="module" crossorigin src="/praxly/assets/index-4bb5a456.js"></script>
+  <link rel="stylesheet" href="/praxly/assets/index-0eb1e71b.css">
+</head>
+<body>
+  <header>
+    <h1 >Praxly beta</h1>
+    <img src="/praxly/assets/logo_built_on-bffeaec3.png" alt="built on blockly" style="height: 40px; width: 120px;">
+  </header>
+  
+  <ul class="menuButtons">
+    <li><button id="runButton">run blocks</button></li>
+    <li><button id="runCode">turn code to blocks</button></li>
+    <!-- <li><button id="saveButton">save</button></li>
+    <li><button id="loadButton">load</button></li> -->
+    <li><button id="darkMode">Dark mode</button></li>
+    <li><button id="blockUpdates">block updates: on save</button></li>
+  </ul>
+
+  <main>
+
+
+    <div id="blocklyDiv"></div>
+
+    <div class="resizeBar"></div>
+
+      <div id="aceCode" class="codeEditor"></div>
+
+      
+      
+      
+      
+    </div>
+  </main>
+  <div class="output">
+    output is here
+  </div>
+
+  <div class="error">
+    error messages will be here
+  </div>
+
+
+</body>
+<div>Notes:
+  <ul>
+    <li>this is still in development. most things will not work.</li>
+    <li>not equals (≠) is currently interpreted as '!=' in the text side for ease of debugging</li>
+    <li>error messages are minimal and likely confusing. </li>
+    <li>most blocks that are visible are working</li>
+    <li>list of planned accessibility features: 
+      <ul>
+        <li>resize fonts</li>
+        <li>make nesteded blocks more recogizable if they are the same color (maybe make them a darker shade for every level?)</li>
+        <li>change buttons at the top to be colorful icons</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+</html>
