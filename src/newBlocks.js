@@ -551,7 +551,7 @@ export function definePraxlyBlocks(workspace) {
           },
     {
 "type": "praxly_assignment_block",
-"message0": "%1%2 = %3 %4",
+"message0": "%1%2 ⬅ %3 %4",
 "args0": [
   {
     "type": "field_dropdown",
@@ -609,7 +609,7 @@ export function definePraxlyBlocks(workspace) {
     
     {
       "type": "praxly_reassignment_block",
-      "message0": "%1=%2 %3",
+      "message0": "%1⬅%2 %3",
       "args0": [
       
         {
@@ -762,7 +762,7 @@ export function definePraxlyBlocks(workspace) {
 
     {
       "type": "praxly_assignment_expression_block",
-      "message0": "%1%2 = %3 %4",
+      "message0": "%1%2 ⬅ %3 %4",
       "args0": [
         {
           "type": "field_dropdown",
@@ -836,7 +836,7 @@ export function definePraxlyBlocks(workspace) {
           }, 
           {
             "type": "praxly_reassignment_expression_block",
-            "message0": "%1=%2 %3",
+            "message0": "%1⬅%2 %3",
             "args0": [
             
               {
