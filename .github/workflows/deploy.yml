@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-
+env:
+  # Setting an environment variable with the value of a configuration variable
+  PRAXLY_PATH: ${{ vars.PRAXLY_PATH }}
 jobs:
   build:
     name: Build
@@ -21,6 +23,8 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Build project
+        env:
+          PRAXLY_PATH: ${{ vars.PRAXLY_PATH }}
         run: npm run build
 
       - name: Upload production-ready build files
