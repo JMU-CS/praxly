@@ -259,7 +259,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             blockjson.endIndex = startIndex + 2;
             var result = '\t'.repeat(indentation) + "if (" ;
             var condition =  tree2text(blockjson.condition, startIndex + result.length, indentation) + ")\n" ;
-            var contents = '\t'.repeat(indentation) + tree2text(blockjson.statement, startIndex + result.length + condition.length, indentation + 1)
+            var contents = tree2text(blockjson.statement, startIndex + result.length + condition.length, indentation + 1)
                 + '\t'.repeat(indentation) +'end if\n';
             blockjson.end = startIndex + result.length + condition.length + contents.length;
             return result + condition + contents;
@@ -269,7 +269,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             blockjson.endIndex = startIndex + 2;
             var result = '\t'.repeat(indentation) + "if (" ;
             var condition =  tree2text(blockjson.condition, startIndex + result.length, indentation) + ")\n" ;
-            var contents = '\t'.repeat(indentation) + tree2text(blockjson.statement, startIndex + result.length + condition.length, indentation + 1);
+            var contents =  tree2text(blockjson.statement, startIndex + result.length + condition.length, indentation + 1);
             var alternative = '\t'.repeat(indentation) +'\else\n' 
             + '\t'.repeat(indentation) + tree2text(blockjson.alternative, startIndex + result.length + condition.length + contents.length, indentation + 1) 
             + '\t'.repeat(indentation) +'end if\n';
