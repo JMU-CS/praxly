@@ -688,12 +688,12 @@ class Praxly_codeBlock {
           const element = this.praxly_blocks[i];
         
           //aborts if it detects a return statement. Hopefully this doesn't cause problems later ahaha
-          if (element?.isreturn) {
-            return element.evaluate(environment);       
-        } else {
-            element.evaluate(environment);
-        }
-        }
+              if (element?.isreturn) {
+                return element.evaluate(environment);       
+            } else {
+                element.evaluate(environment);
+            }
+        } 
       
         return "Exit_Success";
       }

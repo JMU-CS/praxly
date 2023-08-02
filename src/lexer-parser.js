@@ -1319,8 +1319,8 @@ statement() {
   else {
     // console.log(`the current token is ${this.tokens[this.i].token_type} and the next one is ${this.tokens[this.i + 1].token_type}`)
     let contents = this.boolean_operation();
-    if (contents === undefined){
-      contents = null;
+    if (contents === undefined || contents === null){
+      return;
     }
     if (this.has(';')){
       this.advance();
