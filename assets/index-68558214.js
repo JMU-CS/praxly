@@ -2045,9 +2045,9 @@ edRow: ${r}, 	endcolumn: ${g}`);var m=st.session,B=Tm.require("ace/range").Range
 `;return S.end=S.endIndex+l.length,c+l;case"RETURN":S.beg=$,S.startIndex=$;var c="	".repeat(r)+"return ";S.endIndex=$+c.length;var l=Se(S.value,S.endIndex,r)+`
 `;return S.end=S.endIndex+l.length,c+l;case"PROGRAM":return Se(S.value,$,r);case"STATEMENT":S.beg=$,S.startIndex=$;var c="	".repeat(r);S.endIndex=$+c.length;var l=Se(S.value,S.endIndex,r)+`
 `;return S.end=S.endIndex+l.length,c+l;case"CODEBLOCK":var F=S.statements.map(p=>{try{return Se(p,$,r)}catch(_){return console.error("An error occurred: empty statement",_),null}});return F.join("");case"IF":S.beg=$,S.startIndex=$,S.endIndex=$+2;var c="	".repeat(r)+"if (",o=Se(S.condition,$+c.length,r)+`)
-`,a="	".repeat(r)+Se(S.statement,$+c.length+o.length,r+1)+"	".repeat(r)+`end if
+`,a=Se(S.statement,$+c.length+o.length,r+1)+"	".repeat(r)+`end if
 `;return S.end=$+c.length+o.length+a.length,c+o+a;case"IF_ELSE":S.beg=$,S.startIndex=$,S.endIndex=$+2;var c="	".repeat(r)+"if (",o=Se(S.condition,$+c.length,r)+`)
-`,a="	".repeat(r)+Se(S.statement,$+c.length+o.length,r+1),C="	".repeat(r)+`else
+`,a=Se(S.statement,$+c.length+o.length,r+1),C="	".repeat(r)+`else
 `+"	".repeat(r)+Se(S.alternative,$+c.length+o.length+a.length,r+1)+"	".repeat(r)+`end if
 `;return S.end=$+c.length+o.length+a.length+C.length,c+o+a+C;case"ASSIGNMENT":if(S.varType==="reassignment")try{S.beg=$;var f=S.name.toString();S.startIndex=$+f.length;var m=" = ";S.endIndex=S.startIndex+m.length;var l=Se(S.value,S.endIndex,r)+`
 `;return S.end=S.endIndex+l.length,"	".repeat(r)+f+m+l}catch{return" "}else try{S.beg=$;var f=S.varType.toString().substring(7)+" "+S.name.toString();S.startIndex=$+f.length+1;var m=" = ";S.endIndex=S.startIndex+1;var l=Se(S.value,S.endIndex,r)+`
