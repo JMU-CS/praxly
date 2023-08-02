@@ -1,8 +1,12 @@
 
+h1 {
+  font-family: sans-serif;
+}
 
 body {
     display: flex;
     flex-direction: column;
+    margin: 0;
     
 }
 
@@ -11,6 +15,7 @@ body {
     background: #d9dbda;
     margin: 10px;
     height: 10vh;
+    padding: 10px;
 }
 
 main {
