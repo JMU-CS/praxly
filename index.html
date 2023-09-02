@@ -263,6 +263,43 @@
       font-size: 30px;
     }
 
+    .manual-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-image: url('data:image/png;base64,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');
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      position: relative;
+    }
+    
+    .manual-button:hover {
+      background-image: none;
+      background-color: #ec2323; /* Lighter blue color */
+    }
+    
+    .manual-button:hover .button-text {
+      display: inline;
+    }
+    
+    .manual-button:hover::before {
+      content: '';
+    }
+    
+    .manual-button:hover::before {
+      opacity: 1;
+    }
+    
+    .manual-button-icon {
+      font-size: 30px;
+    }
+
     .toast {
       display: none;
       position: fixed;
@@ -281,8 +318,8 @@
 
   </style>
   <div id="toast" class="toast">URL copied to clipboard</div>
-  <script type="module" crossorigin src="/assets/index-68558214.js"></script>
-  <link rel="stylesheet" href="/assets/index-826ab027.css">
+  <script type="module" crossorigin src="/assets/index-86ade28d.js"></script>
+  <link rel="stylesheet" href="/assets/index-4c31c57b.css">
 </head>
 <body>
   <header class="nav-bar">
@@ -303,6 +340,173 @@
       </div>
     
     </div>
+
+    <div id="manual" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Praxis Pseudocode notation</h2>
+        <p>Here is the documentation for the pseudocode that the Praxis exam uses.</p>
+        <table id="reference-table">
+          <tr>
+              <th>Block Representation</th>
+              <th>Name</th>
+              <th>Text Representation</th>
+              <th>Explanation</th>
+          </tr>
+          <tr>
+              <td>block example here</td>
+              <td>Assignment Operator</td>
+              <td>←<br>=</td>
+              <td>
+                  <ul>
+                      <li>This stores the value to the right of the equal sign to the alias on the left.</li>
+                      <li><i>Note that for ease of typing, you can use the equals sign.</i></li>
+                  </ul>
+              </td>
+          </tr>
+          <tr>
+              <td>block example here</td>
+              <td>Arithmetic operators</td>
+              <td>+<br>-<br>*<br>/<br>%<br>^</td>
+              <td>
+                  <ul>
+                      <li>The mod operator (%) returns the remainder</li>
+                      <li>+ can be used to concatenate strings</li>
+                  </ul>
+              </td>
+          </tr>
+          <tr>
+            <td>block example here</td>
+            <td>Logical operators</td>
+            <td>and<br>or<br>not<br></td>
+            <td>
+                <ul>
+                    <li>used to compare two booleans</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+          <td>block example here</td>
+          <td>Boolean values operators</td>
+          <td>true<br>false</td>
+          <td>
+              <ul>
+                  <li></li>
+              </ul>
+          </td>
+      </tr>
+      <tr>
+        <td>block example here</td>
+        <td>null</td>
+        <td>null</td>
+        <td>
+            <ul>
+                <li>something that has not been initialized. </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+      <td>block example here</td>
+      <td>/*comment here*/</td>
+      <td>multi-lined comment</td>
+      <td>
+          <ul>
+              <li>multiple lined comments that usally indicate missing code.</li>
+          </ul>
+      </td>
+  </tr>
+  <tr>
+    <td>block example here</td>
+    <td>single-line comment </td>
+    <td>// comment here</td>
+    <td>
+        <ul>
+            <li>single lined comments that usally describe a line of code on the same line. </li>
+        </ul>
+    </td>
+</tr>
+<tr>
+  <td>block example here</td>
+  <td>print statement </td>
+  <td>print <i>argument</i></td>
+  <td>
+      <ul>
+          <li>prints to standard output when the code is ran. </li>
+      </ul>
+  </td>
+</tr>
+<tr>
+  <td>block example here</td>
+  <td>Data types </td>
+  <td>boolean<br>char<br>double<br>float<br>int<br>int[]<br>int[][]<br>short<br>String</td>
+  <td>
+      <ul>
+          <li>These are the types supported in this language. </li>
+      </ul>
+  </td>
+</tr>
+<tr>
+  <td>block example here</td>
+  <td>Array initialization and reference </td>
+  <td>int[] a ← {1, 2, 3}<br>int[] b[0..2] ← {1, 2, 3}<br>a[0] ←</td>
+  <td>
+      <ul>
+          <li>a[0] refers to 'a at index 0' </li>
+      </ul>
+  </td>
+</tr>
+<tr>
+  <td>block example here</td>
+  <td>Conditional statements</td>
+ <td>if (<i>condition</i>)<br>  <i>code here</i><br> end if <br><br>
+  if (<i>condition</i>)<br><i>code here</i><br>else<br><i>alternitive code here</i><br>end if </td>
+  <td>
+      <ul>
+          <li>runs the code only if the condition is evaluated to true. </li>
+      </ul>
+  </td>
+</tr>
+<tr>
+  <td>block example here</td>
+  <td>Iterative statements</td>
+ <td>for (<i>initialization; condition; increment</i>)<br>  <i>code here</i><br> end for <br><br>
+  while (<i>condition</i>)<br><i>code here</i><br>end while </td>
+  <td>
+      <ul>
+          <li>runs the code only if the condition is evaluated to true. </li>
+      </ul>
+  </td>
+</tr>
+<tr>
+  <td>block example here</td>
+  <td>Procedures</td>
+ <td><i>void</i> functionName(arg1, arg2) <br> <i>code here</i> <br>end functionName <br> <br> functionName(3, 4) </td>
+  <td>
+      <ul>
+          <li>procedures are used to write code with a certain input, run the desired code, and return something else.  </li>
+      </ul>
+  </td>
+</tr>
+<tr>
+  <td>block example here</td>
+  <td>Classes</td>
+ <td>Coming soon....... </td>
+  <td>
+      <ul>
+          <li>a template for an object.  </li>
+      </ul>
+  </td>
+</tr> 
+       
+      </table>
+      
+      
+      </div>
+    
+    </div>
+   
     <ul>
       <li>
         <button id="runButton" class="run-button" title="Run Code">
@@ -311,6 +515,9 @@
       </li>
       <li><button id="help" class="help-button" title="Help">
         <span class="button-text">Help</span>
+      </button></li>
+      <li><button id="reference" class="manual-button" title="reference">
+        <span class="button-text">manual</span>
       </button></li>
       <li><button id="share" class="share-button" title="Share">
         <span class="button-text">Share</span>
@@ -334,12 +541,34 @@
   </header>
   
 
+  <div class="tab">
+    <button id="tab1_button" class="tablinks" >Blocks only</button>
+    <button id="tab2_button" class="tablinks" >Text only</button>
+    <button id="tab3_button" class="tablinks" >Default</button>
+  </div>
+  
+  <!-- Tab content -->
+  <div id="London" class="tabcontent">
+    <main>
+  
+      <div id="blocklyDiv"></div>
+      <div class="resizeBar"></div>
+      <div id="aceCode" class="codeEditor"></div>
+    </main>
+  </div>
+  
+  <div id="Paris" class="tabcontent">
+    <h3>coming soon</h3>
+    <p>this feature is surprisingly harder to impliment than I thought. I aim to have it by late september.</p>
+  </div>
+  
+  <div id="Tokyo" class="tabcontent">
+    <h3>coming soon</h3>
+    <p>this feature is surprisingly harder to impliment than I thought. I aim to have it by late september.</p>
+  </div>
 
-  <main>
-    <div id="blocklyDiv"></div>
-    <div class="resizeBar"></div>
-    <div id="aceCode" class="codeEditor"></div>
-  </main>
+
+
 
   <div class="output">
     Output is here
@@ -349,6 +578,18 @@
     Error messages will be here (work in progress)
   </div>
 
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+  <!-- end tab stuff -->
+  
   
 </body>
 </html>
