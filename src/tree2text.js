@@ -58,9 +58,9 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             }
         case 'COMMENT':
             try {
-                var result = '/*' + blockjson.value + '*/\n';
+                var result = '\t'.repeat(indentation) + '/*' + blockjson.value + '*/\n';
                 blockjson.startIndex = startIndex;
-                blockjson.endIndex = startIndex + result.length;
+                blockjson.endIndex = artIndex + result.length;
                 blockjson.beg = startIndex;
                 blockjson.end = startIndex + result.length;
                 return  result;
@@ -71,7 +71,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             }
         case 'SINGLE_LINE_COMMENT':
             try {
-                var result = '// ' + blockjson.value + '\n';
+                var result = '\t'.repeat(indentation) + '// ' + blockjson.value + '\n';
                 blockjson.startIndex = startIndex;
                 blockjson.endIndex = startIndex + result.length;
                 blockjson.beg = startIndex;
@@ -271,7 +271,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             var condition =  tree2text(blockjson.condition, startIndex + result.length, indentation) + ")\n" ;
             var contents =  tree2text(blockjson.statement, startIndex + result.length + condition.length, indentation + 1);
             var alternative = '\t'.repeat(indentation) +'\else\n' 
-            + '\t'.repeat(indentation) + tree2text(blockjson.alternative, startIndex + result.length + condition.length + contents.length, indentation + 1) 
+            +  tree2text(blockjson.alternative, startIndex + result.length + condition.length + contents.length, indentation + 1) 
             + '\t'.repeat(indentation) +'end if\n';
             blockjson.end = startIndex + result.length + condition.length + contents.length + alternative.length;
             return result + condition + contents + alternative;

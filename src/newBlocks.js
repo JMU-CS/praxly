@@ -488,7 +488,8 @@ export function definePraxlyBlocks(workspace) {
                   ["double", "double"],
                   ["char", "char"],
                   ["String", "String"],
-                  ["float", "float"]
+                  ["float", "float"], 
+                  ['short', 'short']
                 ]
               },
               {
@@ -580,6 +581,10 @@ export function definePraxlyBlocks(workspace) {
       [
         "float",
         "float"
+      ], 
+      [
+        'short', 
+        'short'
       ]
     ]
   },
@@ -791,6 +796,10 @@ export function definePraxlyBlocks(workspace) {
             [
               "float",
               "float"
+            ], 
+            [
+              'short', 
+              'short'
             ]
           ]
         },
@@ -929,6 +938,10 @@ export function definePraxlyBlocks(workspace) {
                         [
                           "float",
                           "float"
+                        ], 
+                        [
+                          'short', 
+                          'short'
                         ]
                       ]
                     },

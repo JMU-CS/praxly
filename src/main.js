@@ -39,11 +39,30 @@ export const workspace = Blockly.inject('blocklyDiv', {
 
   renderer: 'zelos'
 });
+// Blockly.inject('blocklyDiv2', {
+//   toolbox: toolbox,
+//   // scrollbars: false,
+//   horizontalLayout: false,
+//   toolboxPosition: "start",
+//   theme: praxlyDefaultTheme,
+//   zoom:
+//          {controls: true,
+//           wheel: true,
+//           startScale: 1.0,
+//           maxScale: 3,
+//           minScale: 0.3,
+//           scaleSpeed: 1.2,
+//           pinch: true},
+
+//   renderer: 'zelos',
+//   workspace: workspace  // Share the same workspace instance
+// });
 const runButton = document.getElementById('runButton');
 const shareButton = document.getElementById('share');
 const darkModeButton = document.getElementById('darkMode');
 const reportIssueButton = document.getElementById('reportBtn')
 const helpButton = document.getElementById("help");
+const manualButton = document.getElementById("reference");
 // const blockUpdatesButton = document.getElementById('blockUpdates');
 const resizeBar = document.querySelector('.resizeBar');
 const leftPane = document.querySelector('#blocklyDiv');
@@ -51,6 +70,8 @@ const rightPane = document.querySelector('#aceCode');
 const stdError = document.querySelector('.error');
 const stdOut = document.querySelector('.output');
 var modal = document.getElementById("myModal");
+var manual = document.getElementById("manual");
+
 
 const editorElement = textEditor.container;
 
@@ -100,15 +121,22 @@ helpButton.onclick = function() {
   modal.style.display = "block";
 }
 
+manualButton.onclick = function() {
+  manual.style.display = "block";
+}
+
+
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
   modal.style.display = "none";
+  manual.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-  if (event.target == modal) {
+  if (event.target == modal || event.target == manual) {
     modal.style.display = "none";
+    manual.style.display = "none";
   }
 }
 
@@ -295,5 +323,41 @@ shareButton.addEventListener('click', generateUrl);
 
 loadFromUrl(turnCodeToBLocks);
 
+
+
+function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+} 
+
+const bothButton = document.getElementById("tab1_button");
+const textButton = document.getElementById('tab2_button');
+const blocksButton = document.getElementById('tab3_button');
+blocksButton.addEventListener('click', function(event){
+  openCity(event, 'London');
+});
+textButton.addEventListener('click', function(event){
+  openCity(event, 'Paris');
+});
+bothButton.addEventListener('click', function(event){
+  openCity(event, 'Tokyo');
+});
+blocksButton.click();
 
 

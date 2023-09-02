@@ -230,9 +230,11 @@ export const tree2blocks = (workspace, blockjson) => {
             break;
 
         case 'FUNCTION_ASSIGNMENT':
+            var returnType = blockjson?.returnType;
             var argsList = blockjson?.params;
             var result = workspace.newBlock('praxly_procedure_block');
             var params = workspace.newBlock('praxly_parameter_block');
+            result.setFieldValue(returnType, "RETURNTYPE");
             result.setFieldValue(blockjson?.name, 'PROCEDURE_NAME');
             result.setFieldValue(blockjson?.name, 'END_PROCEDURE_NAME');
             result.getInput('PARAMS').connection.connect(params?.outputConnection);

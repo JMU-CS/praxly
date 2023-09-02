@@ -259,7 +259,7 @@ class Token {
       this.startToken = this.i;
     }
   
-    lex() {
+      lex() {
       while (this.i < this.length) {
         if (this.has("+")) {
           
@@ -596,11 +596,11 @@ class Parser {
           beg: startIndex, 
           end: endIndex
         };
-    } else if (this.has("double")) {
+    } else if (this.has("Double")) {
         this.advance();
         return {
           value: tok.value, 
-          type: tok.token_type,
+          type: "DOUBLE",
           blockID: "code",
           startIndex: startIndex, 
           endIndex: endIndex,
