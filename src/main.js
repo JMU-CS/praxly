@@ -19,6 +19,9 @@ import { errorOutput } from './lexer-parser';
 import { text2tree } from './lexer-parser';
 import { generateUrl, loadFromUrl } from './share';
 
+// import { readFileSync } from 'fs';
+import {codeText} from './examples';
+// import { registerDefaultOptions } from 'blockly/core/contextmenu_items';
 
 
 const praxlyGenerator = makeGenerator();
@@ -39,41 +42,26 @@ export const workspace = Blockly.inject('blocklyDiv', {
 
   renderer: 'zelos'
 });
-// Blockly.inject('blocklyDiv2', {
-//   toolbox: toolbox,
-//   // scrollbars: false,
-//   horizontalLayout: false,
-//   toolboxPosition: "start",
-//   theme: praxlyDefaultTheme,
-//   zoom:
-//          {controls: true,
-//           wheel: true,
-//           startScale: 1.0,
-//           maxScale: 3,
-//           minScale: 0.3,
-//           scaleSpeed: 1.2,
-//           pinch: true},
 
-//   renderer: 'zelos',
-//   workspace: workspace  // Share the same workspace instance
-// });
+
 const runButton = document.getElementById('runButton');
 const shareButton = document.getElementById('share');
 const darkModeButton = document.getElementById('darkMode');
-const reportIssueButton = document.getElementById('reportBtn')
 const helpButton = document.getElementById("help");
 const manualButton = document.getElementById("reference");
-// const blockUpdatesButton = document.getElementById('blockUpdates');
 const resizeBar = document.querySelector('.resizeBar');
 const leftPane = document.querySelector('#blocklyDiv');
 const rightPane = document.querySelector('#aceCode');
-const stdError = document.querySelector('.error');
 const stdOut = document.querySelector('.output');
 var modal = document.getElementById("myModal");
 var manual = document.getElementById("manual");
-
-
+const featuresButton = document.getElementById('FeaturesButton');
+const bugButton = document.getElementById("BugButton");
+const changelogButton = document.getElementById('ChangelogButton');
+const exampleDiv = document.getElementById('exampleTable');
 const editorElement = textEditor.container;
+const githubButton = document.getElementById('GitHubButton');
+const BenButton = document.getElementById('AboutButton');
 
 var mainTree = null;
 let darkMode = false;
@@ -98,10 +86,26 @@ document.addEventListener('mouseup', function(e) {
   Blockly.svgResize(workspace);
   textEditor.resize();
 });
-reportIssueButton.addEventListener('click', function() {
-  var linkUrl = 'BugsList.html';
+manualButton.addEventListener('click', function() {
+  var linkUrl = 'pseudocode.html';
   window.open(linkUrl, '_blank');
 });
+bugButton.addEventListener('click', function(){
+  window.open("BugsList.html", '_blank');
+});
+changelogButton.addEventListener('click', function(){
+  window.open("changelog.html", '_blank');
+});
+featuresButton.addEventListener('click', function(){
+  window.open("features.html", '_blank');
+});
+githubButton.addEventListener('click', function(){
+  window.open("https://github.com/Praxly/praxly.github.io", '_blank');
+});
+BenButton.addEventListener('click', function() {
+  window.open('https://sauppb.github.io/website/');
+});
+
 
 // these make it so that the blocks and text take turns. 
 leftPane.addEventListener('click', () => {
@@ -153,8 +157,17 @@ function runTasks() {
   const executable = createExecutable(mainTree);
   console.log(executable);
   executable.evaluate();
-  stdOut.innerHTML = printBuffer;
-  stdError.innerHTML = errorOutput;
+  if (errorOutput.length > 0){
+    stdOut.innerHTML = errorOutput;
+    stdOut.style.color = '#ff0000';
+  } else{
+    stdOut.innerHTML = printBuffer;
+    stdOut.style.color = darkMode ? '#FFFFFF': '#000000';
+
+    
+  }
+
+  // stdError.innerHTML = errorOutput;
   textEditor.session.setAnnotations(annotationsBuffer);
   //might have to remove
   addBlockErrors(workspace);
@@ -244,6 +257,7 @@ function setDark(){
   darkMode = true;
   workspace.setTheme(PraxlyDark);
   textEditor.setTheme("ace/theme/twilight");
+  // textEditor.setMode("ace/modes/java")
   var bodyElement = document.body;
   bodyElement.style.backgroundColor = "black";
   var elements = document.querySelectorAll(".output, .error, .nav-bar");
@@ -350,14 +364,61 @@ const bothButton = document.getElementById("tab1_button");
 const textButton = document.getElementById('tab2_button');
 const blocksButton = document.getElementById('tab3_button');
 blocksButton.addEventListener('click', function(event){
-  openCity(event, 'London');
+  resizeBar.style.display = 'none';
+  rightPane.style.display = 'none';
+  leftPane.style.display = 'block';
+  Blockly.svgResize(workspace);
+  textEditor.resize();
+  // openCity(event, 'London');
 });
 textButton.addEventListener('click', function(event){
-  openCity(event, 'Paris');
+  resizeBar.style.display = 'none';
+  leftPane.style.display = 'none';
+  rightPane.style.display = 'block';
+  Blockly.svgResize(workspace);
+  textEditor.resize();
+  // openCity(event, 'Paris');
 });
 bothButton.addEventListener('click', function(event){
-  openCity(event, 'Tokyo');
+  // openCity(event, 'Tokyo');
+  resizeBar.style.display = 'block';
+  leftPane.style.display = 'block';
+  rightPane.style.display = 'block';
+  Blockly.svgResize(workspace);
+  textEditor.resize();
 });
-blocksButton.click();
+bothButton.click();
+
+
+
+function GenerateExamples() {
+  const dataArray = codeText.split('##');
+
+  const result = {};
+
+  for (let i = 1; i < dataArray.length - 1; i += 2) {
+    const label = dataArray[i].trim();
+    var newButton = document.createElement("button");
+    newButton.textContent = label;
+    newButton.classList.add("example_links");
+    newButton.addEventListener('click', function(){
+      generateUrl();
+      applyExample(label);
+    });
+    exampleDiv.appendChild(newButton);    
+
+    const value = dataArray[i + 1].trim();
+    result[label] = value;
+  }
+
+  return result;
+}
+let examples = GenerateExamples();
+console.log(`the examples are: ${Object.keys(examples)}`);
+
+function applyExample (exampleName){
+  // append the example to the code
+  textEditor.setValue(examples[exampleName], -1);
+}
 
 

@@ -1,9 +1,7 @@
 
 // import { workspace } from "./main";
 
-// import { highlightError, indextoAceRange } from "./milestone2";
-// import { textEditor } from "./milestone2";
-// import { block } from "blockly/core/tooltip"
+
 import { appendAnnotation, sendRuntimeError } from "./lexer-parser";
 import { printBuffer } from "./lexer-parser";
 import { addToPrintBuffer } from "./lexer-parser";
@@ -220,9 +218,22 @@ export const createExecutable = (blockjson) => {
         case 'RETURN':
             return new Praxly_return(createExecutable(blockjson.value), blockjson);
 
+        case 'ARRAY':
+            var args = [];
+            blockjson.params.forEach((arg) => {
+                args.push(createExecutable(arg));
+            });
+            return new Praxly_array( args, blockjson);
+        case 'ARRAY_REFERENCE':
+            // console.error(createExecutable(blockjson.index));
+            return new Praxly_array_reference(blockjson.name, createExecutable(blockjson.index), blockjson);
+            //go here
+
+
+
 
         default: 
-        
+            console.error(`I donot recognize this type: ${blockjson.type}}`);
             
 
     }
@@ -341,8 +352,13 @@ class Praxly_String {
 }
 
 class Praxly_array{
-    constructor(){
-        
+    constructor(elements, blockjson){
+        this.elements = elements;
+        this.blockjson = blockjson;
+        this.jsonType = 'Praxly_array';
+    }
+    evaluate(environment){
+        return this;
     }
 }
 
@@ -750,20 +766,19 @@ class Praxly_assignment {
         console.error(this.value);
     }
     evaluate(environment) {
-        
         // if it is a reassignment, the variable must be in the list and have a matching type. 
         let valueEvaluated = this.value.evaluate(environment);
         if (this.type === "reassignment"){
             let currentStoredVariableEvaluated = environment.variableList[this.name].evaluate(environment);
             // console.log(variableList);
             if (!environment.variableList.hasOwnProperty(this.name)){
-                console.error(`Error: variable name ${this.name} not in the variablelist: \n ${environment.variableList}`);
+                sendRuntimeError(`Error: variable name ${this.name} not in the variablelist: \n ${environment.variableList}`, this.json);
             }
     
             if (currentStoredVariableEvaluated.jsonType !== valueEvaluated.jsonType){
                 sendRuntimeError(`Error: varible reassignment does not match declared type: \n\t Expected:`
                 + `${currentStoredVariableEvaluated.jsonType.slice(7)}, \n\t Actual: ${valueEvaluated.jsonType.slice(7)}`, this.json);
-                console.error("Error: varible reassignment does not match declared type:");
+                sendRuntimeError("Error: varible reassignment does not match declared type:", this.json);
             }
           
         } else {
@@ -795,6 +810,22 @@ class Praxly_variable {
             return new Praxly_invalid();
         }
         return environment.variableList[this.name];
+    }
+}
+
+
+class Praxly_array_reference {
+    constructor(name, index,  blockjson){
+        this.json = blockjson;
+        this.name = name;
+        this.index = index;
+    }
+    evaluate(environment){
+        if (!environment.variableList.hasOwnProperty(this.name)){
+            sendRuntimeError(`the variable \'${this.name}\' is not recognized by the program. \n\tPerhaps you forgot to initialize it?`, this.json);
+            return new Praxly_invalid();
+        }
+        return environment.variableList[this.name].elements[this.index.evaluate(environment).value].evaluate(environment);
     }
 }
 

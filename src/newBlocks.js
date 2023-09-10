@@ -367,16 +367,7 @@ export function definePraxlyBlocks(workspace) {
             "style": 'expression_blocks',
             "tooltip": "",
             "helpUrl": "", 
-            // 'childBLocks_' : [
-            //   {
-            //     'kind': 'block',
-            //     'type': 'praxly_literal_block'
-            //   },
-            //   {
-            //     'kind': 'block',
-            //     'type': 'praxly_literal_block'
-            //   },
-            // ],
+
           }, 
           {
             "type": "praxly_boolean_operators_block",
@@ -585,7 +576,8 @@ export function definePraxlyBlocks(workspace) {
       [
         'short', 
         'short'
-      ]
+      ],
+      
     ]
   },
 
@@ -961,6 +953,82 @@ export function definePraxlyBlocks(workspace) {
                         "tooltip": "",
                         "helpUrl": ""
                       }, 
+                      {
+                        "type": "praxly_array_assignment_block",
+                        "message0": "%1%2 ⬅ {%3 %4}",
+                        "args0": [
+                          {
+                            "type": "field_dropdown",
+                            "name": "VARTYPE",
+                            "options": [
+                              [
+                                "int[]",
+                                "int[]"
+                              ],
+                              [
+                                "int[][] (coming soon)",
+                                "int[][] (coming soon)"
+                              ],
+                            
+                              
+                            ]
+                          },
+                        
+                          {
+                            "type": "field_input",
+                            "name": "VARIABLENAME",
+                            "text": "arrayName"
+                          },
+                          {
+                            "type": "input_value",
+                            "name": "EXPRESSION"
+                          },
+                          {
+                            "type": "input_dummy"
+                          }
+                        
+                        
+                        ],
+                              "inputsInline": true,
+                              "previousStatement": null,
+                              "nextStatement": null,
+                              "style": 'variable_blocks',
+                              "tooltip": "",
+                              "helpUrl": ""
+                            }, 
+                            {
+                              "type": "praxly_array_reference_block",
+                              "message0": "%1[%2] %3",
+                              "args0": [
+                              
+                                {
+                                  "type": "field_input",
+                                  "name": "VARIABLENAME",
+                                  "text": "arrayName"
+                                },
+                                {
+                                  "type": "input_value",
+                                  "name": "INDEX",
+                                  "text": "0"
+                                },
+                                {
+                                  "type": "input_dummy"
+                                }
+                              
+                              
+                              ],
+                                    "inputsInline": true,
+                                    "style": 'variable_blocks',
+                                    "tooltip": "",
+                                    "helpUrl": "",
+                                    "output": null
+                                  }, 
+                            
+
+                      
+
+
+
     ]);
 
  

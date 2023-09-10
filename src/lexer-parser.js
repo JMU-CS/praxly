@@ -2,7 +2,9 @@ import ace from 'ace-builds';
 
 
 
-export const textEditor = ace.edit("aceCode", {fontSize: 16});
+export const textEditor = ace.edit("aceCode", {fontSize: 16, mode: 'ace/mode/java'});
+// textEditor.session.setMode("ace/mode/java");
+
 // var AceRange = ace.require('ace/range').Range;
 
 
@@ -200,7 +202,7 @@ class Token {
       this.length = this.source?.length;
       this.token_so_far = "";
       this.keywords = ["if", "else", "end", "print", "for", "while", 'and', 'or', 'do', 'repeat', 'until', 'not', 'return'];
-      this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];
+      this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void', 'int[]'];
       this.startToken = 0;
       this.currentLine = 0;
     }
@@ -230,6 +232,9 @@ class Token {
 
     has_ahead(c) {
       return this.i < this.length && this.source[this.i + 1] === c;
+    }
+    has_ahead_ahead(c) {
+      return this.i < this.length && this.source[this.i + 2] === c;
     }
 
     hasNot_ahead(c) {
@@ -419,6 +424,12 @@ class Token {
             while (this.i < this.length && (this.has_letter() || this.has_digit())) {
               this.capture();
             }
+            // potential array problem
+            
+            if (this.has('[') && this.has_ahead(']')){
+              this.capture();
+              this.capture();
+            }
             if (this.token_so_far === "true" || this.token_so_far === "false") {
               this.emit_token("boolean");
             } else if (this.token_so_far === 'end'){
@@ -432,6 +443,7 @@ class Token {
               
             } 
             else if (this.types.includes(this.token_so_far)) {
+              
               this.emit_token('Type');  
             }
 
@@ -446,6 +458,8 @@ class Token {
               }
 
             }
+
+          
           } else if (this.has(",")) {
             this.capture();
             this.emit_token(",");
@@ -460,6 +474,18 @@ class Token {
           } else if (this.has(")")) {
             this.capture();
             this.emit_token(")");
+          } else if (this.has("{")) {
+            this.capture();
+            this.emit_token("{");
+          } else if (this.has("}")) {
+            this.capture();
+            this.emit_token("}");
+          } else if (this.has("[")) {
+            this.capture();
+            this.emit_token("[");
+          } else if (this.has("]")) {
+            this.capture();
+            this.emit_token("]");
          } else if (this.has("\n")) {
             this.capture();
             this.emit_token("\n");
@@ -618,6 +644,41 @@ class Parser {
         beg: startIndex, 
         end: endIndex
       };
+
+    } else if (this.has('{')){
+      let result = {
+        blockID: 'code', 
+        startIndex: startIndex, 
+        endIndex: endIndex, 
+        beg: startIndex,
+        type: 'ARRAY',
+      };
+      // result.type = 'ARRAY';
+      // result.name = this.tokens[this.i].value;
+      var args = [];
+      this.advance();
+      var loopBreak = 0;
+      while (this.hasNot('}') &&  loopBreak < maxLoop) {
+        // this.advance();
+        var param = this.boolean_operation();
+        args.push(param);
+        if (this.has(',')) {
+          this.advance();
+          
+        }
+        loopBreak++;
+      }
+      console.log('here are the array contents');
+      console.log(args);
+      result.params = args;
+      if (this.hasNot('}')){
+        appendAnnotation("didnt detect closing curlybrace in the array declaration", this.tokens[this.i].startIndex, this.tokens[this.i].endIndex);
+        // console.error('didnt detect closing parintheses in the arguments of  a function call');
+      }
+      result.endIndex = this.tokens[this.i]?.endIndex;
+      result.end = result?.endIndex;
+      this.advance();
+      return result;
     
     } else if (this.has("(")) {
       this.advance();
@@ -632,6 +693,27 @@ class Parser {
 
     }else if (this.has("Variable")){
       this.advance();
+      if(this.has('[')){
+        this.advance();
+        var index = this.boolean_operation();
+        if (this.has("]")) {
+          this.advance();
+        } else {
+          textError('parsing', 'did not detect closing bracket', startIndex, endIndex);
+          // console.log("did not detect closing parentheses");
+        }
+        return {
+          name: tok.value, 
+          type: 'ARRAY_REFERENCE',
+          index: index,
+          blockID: "code",
+          startIndex: startIndex, 
+          endIndex: endIndex,
+          beg: startIndex, 
+          end: endIndex 
+          
+        };
+      }
       return {
         name: tok.value, 
         type: 'VARIABLE',
@@ -766,6 +848,10 @@ class Parser {
     }
     return l;
   }
+
+  
+
+
 
   additive() {
     let l =this.multiplicitive();
@@ -954,7 +1040,7 @@ boolean_operation() {
       var endIndex = this.tokens[this.i].endIndex;
     if (this.has("and")) {
       this.advance();
-      const r =this.additive();
+      const r =this.comparable();
       // l =new Operators.Less_Than_Equal_To(left, right);
       l ={
           left: l, 
@@ -968,7 +1054,7 @@ boolean_operation() {
       }
     } else if (this.has("or")) {
       this.advance();
-      const r =this.additive();
+      const r =this.comparable();
       // l =new Operators.Greater_Than_EqualTo(left, right);
       l ={
           left: l, 
@@ -1204,11 +1290,17 @@ statement() {
     result.value = this.tokens[this.i].value;
     result.end = result.endIndex;
     return result;
-  
   }
+
+
+
   
   else if (this.has_type() && this.has_ahead('Variable')){
-      var returnType = 'Praxly_' + this.tokens[this.i].value;
+    var returnType = 'Praxly_' + this.tokens[this.i].value;
+      if (this.tokens[this.i].value == 'int[]'){
+        // potential array problem
+        returnType = 'Praxly_array';
+      }
       this.advance();
       if (this.has("Variable")){
         result.type = 'ASSIGNMENT';

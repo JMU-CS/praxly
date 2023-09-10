@@ -137,7 +137,32 @@ export const toolbox = {
                 'kind': 'block',
                 'type': 'praxly_variable_block'
               }, 
-
+              {
+                'kind': 'block', 
+                'type': 'praxly_array_assignment_block', 
+                'inputs': {
+                  'EXPRESSION':{
+                    'block': {
+                      'type': 'praxly_parameter_block', 
+                    }
+                  }
+                  
+                }
+              },
+              {
+                'kind': 'block', 
+                'type': 'praxly_array_reference_block',
+                'inputs': {
+                  'INDEX' : {
+                    'shadow': {
+                      'type' :'praxly_literal_block', 
+                      'fields' : {
+                        'LITERAL' : '0',
+                      }
+                    },
+                  }, 
+                }
+              },
              
               
         ]

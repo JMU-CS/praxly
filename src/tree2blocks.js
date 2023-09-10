@@ -171,8 +171,16 @@ export const tree2blocks = (workspace, blockjson) => {
             }
             else {
                 var result = workspace.newBlock('praxly_assignment_block');
-                result.setFieldValue(blockjson.varType.substring(7), "VARTYPE");
+                if (blockjson.varType === 'Praxly_array'){
+                    result.dispose();
+                    result = workspace.newBlock('praxly_array_assignment_block');
+                    result.setFieldValue('int[]', "VARTYPE");
+                } else{
+                    result.setFieldValue(blockjson.varType.substring(7), "VARTYPE");
+                    
+                }
             }
+            
             result.setFieldValue(blockjson.name, "VARIABLENAME");
             result.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
             break;
@@ -280,6 +288,27 @@ export const tree2blocks = (workspace, blockjson) => {
 
             }
             break;
+        case 'ARRAY':
+            
+            var argsList = blockjson?.params;
+            var params = workspace.newBlock('praxly_parameter_block');
+            for (var i = 0; i < ( argsList?.length ?? 0); i++){
+                params.appendValueInput(`PARAM_${i}`);
+                var parameterBlock = workspace.newBlock('praxly_literal_block');
+                parameterBlock.setFieldValue(tree2blocks(workspace, argsList[i]), "LITERAL");  
+                params.getInput(`PARAM_${i}`).connection.connect(parameterBlock?.outputConnection);
+                parameterBlock.initSvg();
+            }
+            var result = params;
+            break;
+
+        case 'ARRAY_REFERENCE':
+            var result = workspace.newBlock('praxly_array_reference_block');
+            result.setFieldValue(blockjson.name, "VARIABLENAME");
+            var child = tree2blocks(workspace, blockjson?.index);
+            result.getInput('INDEX').connection.connect(child?.outputConnection);
+            break;
+
 
         default: 
             return null;

@@ -10,16 +10,7 @@ export function generateUrl() {
     window.location.hash = ''; //this should clear it before repalcing it
     window.location.hash = `code=${encoded}`
     saveToLocal();
-    // encode
-    // encodeURIComponent is the function we use by default
-    //update the url
-    //future: automatically copy to clipboard
-    // const dummyInput = document.createElement('input');
-    // document.body.appendChild(dummyInput);
-    // dummyInput.value = url;
-    // dummyInput.select();
-    // document.execCommand('copy');
-    // document.body.removeChild(dummyInput);
+  
     var dummy = document.createElement('input'),
     text = window.location.href;
 

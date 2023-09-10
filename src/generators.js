@@ -61,6 +61,16 @@ export const makeGenerator = () => {
         } 
     }
 
+    praxlyGenerator['praxly_array_reference_block'] = (block) => {
+         
+        return {
+            blockID: block.id,
+            type: 'ARRAY_REFERENCE', 
+            name: block.getFieldValue("VARIABLENAME"),
+            index: block.getInputTargetBlock("INDEX"),
+        } 
+    }
+
     praxlyGenerator['praxly_literal_block'] = (block) =>  {
         const input = block.getFieldValue('LITERAL');
         const node = {
@@ -207,6 +217,28 @@ export const makeGenerator = () => {
             value: value, 
             blockID: block.id, 
             varType: 'Praxly_' + varType,
+
+        }
+    }
+
+    praxlyGenerator['praxly_array_assignment_block'] = (block)=> {
+        var varType = block.getFieldValue('VARTYPE');
+        console.log(`field input is ${varType}`);
+        var variableName = block.getFieldValue('VARIABLENAME');
+        var args = block.getInputTargetBlock('EXPRESSION');
+        var argschildren = args.getChildren(true);
+        var argsList = [];
+        argschildren.forEach(element => {
+            
+            argsList.push(praxlyGenerator[element.type](element));
+        });
+        
+        return {
+            type: 'ASSIGNMENT', 
+            name: variableName, 
+            value: argsList, 
+            blockID: block.id, 
+            varType: 'Praxly_array',
 
         }
     }

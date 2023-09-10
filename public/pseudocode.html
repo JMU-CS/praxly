@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/jmu.ico" type="image/x-icon">
+    <title>Praxly Reference</title>
+</head>
+
+<style>
+
+    /* reference table*/
+
+#reference-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #reference-table th, #reference-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  #reference-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  #reference-table th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  
+  .showBlockImage {
+    display: none;
+  }
+
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
+</style>
+
+
+
+
+
+<div>
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <h2>Praxis Pseudocode notation</h2>
+      <p>Here is the documentation for the pseudocode that the Praxis exam uses.</p>
+      <table id="reference-table">
+        <tr>
+            <th class="showBlockImage" >Block Representation</th>
+            <th>Name</th>
+            <th>Text Representation</th>
+            <th>Explanation</th>
+        </tr>
+        <tr>
+            <td class="showBlockImage">block example here</td>
+            <td>Assignment Operator</td>
+            <td>← &nbsp; &nbsp; =</td>
+            <td>This stores the value to the right of the equal sign to the alias on the left.</td>
+        </tr>
+        <tr>
+            <td class="showBlockImage">block example here</td>
+            <td>Arithmetic operators</td>
+            <td>+ &nbsp; &nbsp; - &nbsp; &nbsp; * &nbsp; &nbsp; / &nbsp; &nbsp; % &nbsp; &nbsp; ^</td>
+            <td>The mod operator (%) returns the remainder.  + can be used to concatenate strings</td>
+        </tr>
+        <tr>
+          <td class="showBlockImage">block example here</td>
+          <td>Relational operators</td>
+          <td> == &nbsp; &nbsp;  &lt; &nbsp; &nbsp;  &gt; &nbsp; &nbsp; 	&le; &nbsp; &nbsp;  &#8805; &nbsp; &nbsp;  &ne; 
+            <br> <i>Note that these can be expressed as the following for text input: <br> == &nbsp; &nbsp;  &lt; &nbsp; &nbsp;  &gt; &nbsp; &nbsp; 	 &lt;=  &nbsp; &nbsp; &gt;= &nbsp; &nbsp; !=</i></td>
+          <td>returns a boolean operator for if the comparison is true </td>
+      </tr>
+        <tr>
+          <td class="showBlockImage">block example here</td>
+          <td>Logical operators</td>
+          <td><b>and</b> &nbsp; &nbsp; <b>or</b> &nbsp; &nbsp; <b>not</b> &nbsp; &nbsp; </td>
+          <td>
+               
+                   used to compare two booleans 
+               
+          </td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Boolean values operators</td>
+        <td><b>true</b> &nbsp; &nbsp; <b>false</b></td>
+        <td>
+             
+                  
+             
+        </td>
+    </tr>
+    <tr>
+      <td class="showBlockImage">block example here</td>
+      <td>null</td>
+      <td><b>null</b></td>
+      <td>
+           
+               something that has not been initialized.  
+           
+      </td>
+  </tr>
+  <tr>
+    <td class="showBlockImage">block example here</td>
+    <td>/*comment here*/</td>
+    <td>multi-lined comment</td>
+    <td>
+         
+             multiple lined comments that usally indicate missing code. 
+         
+    </td>
+</tr>
+<tr>
+  <td class="showBlockImage">block example here</td>
+  <td>single-line comment </td>
+  <td>// comment here</td>
+  <td>
+       
+           single lined comments that usally describe a line of code on the same line.  
+       
+  </td>
+</tr>
+<tr>
+<td class="showBlockImage">block example here</td>
+<td>print statement </td>
+<td><b>print</b> <i>argument</i></td>
+<td>
+     
+         prints to standard output when the code is ran.  
+     
+</td>
+</tr>
+<tr>
+<td class="showBlockImage">block example here</td>
+<td>Data types </td>
+<td><b>boolean</b> &nbsp; &nbsp; <b>char</b> &nbsp; &nbsp; <b>double</b> &nbsp; &nbsp; <b>float</b> &nbsp; &nbsp; <b>int</b> &nbsp; &nbsp; <b>int[]</b> &nbsp; &nbsp; <b>int[][]</b> &nbsp; &nbsp; <b>short</b> &nbsp; &nbsp; <b>String</b></td>
+<td>
+     
+         These are the types supported in this language.  
+     
+</td>
+</tr>
+<tr>
+<td class="showBlockImage">block example here</td>
+<td>Array initialization and reference </td>
+<td>int[] a ← {1, 2, 3} &nbsp; &nbsp; int[] b[0..2] ← {1, 2, 3} &nbsp; &nbsp; a[0] ←</td>
+<td>
+     
+         a[0] refers to 'a at index 0'  
+     
+</td>
+</tr>
+<tr>
+<td class="showBlockImage">block example here</td>
+<td>Conditional statements</td>
+<td>if (<i>condition</i>) <br>&nbsp; &nbsp;   <i>code here</i><br> end if  <br><br> 
+if (<i>condition</i>) <br> &nbsp; &nbsp; <i>code here</i><br>  else <br>  &nbsp; &nbsp; <i>alternitive code here</i> <br> end if </td>
+<td>
+     
+         runs the code only if the condition is evaluated to true.  
+     
+</td>
+</tr>
+<tr>
+<td class="showBlockImage">block example here</td>
+<td>Iterative statements</td>
+<td>for (<i>initialization; condition; increment</i>) <br> &nbsp; &nbsp;   <i>code here</i> end for  <br><br>  
+while (<i>condition</i>) <br> &nbsp; &nbsp; <i>code here</i> <br> end while </td>
+<td>
+     
+         runs the code only if the condition is evaluated to true.  
+     
+</td>
+</tr>
+<tr>
+<td class="showBlockImage">block example here</td>
+<td>Procedures</td>
+<td><i>void</i> functionName(arg1, arg2) <br> &nbsp; &nbsp;  <i>code here</i> <br> end functionName  &nbsp; &nbsp;   &nbsp; &nbsp;  functionName(3, 4) </td>
+<td>
+     
+         procedures are used to write code with a certain input, run the desired code, and return something else.   
+     
+</td>
+</tr>
+<tr>
+<td class="showBlockImage">block example here</td>
+<td>Classes</td>
+<td>Coming soon....... </td>
+<td>
+     
+         a template for an object.   
+     
+</td>
+</tr> 
+     
+    </table>
+    
+    
+    </div>
+  
+  </div>

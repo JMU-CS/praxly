@@ -71,7 +71,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             }
         case 'SINGLE_LINE_COMMENT':
             try {
-                var result = '\t'.repeat(indentation) + '// ' + blockjson.value + '\n';
+                var result = '\t'.repeat(indentation) +  blockjson.value + '\n';
                 blockjson.startIndex = startIndex;
                 blockjson.endIndex = startIndex + result.length;
                 blockjson.beg = startIndex;
@@ -397,6 +397,31 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             result += ')';
             blockjson.end = startIndex + result.length;
             return result;
-
+        case 'ARRAY':
+            blockjson.beg = startIndex;
+            blockjson.startIndex = startIndex;
+            var result = '{';
+            blockjson.endIndex = startIndex + result.length - 1;
+            var argsList = blockjson.params;
+            
+            if (argsList !== null && argsList.length > 0){
+                argsList.forEach(element => {
+                    result += tree2text(element, startIndex + result.length, indentation) + ', ';
+                });
+                result = result.slice(0, result.length - 2);
+            }
+            result += '}';
+            blockjson.end = startIndex + result.length;
+            return result;
+            break;
+        case 'ARRAY_REFERENCE':
+            blockjson.beg = startIndex;
+            blockjson.startIndex = startIndex;
+            result = blockjson.name + '[';
+            blockjson.endIndex = startIndex + result.length - 1;
+            var expression = tree2text(blockjson.index, blockjson.endIndex, indentation) + ']';
+            blockjson.end = blockjson.endIndex + expression.length;
+            return result + expression;
+            break;
     }
 }
