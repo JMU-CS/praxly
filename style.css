@@ -184,24 +184,75 @@ main {
   cursor: pointer;
 }
 
-/* reference table*/
+/* help menu */
 
-#reference-table {
-  border-collapse: collapse;
-  width: 100%;
+#helpMenu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f8f8;
+  display: flex;
 }
 
-#reference-table th, #reference-table td {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+.helpMenuButtons {
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0 5px; /* Added right margin of 5 pixels */
+  transition: background-color 0.3s;
+  font-family: 'Arial', sans-serif;
+  border-radius: 15px;
 }
 
-#reference-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.helpMenuButtons:hover {
+  background-color: #ddd;
 }
 
-#reference-table th {
-  background-color: #4CAF50;
-  color: white;
+#FeaturesButton {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+#ChangelogButton {
+  background-color: #2196f3;
+  color: #ffffff;
+}
+
+#BugButton {
+  background-color: #f44336;
+  color: #ffffff;
+}
+
+#GitHubButton {
+  background-color: #673ab7;
+  color: #ffffff;
+}
+
+#AboutButton {
+  background-color: #ff5722;
+  color: #ffffff;
+}
+
+#exampleTable{
+  color: #2196f3;
+  display: flex;
+
+}
+
+
+
+.example_links {
+  color:blue;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 10px;
+  cursor: pointer; /* Optional: add a pointer cursor to indicate interactivity */
+  color: inherit; /* Inherit the text color from its parent element */
+  text-decoration: underline;
+}
+
+#secondary_bar {
+  display: flex;
 }

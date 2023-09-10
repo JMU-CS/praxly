@@ -318,19 +318,31 @@
 
   </style>
   <div id="toast" class="toast">URL copied to clipboard</div>
-  <script type="module" crossorigin src="/assets/index-86ade28d.js"></script>
-  <link rel="stylesheet" href="/assets/index-4c31c57b.css">
+  <script type="module" crossorigin src="/assets/index-6d387683.js"></script>
+  <link rel="stylesheet" href="/assets/index-caa1a5c1.css">
 </head>
 <body>
   <header class="nav-bar">
-    <h1>Praxly beta</h1>
+    <h1>Praxly 🍂</h1>
+    <h4>version 1.0</h4>
     <div id="myModal" class="modal">
 
       <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Welcome To Praxly!</h2>
+        <ul id="helpMenu">
+          <button class="helpMenuButtons" id="FeaturesButton">Features ✨</button>
+          <button class="helpMenuButtons" id="ChangelogButton">Changelog 📈</button>
+          <button class="helpMenuButtons" id="BugButton">Report a bug 🐞</button>
+          <button class="helpMenuButtons" id="GitHubButton">github 😺</button>
+          <button class="helpMenuButtons" id="AboutButton">About the creator 😎</button>
+                  
+        </ul>
+
+        
         <p>this is a place to try the praxis pseudocode. Feel free to switch between the blocks and the text whenever you please </p>
+        <p>The <b>Book</b> Icon is the manual, which is the reference to the pseudocode that this was made for.</p>
         <h4>Notes</h4>
         <ol>
           <li>This is in very early release, but as of now everyrthing on the blocks list will work properly. </li>
@@ -341,171 +353,7 @@
     
     </div>
 
-    <div id="manual" class="modal">
-
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Praxis Pseudocode notation</h2>
-        <p>Here is the documentation for the pseudocode that the Praxis exam uses.</p>
-        <table id="reference-table">
-          <tr>
-              <th>Block Representation</th>
-              <th>Name</th>
-              <th>Text Representation</th>
-              <th>Explanation</th>
-          </tr>
-          <tr>
-              <td>block example here</td>
-              <td>Assignment Operator</td>
-              <td>←<br>=</td>
-              <td>
-                  <ul>
-                      <li>This stores the value to the right of the equal sign to the alias on the left.</li>
-                      <li><i>Note that for ease of typing, you can use the equals sign.</i></li>
-                  </ul>
-              </td>
-          </tr>
-          <tr>
-              <td>block example here</td>
-              <td>Arithmetic operators</td>
-              <td>+<br>-<br>*<br>/<br>%<br>^</td>
-              <td>
-                  <ul>
-                      <li>The mod operator (%) returns the remainder</li>
-                      <li>+ can be used to concatenate strings</li>
-                  </ul>
-              </td>
-          </tr>
-          <tr>
-            <td>block example here</td>
-            <td>Logical operators</td>
-            <td>and<br>or<br>not<br></td>
-            <td>
-                <ul>
-                    <li>used to compare two booleans</li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-          <td>block example here</td>
-          <td>Boolean values operators</td>
-          <td>true<br>false</td>
-          <td>
-              <ul>
-                  <li></li>
-              </ul>
-          </td>
-      </tr>
-      <tr>
-        <td>block example here</td>
-        <td>null</td>
-        <td>null</td>
-        <td>
-            <ul>
-                <li>something that has not been initialized. </li>
-            </ul>
-        </td>
-    </tr>
-    <tr>
-      <td>block example here</td>
-      <td>/*comment here*/</td>
-      <td>multi-lined comment</td>
-      <td>
-          <ul>
-              <li>multiple lined comments that usally indicate missing code.</li>
-          </ul>
-      </td>
-  </tr>
-  <tr>
-    <td>block example here</td>
-    <td>single-line comment </td>
-    <td>// comment here</td>
-    <td>
-        <ul>
-            <li>single lined comments that usally describe a line of code on the same line. </li>
-        </ul>
-    </td>
-</tr>
-<tr>
-  <td>block example here</td>
-  <td>print statement </td>
-  <td>print <i>argument</i></td>
-  <td>
-      <ul>
-          <li>prints to standard output when the code is ran. </li>
-      </ul>
-  </td>
-</tr>
-<tr>
-  <td>block example here</td>
-  <td>Data types </td>
-  <td>boolean<br>char<br>double<br>float<br>int<br>int[]<br>int[][]<br>short<br>String</td>
-  <td>
-      <ul>
-          <li>These are the types supported in this language. </li>
-      </ul>
-  </td>
-</tr>
-<tr>
-  <td>block example here</td>
-  <td>Array initialization and reference </td>
-  <td>int[] a ← {1, 2, 3}<br>int[] b[0..2] ← {1, 2, 3}<br>a[0] ←</td>
-  <td>
-      <ul>
-          <li>a[0] refers to 'a at index 0' </li>
-      </ul>
-  </td>
-</tr>
-<tr>
-  <td>block example here</td>
-  <td>Conditional statements</td>
- <td>if (<i>condition</i>)<br>  <i>code here</i><br> end if <br><br>
-  if (<i>condition</i>)<br><i>code here</i><br>else<br><i>alternitive code here</i><br>end if </td>
-  <td>
-      <ul>
-          <li>runs the code only if the condition is evaluated to true. </li>
-      </ul>
-  </td>
-</tr>
-<tr>
-  <td>block example here</td>
-  <td>Iterative statements</td>
- <td>for (<i>initialization; condition; increment</i>)<br>  <i>code here</i><br> end for <br><br>
-  while (<i>condition</i>)<br><i>code here</i><br>end while </td>
-  <td>
-      <ul>
-          <li>runs the code only if the condition is evaluated to true. </li>
-      </ul>
-  </td>
-</tr>
-<tr>
-  <td>block example here</td>
-  <td>Procedures</td>
- <td><i>void</i> functionName(arg1, arg2) <br> <i>code here</i> <br>end functionName <br> <br> functionName(3, 4) </td>
-  <td>
-      <ul>
-          <li>procedures are used to write code with a certain input, run the desired code, and return something else.  </li>
-      </ul>
-  </td>
-</tr>
-<tr>
-  <td>block example here</td>
-  <td>Classes</td>
- <td>Coming soon....... </td>
-  <td>
-      <ul>
-          <li>a template for an object.  </li>
-      </ul>
-  </td>
-</tr> 
-       
-      </table>
-      
-      
-      </div>
     
-    </div>
    
     <ul>
       <li>
@@ -513,51 +361,52 @@
           <span class="button-text">Run Code</span>
         </button>
       </li>
-      <li><button id="help" class="help-button" title="Help">
-        <span class="button-text">Help</span>
-      </button></li>
+      <li><button id="share" class="share-button" title="Share">
+        <span class="button-text">Share</span>
+      </button>
+    </li>
+    <li><button id="darkMode" class="dark-mode-button" title="Dark Mode">
+      <span class="button-text">Dark Mode</span>
+    </button>
+  </li>
       <li><button id="reference" class="manual-button" title="reference">
         <span class="button-text">manual</span>
       </button></li>
-      <li><button id="share" class="share-button" title="Share">
-        <span class="button-text">Share</span>
-      </button></li>
-      <li><button id="darkMode" class="dark-mode-button" title="Dark Mode">
-          <span class="button-text">Dark Mode</span>
-        </button>
-      </li>
-      <!-- <li><button id="loadButton">Load</button></li> -->
-      <li><button id="reportBtn">report an issue</button></li>
       
-      <li class="dropdown">
-        <a href="#">About</a>
-        <div class="dropdown-content">
-          <a href="features.html" target="_blank">View Feature List</a>
-          <a href="changelog.html" target="_blank">View Changelog</a>
-          <a href="BugsList.html" target="_blank">View Known Bugs</a>
-        </div>
+      
+      <li><button id="help" class="help-button" title="Help">
+        <span class="button-text">Help</span>
+      </button>
       </li>
     </ul>
   </header>
   
+  <div id="secondary_bar">
+    
+    <div class="tab">
+      <button id="tab1_button" class="tablinks" >Default</button>
+      <button id="tab2_button" class="tablinks" >Text only</button>
+      <button id="tab3_button" class="tablinks" >Blocks only</button>
+      <!-- this will be full of examples  -->
+    </div>
+    <!-- <div>Example Programs</div> -->
+    <div id="exampleTable">
+      
+    </div>
 
-  <div class="tab">
-    <button id="tab1_button" class="tablinks" >Blocks only</button>
-    <button id="tab2_button" class="tablinks" >Text only</button>
-    <button id="tab3_button" class="tablinks" >Default</button>
   </div>
   
   <!-- Tab content -->
-  <div id="London" class="tabcontent">
+  <!-- <div id="London" class="tabcontent"> -->
     <main>
   
       <div id="blocklyDiv"></div>
       <div class="resizeBar"></div>
       <div id="aceCode" class="codeEditor"></div>
     </main>
-  </div>
-  
-  <div id="Paris" class="tabcontent">
+  <!-- </div>
+   -->
+  <!-- <div id="Paris" class="tabcontent">
     <h3>coming soon</h3>
     <p>this feature is surprisingly harder to impliment than I thought. I aim to have it by late september.</p>
   </div>
@@ -565,7 +414,7 @@
   <div id="Tokyo" class="tabcontent">
     <h3>coming soon</h3>
     <p>this feature is surprisingly harder to impliment than I thought. I aim to have it by late september.</p>
-  </div>
+  </div> -->
 
 
 
@@ -574,9 +423,9 @@
     Output is here
   </div>
 
-  <div class="error">
+  <!-- <div class="error">
     Error messages will be here (work in progress)
-  </div>
+  </div> -->
 
   
 
