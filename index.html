@@ -16,12 +16,11 @@
       background-color: #ffffff;
     }
 
-    .output,
-    .error {
+    .output {
       box-sizing: border-box;
       background: #e3e6e4;
       margin: 10px;
-      height: 10vh;
+      height: 15vh;
       font-size: large;
       border-radius: 10px;
       overflow: auto; /* Add this */
@@ -56,8 +55,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
-      background-color: #f2f2f2;
+      padding: 5px;
+      background-color:goldenrod
     }
 
     .nav-bar img {
@@ -318,13 +317,16 @@
 
   </style>
   <div id="toast" class="toast">URL copied to clipboard</div>
-  <script type="module" crossorigin src="/assets/index-6d387683.js"></script>
-  <link rel="stylesheet" href="/assets/index-caa1a5c1.css">
+  <script type="module" crossorigin src="/assets/index-ca413d27.js"></script>
+  <link rel="stylesheet" href="/assets/index-80f2a537.css">
 </head>
 <body>
   <header class="nav-bar">
-    <h1>Praxly 🍂</h1>
-    <h4>version 1.0</h4>
+    <div id="title-version">
+      <h1>Praxly 🍂</h1>
+      version 1.0
+
+    </div>
     <div id="myModal" class="modal">
 
       <!-- Modal content -->
@@ -341,13 +343,17 @@
         </ul>
 
         
-        <p>this is a place to try the praxis pseudocode. Feel free to switch between the blocks and the text whenever you please </p>
-        <p>The <b>Book</b> Icon is the manual, which is the reference to the pseudocode that this was made for.</p>
+        <p>this is a place to try the pseudocode that will be used in the praxis exam. Feel free to switch between the blocks and the text whenever you please! </p>
+        
+        
+          <p>📕 The <b>Book</b> Icon is the manual, which is the reference to the pseudocode that this was made for.</p>
+          <p>🔗The Blue links are example programs. Feel free to submit your own example to me through the bug report form</p>
+      
         <h4>Notes</h4>
         <ol>
-          <li>This is in very early release, but as of now everyrthing on the blocks list will work properly. </li>
-          <li>check back here for tutorials</li>
-          <li>Arrays and classes coming soon </li>
+          <li>✅ This is in very early release, but as of now everyrthing on the blocks list will work properly. </li>
+          <li>🚨 error messages are probubly going to be inconsistent. I'm sure there will be many scenarios I didn't think of that will cause errors.</li>
+          <li>😔 There is currently no support for object oriented programming </li>
         </ol>
       </div>
     
