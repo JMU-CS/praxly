@@ -420,16 +420,12 @@ class Token {
               this.i -= 1;
               this.emit_token();
             }
+        
           } else if (this.has_letter()) {
             while (this.i < this.length && (this.has_letter() || this.has_digit())) {
               this.capture();
             }
-            // potential array problem
-            
-            if (this.has('[') && this.has_ahead(']')){
-              this.capture();
-              this.capture();
-            }
+  
             if (this.token_so_far === "true" || this.token_so_far === "false") {
               this.emit_token("boolean");
             } else if (this.token_so_far === 'end'){
@@ -552,6 +548,19 @@ class Parser {
   }
   has_statementKeyword() {
     return this.statementKeywords.includes(this.tokens[this.i].token_type);
+  }
+
+  //peeks ahead to determine if this annoying array syntax is correct.
+  //assumes that if an = is seen before a newline, it must be an assignment
+  has_array_reference_assignment(){
+    var j = this.i;
+    while(j < this.length && this.tokens[j].token_type !== '\n'){
+      if(this.tokens[j].token_type === 'Assignment'){
+        return true;
+      }
+      j++
+    }
+    return false;
   }
 
   advance() {
@@ -680,7 +689,8 @@ class Parser {
       this.advance();
       return result;
     
-    } else if (this.has("(")) {
+    } 
+    else if (this.has("(")) {
       this.advance();
       const expression = this.boolean_operation();
       if (this.has(")")) {
@@ -1297,10 +1307,6 @@ statement() {
   
   else if (this.has_type() && this.has_ahead('Variable')){
     var returnType = 'Praxly_' + this.tokens[this.i].value;
-      if (this.tokens[this.i].value == 'int[]'){
-        // potential array problem
-        returnType = 'Praxly_array';
-      }
       this.advance();
       if (this.has("Variable")){
         result.type = 'ASSIGNMENT';
@@ -1317,6 +1323,65 @@ statement() {
       }
       return result;
   }
+
+  else if (this.has_type() && this.has_ahead('[')){
+    var returnType = 'Praxly_' + this.tokens[this.i].value;
+      this.advance();
+      this.advance();
+      if (this.has("]")) {
+        this.advance();
+      } else {
+        textError('parsing', 'did not detect closing bracket', startIndex, endIndex);
+        // console.log("did not detect closing parentheses");
+      }
+      if (this.has("Variable")){
+        result.type = 'ARRAY_ASSIGNMENT';
+        result.name = this.tokens[this.i].value;
+        this.advance();
+        if (this.has('Assignment')){
+          result.startIndex = this.tokens[this.i].startIndex;
+          result.endIndex = this.tokens[this.i].endIndex;
+          this.advance();
+          result.value = this.boolean_operation();
+          result.end = result.value.end;
+          result.varType = returnType;
+        }
+      }
+      return result;
+  }
+
+  //annoying stuff because array syntax sucks to impliment
+  else if (this.has('Variable') && this.has_ahead('[') && this.has_array_reference_assignment()){
+    result.name = this.tokens[this.i].value;
+    this.advance();
+    // console.error(`made it here`);
+    if(this.has('[')){
+      this.advance();
+      var index = this.boolean_operation();
+      if (this.has("]")) {
+        this.advance();
+      } else {
+        textError('parsing', 'did not detect closing bracket', startIndex, endIndex);
+        // console.log("did not detect closing parentheses");
+      }
+      result.type = 'ARRAY_REFERENCE_ASSIGNMENT';
+      result.index = index;
+      if (this.has('Assignment')){
+        result.startIndex = this.tokens[this.i].startIndex;
+        this.advance();
+        result.value = this.boolean_operation();
+        result.end = result.value.end;
+      } else {
+        console.error(`the array reference asssignement function failed. `);
+      }
+    }
+    if (this.has(';')){
+      this.advance();
+    }
+    return result;
+  }
+
+
   
   else if (this.has('Variable') && this.has_ahead('Assignment')){
     if (this.has("Variable")){

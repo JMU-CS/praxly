@@ -148,6 +148,17 @@ export const createExecutable = (blockjson) => {
                 console.error('assignment error: ', error);
                 return null;
             }
+
+        case 'ARRAY_ASSIGNMENT':
+            try {
+                return new Praxly_array_assignment(blockjson, blockjson.varType, blockjson.name, createExecutable(blockjson.value), blockjson);
+            } 
+            catch (error) {
+                sendRuntimeError('assignment error', blockjson);
+                console.error('assignment error: ', error);
+                return null;
+            }
+
         
         case 'VARIABLE':
             try {
@@ -229,13 +240,27 @@ export const createExecutable = (blockjson) => {
             return new Praxly_array_reference(blockjson.name, createExecutable(blockjson.index), blockjson);
             //go here
 
-
+        case 'ARRAY_REFERENCE_ASSIGNMENT':
+            return new Praxly_array_reference_assignment(blockjson.name, createExecutable(blockjson.index), createExecutable(blockjson.value), blockjson);
 
 
         default: 
             console.error(`I donot recognize this type: ${blockjson.type}}`);
             
 
+    }
+}
+
+class Praxly_array_reference_assignment{
+    constructor(name, index, value, blockjson){
+        this.json = blockjson;
+        this.name = name; 
+        this.value = value;
+        this.index = index;
+
+    }
+    evaluate(environment){
+        environment.variableList[this.name].elements[this.index.evaluate(environment).value] = this.value.evaluate(environment);
     }
 }
 
@@ -799,6 +824,35 @@ class Praxly_assignment {
     }
 }
 
+
+class Praxly_array_assignment {
+    constructor( json, type, name, expression, blockjson){
+        this.json = blockjson;
+        this.type = type;
+        this.name = name;
+        this.value = expression;
+        console.error(this.value);
+    }
+    evaluate(environment) {
+        // if it is a reassignment, the variable must be in the list and have a matching type. 
+        let valueEvaluated = this.value.evaluate(environment);   
+            for (var k = 0; k < valueEvaluated.elements.length; k++){
+                if (valueEvaluated.elements[k].jsonType !== this.type){
+                    
+                    sendRuntimeError(`at least one element in the array did not match declared type:\n\texpected type: ${this.type.slice(7)} \n\texpression type: ${valueEvaluated.jsonType}`, this.json);
+                }
+            }
+        environment.variableList[this.name] = valueEvaluated;
+    }
+}
+
+
+
+
+
+
+
+
 class Praxly_variable {
     constructor(json, name, blockjson){
         this.json = blockjson;
@@ -828,6 +882,8 @@ class Praxly_array_reference {
         return environment.variableList[this.name].elements[this.index.evaluate(environment).value].evaluate(environment);
     }
 }
+
+
 
 class Praxly_for {
     constructor(initialization, condition, incrimentation, statement, blockjson){

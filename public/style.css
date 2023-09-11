@@ -7,14 +7,17 @@ body {
     display: flex;
     flex-direction: column;
     margin: 0;
+    background-color: #2196f3;
+    height: 100%;
+    
     
 }
 
-.output, .error {
+.output {
     box-sizing: border-box;
     background: #d9dbda;
     margin: 10px;
-    height: 10vh;
+    height: 20vh;
     padding: 10px;
 }
 
@@ -22,6 +25,7 @@ main {
     display: flex;
     height: 60vh;
     width: 95vw;
+    background-color: #ddc8f5;
     
 }
 
@@ -236,6 +240,7 @@ main {
 
 #exampleTable{
   color: #2196f3;
+  background-color: #e7e5e5;
   display: flex;
 
 }
@@ -255,4 +260,8 @@ main {
 
 #secondary_bar {
   display: flex;
+  background-color:  #e7e5e5;
+  border-style: solid;
+  border-color: #aaaaaa;
+  
 }

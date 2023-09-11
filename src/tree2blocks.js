@@ -288,16 +288,13 @@ export const tree2blocks = (workspace, blockjson) => {
 
             }
             break;
-        case 'ARRAY':
-            
+        case 'ARRAY':    
             var argsList = blockjson?.params;
             var params = workspace.newBlock('praxly_parameter_block');
             for (var i = 0; i < ( argsList?.length ?? 0); i++){
                 params.appendValueInput(`PARAM_${i}`);
-                var parameterBlock = workspace.newBlock('praxly_literal_block');
-                parameterBlock.setFieldValue(tree2blocks(workspace, argsList[i]), "LITERAL");  
+                var parameterBlock = tree2blocks(workspace, argsList[i]);  
                 params.getInput(`PARAM_${i}`).connection.connect(parameterBlock?.outputConnection);
-                parameterBlock.initSvg();
             }
             var result = params;
             break;
@@ -309,6 +306,23 @@ export const tree2blocks = (workspace, blockjson) => {
             result.getInput('INDEX').connection.connect(child?.outputConnection);
             break;
 
+        case 'ARRAY_REFERENCE_ASSIGNMENT':
+            var result = workspace.newBlock('praxly_array_reference_reassignment_block');
+            console.error(`reached here`);
+            result.setFieldValue(blockjson.name, "VARIABLENAME");
+            var child = tree2blocks(workspace, blockjson?.index);
+            result.getInput('INDEX').connection.connect(child?.outputConnection);
+            var expression = tree2blocks(workspace, blockjson?.value); 
+            result.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
+            break;
+
+        case 'ARRAY_ASSIGNMENT':
+            var expression = tree2blocks(workspace, blockjson?.value); 
+            var result = workspace.newBlock('praxly_array_assignment_block');
+            result.setFieldValue(blockjson?.varType, 'VARTYPE');
+            result.setFieldValue(blockjson?.name, 'VARIABLENAME');
+            result.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
+            break;
 
         default: 
             return null;

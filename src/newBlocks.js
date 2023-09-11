@@ -604,6 +604,39 @@ export function definePraxlyBlocks(workspace) {
       "helpUrl": ""
     }, 
     
+   
+    {
+      "type": "praxly_array_reference_reassignment_block",
+      "message0": "%1[%2]⬅%3 %4",
+      "args0": [
+      
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "arrayName"
+        },
+        {
+          "type": "input_value",
+          "name": "INDEX"
+        },
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      
+      
+      ],
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "style": 'variable_blocks',
+            "tooltip": "",
+            "helpUrl": ""
+          }, 
+
     {
       "type": "praxly_reassignment_block",
       "message0": "%1⬅%2 %3",
@@ -955,21 +988,40 @@ export function definePraxlyBlocks(workspace) {
                       }, 
                       {
                         "type": "praxly_array_assignment_block",
-                        "message0": "%1%2 ⬅ {%3 %4}",
+                        "message0": "%1[] %2 ⬅ {%3 %4}",
                         "args0": [
                           {
                             "type": "field_dropdown",
                             "name": "VARTYPE",
                             "options": [
                               [
-                                "int[]",
-                                "int[]"
+                                "int",
+                                "int"
                               ],
                               [
-                                "int[][] (coming soon)",
-                                "int[][] (coming soon)"
+                                "boolean",
+                                "boolean"
                               ],
-                            
+                              [
+                                "double",
+                                "double"
+                              ],
+                              [
+                                "char",
+                                "char"
+                              ],
+                              [
+                                "String",
+                                "String"
+                              ],
+                              [
+                                "float",
+                                "float"
+                              ], 
+                              [
+                                'short', 
+                                'short'
+                              ],
                               
                             ]
                           },

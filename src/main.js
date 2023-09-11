@@ -122,6 +122,7 @@ var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal 
 helpButton.onclick = function() {
+  setLight();
   modal.style.display = "block";
 }
 
@@ -260,7 +261,7 @@ function setDark(){
   // textEditor.setMode("ace/modes/java")
   var bodyElement = document.body;
   bodyElement.style.backgroundColor = "black";
-  var elements = document.querySelectorAll(".output, .error, .nav-bar");
+  var elements = document.querySelectorAll(".output, .error, #secondary_bar, example_links, #exampleTable");
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.backgroundColor = "#303030";
     elements[i].style.color = "white";
@@ -274,7 +275,7 @@ function setLight(){
   textEditor.setTheme('ace/theme/katzenmilch');
   var bodyElement = document.body;
   bodyElement.style.backgroundColor = "white";
-  var elements = document.querySelectorAll(".output, .error, .nav-bar");
+  var elements = document.querySelectorAll(".output, .error, #secondary_bar, example_links, #exampleTable");
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.backgroundColor = "#e3e6e4";
     elements[i].style.color = "black";

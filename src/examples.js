@@ -4,18 +4,6 @@ export const codeText = `
 // and try out example code! 
 // Refresh the page to go back to any code
 // you may have had before browsing.
-##recursion
-##// this function returns the factorial of a number.
-int fact(int n)
-	if (n < 2)
-		return n
-	end if
-	return n * fact(n - 1)
-end fact
-// try printing different numbers to test your code!
-print fact(5)
-different numbers to test your code!
-print fact(5)
 
 ##Order of Operations
 ##// 1. what do you think this will print out?
@@ -70,9 +58,54 @@ print b
 	return a
 end gcd
 print gcd(21, 35)
+##Insertion Sort
+##int[] arr = {3, 7, 2, 8, 4, 65, 23, 67, 2, 1}
+
+// Function definition
+void insertionSort(int n)
+    for (int i = 1; i < n; i = i + 1)
+        int key = arr[i]
+        int j = i - 1
+        while (j >= 0 and arr[j] > key)
+            arr[j + 1] = arr[j]
+            j = j - 1
+        end while
+        arr[j + 1] = key
+    end for
+end insertionSort
+
+// Function call
+insertionSort(10)
+
+// Print the sorted array
+for (int i = 0; i < 10; i = i + 1)
+    print arr[i]
+end for
+
+##Factorial
+##// this function returns the factorial of a number.
+int fact(int n)
+	if (n < 2)
+		return n
+	end if
+	return n * fact(n - 1)
+end fact
+// try printing different numbers to test your code!
+print fact(5)
+different numbers to test your code!
+print fact(5)
+
+##Fibonacci
+##int fibonacci(int n)
+if (n <= 1)
+	return n
+else
+	return fibonacci(n - 1) + fibonacci(n - 2)
+end if
+end fibonacci
+print fibonacci(10)
+
+
+
 `;
 
-console.log(codeText);
-
-
-console.log(codeText);

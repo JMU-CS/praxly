@@ -423,5 +423,47 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             blockjson.end = blockjson.endIndex + expression.length;
             return result + expression;
             break;
+
+        case 'ARRAY_ASSIGNMENT':
+            try {
+                blockjson.beg = startIndex;
+                var varname = blockjson.varType.toString().substring(7) + '[] ' + blockjson.name.toString();
+                blockjson.startIndex = startIndex + varname.length + 1;
+                var operator = ' = ';
+                blockjson.endIndex = blockjson.startIndex + 1;
+                // var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+                var result = '{';
+                var argsList = blockjson.value.params;
+                if (argsList !== null && argsList.length > 0){
+                    argsList.forEach(element => {
+                        result += tree2text(element, startIndex + result.length, indentation) + ', ';
+                    });
+                    result = result.slice(0, result.length - 2);
+                }
+                result += '}\n';
+                blockjson.end = blockjson.endIndex + result.length;
+                return '\t'.repeat(indentation) + varname + operator + result;
+            }
+            catch (error){
+                console.error(error);
+                return "assignemnt for arrays borke ";
+            }
+        case 'ARRAY_REFERENCE_ASSIGNMENT':
+            try {
+                blockjson.beg = startIndex;
+
+                var index = tree2text(blockjson.index, blockjson.endIndex, indentation) + ']';
+                var varname = blockjson.name.toString() + '[' + index;
+                blockjson.startIndex = startIndex + varname.length;
+                var operator = ' = ';
+                blockjson.endIndex = blockjson.startIndex + operator.length;
+                var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+                blockjson.end = blockjson.endIndex + expression.length;
+                return '\t'.repeat(indentation) + varname + operator + expression;
+            }
+            catch (error){
+                return " ";
+            }
+
     }
 }

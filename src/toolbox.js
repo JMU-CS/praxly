@@ -163,6 +163,21 @@ export const toolbox = {
                   }, 
                 }
               },
+              {
+                'kind': 'block',
+                'type': 'praxly_array_reference_reassignment_block', 
+                'inputs': {
+                  'INDEX' : {
+                    'shadow': {
+                      'type' :'praxly_literal_block', 
+                      'fields' : {
+                        'LITERAL' : '0',
+                      }
+                    },
+                  }, 
+                }
+                
+              }, 
              
               
         ]

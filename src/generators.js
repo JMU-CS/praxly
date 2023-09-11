@@ -62,14 +62,19 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_array_reference_block'] = (block) => {
-         
+        var index = block.getInputTargetBlock("INDEX");
         return {
             blockID: block.id,
             type: 'ARRAY_REFERENCE', 
             name: block.getFieldValue("VARIABLENAME"),
-            index: block.getInputTargetBlock("INDEX"),
+            index: praxlyGenerator[index.type](index),
         } 
     }
+
+    
+
+
+
 
     praxlyGenerator['praxly_literal_block'] = (block) =>  {
         const input = block.getFieldValue('LITERAL');
@@ -229,16 +234,19 @@ export const makeGenerator = () => {
         var argschildren = args.getChildren(true);
         var argsList = [];
         argschildren.forEach(element => {
-            
             argsList.push(praxlyGenerator[element.type](element));
         });
         
         return {
-            type: 'ASSIGNMENT', 
+            type: 'ARRAY_ASSIGNMENT', 
             name: variableName, 
-            value: argsList, 
+            value: {
+                blockID: args.id, 
+                params: argsList,
+                type: 'ARRAY',
+              }, 
             blockID: block.id, 
-            varType: 'Praxly_array',
+            varType: 'Praxly_' + varType,
 
         }
     }
@@ -258,6 +266,24 @@ export const makeGenerator = () => {
 
         }
     }
+
+    praxlyGenerator['praxly_array_reference_reassignment_block'] = (block)=> {
+
+        var variableName = block.getFieldValue('VARIABLENAME');
+        var expression = block.getInputTargetBlock('EXPRESSION'); 
+        var indexInput = block.getInputTargetBlock('INDEX');
+        var value = praxlyGenerator[expression.type](expression);
+        var index = praxlyGenerator[indexInput.type](indexInput);
+        return {
+            type: 'ARRAY_REFERENCE_ASSIGNMENT', 
+            name: variableName, 
+            index: index,
+            value: value, 
+            blockID: block.id, 
+
+        }
+    }
+
 
     praxlyGenerator['praxly_assignment_expression_block'] = (block)=> {
         var varType = block.getFieldValue('VARTYPE');
