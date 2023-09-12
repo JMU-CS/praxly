@@ -475,6 +475,7 @@ export function definePraxlyBlocks(workspace) {
                 "name": "RETURNTYPE",
                 "options": [
                   ["int", "int"],
+                  ['void', 'void'],
                   ["boolean", "boolean"],
                   ["double", "double"],
                   ["char", "char"],

@@ -259,7 +259,7 @@ function setDark(){
   workspace.setTheme(PraxlyDark);
   textEditor.setTheme("ace/theme/twilight");
   // textEditor.setMode("ace/modes/java")
-  var bodyElement = document.body;
+  // var bodyElement = document.body;
   bodyElement.style.backgroundColor = "black";
   var elements = document.querySelectorAll(".output, .error, #secondary_bar, example_links, #exampleTable");
   for (var i = 0; i < elements.length; i++) {
@@ -274,7 +274,7 @@ function setLight(){
   workspace.setTheme(praxlyDefaultTheme);
   textEditor.setTheme('ace/theme/katzenmilch');
   var bodyElement = document.body;
-  bodyElement.style.backgroundColor = "white";
+  // bodyElement.style.backgroundColor = "white";
   var elements = document.querySelectorAll(".output, .error, #secondary_bar, example_links, #exampleTable");
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.backgroundColor = "#e3e6e4";
