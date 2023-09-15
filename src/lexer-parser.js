@@ -2,7 +2,7 @@ import ace from 'ace-builds';
 
 
 
-export const textEditor = ace.edit("aceCode", {fontSize: 16, mode: 'ace/mode/java'});
+export const textEditor = ace.edit("aceCode", {fontSize: 17, mode: 'ace/mode/java'});
 // textEditor.session.setMode("ace/mode/java");
 
 // var AceRange = ace.require('ace/range').Range;
@@ -351,6 +351,8 @@ class Token {
             this.capture();
             this.emit_token("Not_Equal");
          } else if (this.has('/') && this.has_ahead('/')){
+          this.skip();
+          this.skip();
           while(this.hasNot('\n')){
             this.capture();
           }

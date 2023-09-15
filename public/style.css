@@ -24,7 +24,7 @@ body {
 main {
     display: flex;
     height: 60vh;
-    width: 95vw;
+    width: 100vw;
     background-color: #ddc8f5;
     
 }
@@ -43,6 +43,7 @@ main {
  
 .codeEditor {
     flex: 1;
+    width: 100%;
     
 }
 

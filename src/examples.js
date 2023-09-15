@@ -1,9 +1,8 @@
 export const codeText = `
 ##Example Programs: 
 ## // click on the blue links above to browse 
-// and try out example code! 
-// Refresh the page to go back to any code
-// you may have had before browsing.
+// and try out example code!
+
 
 ##Order of Operations
 ##// 1. what do you think this will print out?

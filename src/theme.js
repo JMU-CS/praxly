@@ -21,7 +21,7 @@ export const praxlyDefaultTheme = Blockly.Theme.defineTheme('themeName', {
             'colourPrimary' : '#808080'
         }, 
         'procedure_blocks' : {
-            'colourPrimary' : '#5300EB'
+            'colourPrimary' : '#FF6600'
         }, 
         'variable_blocks' : {
             'colourPrimary' : '#f80069'

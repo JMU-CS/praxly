@@ -127,11 +127,31 @@ export const toolbox = {
      
               {
                 'kind': 'block',
-                'type': 'praxly_assignment_block'
+                'type': 'praxly_assignment_block', 
+                'inputs': {
+                  'EXPRESSION' : {
+                    'shadow': {
+                      'type' :'praxly_literal_block', 
+                      'fields' : {
+                        'LITERAL' : 0,
+                      }
+                    },
+                  }, 
+                }
               }, 
               {
                 'kind': 'block',
-                'type': 'praxly_reassignment_block'
+                'type': 'praxly_reassignment_block', 
+                'inputs': {
+                  'EXPRESSION' : {
+                    'shadow': {
+                      'type' :'praxly_literal_block', 
+                      'fields' : {
+                        'LITERAL' : 0,
+                      }
+                    },
+                  }, 
+                }
               }, 
               {
                 'kind': 'block',
@@ -331,6 +351,11 @@ export const toolbox = {
                       }
                     }
                   }, 
+                  'CODEBLOCK' : {
+                    'shadow': {
+                      'type' :'praxly_single_line_comment_block', 
+                    },
+                  }
                 }
               }, 
               {

@@ -403,7 +403,7 @@ function GenerateExamples() {
     newButton.textContent = label;
     newButton.classList.add("example_links");
     newButton.addEventListener('click', function(){
-      generateUrl();
+      // generateUrl();
       applyExample(label);
     });
     exampleDiv.appendChild(newButton);    
