@@ -35,7 +35,7 @@ export function clearOutput() {
 export function textError(type, error, startIndex, endIndex){
   
   if (endIndex ?? 0  < startIndex){
-    console.error('invalid index for error');
+    // console.error('invalid index for error');
 
     endIndex = textEditor?.getValue().length - 1;
   }
@@ -375,7 +375,7 @@ class Token {
             this.capture();
             this.emit_token("Not_Equal");
           } 
-        } else if (this.has("=")) {
+        } else if (this.has("=") || this.has('⟵')) {
           this.capture();
           if (this.has('=')){
             this.capture();
@@ -1143,6 +1143,13 @@ statement() {
         result.end = this.tokens[this.i].endIndex;
         this.advance();
         return result;
+      }
+      else {
+        // sendRuntimeError("missing the \'end if\' token", blockjson);
+        textError('compile time', "missing the \'end if\' token", result.startIndex ,result.endIndex);
+        return {
+          type: 'INVALID'
+        };
       }
     } 
   } 

@@ -242,7 +242,9 @@ export const createExecutable = (blockjson) => {
 
         case 'ARRAY_REFERENCE_ASSIGNMENT':
             return new Praxly_array_reference_assignment(blockjson.name, createExecutable(blockjson.index), createExecutable(blockjson.value), blockjson);
-
+        
+        case 'INVALID':
+            return new Praxly_invalid();
 
         default: 
             console.error(`I donot recognize this type: ${blockjson.type}}`);

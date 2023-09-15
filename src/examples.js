@@ -91,7 +91,6 @@ int fact(int n)
 end fact
 // try printing different numbers to test your code!
 print fact(5)
-different numbers to test your code!
 print fact(5)
 
 ##Fibonacci
