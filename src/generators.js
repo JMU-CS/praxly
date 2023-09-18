@@ -5,10 +5,21 @@ function containsOnlyNumbers(str) {
   }
 
 export const blocks2tree = (workspace, generator) => {
+    var topBlocks = workspace.getTopBlocks();
+    
+    // console.error(topBlocks);
+    if (topBlocks.length === 0){
+        return {
+            type: 'PROGRAM', 
+            blockID: 'blocksRoot', 
+            value: 0
+        };
+    }
+
     var result = {
         type: 'PROGRAM', 
         blockID: 'blocksRoot', 
-        value: generator['codeBLockJsonBuilder'](workspace.getTopBlocks()[0])
+        value: generator['codeBLockJsonBuilder'](topBlocks[0])
     }
     
 
@@ -23,6 +34,8 @@ export const makeGenerator = () => {
     praxlyGenerator['codeBLockJsonBuilder'] = (headBlock) => {
         // console.log('this is the head block');
         // console.log(headBlock);
+
+ 
         var codeblock = {
             type: 'CODEBLOCK', 
             blockID: "blocks[]",
@@ -60,6 +73,19 @@ export const makeGenerator = () => {
             value: praxlyGenerator[expression.type](expression),
         } 
     }
+
+    praxlyGenerator['praxly_statement_block'] = (block) => {
+        const expression = block.getInputTargetBlock('EXPRESSION'); 
+        return {
+            blockID: block.id,
+            type: 'STATEMENT', 
+            value: praxlyGenerator[expression.type](expression),
+        } 
+    }
+
+
+
+
 
     praxlyGenerator['praxly_array_reference_block'] = (block) => {
         var index = block.getInputTargetBlock("INDEX");

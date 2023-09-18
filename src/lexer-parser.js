@@ -375,7 +375,7 @@ class Token {
             this.capture();
             this.emit_token("Not_Equal");
           } 
-        } else if (this.has("=") || this.has('⟵')) {
+        } else if (this.has("=") || this.has('←')) {
           this.capture();
           if (this.has('=')){
             this.capture();

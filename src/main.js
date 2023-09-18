@@ -420,6 +420,7 @@ console.log(`the examples are: ${Object.keys(examples)}`);
 function applyExample (exampleName){
   // append the example to the code
   textEditor.setValue(examples[exampleName], -1);
+  rightPane.click();
 }
 
 

@@ -282,7 +282,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
                     blockjson.beg = startIndex;
                     var varname = blockjson.name.toString();
                     blockjson.startIndex = startIndex + varname.length;
-                    var operator = ' ⟵ ';
+                    var operator = ' ← ';
                     blockjson.endIndex = blockjson.startIndex + operator.length;
                     var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
                     blockjson.end = blockjson.endIndex + expression.length;
@@ -296,7 +296,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
                     blockjson.beg = startIndex;
                     var varname = blockjson.varType.toString().substring(7) + ' ' + blockjson.name.toString();
                     blockjson.startIndex = startIndex + varname.length + 1;
-                    var operator = ' ⟵ ';
+                    var operator = ' ← ';
                     blockjson.endIndex = blockjson.startIndex + 1;
                     var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
                     blockjson.end = blockjson.endIndex + expression.length;
@@ -429,7 +429,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
                 blockjson.beg = startIndex;
                 var varname = blockjson.varType.toString().substring(7) + '[] ' + blockjson.name.toString();
                 blockjson.startIndex = startIndex + varname.length + 1;
-                var operator = ' ⟵ ';
+                var operator = ' ← ';
                 blockjson.endIndex = blockjson.startIndex + 1;
                 // var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
                 var result = '{';
@@ -455,7 +455,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
                 var index = tree2text(blockjson.index, blockjson.endIndex, indentation) + ']';
                 var varname = blockjson.name.toString() + '[' + index;
                 blockjson.startIndex = startIndex + varname.length;
-                var operator = ' ⟵ ';
+                var operator = ' ← ';
                 blockjson.endIndex = blockjson.startIndex + operator.length;
                 var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
                 blockjson.end = blockjson.endIndex + expression.length;
