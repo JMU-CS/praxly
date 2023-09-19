@@ -51,6 +51,20 @@ export const toolbox = {
               }, 
               {
                 'kind': 'block',
+                'type': 'praxly_println_block',
+                'inputs': {
+                  'EXPRESSION' : {
+                    'shadow': {
+                      'type' :'praxly_literal_block', 
+                      'fields' : {
+                        'LITERAL' : '\"hello, world\"',
+                      }
+                    },
+                  }, 
+                }
+              }, 
+              {
+                'kind': 'block',
                 'type': 'praxly_statement_block', 
                 'inputs': {
                   'EXPRESSION' : {

@@ -149,7 +149,7 @@ window.onclick = function(event) {
 
 
 function runTasks() {
-  clearOutput();
+  
   // mainTree = blocks2tree(workspace, praxlyGenerator);
   if (mainTree === null){
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
@@ -172,6 +172,7 @@ function runTasks() {
   textEditor.session.setAnnotations(annotationsBuffer);
   //might have to remove
   addBlockErrors(workspace);
+  clearOutput();
 }
 
 

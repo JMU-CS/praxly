@@ -118,6 +118,12 @@ export const tree2blocks = (workspace, blockjson) => {
             var child = tree2blocks(workspace, blockjson?.value);
             result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
             break;
+
+        case 'PRINTLN':
+            var result = workspace.newBlock('praxly_println_block');
+            var child = tree2blocks(workspace, blockjson?.value);
+            result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
+            break;
             
         case 'CODEBLOCK':
             var statements = blockjson.statements.map(element => {

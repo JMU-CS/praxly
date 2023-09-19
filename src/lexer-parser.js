@@ -41,7 +41,7 @@ export function textError(type, error, startIndex, endIndex){
   }
 
   var ranges = indextoAceRange(startIndex, endIndex);
-  errorOutput += `<pre>${type} error occured on line ${ranges[0]}:  ${error} \n\t (highlighting index ${startIndex} to ${endIndex})</pre>`;
+  errorOutput += `<pre>${type} error occured on line ${ranges[0]}:  ${error} \n\t (highlighting index ${startIndex ?? '?'} to ${endIndex ?? '?'})</pre>`;
   appendAnnotation(error, startIndex, endIndex);
   // highlightError(ranges[0], ranges[1], ranges[2], ranges[3]);
 }
@@ -201,7 +201,7 @@ class Token {
       this.i = 0;
       this.length = this.source?.length;
       this.token_so_far = "";
-      this.keywords = ["if", "else", "end", "print", "for", "while", 'and', 'or', 'do', 'repeat', 'until', 'not', 'return'];
+      this.keywords = ["if", "else", "end", "print", "println", "for", "while", 'and', 'or', 'do', 'repeat', 'until', 'not', 'return'];
       this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void', 'int[]'];
       this.startToken = 0;
       this.currentLine = 0;
@@ -513,7 +513,7 @@ class Parser {
     this.length = tokens?.length;
     this.eof = false;
     this.keywords = ["if", "else", "then", "done"];
-    this.statementKeywords = ['if', 'print', 'for', 'while'];
+    this.statementKeywords = ['if', 'print', 'for', 'while', 'println'];
 
   }
 
@@ -1180,6 +1180,9 @@ statement() {
             this.advance();
             return result;
           }
+          else{
+            textError('compile time', "missing the \'end for\' token", result.startIndex ,result.endIndex);
+          }
         }
       }
       
@@ -1204,6 +1207,9 @@ statement() {
         result.end = this.tokens[this.i].endIndex;
         this.advance();
         return result;
+      } else {
+        textError('compile time', "missing the \'end while\' token", result.startIndex ,result.endIndex);
+        //gohere
       }
   } 
    
@@ -1277,6 +1283,22 @@ statement() {
       if (this.has('\n')){
         // this.advance();
         result.type = 'PRINT';
+        result.value = expression;
+        result.end = expression?.end; 
+        return result;
+      }
+  }
+
+  else if (this.has("println")) {
+    // while (this.has('print')) {
+      this.advance();
+      const expression = this.boolean_operation();
+      if (this.has(';')){
+        this.advance();
+      }
+      if (this.has('\n')){
+        // this.advance();
+        result.type = 'PRINTLN';
         result.value = expression;
         result.end = expression?.end; 
         return result;
@@ -1450,7 +1472,7 @@ statement() {
         this.advance();
       } else {
           console.error('missing closing parinthesees');
-          appendAnnotation("didnt detect closing parintheses in the arguments of  a function definition", this.tokens[this.i].startIndex, this.tokens[this.i].endIndex);
+          textError("compile time", "didnt detect closing parintheses in the arguments of  a function definition", this.tokens[this.i].startIndex, this.tokens[this.i].endIndex);
     
       }
       result.params = args;
@@ -1466,12 +1488,12 @@ statement() {
       return;
     }
     var contents = this.codeBlock('end ' + result.name);
-    if (this.hasNot('end ' + result.name)){
-      console.error('missing end function token');
-      return result;
-    }
     result.contents = contents;
     result.end = this.tokens[this.i]?.endIndex;
+    if (this.hasNot('end ' + result.name)){
+      textError('compile time', `missing the \'end ${result.name}\' token`, result.startIndex ,result.endIndex);
+      return result;
+    }
     this.advance();
     return result;
   }

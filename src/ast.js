@@ -86,6 +86,9 @@ export const createExecutable = (blockjson) => {
         case 'PRINT':
             return new Praxly_print(createExecutable(blockjson.value), blockjson);
 
+        case 'PRINTLN':
+            return new Praxly_println(createExecutable(blockjson.value), blockjson);
+
         case 'CODEBLOCK':
             let statements = blockjson.statements;
             
@@ -397,10 +400,24 @@ class Praxly_print {
     }
     evaluate(environment) {
         // console.log(this.expression.evaluate(environment));
+        addToPrintBuffer((this.expression.evaluate(environment).value.toString()));
+        return null;
+    }
+}
+
+class Praxly_println {
+      
+    constructor(value  , blockjson){
+        this.json = blockjson;
+        this.expression = value;
+    }
+    evaluate(environment) {
+        // console.log(this.expression.evaluate(environment));
         addToPrintBuffer((this.expression.evaluate(environment).value.toString()) + '<br>');
         return null;
     }
 }
+
 
 
 class Praxly_return {
@@ -508,15 +525,13 @@ class Praxly_division {
     evaluate(environment)   {
         let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
-        switch (typecheck("DIVISION", a, b)) {
+        
+        switch (typecheck("DIVIDE", a, b)) {
             case "INT":
-                return new Praxly_int( a.value / b.value); 
-            case "STRING":
-                return new Praxly_String( a.value / b.value);
+                return new Praxly_int( Math.floor(a.value / b.value)); 
             case "DOUBLE":
                 return new Praxly_double( a.value / b.value);
-            case "BOOLEAN":
-                return new Praxly_boolean( a.value / b.value);
+            
         }   
     }
 }
@@ -965,7 +980,7 @@ class Praxly_invalid {
         
     }
     evaluate(environment) {
-        
+        // throw new Error('problem');
     }
 }
 
@@ -1100,9 +1115,9 @@ const ResultType = {
         return ResultType.STRING;
     }
     if (
-        (op1 instanceof Praxly_int && op2 instanceof Praxly_double) ||
-        (op1 instanceof Praxly_double && op2 instanceof Praxly_int) ||
-        (op1 instanceof Praxly_double && op2 instanceof Praxly_double)
+        (op1 instanceof Praxly_int && (op2 instanceof Praxly_double || op2 instanceof Praxly_float)) ||
+        ((op1 instanceof Praxly_double || op2 instanceof Praxly_float) && op2 instanceof Praxly_int) ||
+        ((op1 instanceof Praxly_double || op2 instanceof Praxly_float) && (op2 instanceof Praxly_double|| op2 instanceof Praxly_float))
       ) {
         return ResultType.DOUBLE;
       } 
@@ -1133,16 +1148,24 @@ const ResultType = {
   }
   
   function checkBinaryOperation(op1, op2) {
-    if (
-      (op1 instanceof Praxly_int && op2 instanceof Praxly_int) ||
-      (op1 instanceof Praxly_double && op2 instanceof Praxly_double)
-    ) {
+    if (op1 instanceof Praxly_int && op2 instanceof Praxly_int)
+    {
       return ResultType.INT;
-    } else {
+    
+    }
+    if (
+        (op1 instanceof Praxly_int && op2 instanceof Praxly_double) ||
+        (op1 instanceof Praxly_double && op2 instanceof Praxly_int) ||
+        (op1 instanceof Praxly_double && op2 instanceof Praxly_double)
+      ) {
+        return ResultType.DOUBLE;
+      } else {
         console.log('we have an issue');
         return ResultType.INVALID;
     }
   
-  
+    
+
+
 
   }

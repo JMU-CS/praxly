@@ -218,6 +218,16 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             blockjson.end = blockjson.endIndex + expression.length;
             return result + expression;     
 
+        case 'PRINTLN':
+            
+            blockjson.beg = startIndex;
+            blockjson.startIndex = startIndex; // - indentation???????
+            var result = '\t'.repeat(indentation) + "println ";
+            blockjson.endIndex = startIndex + result.length;
+            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+            blockjson.end = blockjson.endIndex + expression.length;
+            return result + expression;     
+
         case 'RETURN':
             
             blockjson.beg = startIndex;

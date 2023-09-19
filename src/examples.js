@@ -6,25 +6,25 @@ export const codeText = `
 
 ##Order of Operations
 ##// 1. what do you think this will print out?
-print "question 1 prints"
-print 3 + 4 * 5 > 32 and 1 + 1 == 2
+println "question 1 prints"
+println 3 + 4 * 5 > 32 and 1 + 1 == 2
 
 // 2. what do you think this will print out?
-print "question 2 prints"
-print "1" + 5 + 6
+println "question 2 prints"
+println "1" + 5 + 6
 
 ##array loop
 ##// you can use for loops when working with arrays!
 int[] nums = {1, 2, 3, 4, 5, 6, 7, 8}
 for (int i = 3; i < 6; i = i + 1)
-	print nums[i]
+	println nums[i]
 end for
 
 ##if Statement
 ##if (23 % 2 == 1)
-	print "odd!"
+	println "odd!"
 else
-	print "even!"
+	println "even!"
 end if
 
 ##Variables assignment
@@ -34,9 +34,9 @@ int c = 0
 c = a + b
 a = b
 b = a - c % b
-print a
-print b
-print c
+println a
+println b
+println c
 
 ##Scope
 ##// The output might surprise you
@@ -45,7 +45,7 @@ void change( int b)
 	b = 100
 end change
 change(b)
-print b
+println b
 
 ##gcd 
 ##int gcd(int a, int b)
@@ -56,7 +56,7 @@ print b
 	end while
 	return a
 end gcd
-print gcd(21, 35)
+println gcd(21, 35)
 ##Insertion Sort
 ##int[] arr = {3, 7, 2, 8, 4, 65, 23, 67, 2, 1}
 
@@ -76,9 +76,9 @@ end insertionSort
 // Function call
 insertionSort(10)
 
-// Print the sorted array
+// println the sorted array
 for (int i = 0; i < 10; i = i + 1)
-    print arr[i]
+    println arr[i]
 end for
 
 ##Factorial
@@ -89,9 +89,8 @@ int fact(int n)
 	end if
 	return n * fact(n - 1)
 end fact
-// try printing different numbers to test your code!
-print fact(5)
-print fact(5)
+// try printlning different numbers to test your code!
+println fact(5)
 
 ##Fibonacci
 ##int fibonacci(int n)
@@ -101,7 +100,7 @@ else
 	return fibonacci(n - 1) + fibonacci(n - 2)
 end if
 end fibonacci
-print fibonacci(10)
+println fibonacci(10)
 
 
 

@@ -699,6 +699,24 @@ export function definePraxlyBlocks(workspace) {
       "helpUrl": ""
     }, 
     {
+      "type": "praxly_println_block",
+      "message0": "println %1 %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'procedure_blocks',
+      "tooltip": "",
+      "helpUrl": ""
+    }, 
+    {
       "type": "praxly_statement_block",
       "message0": "%1",
       "args0": [
