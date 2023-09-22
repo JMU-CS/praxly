@@ -100,7 +100,7 @@ featuresButton.addEventListener('click', function(){
   window.open("features.html", '_blank');
 });
 githubButton.addEventListener('click', function(){
-  window.open("https://github.com/Praxly/praxly.github.io", '_blank');
+  window.open("https://github.com/sauppb/praxly", '_blank');
 });
 BenButton.addEventListener('click', function() {
   window.open('https://sauppb.github.io/website/');

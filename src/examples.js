@@ -102,7 +102,19 @@ end if
 end fibonacci
 println fibonacci(10)
 
-
+##mystery
+##//this is from question 12 of the example problems
+void mystery(int n)
+while (n≠1)
+		if (n % 2 == 1)
+		n ← 3 * n + 1
+	else
+		n ← n / 2
+	end if
+	print n
+end while
+end mystery
+mystery(6)
 
 `;
 
