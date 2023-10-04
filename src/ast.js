@@ -2,7 +2,7 @@
 // import { workspace } from "./main";
 
 
-import { appendAnnotation, sendRuntimeError } from "./lexer-parser";
+import { appendAnnotation, defaultError, sendRuntimeError } from "./lexer-parser";
 import { printBuffer } from "./lexer-parser";
 import { addToPrintBuffer } from "./lexer-parser";
 
@@ -33,6 +33,7 @@ class ReturnException extends Error {
 
 export const createExecutable = (blockjson) => {
     if (typeof blockjson === 'undefined' || typeof blockjson.type === 'undefined'  ) {
+        defaultError("invalid program.");
         console.error('error constructing the tree: reached an invalid branch that is either undefined or has an undefined type');
         return new Praxly_invalid(blockjson);
       }
@@ -244,6 +245,8 @@ export const createExecutable = (blockjson) => {
         
         case 'INVALID':
             return new Praxly_invalid(blockjson);
+        case 'EMPTYLINE':
+            return new Praxly_emptyLine(blockjson);
 
         default: 
             console.error(`I donot recognize this type: ${blockjson.type}}`);

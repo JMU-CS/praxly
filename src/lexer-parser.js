@@ -56,6 +56,10 @@ export function textError(type, error, startIndex, endIndex){
   // highlightError(ranges[0], ranges[1], ranges[2], ranges[3]);
 }
 
+export function defaultError(message){
+  errorOutput += `<pre>default error:  ${message} \n\t Ben has not written an error message for this issue yet. Contact him thrrough the bug report form on the help page. </pre>`;
+}
+
 
 export function addBlockErrors(workspace){
   for (var key in blockErrorsBuffer){
@@ -1541,7 +1545,10 @@ statement() {
   // expressions can be statements too, might cause bugs
   else if (this.has('/n')){
 
-    return;
+    return {
+      type: "EMPTYLINE", 
+      blockID: "code"
+    };
   }
 
   else {
