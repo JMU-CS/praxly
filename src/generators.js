@@ -256,7 +256,7 @@ export const makeGenerator = () => {
             name: variableName, 
             value: value, 
             blockID: block.id, 
-            varType: 'Praxly_' + varType,
+            varType: varType.toUpperCase(),
 
         }
     }
@@ -281,7 +281,7 @@ export const makeGenerator = () => {
                 type: 'ARRAY',
               }, 
             blockID: block.id, 
-            varType: 'Praxly_' + varType,
+            varType: varType.toUpperCase(),
 
         }
     }
@@ -331,7 +331,7 @@ export const makeGenerator = () => {
             name: variableName, 
             value: value, 
             blockID: block.id, 
-            varType: 'Praxly_' + varType,
+            varType: varType.toUpperCase(),
 
         }
     }

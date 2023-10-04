@@ -8,6 +8,16 @@ export const textEditor = ace.edit("aceCode", {fontSize: 17, mode: 'ace/mode/jav
 // var AceRange = ace.require('ace/range').Range;
 
 
+
+
+
+
+
+
+
+
+
+
 const maxLoop = 100;
 
 export var printBuffer = "";
@@ -84,7 +94,7 @@ export function appendAnnotation(errorMessage, startindex, endindex) {
 
 // this doesnt work
 function highlightError(startRow, startColumn, endRow, endColumn) {
-  console.error(`startRow: ${startRow}\t, start column: ${startColumn}\nedRow: ${endRow}, \tendcolumn: ${endColumn}`);
+  // console.error(`startRow: ${startRow}\t, start column: ${startColumn}\nedRow: ${endRow}, \tendcolumn: ${endColumn}`);
   var session = textEditor.session;
   var Range = ace.require('ace/range').Range;
 
@@ -217,6 +227,7 @@ class Token {
       const a = this.source[this.i];
       return /^[A-Za-z]$/.test(a);
     }
+
   
     has(c) {
       return this.i < this.length && this.source[this.i] === c;
@@ -552,6 +563,18 @@ class Parser {
     return this.statementKeywords.includes(this.tokens[this.i].token_type);
   }
 
+  match_and_discard_next_token(type){
+    if (this.tokens[this.i].token_type === type ){
+      this.advance();
+    } else{
+      sendRuntimeError(`did not detect desired token at this location. \nexpected: \'${type}\'\n but was: ${this.tokens[this.i].token_type}`);
+    }
+  }
+
+
+
+
+
   //peeks ahead to determine if this annoying array syntax is correct.
   //assumes that if an = is seen before a newline, it must be an assignment
   has_array_reference_assignment(){
@@ -808,6 +831,23 @@ class Parser {
     }
     return l;
   }
+
+  
+  location(){
+    var tok = this.tokens[this.i];
+    if (this.has('Variable')) {
+      this.advance();
+      if (this.has('[')){
+        this.advance();
+      }
+
+    }
+  }
+
+
+
+
+
 
   multiplicitive() {
     let l =this.exponent();
@@ -1337,7 +1377,7 @@ statement() {
 
   
   else if (this.has_type() && this.has_ahead('Variable')){
-    var returnType = 'Praxly_' + this.tokens[this.i].value;
+    var returnType = this.tokens[this.i].value.toUpperCase();
       this.advance();
       if (this.has("Variable")){
         result.type = 'ASSIGNMENT';
@@ -1529,16 +1569,9 @@ statement() {
   
 }
 
-  //this should be fine since there is no support for variables yet
-  // assignment() {
-  //   let l =this.boolean_operation();
-  //   while (this.has("Assignment")) {
-  //     this.advance();
-  //     const r =this.boolean_operation();
-  //     l =new Assignment(left, right);
-  //   }
-  //   return l;
-  // }
+
 
 
 }
+
+

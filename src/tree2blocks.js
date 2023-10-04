@@ -182,7 +182,7 @@ export const tree2blocks = (workspace, blockjson) => {
                     result = workspace.newBlock('praxly_array_assignment_block');
                     result.setFieldValue('int[]', "VARTYPE");
                 } else{
-                    result.setFieldValue(blockjson.varType.substring(7), "VARTYPE");
+                    result.setFieldValue(blockjson.varType.toLowerCase(), "VARTYPE");
                     
                 }
             }
@@ -272,7 +272,7 @@ export const tree2blocks = (workspace, blockjson) => {
                 var initialization = workspace.newBlock('praxly_assignment_expression_block');
                 var incriment = workspace.newBlock('praxly_reassignment_expression_block');
                 var expression = tree2blocks(workspace, blockjson?.initialization.value); 
-                initialization.setFieldValue(blockjson?.initialization.varType.substring(7), "VARTYPE");
+                initialization.setFieldValue(blockjson?.initialization.varType.toUpperCase(), "VARTYPE");
                 initialization.setFieldValue(blockjson?.initialization.name, "VARIABLENAME");
                 initialization.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
                 result.getInput('INITIALIZATION').connection.connect(initialization?.outputConnection);

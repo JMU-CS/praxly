@@ -304,7 +304,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             } else {
                 try {
                     blockjson.beg = startIndex;
-                    var varname = blockjson.varType.toString().substring(7) + ' ' + blockjson.name.toString();
+                    var varname = blockjson.varType.toString().toLowerCase() + ' ' + blockjson.name.toString();
                     blockjson.startIndex = startIndex + varname.length + 1;
                     var operator = ' ← ';
                     blockjson.endIndex = blockjson.startIndex + 1;
@@ -437,7 +437,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
         case 'ARRAY_ASSIGNMENT':
             try {
                 blockjson.beg = startIndex;
-                var varname = blockjson.varType.toString().substring(7) + '[] ' + blockjson.name.toString();
+                var varname = blockjson.varType.toString().toLowerCase() + '[] ' + blockjson.name.toString();
                 blockjson.startIndex = startIndex + varname.length + 1;
                 var operator = ' ← ';
                 blockjson.endIndex = blockjson.startIndex + 1;

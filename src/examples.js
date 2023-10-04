@@ -60,6 +60,8 @@ println gcd(21, 35)
 ##Insertion Sort
 ##int[] arr = {3, 7, 2, 8, 4, 65, 23, 67, 2, 1}
 
+// WARNING: arrays are currently broken
+
 // Function definition
 void insertionSort(int n)
     for (int i = 1; i < n; i = i + 1)

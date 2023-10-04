@@ -34,7 +34,7 @@ class ReturnException extends Error {
 export const createExecutable = (blockjson) => {
     if (typeof blockjson === 'undefined' || typeof blockjson.type === 'undefined'  ) {
         console.error('error constructing the tree: reached an invalid branch that is either undefined or has an undefined type');
-        return new Praxly_invalid();
+        return new Praxly_invalid(blockjson);
       }
       
 
@@ -49,12 +49,8 @@ export const createExecutable = (blockjson) => {
             return new Praxly_boolean( blockjson.value, blockjson);
         case 'DOUBLE':
             return new Praxly_double( blockjson.value, blockjson);
-        
-        
-        // more here coming soon
         case 'ADD':
             return new Praxly_addition(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
-        
         case 'SUBTRACT':
             return new Praxly_subtraction(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
         case 'MULTIPLY':
@@ -247,7 +243,7 @@ export const createExecutable = (blockjson) => {
             return new Praxly_array_reference_assignment(blockjson.name, createExecutable(blockjson.index), createExecutable(blockjson.value), blockjson);
         
         case 'INVALID':
-            return new Praxly_invalid();
+            return new Praxly_invalid(blockjson);
 
         default: 
             console.error(`I donot recognize this type: ${blockjson.type}}`);
@@ -299,6 +295,7 @@ class Praxly_int {
         this.jsonType = 'Praxly_int';
         this.json = blockjson;
         this.value = Math.floor(value);
+        this.realType = TYPES.INT;
     }
     evaluate(environment) {
         return this;
@@ -311,6 +308,7 @@ class Praxly_short {
         this.jsonType = 'Praxly_int';
         this.json = blockjson;
         this.value = Math.floor(value);
+        this.realType = TYPES.SHORT;
     }
     evaluate(environment) {
         return this;
@@ -323,6 +321,7 @@ class Praxly_double {
         this.jsonType = 'Praxly_double';
         this.json = blockjson;
         this.value = parseFloat(value).toFixed(1);
+        this.realType = TYPES.DOUBLE;
 
     }
     evaluate(environment) {
@@ -336,6 +335,7 @@ class Praxly_float {
         this.jsonType = 'Praxly_double';
         this.json = blockjson;
         this.value = parseFloat(value).toFixed(1);
+        this.realType = TYPES.FLOAT;
 
     }
     evaluate(environment) {
@@ -349,6 +349,7 @@ class Praxly_boolean {
         this.json = blockjson;
         this.jsonType = 'Praxly_boolean';
         this.value = value;
+        this.realType = TYPES.BOOLEAN;
 
     }
     evaluate(environment) {
@@ -362,6 +363,7 @@ class Praxly_char {
         this.value = value;
         this.json = blockjson;
         this.jsonType = 'Praxly_String';
+        this.realType = TYPES.CHAR;
 
     }
     evaluate(environment) {
@@ -375,6 +377,7 @@ class Praxly_String {
         this.jsonType = 'Praxly_String';
         this.json = blockjson;
         this.value = value;
+        this.realType = TYPES.STRING;
     }
     evaluate(environment) {
         return this;
@@ -447,16 +450,7 @@ class Praxly_addition {
     evaluate(environment)   {
         let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
-        switch (typecheck("ADD", a, b)) {
-            case "INT":
-                return new Praxly_int( a.value + b.value); 
-            case "STRING":
-                return new Praxly_String( a.value + b.value);
-            case "DOUBLE":
-                return new Praxly_double( a.value + b.value);
-            case "BOOLEAN":
-                return new Praxly_boolean( a.value + b.value);
-        }   
+        return litNode_new(master_typecheck(OP.ADDITION, a.realType, b.realType, this.json), a.value + b.value); 
     }
 }
 
@@ -473,16 +467,7 @@ class Praxly_subtraction {
     evaluate(environment)   {
         let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
-        switch (typecheck("SUBTRACT", a, b)) {
-            case "INT":
-                return new Praxly_int( a.value - b.value); 
-            case "STRING":
-                return new Praxly_String( a.value - b.value);
-            case "DOUBLE":
-                return new Praxly_double( a.value - b.value);
-            case "BOOLEAN":
-                return new Praxly_boolean( a.value - b.value);
-        }   
+        return litNode_new(master_typecheck(OP.SUBTRACTION, a.realType, b.realType, this.json), a.value - b.value); 
     }
 }
 
@@ -499,16 +484,7 @@ class Praxly_multiplication {
     evaluate(environment)   {
         let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
-        switch (typecheck("MULTIPLY", a, b)) {
-            case "INT":
-                return new Praxly_int( a.value * b.value); 
-            case "STRING":
-                return new Praxly_String( a.value * b.value);
-            case "DOUBLE":
-                return new Praxly_double( a.value * b.value);
-            case "BOOLEAN":
-                return new Praxly_boolean( a.value * b.value);
-        }   
+        return litNode_new(master_typecheck(OP.MULTIPLICATION, a.realType, b.realType, this.json), a.value * b.value); 
     }
 }
 
@@ -525,14 +501,7 @@ class Praxly_division {
     evaluate(environment)   {
         let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
-        
-        switch (typecheck("DIVIDE", a, b)) {
-            case "INT":
-                return new Praxly_int( Math.floor(a.value / b.value)); 
-            case "DOUBLE":
-                return new Praxly_double( a.value / b.value);
-            
-        }   
+        return litNode_new(master_typecheck(OP.DIVISION, a.realType, b.realType, this.json), a.value / b.value); 
     }
 }
 
@@ -549,16 +518,7 @@ class Praxly_modulo {
     evaluate(environment)   {
         let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
-        switch (typecheck("MODULO", a, b)) {
-            case "INT":
-                return new Praxly_int( a.value % b.value); 
-            case "STRING":
-                return new Praxly_String( a.value % b.value);
-            case "DOUBLE":
-                return new Praxly_double( a.value % b.value);
-            case "BOOLEAN":
-                return new Praxly_boolean( a.value % b.value);
-        }   
+        return litNode_new(master_typecheck(OP.MODULUS, a.realType, b.realType, this.json), a.value % b.value); 
     }
 }
 
@@ -575,16 +535,7 @@ class Praxly_exponent {
     evaluate(environment)   {
         let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
-        switch (typecheck("EXPONENT", a, b)) {
-            case "INT":
-                return new Praxly_int( a.value ** b.value); 
-            case "STRING":
-                return new Praxly_String( a.value ** b.value);
-            case "DOUBLE":
-                return new Praxly_double( a.value ** b.value);
-            case "BOOLEAN":
-                return new Praxly_boolean( a.value ** b.value);
-        }   
+        return litNode_new(master_typecheck(OP.EXPONENTIATION, a.realType, b.realType, this.json), a.value ** b.value); 
     }
 }
 
@@ -600,7 +551,9 @@ class Praxly_and {
 
     evaluate(environment)   {
         
-        return new Praxly_boolean( this.a_operand.evaluate(environment).value && this.b_operand.evaluate(environment).value);
+        let b = this.b_operand.evaluate(environment);
+        let a = this.a_operand.evaluate(environment);
+        return litNode_new(master_typecheck(OP.AND, a.realType, b.realType, this.json), a.value && b.value); 
     }      
 }
 
@@ -615,7 +568,9 @@ class Praxly_or {
     }
 
     evaluate(environment)   {
-        return new Praxly_boolean( this.a_operand.evaluate(environment).value || this.b_operand.evaluate(environment).value);
+        let b = this.b_operand.evaluate(environment);
+        let a = this.a_operand.evaluate(environment);
+        return litNode_new(master_typecheck(OP.OR, a.realType, b.realType, this.json), a.value || b.value); 
     }      
 }
 
@@ -805,7 +760,7 @@ class Praxly_assignment {
         this.type = type;
         this.name = name;
         this.value = expression;
-        console.error(this.value);
+        // console.error(this.value);
     }
     evaluate(environment) {
         // if it is a reassignment, the variable must be in the list and have a matching type. 
@@ -814,25 +769,22 @@ class Praxly_assignment {
             let currentStoredVariableEvaluated = environment.variableList[this.name].evaluate(environment);
             // console.log(variableList);
             if (!environment.variableList.hasOwnProperty(this.name)){
-                sendRuntimeError(`Error: variable name ${this.name} not in the variablelist: \n ${environment.variableList}`, this.json);
+                sendRuntimeError(`Error: variable name ${this.name} does not currently exist in this scope: \n ${environment.variableList}`, this.json);
             }
     
-            if (currentStoredVariableEvaluated.jsonType !== valueEvaluated.jsonType){
-                sendRuntimeError(`Error: varible reassignment does not match declared type: \n\t Expected:`
-                + `${currentStoredVariableEvaluated.jsonType.slice(7)}, \n\t Actual: ${valueEvaluated.jsonType.slice(7)}`, this.json);
-                sendRuntimeError("Error: varible reassignment does not match declared type:", this.json);
+            if (!can_assign(currentStoredVariableEvaluated.realType, valueEvaluated.realType)){
+                sendRuntimeError(`Error: varible reassignment does not match declared type: \n\t Expected: `
+                + `${currentStoredVariableEvaluated.realType}, \n\t Actual: ${valueEvaluated.realType}`, this.json);
+                // sendRuntimeError("Error: varible reassignment does not match declared type:", this.json);
             }
           
         } else {
-            //this should allow ints to be assigned to doubles
-            if (valueEvaluated.jsonType === "Praxly_int" && this.type === "Praxly_double"){
-                // valueEvaluated.value += 0.0;
-                valueEvaluated.jsonType = "Praxly_double";
+            // if (environment.variableList.hasOwnProperty(this.name)){
+            //     sendRuntimeError(`variable ${this.name}as already been declared in this scope. `)
+            // }
+            if (!can_assign(this.type, valueEvaluated.realType)){
                 
-            }
-            if (valueEvaluated.jsonType !== this.type){
-                
-                sendRuntimeError(`varible assignment does not match declared type:\n\texpected type: ${this.type.slice(7)} \n\texpression type: ${valueEvaluated.jsonType}`, this.json);
+                sendRuntimeError(`varible assignment does not match declared type:\n\texpected type: ${this.type} \n\texpression type: ${valueEvaluated.realType}`, this.json);
             }
             // environment.variableList[this.name] = this.expression;
                   
@@ -848,13 +800,13 @@ class Praxly_array_assignment {
         this.type = type;
         this.name = name;
         this.value = expression;
-        console.error(this.value);
+        // console.error(this.value);
     }
     evaluate(environment) {
         // if it is a reassignment, the variable must be in the list and have a matching type. 
         let valueEvaluated = this.value.evaluate(environment);   
             for (var k = 0; k < valueEvaluated.elements.length; k++){
-                if (valueEvaluated.elements[k].jsonType !== this.type){
+                if (valueEvaluated.elements[k].realType !== this.type){
                     
                     sendRuntimeError(`at least one element in the array did not match declared type:\n\texpected type: ${this.type.slice(7)} \n\texpression type: ${valueEvaluated.jsonType}`, this.json);
                 }
@@ -878,7 +830,7 @@ class Praxly_variable {
     evaluate(environment){
         if (!environment.variableList.hasOwnProperty(this.name)){
             sendRuntimeError(`the variable \'${this.name}\' is not recognized by the program. \n\tPerhaps you forgot to initialize it?`, this.json);
-            return new Praxly_invalid();
+            return new Praxly_invalid(this.json);
         }
         return environment.variableList[this.name];
     }
@@ -894,7 +846,7 @@ class Praxly_array_reference {
     evaluate(environment){
         if (!environment.variableList.hasOwnProperty(this.name)){
             sendRuntimeError(`the variable \'${this.name}\' is not recognized by the program. \n\tPerhaps you forgot to initialize it?`, this.json);
-            return new Praxly_invalid();
+            return new Praxly_invalid(this.json);
         }
         return environment.variableList[this.name].elements[this.index.evaluate(environment).value].evaluate(environment);
     }
@@ -915,7 +867,12 @@ class Praxly_for {
         var loopLimit = 0;
         while (loopLimit < 500 && this.condition.evaluate(environment).value) {
             this.statement.evaluate(environment);
+            loopLimit += 1;
             this.incrimentation.evaluate(environment);
+            if (loopLimit === 499){
+                sendRuntimeError(`This is probubly an infinite loop.`, this.json);
+            }
+            
 
         }
     }
@@ -931,6 +888,10 @@ class Praxly_while {
         var loopLimit = 0;
         while (loopLimit < 500 && this.condition.evaluate(environment).value) {
             this.statement.evaluate(environment);
+            loopLimit += 1;
+            if (loopLimit === 499){
+                sendRuntimeError(`This is probubly an infinite loop.`, this.json);
+            }
         }
     }
 }
@@ -945,6 +906,10 @@ class Praxly_do_while {
         var loopLimit = 0;
         while (loopLimit < 500 && this.condition.evaluate(environment).value) {
             this.statement.evaluate(environment);
+            loopLimit += 1;
+            if (loopLimit === 499){
+                sendRuntimeError(`This is probubly an infinite loop.`, this.json);
+            }
         }
     }
 }
@@ -959,6 +924,10 @@ class Praxly_repeat_until {
         this.statement.evaluate(environment);
         while (loopLimit < 500 && ! this.condition.evaluate(environment).value) {
             this.statement.evaluate(environment);
+            loopLimit += 1;
+            if (loopLimit === 499){
+                sendRuntimeError(`This is probubly an infinite loop.`, this.json);
+            }
         }
     }
 }
@@ -980,6 +949,7 @@ class Praxly_invalid {
         
     }
     evaluate(environment) {
+        console.error(`invalid tree. Problem detected here:`);
         // throw new Error('problem');
     }
 }
@@ -1016,7 +986,7 @@ class Praxly_function_call {
         if (functionParams.length !== this.args.length){
             sendRuntimeError(`incorrect amount of arguments passed, expected ${functionParams.length}, was ${this.args.length}`, this.json);
             console.log(`incorrect amount of arguments passed, expected ${functionParams.length}, was ${this.args.length}`);
-            return new Praxly_invalid();
+            return new Praxly_invalid(this.json);
         }
         // copy the new parameters to the duplicate of the global scope
         // var newScope = JSON.parse(JSON.stringify(environment));
@@ -1045,8 +1015,8 @@ class Praxly_function_call {
                 result = error.errorData;
                 // console.log(res)
             }
-            console.error(`return `, error);
-            console.error(error.errorData);
+            // console.error(`return `, error);
+            // console.error(error.errorData);
             
         }
 
@@ -1076,96 +1046,222 @@ class Praxly_emptyLine{
     }
 }
 
-//alright, here's the fun function
+
+  export const OP = {
+    ASSIGNMENT: "ASSIGNMENT",
+    ADDITION: "ADDITION",
+    SUBTRACTION: "SUBTRACTION",
+    MULTIPLICATION: "MULTIPLICATION",
+    DIVISION: "DIVISION",
+    MODULUS: "MODULUS",
+    EXPONENTIATION: "EXPONENTIATION",
+    ASSIGNMENT: "ASSIGNMENT",
+    EQUALITY: "EQUALITY",
+    INEQUALITY: "INEQUALITY",
+    GREATER_THAN: "GREATER THAN",
+    LESS_THAN: "LESS THAN",
+    GREATER_THAN_OR_EQUAL: "GREATER THAN OR EQUAL",
+    LESS_THAN_OR_EQUAL: "LESS THAN OR EQUAL",
+    AND: "AND",
+    OR: "OR",
+    NOT: "NOT",
+};
 
 
-const ResultType = {
+export const TYPES = {
     INT: "INT",
     DOUBLE: "DOUBLE",
     STRING: "STRING",
     BOOLEAN: "BOOLEAN",
+    FLOAT: "FLOAT",
+    SHORT: "SHORT",
+    CHAR: "CHAR",
+    VOID: "VOID",
     INVALID: "INVALID"
   };
-  
-  function typecheck(operation, op1, op2) {
-    switch (operation) {
-      case "ADD":
-        return checkAddition(op1, op2);
-      case "SUBTRACT":
-      case "MULTIPLY":
-      case "DIVIDE":
-      case "EXPONENT":
-      case "MODULO":
-        return checkBinaryOperation(op1, op2);
-      case "GREATER_THAN":
-      case "EQUAL":
-      case "LESS_THAN":
-      case "GREATER_THAN_EQUAL":
-      case "LESSTHAN_EQUAL":
-      case "NOT_EQUAL":
-        return checkComparisonOperation(op1, op2);
-      default:
-        console.log("typecheck issue");
-        return null;
-    }
-  }
-  
-  function checkAddition(op1, op2) {
-    if(op1 instanceof Praxly_String || op2 instanceof Praxly_String){
-        return ResultType.STRING;
-    }
-    if (
-        (op1 instanceof Praxly_int && (op2 instanceof Praxly_double || op2 instanceof Praxly_float)) ||
-        ((op1 instanceof Praxly_double || op2 instanceof Praxly_float) && op2 instanceof Praxly_int) ||
-        ((op1 instanceof Praxly_double || op2 instanceof Praxly_float) && (op2 instanceof Praxly_double|| op2 instanceof Praxly_float))
-      ) {
-        return ResultType.DOUBLE;
-      } 
-    if (op1 instanceof Praxly_int && op2 instanceof Praxly_int) {
-      return ResultType.INT;
-    } else if (
-      op1 instanceof Praxly_String ||
-      op2 instanceof Praxly_String
-    ) {
-      return ResultType.STRING;
+
+function can_assign(varType, expressionType) {
+    if (varType === TYPES.INT) {
+      return expressionType === TYPES.INT || expressionType === TYPES.SHORT || expressionType === TYPES.CHAR;
+    } else if (varType === TYPES.DOUBLE) {
+      return expressionType === TYPES.INT || expressionType === TYPES.DOUBLE || expressionType === TYPES.FLOAT;
+    } else if (varType === TYPES.STRING) {
+      return expressionType === TYPES.STRING;
+    } else if (varType === TYPES.BOOLEAN) {
+      return expressionType === TYPES.BOOLEAN;
+    } else if (varType === TYPES.FLOAT) {
+      return expressionType === TYPES.INT || expressionType === TYPES.DOUBLE || expressionType === TYPES.FLOAT;
+    } else if (varType === TYPES.SHORT) {
+      return expressionType === TYPES.SHORT || expressionType === TYPES.CHAR || expressionType === TYPES.INT; 
+    } else if (varType === TYPES.CHAR) {
+      return expressionType === TYPES.CHAR;
     } else {
-      return ResultType.INVALID;
+      return false; // Invalid varType
     }
   }
-  
-  function checkComparisonOperation(op1, op2) {
-    if (
-      (op1 instanceof Praxly_int && op2 instanceof Praxly_int) ||
-      (op1 instanceof Praxly_double && op2 instanceof Praxly_double) ||
-      (op1 instanceof Praxly_String && op2 instanceof Praxly_String) ||
-      (op1 instanceof Praxly_boolean && op2 instanceof Praxly_boolean) ||
-      (op1 instanceof Praxly_char && op2 instanceof Praxly_char)
-    ) {
-      return ResultType.BOOLEAN;
+
+
+function can_add(type1, type2, json) {
+    if (type1 === type2) {
+        return type1;
+    }
+
+    if (type1 === TYPES.STRING || type2 === TYPES.STRING) {
+        return TYPES.STRING;
+    }
+
+    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
+        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
+            return TYPES.DOUBLE; // Result is promoted to double for numeric types
+        }
+    }
+    sendRuntimeError(`bad operand tpyes for addition, \n\tleft: ${type1}\n\tright: ${type2}`, json);
+    return TYPES.INVALID; // Invalid addition
+}
+
+function can_subtract(type1, type2, json) {
+    if (type1 === type2) {
+        return type1;
+    }
+
+    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
+        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
+            return TYPES.DOUBLE; // Result is promoted to double for numeric types
+        }
+    }
+    sendRuntimeError(`bad operand tpyes for subtraction, \n\tleft: ${type1}\n\tright: ${type2}`, json);
+    return TYPES.INVALID; // Invalid subtraction
+}
+
+function can_multiply(type1, type2, json) {
+    if (type1 === type2) {
+        return type1;
+    }
+    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
+        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
+            return TYPES.DOUBLE; // Result is promoted to double for numeric types
+        }
+    }
+    sendRuntimeError(`bad operand tpyes for multiplication or exponentiation, \n\tleft: ${type1}\n\tright: ${type2}`, json);
+    return TYPES.INVALID; // Invalid multiplication
+}
+
+function can_divide(type1, type2, json) {
+    if (type1 === type2) {
+        return type1;
+    }
+    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
+        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
+            if (type1 === TYPES.INT && type2 === TYPES.INT) {
+                return TYPES.INT; // Integer division results in an integer
+            } else {
+                return TYPES.DOUBLE; // Result is promoted to double for numeric types
+            }
+        }
+    }
+    sendRuntimeError(`bad operand tpyes for division, \n\tleft: ${type1}\n\tright: ${type2}`, json);
+    return TYPES.INVALID; // Invalid division
+}
+
+function can_modulus(type1, type2, json) {
+    if (type1 === type2) {
+        return type1;
+    }
+    if (type1 === TYPES.INT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
+        if (type2 === TYPES.INT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
+            return TYPES.INT; // Modulus of integers is an integer
+        }
+    }
+    sendRuntimeError(`bad operand tpyes for modulus, \n\tleft: ${type1}\n\tright: ${type2}`, json);
+    return TYPES.INVALID; // Invalid modulus
+}
+
+function can_boolean_operation(operation, type1, type2) {
+    if (operation === OP.AND || operation === OP.OR) {
+        return type1 === TYPES.BOOLEAN && type2 === TYPES.BOOLEAN ? TYPES.BOOLEAN : TYPES.INVALID;
+    } else if (operation === OP.NOT) {
+        return type1 === TYPES.BOOLEAN ? TYPES.BOOLEAN : TYPES.INVALID;
     } else {
-      return ResultType.INVALID;
+        return TYPES.INVALID; // Invalid boolean operation
     }
-  }
-  
-  function checkBinaryOperation(op1, op2) {
-    if (op1 instanceof Praxly_int && op2 instanceof Praxly_int)
-    {
-      return ResultType.INT;
-    
-    }
-    if (
-        (op1 instanceof Praxly_int && op2 instanceof Praxly_double) ||
-        (op1 instanceof Praxly_double && op2 instanceof Praxly_int) ||
-        (op1 instanceof Praxly_double && op2 instanceof Praxly_double)
-      ) {
-        return ResultType.DOUBLE;
-      } else {
-        console.log('we have an issue');
-        return ResultType.INVALID;
-    }
-  
-    
+}
 
 
+function can_compare(operation, type1, type2) {
+    if (operation === OP.EQUALITY || operation === OP.INEQUALITY || operation === OP.GREATER_THAN || operation === OP.LESS_THAN || operation === OP.GREATER_THAN_OR_EQUAL || operation === OP.LESS_THAN_OR_EQUAL) {
+        if (type1 === type2) {
+            return TYPES.BOOLEAN; // Result of comparison is always a boolean
+        }
+    }
 
-  }
+    return TYPES.INVALID; // Invalid comparison operation
+}
+
+
+/* 
+this function will take in the operation and the types of the operands and report what type the result will be 
+upon evaluation. If the operators are incompatible, then it will throw an error.
+*/
+function master_typecheck(operation, type1, type2, json) {
+    if (type1 === undefined || type2 === undefined){
+        sendRuntimeError(`missing operand type for ${operation}`, json);
+    }
+    switch(operation) {
+
+        case OP.ADDITION:
+            return can_add(type1, type2, json);
+
+        case OP.SUBTRACTION:
+            return can_subtract(type1, type2, json);
+
+        case OP.MULTIPLICATION:
+        case OP.EXPONENTIATION:
+            return can_multiply(type1, type2, json);
+
+        case OP.DIVISION:
+            return can_divide(type1, type2, json);
+
+        case OP.MODULUS:
+            return can_modulus(type1, type2, json);
+
+        case OP.AND:
+        case OP.OR:
+            return can_boolean_operation(operation, type1, type2, json);
+
+        case OP.EQUALITY:
+        case OP.INEQUALITY:
+        case OP.GREATER_THAN:
+        case OP.LESS_THAN:
+        case OP.GREATER_THAN_OR_EQUAL:
+        case OP.LESS_THAN_OR_EQUAL:
+            return can_compare(operation, type1, type2, json);
+
+        default:
+            // sendRuntimeError(`bad operand tpyes for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json);
+            return TYPES.INVALID; // Invalid operation
+    }
+}
+
+
+function litNode_new(type, value, json){
+    switch(type){
+        case TYPES.INT:
+            return new Praxly_int(value); 
+        case TYPES.STRING:
+            return new Praxly_String(value);
+        case TYPES.DOUBLE:
+            return new Praxly_double(value);
+        case TYPES.BOOLEAN:
+            return new Praxly_boolean(value);
+        case TYPES.FLOAT:
+            return new Praxly_float(value);
+        case TYPES.CHAR:    
+            return new Praxly_char(value);
+        case TYPES.SHORT:
+            return new Praxly_short(value);
+        case TYPES.INVALID:
+            console.error(`invalid literal:`);
+            console.error(json);
+            return new Praxly_invalid();
+    }
+}
