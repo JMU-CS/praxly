@@ -62,6 +62,7 @@ const exampleDiv = document.getElementById('exampleTable');
 const editorElement = textEditor.container;
 const githubButton = document.getElementById('GitHubButton');
 const BenButton = document.getElementById('AboutButton');
+const titleRefresh = document.getElementById('titleRefresh');
 
 var mainTree = null;
 let darkMode = false;
@@ -104,6 +105,11 @@ githubButton.addEventListener('click', function(){
 });
 BenButton.addEventListener('click', function() {
   window.open('https://sauppb.github.io/website/');
+});
+
+titleRefresh.addEventListener('click', function(){
+  window.location.hash = '';
+  textEditor.setValue('', -1);
 });
 
 
