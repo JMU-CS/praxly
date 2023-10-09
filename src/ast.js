@@ -276,7 +276,6 @@ class Praxly_single_line_comment {
     }
 
     evaluate(environment) {
-        return;
     }
 }
 
@@ -288,7 +287,6 @@ class Praxly_comment {
         this.value = value;
     }
     evaluate(environment) {
-        return;
     }
 
 }

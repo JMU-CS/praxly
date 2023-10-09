@@ -371,6 +371,7 @@ class Token {
           while(this.hasNot('\n')){
             this.capture();
           }
+          this.skip();
           this.emit_token("single_line_comment");
 
         } else if (this.has("/")) {
