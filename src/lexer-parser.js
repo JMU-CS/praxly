@@ -1,4 +1,5 @@
 import ace from 'ace-builds';
+import { FieldNumber } from 'blockly';
 
 
 
@@ -6,13 +7,6 @@ export const textEditor = ace.edit("aceCode", {fontSize: 17, mode: 'ace/mode/jav
 // textEditor.session.setMode("ace/mode/java");
 
 // var AceRange = ace.require('ace/range').Range;
-
-
-
-
-
-
-
 
 
 
@@ -197,11 +191,12 @@ export const text2tree = () => {
 }
 
 class Token {
-    constructor(type, text, startIndex, endIndex) {
+    constructor(type, text, startIndex, endIndex, line) {
       this.token_type = type;
       this.value = text;
       this.startIndex = startIndex;
       this.endIndex = endIndex;
+      this.line = line
     }
   }
   
@@ -271,10 +266,11 @@ class Token {
       this.i++;
       this.startToken ++;
     }
+
   
     emit_token(type) {
 
-      this.tokens.push(new Token(type, this.token_so_far, this.startToken, this.i));
+      this.tokens.push(new Token(type, this.token_so_far, this.startToken, this.i, this.currentLine));
       this.token_so_far = '';
       this.startToken = this.i;
     }
@@ -282,28 +278,11 @@ class Token {
       lex() {
       while (this.i < this.length) {
         if (this.has("+")) {
-          
-          this.capture();
-          if (this.has('=')){
             this.capture();
-            this.emit_token('+=');
-          } 
-          else if (this.has( '+')){
-            this.capture();
-            this.emit_token('++')
-          }
-          
-          else {
             this.emit_token("ADD");
-          }
-//problem
         } else if (this.has('/') && this.has_ahead('*')){
-          // console.log('saw a comment');
           this.skip();
           var commentStart = this.i;
-
-
-          
           this.skip();
           while (this.hasNot('*') && this.hasNot_ahead('/')){
             this.capture();
@@ -327,17 +306,7 @@ class Token {
           
         } else if (this.has("-")) {
           this.capture();
-          if (this.has('=')){
-            this.capture();
-            this.emit_token('-=');
-          } 
-          else if (this.has( '-')){
-            this.capture();
-            this.emit_token('--');
-          }  
-          else {
-            this.emit_token("SUBTRACT");
-          }
+          this.emit_token("SUBTRACT");
         } else if (this.has("%")) {
           this.capture();
           if (this.has('=')){
@@ -422,6 +391,20 @@ class Token {
             }
           } else if (this.has(" ")) {
             this.skip();
+
+          } else if (this.has('\'')){
+            this.skip();
+            if (this.has_letter && this.has_ahead('\'')) {
+              this.capture();
+              this.skip();
+              this.emit_token('char');
+            } else {
+              textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a single or double quote mark (\' or \").',stringStart, this.i - 1);
+            }
+          
+
+
+
           } else if (this.has("\"") || this.has("\'") ){
             var stringStart = this.i;
             this.skip();
@@ -504,6 +487,11 @@ class Token {
             this.capture();
             this.emit_token("\n");
             this.currentLine += 1;
+            while(this.has('\n')){
+              this.skip();
+              this.currentLine += 1;
+            }
+
           } else if (this.has('\t')){
             // skip tabs since they only apppear to be for style
             this.skip();
@@ -654,7 +642,7 @@ class Parser {
         this.advance();
         return {
           value: tok.value, 
-          type: tok.token_type,
+          type: "CHAR",
           blockID: "code",
           startIndex: startIndex, 
           endIndex: endIndex,
@@ -1581,5 +1569,116 @@ statement() {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// for the new lexer
+// export const TokenTypes = {
+//   INT: "INT",
+//   FLOAT: "FLOAT",
+//   STRING: "STRING",
+//   DOUBLE: "DOUBLE",
+//   CHAR: "CHAR",
+//   BOOLEAN: "BOOLEAN",
+//   COMMENT: "COMMENT", 
+//   LONG_COMMENT: "LONG_COMMENT", 
+//   KEYWORD: "KEYWORD",
+//   TYPE: "TYPE",
+//   INDENTIFIER: "IDENTIFIER", 
+//   SYMBOL: "SYMBOL",
+
+//   EOF: "EOF",
+
+// };
+
+
+// const tokenPatterns = [
+//   { type: TokenTypes.INT, pattern: /^-?\d+$/ },
+//   { type: TokenTypes.DOUBLE, pattern: /^-?\d+(\.\d+)?$/ },
+//   { type: TokenTypes.STRING, pattern: /^(['"])(.*?)\1$/ },
+//   { type: TokenTypes.CHAR, pattern: /^['"].['"]$/ },
+//   { type: TokenTypes.BOOLEAN, pattern: /^(true|false)$/ },
+//   { type: TokenTypes.COMMENT, pattern: /^\/\/.*$/ },
+//   { type: TokenTypes.LONG_COMMENT, pattern: /^\/\*[\s\S]*?\*\/$/ },
+//   { type: TokenTypes.KEYWORD, pattern: /^(if|else|end|print|println|for|while|and|or|do|repeat|until|not|return)$/ },
+//   { type: TokenTypes.type, pattern: /^(int|double|String|char|float|boolean|short|void|int\[\])$/},
+//   { type: TokenTypes.INDENTIFIER, pattern: /^[a-zA-Z_$][a-zA-Z0-9_$]*$/ },
+//   { type: TokenTypes.SYMBOL, pattern: /^[+\-*%^\/,;()[]!<>=]$/ }
+
+
+// ];
+
+
+//   function tokenize(input) {
+//     let tokens = [];
+//     let inputCopy = input;
+//     let lineNumber = 1;
+//     let position = 0;
+
+//     while (inputCopy.length > 0) {
+//         let found = false;
+
+//         for (let { type, pattern } of tokenPatterns) {
+//             let match = pattern.exec(inputCopy);
+//             console.log('Trying pattern:', pattern);
+//             console.log('Match:', match);
+//             if (match) {
+//                 tokens.push({
+//                     type: type,
+//                     value: match[0],
+//                     line: lineNumber
+//                 });
+//                 inputCopy = inputCopy.slice(match[0].length);
+//                 position += match[0].length;
+
+//                 // Update line number if a newline character is found
+//                 let newlineMatch = match[0].match(/\n/g);
+//                 if (newlineMatch) {
+//                     lineNumber += newlineMatch.length;
+//                     position = 0; // Reset position on a new line
+//                 }
+
+//                 found = true;
+//                 break;
+//             }
+//         }
+
+//         if (!found) {
+//             throw new Error(`Unexpected character: ${inputCopy[0]} at line ${lineNumber}, position ${position}`);
+//         }
+//     }
+
+//     return tokens;
+// }
+
+// console.log('here is the new lexer:')
+// console.log(tokenize("int hi = 0;"));
+
+
+
 
 

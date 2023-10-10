@@ -46,6 +46,8 @@ export const createExecutable = (blockjson) => {
             return new Praxly_int( blockjson.value, blockjson);
         case 'STRING':
             return new Praxly_String(blockjson.value, blockjson);
+         case 'CHAR':
+            return new Praxly_char(blockjson.value, blockjson);
         case 'BOOLEAN':
             return new Praxly_boolean( blockjson.value, blockjson);
         case 'DOUBLE':
@@ -1041,9 +1043,7 @@ class Praxly_emptyLine{
         this.blockjson = blockjson;
     }
     evaluate(environment){
-        console.log('newline detected at ');
-        console.log(this.blockjson);
-        console.log('this should not exist');
+        //do nothing
     }
 }
 
