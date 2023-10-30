@@ -415,7 +415,11 @@ class Praxly_print {
     evaluate(environment) {
         // console.log(this.expression.evaluate(environment));
         var child = this.expression.evaluate(environment);
-        addToPrintBuffer((child.value.toString()));
+        var result = child.value.toString();
+        if ((child.realType === TYPES.DOUBLE || child.realType === TYPES.FLOAT) && result.indexOf('.') === -1){
+            result += '.0';
+        }
+        addToPrintBuffer(result);
         return null;
     }
 }
@@ -818,7 +822,7 @@ class Praxly_assignment {
             // environment.variableList[this.name] = this.expression;
                   
         }
-        environment.variableList[this.name] = valueEvaluated;
+        environment.variableList[this.name] =  litNode_new(this.type, valueEvaluated.value, this.json);
     }
 }
 
