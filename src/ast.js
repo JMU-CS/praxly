@@ -432,7 +432,12 @@ class Praxly_println {
     }
     evaluate(environment) {
         // console.log(this.expression.evaluate(environment));
-        addToPrintBuffer((this.expression.evaluate(environment).value.toString()) + '<br>');
+        var child = this.expression.evaluate(environment);
+        var result = child.value.toString();
+        if ((child.realType === TYPES.DOUBLE || child.realType === TYPES.FLOAT) && result.indexOf('.') === -1){
+            result += '.0';
+        }
+        addToPrintBuffer(result + '<br>');
         return null;
     }
 }
