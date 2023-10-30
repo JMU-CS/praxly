@@ -19,6 +19,7 @@
     .output {
       box-sizing: border-box;
       background: #e3e6e4;
+      position: relative;
       margin: 10px;
       height: 15vh;
       font-size: large;
@@ -26,6 +27,16 @@
       overflow: auto; /* Add this */
       max-height: 200px; /* Adjust the value as needed */
     }
+
+    .clearOut{
+      position: absolute;
+      font-size: x-large;
+      top: 5px;
+      right: 5px;
+      cursor: pointer; 
+    }
+
+
 
     .error {
       color: red;
@@ -311,7 +322,9 @@
       transform: translateX(-50%);
     }
     
-
+    #titleRefresh{
+      cursor: pointer;
+    }
 
 
 
@@ -322,7 +335,7 @@
   <header class="nav-bar">
     <div id="title-version">
       <h1 id="titleRefresh">Praxly 🍂</h1>
-      version <a href="changelog.html">10/10/2023</a>
+      version <a href="changelog.html">10/29/2023</a>
       
 
     </div>
@@ -425,7 +438,8 @@
 
 
   <div class="output">
-    Output is here
+    <div class="clearOut">🗑</div>
+    <p class="stdout">output is here</p>
   </div>
 
   <!-- <div class="error">

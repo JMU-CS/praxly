@@ -304,7 +304,9 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             } else {
                 try {
                     blockjson.beg = startIndex;
-                    var varname = blockjson.varType.toString().toLowerCase() + ' ' + blockjson.name.toString();
+                    var vartype = blockjson.varType.toString().toLowerCase();
+                    vartype = vartype === "string" ? "String" : vartype;
+                    var varname = vartype + ' ' + blockjson.name.toString();
                     blockjson.startIndex = startIndex + varname.length + 1;
                     var operator = ' ← ';
                     blockjson.endIndex = blockjson.startIndex + 1;
@@ -352,6 +354,14 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             blockjson.beg = startIndex;
             blockjson.startIndex = startIndex;
             var result =  "not ";
+            blockjson.endIndex = startIndex + result.length;
+            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation);
+            blockjson.end = blockjson.endIndex + expression.length;
+            return result + expression;
+        case 'NEGATE':
+            blockjson.beg = startIndex;
+            blockjson.startIndex = startIndex;
+            var result =  "-";
             blockjson.endIndex = startIndex + result.length;
             var expression = tree2text(blockjson.value, blockjson.endIndex, indentation);
             blockjson.end = blockjson.endIndex + expression.length;

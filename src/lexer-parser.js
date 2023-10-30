@@ -1,18 +1,28 @@
 import ace from 'ace-builds';
 import { FieldNumber } from 'blockly';
+import { tokenize } from './newLexer';
+import { praxlyDefaultTheme } from './theme';
 
 
 
-export const textEditor = ace.edit("aceCode", {fontSize: 17, mode: 'ace/mode/java'});
+export const textEditor = ace.edit("aceCode", {fontSize: 19, mode: 'ace/mode/java'});
 // textEditor.session.setMode("ace/mode/java");
 
 // var AceRange = ace.require('ace/range').Range;
 
 
 
+export class PraxlyErrorException extends Error {
+  constructor(message, line) {
+    super(`<pre>error occured on line ${line}:\n\t${message}</pre>`);
+    this.errorMessage = this.message;
+    appendAnnotation(message, line);
+    errorOutput += this.message;
 
+  }
+}
 
-const maxLoop = 100;
+export const MAX_LOOP = 100;
 
 export var printBuffer = "";
 export var errorOutput = "";
@@ -36,18 +46,11 @@ export function clearOutput() {
 }
 
 
-export function textError(type, error, startIndex, endIndex){
-  
-  if (endIndex ?? 0  < startIndex){
-    // console.error('invalid index for error');
-
-    endIndex = textEditor?.getValue().length - 1;
-  }
-
-  var ranges = indextoAceRange(startIndex, endIndex);
-  errorOutput += `<pre>${type} error occured on line ${ranges[0]}:  ${error} \n\t (highlighting index ${startIndex ?? '?'} to ${endIndex ?? '?'})</pre>`;
-  appendAnnotation(error, startIndex, endIndex);
-  // highlightError(ranges[0], ranges[1], ranges[2], ranges[3]);
+// might delete
+// this is a unique function that will throw an error, but not halt execution. That way we can attempt to build as accurate of a tree as possible before shutting down. 
+export function textError(type, error, line){
+  errorOutput += `<pre>${type} error occured on line ${line}:  ${error} \n\t </pre>`;
+  appendAnnotation(error, line);
 }
 
 export function defaultError(message){
@@ -59,45 +62,35 @@ export function addBlockErrors(workspace){
   for (var key in blockErrorsBuffer){
       var block = workspace.getBlockById(key);
       block.setWarningText(blockErrorsBuffer[key]);
-
   }
+}
+
+// might delete
+// this will likely be replaced as well
+export function sendRuntimeError(errormessage, json){
+  textError('runtime', errormessage, json.line);
+  blockErrorsBuffer[blockjson.blockID] = errormessage;
 
 }
 
-export function sendRuntimeError(errormessage, blockjson){
-  textError('runtime', errormessage, blockjson.startIndex, blockjson.endIndex);
-  // if (typeof(blockjson.blockid !== 'undefined')){
-      blockErrorsBuffer[blockjson.blockID] = errormessage;
-  // }
-  // appendAnnotation(`the variable \'${blockjson.name}\' is not recognized by the program. Perhaps you forgot to initialize it?`, blockjson.startIndex, blockjson.endIndex);
-  console.log('here are the block errors');
-  console.log(blockErrorsBuffer);
-}
 
-
-
-export function appendAnnotation(errorMessage, startindex, endindex) {
-  // endindex = (endindex ?? 0) < startindex ? textEditor.getValue().length : endindex;
-  var ranges = indextoAceRange(startindex, endindex);
+export function appendAnnotation(errorMessage, line) {
   var annotation = {
-    row: ranges[0] - 1, // no idea why the rows start with zero here but start with 1 everywhere else, but okay
-    column: ranges[1],
+    row: line - 1, // no idea why the rows start with zero here but start with 1 everywhere else, but okay
+    column: 0,
     text: errorMessage,
     type: "error"
   };
   annotationsBuffer.push(annotation);
-  highlightError(ranges[0], ranges[1], ranges[2], ranges[3]);
+  highlightLine(line);
 
 }
 
-// this doesnt work
-function highlightError(startRow, startColumn, endRow, endColumn) {
-  // console.error(`startRow: ${startRow}\t, start column: ${startColumn}\nedRow: ${endRow}, \tendcolumn: ${endColumn}`);
+function highlightLine(line, debug = false) {
   var session = textEditor.session;
-  var Range = ace.require('ace/range').Range;
-
-  var errorRange = new Range(startRow - 1, startColumn, endRow - 1, endColumn);
-  var markerId = session.addMarker(errorRange, 'error-marker', 'text');
+  
+  var errorRange = indextoAceRange(line - 1);
+  var markerId = session.addMarker(errorRange, 'error-marker', 'fullLine');
 
   var markerCss = `
     .error-marker {
@@ -121,7 +114,7 @@ function highlightError(startRow, startColumn, endRow, endColumn) {
   // Append the error-marker rules to the existing style tag
   existingStyleTag.appendChild(document.createTextNode(markerCss));
 
-  console.log('attempted to highlight');
+  console.log(`attempted to highlight ${line}` );
   markersBuffer.push(markerId);
   return markerId;
 }
@@ -131,48 +124,12 @@ function highlightError(startRow, startColumn, endRow, endColumn) {
 
 
 
-
-
-
-
 // Get the underlying DOM element of the Ace editor
 
-export const indextoAceRange = (startindex, endindex) => {
-  let code = textEditor?.getValue();
-  console.log(`the length is ${code.length} and the endIndex is ${endindex}`);
-  var startLine = 0;
-  var startLineIndex = 0;
-  var endLine = 0;
-  var endLineIndex = 0;
-  var currentLine = 0; // Change to 0 to represent zero-based line numbers
-  var currentLineIndex = 0;
+export const indextoAceRange = (line) => {
 
-  for (let i = 0; i < code.length; i++) { // Remove -1 from loop condition
-    if (i === startindex) {
-      startLine = currentLine;
-      startLineIndex = currentLineIndex;
-    }
-    if (i === endindex) {
-      endLine = currentLine;
-      endLineIndex = currentLineIndex;
-      break; // Once endindex is found, exit the loop
-    }
-    if (code[i] === '\n') {
-      currentLine += 1;
-      currentLineIndex = 0;
-    } else {
-      currentLineIndex += 1;
-    }
-  }
-
-  // Add 1 to both row and column values to represent one-based line numbers and column numbers
-  var start = { row: startLine + 1, column: startLineIndex };
-  var end = { row: endLine + 1, column: endLineIndex };
-
-  // console.log("Start:", start);
-  // console.log("End:", end);
-
-  return [start.row, start.column, end.row, end.column];
+  var Range = ace.require('ace/range').Range;
+  return new Range(line, 0, line, 1);
 };
 
 
@@ -183,19 +140,21 @@ export const text2tree = () => {
     console.log(code);
     let lexer = new Lexer(code);
     let tokens = lexer?.lex();
-    console.log(tokens);
+    // console.log('here are the new lexer tokens:');
+    // console.log(tokenize(code));
+    console.info('here are the tokens:');
+    console.debug(tokens);
     let parser = new Parser(tokens);
     let textjson = parser?.parse();
-    console.log(textjson);
+    console.info('here is the tree:');
+    console.debug(textjson);
     return textjson;
 }
 
 class Token {
-    constructor(type, text, startIndex, endIndex, line) {
+    constructor(type, text, line) {
       this.token_type = type;
       this.value = text;
-      this.startIndex = startIndex;
-      this.endIndex = endIndex;
       this.line = line
     }
   }
@@ -213,7 +172,7 @@ class Token {
       this.keywords = ["if", "else", "end", "print", "println", "for", "while", 'and', 'or', 'do', 'repeat', 'until', 'not', 'return'];
       this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void', 'int[]'];
       this.startToken = 0;
-      this.currentLine = 0;
+      this.currentLine = 1;
     }
   
     printTokens() {
@@ -270,7 +229,7 @@ class Token {
   
     emit_token(type) {
 
-      this.tokens.push(new Token(type, this.token_so_far, this.startToken, this.i, this.currentLine));
+      this.tokens.push(new Token(type, this.token_so_far, this.currentLine));
       this.token_so_far = '';
       this.startToken = this.i;
     }
@@ -297,7 +256,8 @@ class Token {
             }
           } 
           else {
-            textError('lexing', 'looks like you didn\'t close your comment. Remember comments start with a \'/*\' and end with a \'*/\'.',commentStart, this.i);
+            textError('lexing', 'looks like you didn\'t close your comment. Remember comments start with a \'/*\' and end with a \'*/\'.',commentStart, this.currentLine);
+            // throw new PraxlyErrorException('looks like you didn\'t close your comment. Remember comments start with a \'/*\' and end with a \'*/\'.', this.currentLine);
             // appendAnnotation('looks like you didn\'t close your comment. Remember comments start with a \'/*\' and end with a \'*/\'.',commentStart, this.i);
             this.i -= 1;
             this.emit_token();
@@ -309,28 +269,13 @@ class Token {
           this.emit_token("SUBTRACT");
         } else if (this.has("%")) {
           this.capture();
-          if (this.has('=')){
-            this.capture();
-            this.emit_token('%=');
-          } else {
-            this.emit_token("MOD");
-          }
+          this.emit_token("MOD");
         } else if (this.has("*")) {
             this.capture();
-            if (this.has('=')){
-              this.capture();
-              this.emit_token('*=');
-            } else {
-              this.emit_token("MULTIPLY");
-            }
+            this.emit_token("MULTIPLY");
         } else if (this.has("^")) {
             this.capture();
-            if (this.has('=')){
-              this.capture();
-              this.emit_token('^=');
-            } else {
-              this.emit_token("EXPONENT");
-            }
+            this.emit_token("EXPONENT");
          } else if (this.has("≠")) {
             this.capture();
             this.emit_token("Not_Equal");
@@ -351,6 +296,9 @@ class Token {
           if (this.has("=")) {
             this.capture();
             this.emit_token("Less_Than_Equal_To");
+          } else if (this.has("-")){
+            this.capture();
+            this.emit_token("Assignment");
           } else {
             this.emit_token("Less_Than");
           }
@@ -399,25 +347,23 @@ class Token {
               this.skip();
               this.emit_token('char');
             } else {
-              textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a single or double quote mark (\' or \").',stringStart, this.i - 1);
+              textError('lexing', 'looks like you didn\'t close your quotes on your char. \n \tRemember chars start and end with a single or double quote mark (\').',this.currentLine);
             }
           
 
-
-
-          } else if (this.has("\"") || this.has("\'") ){
-            var stringStart = this.i;
+          } else if (this.has("\"")){
+            var stringStart = this.currentLine;
             this.skip();
             while (this.i < this.length && !this.has("\"") && !this.has("\'")) {
                 this.capture();
               }
-            if (this.has("\"") || this.has("\'") ){
+            if (this.has("\"")){
               this.skip();
               this.emit_token("String");
               
             }
             else {
-              textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a single or double quote mark (\' or \").',stringStart, this.i - 1);
+              textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a single or double quote mark (\").',stringStart);
               this.i -= 1;
               this.emit_token();
             }
@@ -521,6 +467,7 @@ class Parser {
 
   }
 
+
   hasNot(type) {
     return this.i < this.length && this.tokens[this.i].token_type !== type;
   }
@@ -601,8 +548,7 @@ class Parser {
   atom() {
     
     const tok = this.tokens[this.i];
-    var startIndex = this.tokens[this.i].startIndex;
-    var endIndex = this.tokens[this.i].endIndex;
+    var line = this.tokens[this.i].line;
     
 
 
@@ -621,10 +567,9 @@ class Parser {
         value: tok.value, 
         type: tok.token_type,
         blockID: "code",
-        startIndex: startIndex, 
-        endIndex: endIndex,
-        beg: startIndex, 
-        end: endIndex
+        line: line, 
+         line, 
+         
         
       };
     } else if (this.has("String")) {
@@ -633,10 +578,10 @@ class Parser {
           value: tok.value, 
           type: 'STRING',
           blockID: "code",
-          startIndex: startIndex, 
-          endIndex: endIndex,
-          beg: startIndex, 
-          end: endIndex
+          line: line, 
+          
+           line, 
+           
         };
     } else if (this.has("char")) {
         this.advance();
@@ -644,10 +589,10 @@ class Parser {
           value: tok.value, 
           type: "CHAR",
           blockID: "code",
-          startIndex: startIndex, 
-          endIndex: endIndex,
-          beg: startIndex, 
-          end: endIndex
+          line: line, 
+          
+           line, 
+           
         };
     } else if (this.has("Double")) {
         this.advance();
@@ -655,10 +600,10 @@ class Parser {
           value: tok.value, 
           type: "DOUBLE",
           blockID: "code",
-          startIndex: startIndex, 
-          endIndex: endIndex,
-          beg: startIndex, 
-          end: endIndex
+          line: line, 
+          
+           line, 
+           
         };
     } else if (this.has("boolean")) {
       this.advance();
@@ -666,18 +611,18 @@ class Parser {
         value: tok.value, 
         type: 'BOOLEAN',
         blockID: "code",
-        startIndex: startIndex, 
-        endIndex: endIndex,
-        beg: startIndex, 
-        end: endIndex
+        line: line, 
+        
+         line, 
+         
       };
 
     } else if (this.has('{')){
       let result = {
         blockID: 'code', 
-        startIndex: startIndex, 
-        endIndex: endIndex, 
-        beg: startIndex,
+        line: line, 
+         
+         line,
         type: 'ARRAY',
       };
       // result.type = 'ARRAY';
@@ -685,7 +630,7 @@ class Parser {
       var args = [];
       this.advance();
       var loopBreak = 0;
-      while (this.hasNot('}') &&  loopBreak < maxLoop) {
+      while (this.hasNot('}') &&  loopBreak < MAX_LOOP) {
         // this.advance();
         var param = this.boolean_operation();
         args.push(param);
@@ -699,11 +644,9 @@ class Parser {
       console.log(args);
       result.params = args;
       if (this.hasNot('}')){
-        appendAnnotation("didnt detect closing curlybrace in the array declaration", this.tokens[this.i].startIndex, this.tokens[this.i].endIndex);
+        textError("parsing", "didnt detect closing curlybrace in the array declaration", this.tokens[this.i].line);
         // console.error('didnt detect closing parintheses in the arguments of  a function call');
       }
-      result.endIndex = this.tokens[this.i]?.endIndex;
-      result.end = result?.endIndex;
       this.advance();
       return result;
     
@@ -714,7 +657,7 @@ class Parser {
       if (this.has(")")) {
         this.advance();
       } else {
-        textError('parsing', 'did not detect closing parentheses', startIndex, endIndex);
+        textError('parsing', 'did not detect closing parentheses', line, );
         // console.log("did not detect closing parentheses");
       }
       return expression;
@@ -727,7 +670,7 @@ class Parser {
         if (this.has("]")) {
           this.advance();
         } else {
-          textError('parsing', 'did not detect closing bracket', startIndex, endIndex);
+          textError('parsing', 'did not detect closing bracket', line, );
           // console.log("did not detect closing parentheses");
         }
         return {
@@ -735,10 +678,9 @@ class Parser {
           type: 'ARRAY_REFERENCE',
           index: index,
           blockID: "code",
-          startIndex: startIndex, 
-          endIndex: endIndex,
-          beg: startIndex, 
-          end: endIndex 
+          line: line, 
+          
+            
           
         };
       }
@@ -746,19 +688,19 @@ class Parser {
         name: tok.value, 
         type: 'VARIABLE',
         blockID: "code",
-        startIndex: startIndex, 
-        endIndex: endIndex,
-        beg: startIndex, 
-        end: endIndex 
+        line: line, 
+        
+         line, 
+          
         
       };
 
     } else if (this.has('function')){
         let result = {
           blockID: 'code', 
-          startIndex: startIndex, 
-          endIndex: endIndex, 
-          beg: startIndex
+          line: line, 
+           
+           line
         };
         result.type = 'FUNCTION_CALL';
         result.name = this.tokens[this.i].value;
@@ -767,7 +709,7 @@ class Parser {
         if (this.has('(')){
           this.advance();
           var loopBreak = 0;
-          while (this.hasNot(')') &&  loopBreak < maxLoop) {
+          while (this.hasNot(')') &&  loopBreak < MAX_LOOP) {
             // this.advance();
             var param = this.boolean_operation();
             args.push(param);
@@ -781,11 +723,10 @@ class Parser {
           console.log(args);
           result.params = args;
           if (this.hasNot(')')){
-            appendAnnotation("didnt detect closing parintheses in the arguments of  a function call", this.tokens[this.i].startIndex, this.tokens[this.i].endIndex);
+            appendAnnotation("didnt detect closing parintheses in the arguments of  a function call", this.tokens[this.i].line);
             // console.error('didnt detect closing parintheses in the arguments of  a function call');
           }
-          result.endIndex = this.tokens[this.i]?.endIndex;
-          result.end = result?.endIndex;
+          
           this.advance();
           return result;
         }
@@ -795,9 +736,7 @@ class Parser {
       return;
     
     } else {
-      // textError('parsing', `Missing or Unrecognized token: ${this.i} This is likely the result of a lexing error?.', startIndex, endIndex`);
-      console.log(`atom problem at this token: ${this.tokens[this.i].token_type}`);
-      return;
+      textError("parsing", "missing or invalid base expression. most likely due to a missing operand", line);
     }
   }
 
@@ -805,8 +744,8 @@ class Parser {
     let l =this.unary();
     // let l =this.atom();
     while (this.has("EXPONENT")) {
-      var startIndex = this.tokens[this.i].startIndex;
-      var endIndex = this.tokens[this.i].endIndex;
+      var line = this.tokens[this.i].line;
+      
       this.advance();
       const r =this.exponent();
       // l =new Operators.Exponent(left, right);
@@ -815,10 +754,7 @@ class Parser {
               right: r,
               type: "EXPONENT", 
               blockID: "code", 
-              beg: l?.beg, 
-              end: r?.end,
-              endIndex: endIndex,
-              startIndex: startIndex
+              line: line
 
           }
     }
@@ -845,8 +781,8 @@ class Parser {
   multiplicitive() {
     let l =this.exponent();
     while (this.has("MULTIPLY") || this.has("DIVIDE") || this.has("MOD")) {
-      var endIndex = this.tokens[this.i].endIndex;
-      var startIndex = this.tokens[this.i].startIndex;
+      
+      var line = this.tokens[this.i].line;
       if (this.has("MULTIPLY")) {
         this.advance();
         const r =this.exponent();
@@ -856,10 +792,9 @@ class Parser {
             right: r,
             type: "MULTIPLY", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       } else if (this.has("DIVIDE")) {
         this.advance();
@@ -870,10 +805,9 @@ class Parser {
             right: r,
             type: "DIVIDE", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       } else if (this.has("MOD")) {
         this.advance();
@@ -884,10 +818,9 @@ class Parser {
             right: r,
             type: "MOD", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       }
     }
@@ -901,8 +834,8 @@ class Parser {
   additive() {
     let l =this.multiplicitive();
     while (this.has("ADD") || this.has("SUBTRACT")) {
-      var endIndex = this.tokens[this.i].endIndex;
-      var startIndex = this.tokens[this.i].startIndex;
+      
+      var line = this.tokens[this.i].line;
       if (this.has("SUBTRACT")) {
         this.advance();
         const r =this.multiplicitive();
@@ -912,10 +845,9 @@ class Parser {
             right: r,
             type: "SUBTRACT", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       } else if (this.has("ADD")) {
         this.advance();
@@ -926,10 +858,9 @@ class Parser {
             right: r,
             type: "ADD", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       }
     }
@@ -940,23 +871,26 @@ class Parser {
     if (!this.has('not') && !this.has('SUBTRACT')){
       return this.atom();
     }
-    while (this.has('not')){
-      var endIndex = this.tokens[this.i].endIndex;
-      var startIndex = this.tokens[this.i].startIndex;
+      
+      var line = this.tokens[this.i].line;
       var result = {
         blockID: 'code',
-        startIndex: startIndex, 
-        endIndex: endIndex
+        line: line, 
       };
       if (this.has('not')){
         this.advance();
-        var expression = this.boolean_operation();
+        var expression = this.atom();
         result.type = 'NOT';
         result.value = expression;
-        result.beg = startIndex;
-        result.end = endIndex;
+        return result;
       }
+      else if (this.has("SUBTRACT")){
+      this.advance();
+        var expression = this.atom();
+        result.type = 'NEGATE';
+        result.value = expression;
     }
+
     return result;
   }
 
@@ -970,8 +904,8 @@ class Parser {
       this.has("Equals") ||
       this.has("Not_Equal")
       ) {
-        var startIndex = this.tokens[this.i].startIndex;
-        var endIndex = this.tokens[this.i].endIndex;
+        var line = this.tokens[this.i].line;
+        
       if (this.has("Less_Than_Equal_To")) {
         this.advance();
         const r =this.additive();
@@ -981,10 +915,9 @@ class Parser {
             right: r,
             type: "LESS_THAN_EQUAL", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       } else if (this.has("Greater_Than_Equal_To")) {
         this.advance();
@@ -995,10 +928,9 @@ class Parser {
             right: r,
             type: "GREATER_THAN_EQUAL", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       } else if (this.has("Less_Than")) {
         this.advance();
@@ -1009,10 +941,9 @@ class Parser {
             right: r,
             type: "LESS_THAN", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
       } else if (this.has("Greater_Than")) {
         this.advance();
@@ -1023,10 +954,9 @@ class Parser {
             right: r,
             type: "GREATER_THAN", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
     } else if (this.has("Equals")) {
         this.advance();
@@ -1037,10 +967,9 @@ class Parser {
             right: r,
             type: "EQUALS", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
     } else if (this.has("Not_Equal")) {
         this.advance();
@@ -1051,10 +980,9 @@ class Parser {
             right: r,
             type: "NOT_EQUAL", 
             blockID: "code", 
-            startIndex: startIndex, 
-            endIndex: endIndex, 
-            beg: l?.beg, 
-            end: r?.end,
+            line: line, 
+             
+             
         }
     }
     
@@ -1081,8 +1009,8 @@ boolean_operation() {
     this.has("and") ||
     this.has("or")
     ) {
-      var startIndex = this.tokens[this.i].startIndex;
-      var endIndex = this.tokens[this.i].endIndex;
+      var line = this.tokens[this.i].line;
+      
     if (this.has("and")) {
       this.advance();
       const r =this.comparable();
@@ -1092,10 +1020,9 @@ boolean_operation() {
           right: r,
           type: "AND", 
           blockID: "code", 
-          startIndex: startIndex, 
-          endIndex: endIndex, 
-          beg: l?.beg, 
-          end: r?.end,
+          line: line, 
+           
+           
       }
     } else if (this.has("or")) {
       this.advance();
@@ -1106,10 +1033,9 @@ boolean_operation() {
           right: r,
           type: "OR", 
           blockID: "code", 
-          startIndex: startIndex, 
-          endIndex: endIndex, 
-          beg: l?.beg, 
-          end: r?.end,
+          line: line, 
+           
+           
       }
     
   }
@@ -1147,13 +1073,12 @@ codeBlock(endToken) {
 
 statement() {
   // while loop here?
-  var startIndex = this.tokens[this.i].startIndex;
-  var endIndex = this.tokens[this.i].endIndex;
+  var line = this.tokens[this.i].line;
+  
   let result = {
     blockID: 'code', 
-    startIndex: startIndex, 
-    endIndex: endIndex, 
-    beg: startIndex
+    line: line, 
+     
   };
   if (this.has("if")) {
 
@@ -1173,13 +1098,13 @@ statement() {
         
       }
       if (this.has('end if')) {
-        result.end = this.tokens[this.i].endIndex;
+        
         this.advance();
         return result;
       }
       else {
         // sendRuntimeError("missing the \'end if\' token", blockjson);
-        textError('compile time', "missing the \'end if\' token", result.startIndex ,result.endIndex);
+        textError('compile time', "missing the \'end if\' token", result.line);
         return {
           type: 'INVALID'
         };
@@ -1209,12 +1134,12 @@ statement() {
           this.advance();
           result.statement = this.codeBlock('end for');
           if (this.has('end for')){
-            result.end = this.tokens[this.i].endIndex;
+            
             this.advance();
             return result;
           }
           else{
-            textError('compile time', "missing the \'end for\' token", result.startIndex ,result.endIndex);
+            textError('compile time', "missing the \'end for\' token", result.line);
           }
         }
       }
@@ -1237,11 +1162,11 @@ statement() {
         
       }
       if (this.has('end while')) {
-        result.end = this.tokens[this.i].endIndex;
+        
         this.advance();
         return result;
       } else {
-        textError('compile time', "missing the \'end while\' token", result.startIndex ,result.endIndex);
+        textError('compile time', "missing the \'end while\' token", result.line);
         //gohere
       }
   } 
@@ -1271,7 +1196,7 @@ statement() {
         //error
       }
       this.advance()
-      result.end = this.tokens[this.i].endIndex;
+      
         return result;
       }
   }
@@ -1301,13 +1226,12 @@ statement() {
         //error
       }
       this.advance()
-      result.end = this.tokens[this.i].endIndex;
+      
         return result;
       }
   }
 
   else if (this.has("print")) {
-    // while (this.has('print')) {
       this.advance();
       const expression = this.boolean_operation();
       if (this.has(';')){
@@ -1317,7 +1241,7 @@ statement() {
         // this.advance();
         result.type = 'PRINT';
         result.value = expression;
-        result.end = expression?.end; 
+         
         return result;
       }
   }
@@ -1333,7 +1257,7 @@ statement() {
         // this.advance();
         result.type = 'PRINTLN';
         result.value = expression;
-        result.end = expression?.end; 
+         
         return result;
       }
   }
@@ -1349,20 +1273,20 @@ statement() {
         // this.advance();
         result.type = 'RETURN';
         result.value = expression;
-        result.end = expression.end; 
+         
         return result;
       }
 
   }else if (this.has('comment')){
     result.type = 'COMMENT', 
     result.value = this.tokens[this.i].value;
-    result.end = result.endIndex;
+    
     return result;
   
   } else if (this.has('single_line_comment')){
     result.type = 'SINGLE_LINE_COMMENT', 
     result.value = this.tokens[this.i].value;
-    result.end = result.endIndex;
+    
     return result;
   }
 
@@ -1377,11 +1301,14 @@ statement() {
         result.name = this.tokens[this.i].value;
         this.advance();
         if (this.has('Assignment')){
-          result.startIndex = this.tokens[this.i].startIndex;
-          result.endIndex = this.tokens[this.i].endIndex;
+          result.line = this.tokens[this.i].line;
+          
           this.advance();
           result.value = this.boolean_operation();
-          result.end = result.value.end;
+          if (this.has(";")){
+            this.advance();
+          }
+          
           result.varType = returnType;
         }
       }
@@ -1395,7 +1322,7 @@ statement() {
       if (this.has("]")) {
         this.advance();
       } else {
-        textError('parsing', 'did not detect closing bracket', startIndex, endIndex);
+        textError('parsing', 'did not detect closing bracket', line, );
         // console.log("did not detect closing parentheses");
       }
       if (this.has("Variable")){
@@ -1403,11 +1330,11 @@ statement() {
         result.name = this.tokens[this.i].value;
         this.advance();
         if (this.has('Assignment')){
-          result.startIndex = this.tokens[this.i].startIndex;
-          result.endIndex = this.tokens[this.i].endIndex;
+          result.line = this.tokens[this.i].line;
+          
           this.advance();
           result.value = this.boolean_operation();
-          result.end = result.value.end;
+          
           result.varType = returnType;
         }
       }
@@ -1425,16 +1352,16 @@ statement() {
       if (this.has("]")) {
         this.advance();
       } else {
-        textError('parsing', 'did not detect closing bracket', startIndex, endIndex);
+        textError('parsing', 'did not detect closing bracket', line, );
         // console.log("did not detect closing parentheses");
       }
       result.type = 'ARRAY_REFERENCE_ASSIGNMENT';
       result.index = index;
       if (this.has('Assignment')){
-        result.startIndex = this.tokens[this.i].startIndex;
+        result.line = this.tokens[this.i].line;
         this.advance();
         result.value = this.boolean_operation();
-        result.end = result.value.end;
+        
       } else {
         console.error(`the array reference asssignement function failed. `);
       }
@@ -1453,10 +1380,10 @@ statement() {
       result.name = this.tokens[this.i].value;
       this.advance();
       if (this.has('Assignment')){
-        result.startIndex = this.tokens[this.i].startIndex;
+        result.line = this.tokens[this.i].line;
         this.advance();
         result.value = this.boolean_operation();
-        result.end = result.value.end;
+        
         result.varType = 'reassignment';
       }
     }
@@ -1481,7 +1408,7 @@ statement() {
     if (this.has('(')){
       this.advance();
       var stopLoop = 0;
-      while (this.hasNot(')') && stopLoop < maxLoop) {
+      while (this.hasNot(')') && stopLoop < MAX_LOOP) {
         var param = [];
         if (this.has_type()){
           param.push(this.tokens[this.i].value);
@@ -1505,11 +1432,11 @@ statement() {
         this.advance();
       } else {
           console.error('missing closing parinthesees');
-          textError("compile time", "didnt detect closing parintheses in the arguments of  a function definition", this.tokens[this.i].startIndex, this.tokens[this.i].endIndex);
+          textError("compile time", "didnt detect closing parintheses in the arguments of  a function definition", this.tokens[this.i].line);
     
       }
       result.params = args;
-      result.endindex = this.tokens[this.i].endIndex;
+      
       if (this.has(';')){
         this.advance();
       }
@@ -1522,9 +1449,8 @@ statement() {
     }
     var contents = this.codeBlock('end ' + result.name);
     result.contents = contents;
-    result.end = this.tokens[this.i]?.endIndex;
     if (this.hasNot('end ' + result.name)){
-      textError('compile time', `missing the \'end ${result.name}\' token`, result.startIndex ,result.endIndex);
+      textError('compile time', `missing the \'end ${result.name}\' token`, result.line);
       return result;
     }
     this.advance();
@@ -1557,7 +1483,6 @@ statement() {
         blockID: "code"
       };
     }
-    
 
   }
 
@@ -1569,116 +1494,4 @@ statement() {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// for the new lexer
-// export const TokenTypes = {
-//   INT: "INT",
-//   FLOAT: "FLOAT",
-//   STRING: "STRING",
-//   DOUBLE: "DOUBLE",
-//   CHAR: "CHAR",
-//   BOOLEAN: "BOOLEAN",
-//   COMMENT: "COMMENT", 
-//   LONG_COMMENT: "LONG_COMMENT", 
-//   KEYWORD: "KEYWORD",
-//   TYPE: "TYPE",
-//   INDENTIFIER: "IDENTIFIER", 
-//   SYMBOL: "SYMBOL",
-
-//   EOF: "EOF",
-
-// };
-
-
-// const tokenPatterns = [
-//   { type: TokenTypes.INT, pattern: /^-?\d+$/ },
-//   { type: TokenTypes.DOUBLE, pattern: /^-?\d+(\.\d+)?$/ },
-//   { type: TokenTypes.STRING, pattern: /^(['"])(.*?)\1$/ },
-//   { type: TokenTypes.CHAR, pattern: /^['"].['"]$/ },
-//   { type: TokenTypes.BOOLEAN, pattern: /^(true|false)$/ },
-//   { type: TokenTypes.COMMENT, pattern: /^\/\/.*$/ },
-//   { type: TokenTypes.LONG_COMMENT, pattern: /^\/\*[\s\S]*?\*\/$/ },
-//   { type: TokenTypes.KEYWORD, pattern: /^(if|else|end|print|println|for|while|and|or|do|repeat|until|not|return)$/ },
-//   { type: TokenTypes.type, pattern: /^(int|double|String|char|float|boolean|short|void|int\[\])$/},
-//   { type: TokenTypes.INDENTIFIER, pattern: /^[a-zA-Z_$][a-zA-Z0-9_$]*$/ },
-//   { type: TokenTypes.SYMBOL, pattern: /^[+\-*%^\/,;()[]!<>=]$/ }
-
-
-// ];
-
-
-//   function tokenize(input) {
-//     let tokens = [];
-//     let inputCopy = input;
-//     let lineNumber = 1;
-//     let position = 0;
-
-//     while (inputCopy.length > 0) {
-//         let found = false;
-
-//         for (let { type, pattern } of tokenPatterns) {
-//             let match = pattern.exec(inputCopy);
-//             console.log('Trying pattern:', pattern);
-//             console.log('Match:', match);
-//             if (match) {
-//                 tokens.push({
-//                     type: type,
-//                     value: match[0],
-//                     line: lineNumber
-//                 });
-//                 inputCopy = inputCopy.slice(match[0].length);
-//                 position += match[0].length;
-
-//                 // Update line number if a newline character is found
-//                 let newlineMatch = match[0].match(/\n/g);
-//                 if (newlineMatch) {
-//                     lineNumber += newlineMatch.length;
-//                     position = 0; // Reset position on a new line
-//                 }
-
-//                 found = true;
-//                 break;
-//             }
-//         }
-
-//         if (!found) {
-//             throw new Error(`Unexpected character: ${inputCopy[0]} at line ${lineNumber}, position ${position}`);
-//         }
-//     }
-
-//     return tokens;
-// }
-
-// console.log('here is the new lexer:')
-// console.log(tokenize("int hi = 0;"));
-
-
-
-
 

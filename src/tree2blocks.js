@@ -182,7 +182,9 @@ export const tree2blocks = (workspace, blockjson) => {
                     result = workspace.newBlock('praxly_array_assignment_block');
                     result.setFieldValue('int[]', "VARTYPE");
                 } else{
-                    result.setFieldValue(blockjson.varType.toLowerCase(), "VARTYPE");
+                    var vartype = blockjson.varType.toLowerCase();
+                    vartype = vartype === "string" ? "String" : vartype;
+                    result.setFieldValue(vartype, "VARTYPE");
                     
                 }
             }
@@ -217,6 +219,12 @@ export const tree2blocks = (workspace, blockjson) => {
              
         case 'NOT':
             var result = workspace.newBlock('praxly_not_block');
+            var child = tree2blocks(workspace, blockjson?.value);
+            result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
+            break;
+
+        case 'NEGATE':
+            var result = workspace.newBlock('praxly_negate_block');
             var child = tree2blocks(workspace, blockjson?.value);
             result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
             break;

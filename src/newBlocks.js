@@ -28,6 +28,8 @@ export function definePraxlyBlocks(workspace) {
   //   newblock.initSvg();
 
   // }
+
+
   
   Blockly.Extensions.registerMutator('praxly_arity', callbacks);
   
@@ -369,6 +371,7 @@ export function definePraxlyBlocks(workspace) {
             "helpUrl": "", 
 
           }, 
+          
           {
             "type": "praxly_boolean_operators_block",
             "message0": "%1 %2 %3 %4",
@@ -698,6 +701,24 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "",
       "helpUrl": ""
     }, 
+    
+    {
+      "type": "praxly_negate_block",
+      "message0": "- %1 %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "",
+      "helpUrl": ""
+    }, 
     {
       "type": "praxly_println_block",
       "message0": "println %1 %2",
@@ -920,7 +941,7 @@ export function definePraxlyBlocks(workspace) {
                   "args0": [
                     {
                       'type': 'field_image', 
-                      'src': 'https://iconsplace.com/wp-content/uploads/_icons/ffffff/256/png/plus-icon-18-256.png', 
+                      'src': 'images\icons8-minus-50.png', 
                       'name': 'PLUS_BUTTON',
                       'width': 19, 
                       'height': 19, 
@@ -934,7 +955,7 @@ export function definePraxlyBlocks(workspace) {
                     // },
                     {
                       'type': 'field_image', 
-                      'src': 'https://iconsplace.com/wp-content/uploads/_icons/ffffff/256/png/minus-icon-256.png', 
+                      'src': 'images\icons8-minus-50.png', 
                       'name': 'MINUS_BUTTON',
                       'width': 19, 
                       'height': 19, 

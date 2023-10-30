@@ -393,6 +393,15 @@ export const makeGenerator = () => {
         } 
     }
 
+    praxlyGenerator['praxly_negate_block'] = (block) => {
+        const expression = block.getInputTargetBlock('EXPRESSION'); 
+        return {
+            blockID: block.id,
+            type: 'NEGATE', 
+            value: praxlyGenerator[expression.type](expression),
+        } 
+    }
+
     praxlyGenerator['praxly_for_loop_block'] = (block) => {
         var initialization = block.getInputTargetBlock('INITIALIZATION');
         var condition = block.getInputTargetBlock("CONDITION");

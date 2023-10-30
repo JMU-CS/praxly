@@ -13,19 +13,7 @@ println 3 + 4 * 5 > 32 and 1 + 1 == 2
 println "question 2 prints"
 println "1" + 5 + 6
 
-##array loop
-##// you can use for loops when working with arrays!
-int[] nums = {1, 2, 3, 4, 5, 6, 7, 8}
-for (int i = 3; i < 6; i = i + 1)
-	println nums[i]
-end for
 
-##if Statement
-##if (23 % 2 == 1)
-	println "odd!"
-else
-	println "even!"
-end if
 
 ##Variables assignment
 ##int a = 4
@@ -49,8 +37,8 @@ println b
 
 ##gcd 
 ##int gcd(int a, int b)
+	int temp = b
 	while (b≠0)
-		int temp = b
 		b = a % b
 		a = temp
 	end while

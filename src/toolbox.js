@@ -130,9 +130,24 @@ export const toolbox = {
           {
             'kind': 'block',
             'type': 'praxly_false_block'
-          }
+          }, 
+          {
+            'kind': 'block',
+            'type': 'praxly_negate_block',
+            'inputs': {
+              'EXPRESSION' : {
+                'shadow': {
+                  'type' :'praxly_literal_block', 
+                  'fields' : {
+                    'LITERAL' : '\expression',
+                  }
+                },
+              }, 
+            }
+          }, 
         ]
       },
+      
       {
         "kind": "category",
         "name": "variables",
