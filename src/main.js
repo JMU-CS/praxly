@@ -193,7 +193,7 @@ function runTasks() {
   textEditor.session.setAnnotations(annotationsBuffer);
   //might have to remove
   addBlockErrors(workspace);
-  // clearOutput();
+  clearOutput();
 }
 
 

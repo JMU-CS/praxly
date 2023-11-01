@@ -941,7 +941,7 @@ export function definePraxlyBlocks(workspace) {
                   "args0": [
                     {
                       'type': 'field_image', 
-                      'src': 'images\icons8-minus-50.png', 
+                      'src': 'images/icons8-plus-50.png', 
                       'name': 'PLUS_BUTTON',
                       'width': 19, 
                       'height': 19, 
@@ -955,7 +955,7 @@ export function definePraxlyBlocks(workspace) {
                     // },
                     {
                       'type': 'field_image', 
-                      'src': 'images\icons8-minus-50.png', 
+                      'src': 'images/icons8-minus-50.png', 
                       'name': 'MINUS_BUTTON',
                       'width': 19, 
                       'height': 19, 
