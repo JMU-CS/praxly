@@ -1,3 +1,4 @@
+
 import { textEditor } from "./lexer-parser";
 
 
@@ -164,35 +165,51 @@ export const tree2blocks = (workspace, blockjson) => {
             result.getInput('ALTERNATIVE').connection.connect(alternatives[0]?.previousConnection);
             break;
              
-        case 'VARIABLE':
-            var result = workspace.newBlock('praxly_variable_block');
-            result.setFieldValue(blockjson.name, "LITERAL");
-            break;
+        case 'LOCATION':
+            if (blockjson.isArray){
+                
+                var result = workspace.newBlock('praxly_array_reference_block');
+                result.setFieldValue(blockjson.name, "VARIABLENAME");
+                var child = tree2blocks(workspace, blockjson?.index);
+                result.getInput('INDEX').connection.connect(child?.outputConnection);
+                    break;
+            } else {
+                var result = workspace.newBlock('praxly_variable_block');
+                result.setFieldValue(blockjson.name, "LITERAL");
+                break;
+
+            }
              
 
         case 'ASSIGNMENT':
             var expression = tree2blocks(workspace, blockjson?.value); 
-            if (blockjson.varType === 'reassignment'){
-                var result = workspace.newBlock('praxly_reassignment_block');
-            }
-            else {
-                var result = workspace.newBlock('praxly_assignment_block');
-                if (blockjson.varType === 'Praxly_array'){
-                    result.dispose();
-                    result = workspace.newBlock('praxly_array_assignment_block');
-                    result.setFieldValue('int[]', "VARTYPE");
-                } else{
-                    var vartype = blockjson.varType.toLowerCase();
-                    vartype = vartype === "string" ? "String" : vartype;
-                    result.setFieldValue(vartype, "VARTYPE");
-                    
-                }
-            }
             
-            result.setFieldValue(blockjson.name, "VARIABLENAME");
+                var result = workspace.newBlock('praxly_reassignment_expression_block');
+
+                // if (blockjson.varType === 'Praxly_array'){
+                //     result = workspace.newBlock('praxly_array_assignment_block');
+                //     result.setFieldValue('int[]', "VARTYPE");
+                // } else{
+                //     var vartype = blockjson.varType.toLowerCase();
+                //     vartype = vartype === "string" ? "String" : vartype;
+                //     result.setFieldValue(vartype, "VARTYPE");
+                    
+                // }
+            // }
+            var location = tree2blocks(workspace, blockjson.location);
             result.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
+            result.getInput('LOCATION').connection.connect(location?.outputConnection);
             break;
              
+        case "VARDECL":
+            var result = workspace.newBlock('praxly_assignment_block');
+            var expression = tree2blocks(workspace, blockjson?.value);
+            // expression.initSvg();
+            result.setFieldValue(blockjson.varType.toLowerCase(), "VARTYPE");
+            result.setFieldValue(blockjson.name, "VARIABLENAME");
+            result.getInput('EXPRESSION').connection.connect(expression.outputConnection);
+            break;
+
         case 'WHILE':
             var result = workspace.newBlock('praxly_while_loop_block');
             var condition = tree2blocks(workspace, blockjson?.condition);
@@ -241,7 +258,7 @@ export const tree2blocks = (workspace, blockjson) => {
             result.setFieldValue(blockjson?.name, 'PROCEDURE_NAME');
             
             result.getInput('PARAMS').connection.connect(params?.outputConnection);
-            var argsList = blockjson?.params;
+            var argsList = blockjson?.args;
             for (var i = 0; i < ( argsList?.length ?? 0); i++){
                 params.appendValueInput(`PARAM_${i}`);
                 var argument = tree2blocks(workspace, argsList[i]);
@@ -251,7 +268,7 @@ export const tree2blocks = (workspace, blockjson) => {
             params.initSvg();
             break;
 
-        case 'FUNCTION_ASSIGNMENT':
+        case 'FUNCDECL':
             var returnType = blockjson?.returnType;
             var argsList = blockjson?.params;
             var result = workspace.newBlock('praxly_procedure_block');
@@ -278,7 +295,8 @@ export const tree2blocks = (workspace, blockjson) => {
             var result = workspace.newBlock('praxly_for_loop_block');
             try {
                 var initialization = workspace.newBlock('praxly_assignment_expression_block');
-                var incriment = workspace.newBlock('praxly_reassignment_expression_block');
+                // var incriment = workspace.newBlock('praxly_reassignment_expression_block');
+                var incriment = tree2blocks(workspace, blockjson?.incriment)
                 var expression = tree2blocks(workspace, blockjson?.initialization.value); 
                 initialization.setFieldValue(blockjson?.initialization.varType.toUpperCase(), "VARTYPE");
                 initialization.setFieldValue(blockjson?.initialization.name, "VARIABLENAME");
@@ -286,14 +304,14 @@ export const tree2blocks = (workspace, blockjson) => {
                 result.getInput('INITIALIZATION').connection.connect(initialization?.outputConnection);
                 var condition = tree2blocks(workspace, blockjson?.condition);
                 result.getInput('CONDITION').connection.connect(condition.outputConnection);
-                var expression2 = tree2blocks(workspace, blockjson?.incriment.value); 
-                incriment.setFieldValue(blockjson?.incriment.name, "VARIABLENAME");
-                incriment.getInput('EXPRESSION').connection.connect(expression2?.outputConnection);
+                // var expression2 = tree2blocks(workspace, blockjson?.incriment.value); 
+                // incriment.setFieldValue(blockjson?.incriment.name, "VARIABLENAME");
+                // incriment.getInput('EXPRESSION').connection.connect(expression2?.outputConnection);
                 result.getInput('REASSIGNMENT').connection.connect(incriment?.outputConnection);
                 var codeblocks = tree2blocks(workspace, blockjson?.statement);
                 result.getInput('CODEBLOCK').connection.connect(codeblocks[0]?.previousConnection);
                 initialization.initSvg();
-                incriment.initSvg();
+                // incriment.initSvg();
             }
             catch (error)  {
                 console.error('An error occurred: could not generate the nested block', error);
@@ -302,7 +320,7 @@ export const tree2blocks = (workspace, blockjson) => {
 
             }
             break;
-        case 'ARRAY':    
+        case 'ARRAY_LITERAL':    
             var argsList = blockjson?.params;
             var params = workspace.newBlock('praxly_parameter_block');
             for (var i = 0; i < ( argsList?.length ?? 0); i++){
@@ -313,12 +331,6 @@ export const tree2blocks = (workspace, blockjson) => {
             var result = params;
             break;
 
-        case 'ARRAY_REFERENCE':
-            var result = workspace.newBlock('praxly_array_reference_block');
-            result.setFieldValue(blockjson.name, "VARIABLENAME");
-            var child = tree2blocks(workspace, blockjson?.index);
-            result.getInput('INDEX').connection.connect(child?.outputConnection);
-            break;
 
         case 'ARRAY_REFERENCE_ASSIGNMENT':
             var result = workspace.newBlock('praxly_array_reference_reassignment_block');

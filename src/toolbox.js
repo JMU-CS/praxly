@@ -354,6 +354,14 @@ export const toolbox = {
                     'block': {
                       'type': 'praxly_reassignment_expression_block', 
                       'inputs' : {
+                      'LOCATION': {
+                        'block': {
+                          'type' :'praxly_literal_block', 
+                          'fields' : {
+                            'LITERAL' : 'i',
+                          }
+                        },
+                      },
                         'EXPRESSION': {
                           'block' : {
                             'type': 'praxly_arithmetic_block',

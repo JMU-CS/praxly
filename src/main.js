@@ -165,6 +165,7 @@ function runTasks() {
   }
   // console.log(mainTree);
   const executable = createExecutable(mainTree);
+  console.info('here is the executable');
   console.log(executable);
   try {
     executable.evaluate();
@@ -336,7 +337,7 @@ function setLight(){
 // Attach a keydown event listener to the editor's DOM element
 editorElement.addEventListener("keydown", function(event) {
   // Check if the event key is 's' and Ctrl or Command key is pressed
-  if ((event.key === 's' || event.key === 'S') && (event.ctrlKey || event.metaKey)) {
+  if ((event.key === 's' || event.key === 'S') && (event.ctrlKey || event.metaKey)|| event.key === 'F5') {
     // Prevent the default save action (e.g., opening the save dialog)
     event.preventDefault();
     const output = document.querySelector('.output');

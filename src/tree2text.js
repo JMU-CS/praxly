@@ -30,13 +30,16 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             catch (error){
                 return " ";
             }
-        case "VARIABLE":
+        case "LOCATION":
             try {
                 var result = blockjson.name.toString();
                 blockjson.startIndex = startIndex;
                 blockjson.endIndex = startIndex + result.length;
                 blockjson.beg = startIndex;
                 blockjson.end = startIndex + result.length;
+                if (blockjson.isArray){
+                    result += `[${tree2text(blockjson.index)}]`;
+                }
                 return  result;
                 
             }
@@ -287,38 +290,40 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             return result + condition + contents + alternative;
 
         case 'ASSIGNMENT':
-            if (blockjson.varType === 'reassignment') {
-                try {
+            // if (blockjson.varType === 'reassignment') {
+                // try {
                     blockjson.beg = startIndex;
-                    var varname = blockjson.name.toString();
+                    var varname = tree2text(blockjson.location, blockjson.endIndex, indentation);
                     blockjson.startIndex = startIndex + varname.length;
                     var operator = ' ← ';
                     blockjson.endIndex = blockjson.startIndex + operator.length;
-                    var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+                    blockjson.endIndex = blockjson.startIndex + operator.length;
+                    var expression = tree2text(blockjson.value, blockjson.endIndex, indentation);
                     blockjson.end = blockjson.endIndex + expression.length;
                     return '\t'.repeat(indentation) + varname + operator + expression;
-                }
-                catch (error){
-                    return " ";
-                }
-            } else {
-                try {
-                    blockjson.beg = startIndex;
-                    var vartype = blockjson.varType.toString().toLowerCase();
-                    vartype = vartype === "string" ? "String" : vartype;
-                    var varname = vartype + ' ' + blockjson.name.toString();
-                    blockjson.startIndex = startIndex + varname.length + 1;
-                    var operator = ' ← ';
-                    blockjson.endIndex = blockjson.startIndex + 1;
-                    var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
-                    blockjson.end = blockjson.endIndex + expression.length;
-                    return '\t'.repeat(indentation) + varname + operator + expression;
-                }
-                catch (error){
-                    console.error(error);
-                    return " ";
-                }
+                // }
+                // catch (error){
+                //     return " ";
+                // }
+            // } else {
+        case "VARDECL":
+            try {
+                blockjson.beg = startIndex;
+                var vartype = blockjson.varType.toString().toLowerCase();
+                vartype = vartype === "string" ? "String" : vartype;
+                var varname = vartype + ' ' + blockjson.name.toString();
+                blockjson.startIndex = startIndex + varname.length + 1;
+                var operator = ' ← ';
+                blockjson.endIndex = blockjson.startIndex + 1;
+                var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+                blockjson.end = blockjson.endIndex + expression.length;
+                return '\t'.repeat(indentation) + varname + operator + expression;
             }
+            catch (error){
+                console.error(error);
+                return " ";
+            }
+
         case 'WHILE':
             blockjson.beg = startIndex;
             blockjson.startIndex = startIndex + indentation;
@@ -381,11 +386,13 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             blockjson.end = startIndex + result.length + initialization.length + condition.length + incriment.length + contents.length;
             return result + initialization + condition + incriment + contents;
         
-        case 'FUNCTION_ASSIGNMENT':
+        case 'FUNCDECL':
             
             blockjson.beg = startIndex;
             blockjson.startIndex = startIndex;
-            var result = blockjson.returnType + ' ' + blockjson.name + '(';
+            var vartype = blockjson.returnType.toString().toLowerCase();
+            vartype = vartype === "string" ? "String" : vartype;
+            var result = vartype + ' ' + blockjson.name + '(';
             blockjson.endIndex = startIndex + result.length - 1;
             var argsList = blockjson.params;
             if (argsList !== null && argsList.length !== 0){
@@ -406,7 +413,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             blockjson.startIndex = startIndex;
             var result =  blockjson.name + '(';
             blockjson.endIndex = startIndex + result.length - 1;
-            var argsList = blockjson.params;
+            var argsList = blockjson.args;
             
             if (argsList !== null && argsList.length > 0){
                 argsList.forEach(element => {
