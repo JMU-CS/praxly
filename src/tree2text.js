@@ -380,7 +380,7 @@ export const tree2text = (blockjson, startIndex, indentation) => {
             initialization = initialization.slice(0, -1) + '; ';
             var condition = tree2text(blockjson.condition, startIndex + result.length + initialization.length, indentation) + '; ';
             var incriment = tree2text(blockjson.incriment, startIndex + result.length + initialization.length + condition.length, indentation);
-            incriment = incriment.slice(0, -1) +")\n";
+            incriment = incriment +")\n";
             var contents = '\t'.repeat(indentation) + tree2text(blockjson.statement, startIndex + result.length + initialization.length + condition.length + incriment.length, indentation + 1) 
             + '\t'.repeat(indentation) +'end for\n';
             blockjson.end = startIndex + result.length + initialization.length + condition.length + incriment.length + contents.length;
