@@ -1,5 +1,6 @@
+import { textEditor } from "./common";
 
-import { textEditor } from "./lexer-parser";
+
 
 export function generateUrl() {
     // yank the text in ace
