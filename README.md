@@ -8,7 +8,7 @@ The blocks are built using Google's [Blockly][2] library.
 [2]: https://developers.google.com/blockly
 
 <figure>
-    <img src="images/praxly-screenshot-narrow.png">
+    <img src="public/images/praxly-screenshot-narrow.png">
     <figcaption>Screenshot of Praxly running a recursive factorial function</figcaption>
 </figure>
 
