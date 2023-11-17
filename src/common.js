@@ -1,4 +1,5 @@
 import ace from 'ace-builds';
+import 'ace-builds/src-min-noconflict/mode-java.js';
 
 
 // this is going to be the place wahere all shared enums and constants.
@@ -196,5 +197,7 @@ export const indextoAceRange = (line) => {
   };
 
 
-  ace.config.set('basePath', './node_modules/ace-builds/src-min-noconflict');
+  // ace.config.set('basePath', './node_modules/ace-builds/src-min-noconflict');
+  
+  // ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.5.1');
   export const textEditor = ace.edit("aceCode", {fontSize: 19, mode: 'ace/mode/java'});

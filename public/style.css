@@ -427,7 +427,7 @@ main {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-image: url("/images/darkmodeicon.png");
+  background-image: url("./images/darkmodeicon.png");
   color: white;
   border: none;
   outline: none;
@@ -501,7 +501,7 @@ main {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-image: url('/images/help.png');
+  background-image: url('./images/help.png');
   color: white;
   border: none;
   outline: none;
@@ -538,7 +538,7 @@ main {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-image: url('/images/books-icon.png');
+  background-image: url('./images/books-icon.png');
   color: white;
   border: none;
   outline: none;
@@ -583,4 +583,8 @@ main {
 
 #titleRefresh{
   cursor: pointer;
+}
+
+.stderr{
+  color: red;
 }

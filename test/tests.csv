@@ -1,0 +1,4 @@
+Test Name,Program Code,Expected Output,Expected Error
+Hello World,"print ""Hello, World!""","Hello, World!",
+Assign float to int,int x = 1.2;,,"error occured on line 1:
+	incompatible types: possible lossy conversion from DOUBLE to INT"

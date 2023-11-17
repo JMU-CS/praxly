@@ -49,6 +49,7 @@ const resizeBar = document.querySelector('.resizeBar');
 const leftPane = document.querySelector('#blocklyDiv');
 const rightPane = document.querySelector('#aceCode');
 const stdOut = document.querySelector('.stdout');
+const stdError = document.querySelector('.stderr');
 const clearOut = document.querySelector('.clearOut');
 var modal = document.getElementById("myModal");
 var manual = document.getElementById("manual");
@@ -165,16 +166,17 @@ function runTasks() {
 
   } catch (error){
       console.error(error);
-      stdOut.innerHTML = error.message;
-      stdOut.style.color = '#ff0000'; 
+      stdError.innerHTML = error.message;
+      // stdOut.style.color = '#ff0000'; 
   }
   if (errorOutput.length > 0){
-    stdOut.innerHTML = errorOutput;
-    stdOut.style.color = '#ff0000';
-  } else{
+    stdError.innerHTML = errorOutput;
+  //   stdOut.style.color = '#ff0000';
+  } 
+  // else{
     stdOut.innerHTML = printBuffer;
     stdOut.style.color = darkMode ? '#FFFFFF': '#000000';
-  }
+  // }
     
   textEditor.session.setAnnotations(annotationsBuffer);
   addBlockErrors(workspace);
