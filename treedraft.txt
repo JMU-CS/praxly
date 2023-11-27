@@ -1,6 +1,7 @@
 steps to adding a block
 
-1. define the object for the executable
+0. add to TYPES/OP/NODETYPES in common.js
+1. define the object for the executable in ast.js
 2. finish the walk through the json in ast module
 3. edit the lexer in milestone2 to make sure that the text will tokenize properly
 4. edit the parser so that it will package correctly into the tree
@@ -16,13 +17,13 @@ steps to adding a block
 
 location {
 
-    startIndex, 
-    endIndex, 
+    startIndex,
+    endIndex,
     blockID
 }
 
 
-TODO: 
+TODO:
 
 reorganize toolbox
 for loops
@@ -31,35 +32,32 @@ for loops
 
 environment {
 
-    variableList: {}, 
-    functionlist: {}, 
-
-
-
+    variableList: {},
+    functionlist: {},
 
 }
 
 
-function definitions: 
+function definitions:
 
 int functionname (params) {
 
     codeblock here
 }
 
-when we see a function declaration: 
+when we see a function declaration:
 make a new scope, which is a copy of the old environment
 
 
 
-when seeing a function call: 
+when seeing a function call:
 
 take in the environment
 take the scope for the function and append it to a copy of the environment
 
 
 functionName: {
-    params: 
-    code: 
-    
+    params:
+    code:
+
 }

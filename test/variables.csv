@@ -1,0 +1,63 @@
+Test Name,Program Code,Expected Output,Expected Error
+Wrong type,"int n ← 12
+double u ← 6
+short t ← 12.2
+float f ← 3.75
+boolean b ← true
+char c ← a",,"error occurred on line 3:
+	incompatible types: possible lossy conversion from double to short"
+Missing quotes,"int n ← 12
+double u ← 6
+//short t ← 12.2
+float f ← 3.75
+boolean b ← true
+char c ← a",,"error occurred on line 6:
+	Variable a does not exist."
+Correct vars,"int n ← 12
+double u ← 6
+//short t ← 12.2
+float f ← 3.75
+boolean b ← true
+//char c ← a
+println n
+println u
+println f
+println b","12
+6.0
+3.75
+true",
+Divide vars,"int i1 = 1
+int i2 = 2
+float f1 = 1
+float f2 = 2
+println i1 / i2
+println i1 / f1
+println i1 / f2
+println f1 / i2
+println f1 / f1
+println f1 / f2","0
+1.0
+0.5
+0.5
+1.0
+0.5",
+Redeclare,"double a = 3.5 * 2.1
+double a = 3.5 * 2.1
+print a",,"error occurred on line 2:
+	variable a has already been declared in this scope."
+Number arrays,"int[] a ⟵ {5, 9, 2, 10, 15};
+println a
+double[] b ⟵ {5, 9, 2, 10, 15};
+println b","{5, 9, 2, 10, 15}
+{5.0, 9.0, 2.0, 10.0, 15.0}",
+Local vars,"// procedure definition
+void printSum()
+    int a ⟵ 10;
+    int b ⟵ 15;
+    print a + b;
+end printSum
+
+// main program
+printSum();
+print a * b; // ERROR!",25,"error occurred on line 10:
+	Variable a does not exist."

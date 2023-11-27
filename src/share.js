@@ -1,20 +1,16 @@
 import { textEditor } from "./common";
 
-
-
 export function generateUrl() {
     // yank the text in ace
     // console.log(textEditor.getValue());
     var code = textEditor.getValue();
     let encoded = encodeURIComponent(code);
-    console.log(encoded);
-    window.location.hash = ''; //this should clear it before repalcing it
+    // console.log(encoded);
+    window.location.hash = ''; //this should clear it before replacing it
     window.location.hash = `code=${encoded}`
     saveToLocal();
-  
-    var dummy = document.createElement('input'),
-    text = window.location.href;
-
+    var dummy = document.createElement('input');
+    var text = window.location.href;
     document.body.appendChild(dummy);
     dummy.value = text;
     dummy.select();
@@ -22,13 +18,12 @@ export function generateUrl() {
     document.body.removeChild(dummy);
     const toast = document.getElementById('toast');
     toast.style.display = 'block';
-    setTimeout(function() {
-    toast.style.display = 'none';
-  }, 3000); // Hide the toast after 3 seconds (adjust as needed)
-
+    setTimeout(function () {
+        toast.style.display = 'none';
+    }, 3000); // Hide the toast after 3 seconds (adjust as needed)
 }
 
-export function loadFromUrl(turnCodeToBLocks) {
+export function loadFromUrl() {
     const fragmentPattern = '#code='
     // look at the url
     // look for '#code
@@ -39,15 +34,14 @@ export function loadFromUrl(turnCodeToBLocks) {
     urlSrc = urlSrc.substring(fragmentPattern.length);
     let decoded = decodeURIComponent(urlSrc);
     textEditor.setValue(decoded, 1);
-    turnCodeToBLocks();
+
     //take everything after that
-    // decode the encodeing
-    // set the editor text to the encodedtext
+    // decode the encoding
+    // set the editor text to the encoded text
     // trigger the function that generates the code
 }
 
-
-// this seems to work, but we should trigger it automatically at some frequency so that teacher doens't accidentally lose their work
+// this seems to work, but we should trigger it automatically at some frequency so that teacher doesn't accidentally lose their work
 export function saveToLocal() {
     const currentSrc = textEditor.getValue()
     window.localStorage.setItem(`${(new Date()).toLocaleDateString()}`, currentSrc)

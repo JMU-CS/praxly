@@ -4,23 +4,32 @@ This script uses Selenium to drive the web browser.
 https://www.selenium.dev/documentation/webdriver/
 """
 
+import colorama
 import csv
+import os
+import sys
 import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 # URL to test (localhost or production)
-URL = "https://praxly.github.io/"
+URL = "http://localhost:5173/"  # https://praxly.github.io/
 
 # Timeout, in seconds, to find DOM elements.
-WAIT = 10
+WAIT = 3
 
 # How long to sleep before performing actions.
-PAUSE = 0.5
+PAUSE = 0.25
 
 
-def main():
+def main(filename):
     """Run each test in a loop until one fails."""
+
+    # set up terminal color support
+    colorama.init(autoreset=True)
+    pass_msg = colorama.Fore.GREEN + "PASS"
+    fail_msg = colorama.Fore.RED + "FAIL"
 
     print("Opening browser window")
     driver = webdriver.Firefox()
@@ -32,15 +41,19 @@ def main():
     editor = driver.find_element(By.ID, "aceCode")
     play = driver.find_element(By.ID, "runButton")
     stdout = driver.find_element(By.CLASS_NAME, "stdout")
-    # TODO stderr = driver.find_element(By.CLASS_NAME, "stderr")
+    stderr = driver.find_element(By.CLASS_NAME, "stderr")
 
     # for each test in the CSV file
-    file = open('tests.csv', newline='')
+    print("Reading", filename)
+    file = open(filename, encoding="utf-8", newline="")
     file.readline()  # skip header
     test_id = 0
     for row in csv.reader(file):
         test_id += 1
-        name, code, expect_out, expect_err = row
+        name = row[0]
+        code = row[1]
+        expect_out = row[2].rstrip()
+        expect_err = row[3].rstrip()
 
         print(f"Test {test_id}: {name}...", end="", flush=True)
         time.sleep(PAUSE)
@@ -49,20 +62,34 @@ def main():
         editor.click()
         play.click()
 
-        actual_out = stdout.get_attribute("textContent")
-        # TODO actual_err = stderr.get_attribute("textContent")
-        if actual_out == expect_out:  # TODO and actual_err == expect_err:
-            print("PASS")
+        # compare expected with actual output
+        actual_out = stdout.get_attribute("innerText").rstrip()
+        actual_err = stderr.get_attribute("innerText").rstrip()
+        if actual_out == expect_out and actual_err == expect_err:
+            print(pass_msg)
         else:
-            print("FAIL")
-            print(f"  Expect out: {expect_out}")
-            print(f"  Expect err: {expect_err}")
-            print(f"  Actual out: {actual_out}")
-            # TODO print(f"  Actual err: {actual_err}")
-            break
+            print(fail_msg)
+            if actual_out != expect_out:
+                print(f"  Expect out: {expect_out}")
+                print(f"  Actual out: {actual_out}")
+            if actual_err != expect_err:
+                print(f"  Expect err: {expect_err}")
+                print(f"  Actual err: {actual_err}")
 
-    input("Press Enter to quit...")
+            yesno = input("Continue? [Y/n] ")
+            if yesno not in ["", "y", "Y"]:
+                break
 
 
 if __name__ == "__main__":
-    main()
+
+    # optional command-line argument
+    if len(sys.argv) > 1:
+        main(sys.argv[1])
+    else:
+        main("basic_tests.csv")
+
+    # remove the log file if blank
+    if os.path.exists("geckodriver.log"):
+        if os.path.getsize("geckodriver.log") == 0:
+            os.remove("geckodriver.log")

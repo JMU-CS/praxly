@@ -1,214 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/jmu.ico" type="image/x-icon">
-    <title>Praxly Reference</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/jmu.ico" type="image/x-icon">
+  <title>Praxly Reference</title>
+  <style>
+    #reference-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #reference-table th,
+    #reference-table td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    #reference-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #reference-table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .showBlockImage {
+      display: none;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      font-family: "Lucida Console", "Courier New", monospace;
+    }
+  </style>
 </head>
-
-<style>
-
-    /* reference table*/
-
-#reference-table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  #reference-table th, #reference-table td {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-  }
-  
-  #reference-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  #reference-table th {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  
-  .showBlockImage {
-    display: none;
-  }
-
-
-  .modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    font-family: "Lucida Console", "Courier New", monospace;
-  }
-</style>
-
-
-
-
-
-<div>
-
-    <!-- Modal content -->
-    <div class="modal-content">
-      <h2>Praxis Pseudocode notation</h2>
-      <p>Here is the documentation for the pseudocode that the Praxis exam uses.</p>
-      <table id="reference-table">
-        <tr>
-            <th class="showBlockImage" >Block Representation</th>
-            <th>Name</th>
-            <th>Text Representation</th>
-            <th>Explanation</th>
-        </tr>
-        <tr>
-            <td class="showBlockImage">block example here</td>
-            <td>Assignment Operator</td>
-            <td>&#x27f5;<br> <i>note that the equals (=) sign also works for ease of typing.</i></td>
-            <td>This stores the value to the right of the equal sign to the alias on the left.</td>
-        </tr>
-        <tr>
-            <td class="showBlockImage">block example here</td>
-            <td>Arithmetic operators</td>
-            <td>+ &nbsp; &nbsp; - &nbsp; &nbsp; * &nbsp; &nbsp; / &nbsp; &nbsp; % &nbsp; &nbsp; ^</td>
-            <td>The mod operator (%) returns the remainder.  + can be used to concatenate strings</td>
-        </tr>
-        <tr>
-          <td class="showBlockImage">block example here</td>
-          <td>Relational operators</td>
-          <td> == &nbsp; &nbsp;  &lt; &nbsp; &nbsp;  &gt; &nbsp; &nbsp; 	&le; &nbsp; &nbsp;  &#8805; &nbsp; &nbsp;  &ne; 
-            <br> <i>Note that these can be expressed as the following for text input: <br> == &nbsp; &nbsp;  &lt; &nbsp; &nbsp;  &gt; &nbsp; &nbsp; 	 &lt;=  &nbsp; &nbsp; &gt;= &nbsp; &nbsp; !=</i></td>
-          <td>returns a boolean operator for if the comparison is true </td>
-      </tr>
-        <tr>
-          <td class="showBlockImage">block example here</td>
-          <td>Logical operators</td>
-          <td><b>and</b> &nbsp; &nbsp; <b>or</b> &nbsp; &nbsp; <b>not</b> &nbsp; &nbsp; </td>
-          <td>
-               
-                   used to compare two booleans 
-               
-          </td>
+<body>
+  <div class="modal-content">
+    <h2>Pseudocode Notation</h2>
+    <p>Here is the table from the
+      <a href="https://www.ets.org/pdfs/praxis/5652.pdf#page=21">
+      Praxis Computer Science Study Companion</a>,
+      with comments by the Praxly team.</p>
+    <table id="reference-table">
+      <tr>
+        <th class="showBlockImage">Block Representation</th>
+        <th width="30%">Explanation</th>
+        <th width="35%">Notation</th>
+        <th width="35%">Comments</th>
       </tr>
       <tr>
         <td class="showBlockImage">block example here</td>
-        <td>Boolean values operators</td>
-        <td><b>true</b> &nbsp; &nbsp; <b>false</b></td>
+        <td>Assignment operator</td>
+        <td>←</td>
         <td>
-             
-                  
-             
+          Updates the variable on the left with the value on the right.<br>
+          <br>
+          Praxly also recognizes the equals sign (=) as assignment.
         </td>
-    </tr>
-    <tr>
-      <td class="showBlockImage">block example here</td>
-      <td>null</td>
-      <td><b>null</b></td>
-      <td>
-           
-               something that has not been initialized.  
-           
-      </td>
-  </tr>
-  <tr>
-    <td class="showBlockImage">block example here</td>
-    <td>/*comment here*/</td>
-    <td>multi-lined comment</td>
-    <td>
-         
-             multiple lined comments that usally indicate missing code. 
-         
-    </td>
-</tr>
-<tr>
-  <td class="showBlockImage">block example here</td>
-  <td>// comment here</td>
-  <td>single-line comment </td>
-  <td>
-       
-           single lined comments that usally describe a line of code on the same line.  
-       
-  </td>
-</tr>
-<tr>
-<td class="showBlockImage">block example here</td>
-<td>print statement </td>
-<td><b>print</b> <i>argument</i></td>
-<td>
-     
-         prints to standard output when the code is ran.  
-     
-</td>
-</tr>
-<tr>
-<td class="showBlockImage">block example here</td>
-<td>Data types </td>
-<td><b>boolean</b> &nbsp; &nbsp; <b>char</b> &nbsp; &nbsp; <b>double</b> &nbsp; &nbsp; <b>float</b> &nbsp; &nbsp; <b>int</b> &nbsp; &nbsp; <b>int[]</b> &nbsp; &nbsp; <b>int[][]</b> &nbsp; &nbsp; <b>short</b> &nbsp; &nbsp; <b>String</b></td>
-<td>
-     
-         These are the types supported in this language.  
-     
-</td>
-</tr>
-<tr>
-<td class="showBlockImage">block example here</td>
-<td>Array initialization and reference </td>
-<td>int[] a ← {1, 2, 3} &nbsp; &nbsp;  a[0] ←</td>
-<td>
-     
-         a[0] refers to 'a at index 0'  
-     
-</td>
-</tr>
-<tr>
-<td class="showBlockImage">block example here</td>
-<td>Conditional statements</td>
-<td>if (<i>condition</i>) <br>&nbsp; &nbsp;   <i>code here</i><br> end if  <br><br> 
-if (<i>condition</i>) <br> &nbsp; &nbsp; <i>code here</i><br>  else <br>  &nbsp; &nbsp; <i>alternitive code here</i> <br> end if </td>
-<td>
-     
-         runs the code only if the condition is evaluated to true.  
-     
-</td>
-</tr>
-<tr>
-<td class="showBlockImage">block example here</td>
-<td>Iterative statements</td>
-<td>for (<i>initialization; condition; increment</i>) <br> &nbsp; &nbsp;   <i>code here</i> end for  <br><br>  
-while (<i>condition</i>) <br> &nbsp; &nbsp; <i>code here</i> <br> end while </td>
-<td>
-     
-         runs the code only if the condition is evaluated to true.  
-     
-</td>
-</tr>
-<tr>
-<td class="showBlockImage">block example here</td>
-<td>Procedures</td>
-<td><i>void</i> functionName(arg1, arg2) <br> &nbsp; &nbsp;  <i>code here</i> <br> end functionName  &nbsp; &nbsp;   &nbsp; &nbsp;  functionName(3, 4) </td>
-<td>
-     
-         procedures are used to write code with a certain input, run the desired code, and return something else.   
-     
-</td>
-</tr>
-<tr>
-<td class="showBlockImage">block example here</td>
-<td>Classes</td>
-<td>Coming soon....... </td>
-<td>
-     
-         a template for an object.   
-     
-</td>
-</tr> 
-     
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Arithmetic operators</td>
+        <td>
+          + &nbsp;
+          - &nbsp;
+          * &nbsp;
+          ^ &nbsp;
+          / &nbsp;
+          % <br>
+          <br>
+          Note that / indicates floating point division unless stated otherwise.
+        </td>
+        <td>
+          The pow operator (^) raises to a power.
+          The mod operator (%) gets the remainder.
+        </td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Relational operators</td>
+        <td>
+          ==   &nbsp;
+          &lt; &nbsp;
+          &gt; &nbsp;
+          &le; &nbsp;
+          &ge; &nbsp;
+          &ne; <br>
+        </td>
+        <td>
+          Praxly also recognizes &lt;=, &gt;=, and != to make typing easier.</i>
+        </td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Logical operators</td>
+        <td>
+          <b>and</b><br>
+          <b>or</b><br>
+          <b>not</b><br>
+        </td>
+        <td>used to compare two booleans</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>String concatenation operator</td>
+        <td>+</td>
+        <td>Used to combine two strings</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Boolean values</td>
+        <td>
+          <b>true</b><br>
+          <b>false</b><br>
+        </td>
+        <td>Note lowercase spelling</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Null</td>
+        <td><b>null</b></td>
+        <td>Represents nothing; no reference</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Comments</td>
+        <td>// this is a single-line comment</td>
+        <td>single-line comments usually describe a line of code on the next line.</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Placeholder for missing code</td>
+        <td>For example,<br>
+            /* missing code */<br>
+            /* missing condition */<br>
+        </td>
+        <td>Can also be used to write multi-line comments.</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Print<br><br>
+          A comment is used where necessary to
+          indicate if a line feed or blank is appended
+          to the argument.</td>
+        <td><b>print</b> <i>arg</i></td>
+        <td>
+          With <b>print</b>, no line feed or blank space is appended by Praxly.<br>
+          <br>
+          Praxly also provides <b>println</b> which always appends a line feed.
+        </td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Data types</td>
+        <td><b>boolean</b><br>
+            <b>char</b><br>
+            <b>double</b><br>
+            <b>float</b><br>
+            <b>int</b><br>
+            <b>int[ ]</b><br>
+            <b>int[ ][ ]</b><br>
+            <b>short</b><br>
+            <b>String</b><br>
+          </td>
+        <td>These types more or less follow Java's semantics.</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Array initialization and reference</td>
+        <td>
+          <b>int[ ]</b> a ← {1, 2, 3}<br>
+          <b>int</b> b[0..2] ← {1, 2, 3}<br>
+          <b>int[ ][ ]</b> c<br>
+          a[0]<br>
+        </td>
+        <td>a[0] refers to "a at index 0"</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Conditional statements: Indentation and
+          <b>end if</b> statements are significant.<br><br>
+          Example:
+<pre>
+if ( x > 10 )
+      print "big number"
+else
+      print "small number"
+end if
+</pre>
+        </td>
+        <td>
+          <b>if</b> (condition)<br>
+          &nbsp; &nbsp; block of statements<br>
+          <b>end if</b><br>
+          <br>
+          <b>if</b> (condition)<br>
+          &nbsp; &nbsp; block of statements<br>
+          <b>else</b><br>
+          &nbsp; &nbsp; another block of statements<br>
+          <b>end if</b><br>
+        </td>
+        <td>runs the block of statements if the condition evaluates to true.</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Iterative statements: Indentation and <b>end</b> statements are significant</td>
+        <td>
+          <b>for</b> (initialization; condition; increment)<br>
+          &nbsp; &nbsp; block of statements<br>
+          <b>end for</b><br>
+          <br>
+          <b>while</b> (condition)<br>
+          &nbsp; &nbsp; block of statements<br>
+          <b>end while</b><br>
+          <br>
+          <b>do</b><br>
+          &nbsp; &nbsp; block of statements<br>
+          <b>while</b> (condition)<br>
+          <br>
+          <b>repeat</b><br>
+          &nbsp; &nbsp; block of statements<br>
+          <b>until</b> (condition)<br>
+        </td>
+        <td>runs the code repeatedly when the condition evaluates to true.</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Procedures: Indentation and <b>end</b> statements are significant<br><br>
+          The return type is indicated in the procedure header and is based on the value
+          returned by the procedure or is <b>void</b> if the procedure does not return a value.
+        </td>
+        <td>
+          <b>int</b> <i>procedureName</i> ( arg1, ... )<br>
+          &nbsp; &nbsp; block of statements<br>
+          &nbsp; &nbsp; <b>return</b> value<br>
+          <b>end</b> <i>procedureName</i><br>
+          <br>
+          <b>void</b> <i>procedureName</i> ( arg1, ... )<br>
+          &nbsp; &nbsp; block of statements<br>
+          <b>end</b> <i>procedureName</i><br>
+        </td>
+        <td>procedures are used to write code with a input(s), run the desired code, and return a result.</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Classes</td>
+        <td>
+          <b>class</b> <i>className</i><br>
+          &nbsp; &nbsp; variable declarations<br>
+          &nbsp; &nbsp; procedures<br>
+          <b>end class</b> <i>className</i><br>
+        </td>
+        <td>Not yet supported by Praxly...</td>
+      </tr>
+      <tr>
+        <td class="showBlockImage">block example here</td>
+        <td>Object-oriented keywords</td>
+        <td>
+          <b>extends</b><br>
+          <b>new</b><br>
+          <b>public</b><br>
+          <b>private</b><br>
+        </td>
+        <td>Not yet supported by Praxly...</td>
+      </tr>
     </table>
-    
-    
-    </div>
-  
   </div>
+</body>
+</html>
