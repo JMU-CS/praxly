@@ -1044,7 +1044,7 @@ class Parser {
         return result;
       } else {
         textError('compile time', "missing the \'end while\' token", result.line);
-        //gohere
+
       }
     }
 
@@ -1119,14 +1119,14 @@ class Parser {
     }
 
     else if (this.has("println")) {
-      // while (this.has('print')) {
+   
       this.advance();
       const expression = this.parse_boolean_operation();
       if (this.has(';')) {
         this.advance();
       }
       if (this.has('\n')) {
-        // this.advance();
+  
         result.type = NODETYPES.PRINTLN;
         result.value = expression;
         return result;
@@ -1134,14 +1134,14 @@ class Parser {
     }
 
     else if (this.has("return")) {
-      // while (this.has('print')) {
+
       this.advance();
       const expression = this.parse_boolean_operation();
       if (this.has(';')) {
         this.advance();
       }
       if (this.has('\n')) {
-        // this.advance();
+ 
         result.type = NODETYPES.RETURN;
         result.value = expression;
         return result;
@@ -1171,13 +1171,13 @@ class Parser {
       if (this.has(';')) {
         this.advance();
       }
-      if (this.has('\n')) {
-        result = {
-          type: NODETYPES.STATEMENT,
-          value: contents,
-          blockID: "code"
-        };
-      }
+      // if (this.has('\n')) {
+      // }
+      result = {
+        type: NODETYPES.STATEMENT,
+        value: contents,
+        blockID: "code"
+      };
     }
     return result;
   }

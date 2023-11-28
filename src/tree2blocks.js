@@ -302,13 +302,24 @@ export const tree2blocks = (workspace, blockjson) => {
 
         case NODETYPES.FOR:
             var result = workspace.newBlock('praxly_for_loop_block');
+            
+            //gohere
             try {
-                var initialization = workspace.newBlock('praxly_assignment_expression_block');
-                var expression = tree2blocks(workspace, blockjson?.initialization?.value);
-                initialization.setFieldValue(blockjson?.initialization?.varType, "VARTYPE");
-                initialization.setFieldValue(blockjson?.initialization?.name, "VARIABLENAME");
-                initialization.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
-                initialization.initSvg();
+                var initialization = tree2blocks(workspace, blockjson?.initialization);
+                console.error(initialization?.type);
+                if (!initialization || initialization.type !== 'praxly_statement_block'){
+                    initialization.dispose();
+                    var initialization = workspace.newBlock('praxly_assignment_expression_block');
+                    var expression = tree2blocks(workspace, blockjson?.initialization?.value);
+                    initialization.setFieldValue(blockjson?.initialization?.varType, "VARTYPE");
+                    initialization.setFieldValue(blockjson?.initialization?.name, "VARIABLENAME");
+                    initialization.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
+                    initialization.initSvg();
+                } else {
+                    var container = initialization;
+                    initialization = initialization.getInputTargetBlock('EXPRESSION');
+                    
+                }
 
                 // var increment = workspace.newBlock('praxly_reassignment_expression_block');
                 // var expression2 = tree2blocks(workspace, blockjson?.increment?.value);
@@ -321,6 +332,7 @@ export const tree2blocks = (workspace, blockjson) => {
                 var codeblocks = tree2blocks(workspace, blockjson?.statement);
 
                 result.getInput('INITIALIZATION').connection.connect(initialization?.outputConnection);
+                container?.dispose();
                 result.getInput('CONDITION').connection.connect(condition?.outputConnection);
                 result.getInput('REASSIGNMENT').connection.connect(increment?.outputConnection);
                 if (codeblocks && codeblocks.length > 0) {

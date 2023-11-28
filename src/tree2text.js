@@ -251,7 +251,7 @@ export const tree2text = (blockjson, indentation) => {
         case NODETYPES.FOR:
             var result = '\t'.repeat(indentation) + "for";
             var initialization = " (" + tree2text(blockjson.initialization, 0);
-            initialization = initialization.slice(0, -1) + '; ';
+            initialization = initialization.replace("\n", "") + '; ';
             var condition = tree2text(blockjson.condition, 0) + '; ';
             var increment = tree2text(blockjson.increment, 0);
             increment = increment + ")\n";
