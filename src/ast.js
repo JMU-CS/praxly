@@ -148,7 +148,11 @@ export const createExecutable = (blockjson) => {
 
         case NODETYPES.VARDECL:
             var location = createExecutable(blockjson.location);
-            return new Praxly_vardecl(blockjson, location, createExecutable(blockjson.value));
+            if (blockjson.value !== undefined) {
+                return new Praxly_vardecl(blockjson, location, createExecutable(blockjson.value));
+            } else {
+                return new Praxly_vardecl(blockjson, location, undefined);
+            }
 
         case NODETYPES.ARRAY_ASSIGNMENT:
             try {
@@ -445,7 +449,10 @@ class Praxly_array_literal {
     }
 }
 
-function valueToString(child) {
+function valueToString(child, json) {
+    if (child === "Exit_Success") {
+        throw new PraxlyError("no value returned from void procedure", json.line);
+    }
     var result;
     if (child.jsonType === 'Praxly_array') {
         let values = child.elements.map(valueToString);
@@ -470,7 +477,7 @@ class Praxly_print {
 
     evaluate(environment) {
         var child = this.expression.evaluate(environment);
-        var result = valueToString(child);
+        var result = valueToString(child, this.json);
         addToPrintBuffer(result);
         return null;
     }
@@ -484,9 +491,8 @@ class Praxly_println {
     }
 
     evaluate(environment) {
-        // console.log(this.expression.evaluate(environment));
         var child = this.expression.evaluate(environment);
-        var result = valueToString(child);
+        var result = valueToString(child, this.json);
         addToPrintBuffer(result + '<br>');
         return null;
     }
@@ -503,7 +509,7 @@ class Praxly_input {
         if (result === null) {
             throw new PraxlyError("input canceled", this.json.line);
         }
-        addToPrintBuffer(`<b>${result}</b><br>`);
+        // addToPrintBuffer(`<b>${result}</b><br>`);
         return new Praxly_String(result, this.json);
     }
 }
@@ -534,8 +540,8 @@ class Praxly_addition {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         return litNode_new(binop_typecheck(OP.ADDITION, a.realType, b.realType, this.json), a.value + b.value);
     }
 }
@@ -551,8 +557,8 @@ class Praxly_subtraction {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         return litNode_new(binop_typecheck(OP.SUBTRACTION, a.realType, b.realType, this.json), a.value - b.value);
     }
 }
@@ -568,8 +574,8 @@ class Praxly_multiplication {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         return litNode_new(binop_typecheck(OP.MULTIPLICATION, a.realType, b.realType, this.json), a.value * b.value);
     }
 }
@@ -585,8 +591,8 @@ class Praxly_division {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
         }
@@ -605,8 +611,8 @@ class Praxly_modulo {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
         }
@@ -625,8 +631,8 @@ class Praxly_exponent {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         return litNode_new(binop_typecheck(OP.EXPONENTIATION, a.realType, b.realType, this.json), a.value ** b.value);
     }
 }
@@ -642,8 +648,8 @@ class Praxly_and {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         return litNode_new(binop_typecheck(OP.AND, a.realType, b.realType, this.json), a.value && b.value);
     }
 }
@@ -659,8 +665,8 @@ class Praxly_or {
     }
 
     evaluate(environment) {
-        let b = this.b_operand.evaluate(environment);
         let a = this.a_operand.evaluate(environment);
+        let b = this.b_operand.evaluate(environment);
         return litNode_new(binop_typecheck(OP.OR, a.realType, b.realType, this.json), a.value || b.value);
     }
 }
@@ -942,10 +948,10 @@ class Praxly_vardecl {
     }
 
     evaluate(environment) {
-        let valueEvaluated = this.value.evaluate(environment);
-        if (!valueEvaluated) {
-            // throw new PraxlyError(`incomplete assignment to variable ${this.name}`, this.json.line);
-
+        let valueEvaluated;
+        if (this.value !== undefined) {
+            valueEvaluated = this.value.evaluate(environment);
+        } else {
             // assign default value (declaration without assignment)
             switch (this.json.varType) {
                 case NODETYPES.BOOLEAN:
@@ -1002,7 +1008,7 @@ class Praxly_array_assignment {
         // if it is a reassignment, the variable must be in the list and have a matching type.
         let valueEvaluated = this.value.evaluate(environment);
         for (var k = 0; k < valueEvaluated.elements.length; k++) {
-            if (!can_assign(this.json.varType, valueEvaluated.elements[k].realType)) {
+            if (!can_assign(this.json.varType, valueEvaluated.elements[k].realType, this.json.line)) {
                 throw new PraxlyError(`at least one element in the array did not match declared type:\n\texpected type: ${this.json.varType} \n\texpression type: ${valueEvaluated.realType}`, this.json.line);
             }
             valueEvaluated.elements[k] = typeCoercion(this.json.varType, valueEvaluated.elements[k]);
@@ -1205,7 +1211,7 @@ function findFunction(name, environment, json) {
     } else if (environment.parent === "root") {
         throw new PraxlyError(`Error: function ${name} does not exist.`, json.line);
     } else {
-        return findFunction(name, environment.parent);
+        return findFunction(name, environment.parent, json);
     }
 }
 
@@ -1266,16 +1272,13 @@ class Praxly_function_call {
             }
         }
 
-        // due to lack of time, these datatypes will be considered the same.
-        if (returnType === 'short') {
-            returnType = TYPES.INT;
-        }
-        if (returnType === 'float') {
-            returnType = TYPES.DOUBLE;
-        }
-        if ((result === "Exit_Success" && returnType !== TYPES.VOID) || (returnType !== (result?.realType ?? TYPES.VOID))) {
-            throw new PraxlyError(`this function has an invalid return type.\n\t Expected: ${returnType}\n\t Actual: ${result?.realType ?? TYPES.VOID} `, this.json.line);
-            // console.error(`invalid return type: ${returnType} `);
+        // type check the return value
+        if (result === "Exit_Success") {
+            if (returnType !== TYPES.VOID) {
+                throw new PraxlyError(`function ${this.name} missing return statement`, this.json.line);
+            }
+        } else if (!can_assign(returnType, result.realType, this.json.line)) {
+            throw new PraxlyError(`function ${this.name} returned the wrong type.\n\tExpected: ${returnType}\n\tActual: ${result.realType}`, this.json.line);
         }
         return result;
     }

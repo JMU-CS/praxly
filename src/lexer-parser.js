@@ -99,6 +99,14 @@ class Lexer {
     this.startToken++;
   }
 
+  insert_newline() {
+    if (this.tokens.length > 0 && this.tokens[this.tokens.length - 1].token_type !== "\n") {
+      this.tokens.push(new Token("\n", "", this.currentLine));
+      // Note: the code won't be reformatted if an error occurs
+      // this.currentLine += 1;
+    }
+  }
+
   emit_token(type) {
     this.tokens.push(new Token(type, this.token_so_far, this.currentLine));
     this.token_so_far = '';
@@ -122,9 +130,11 @@ class Lexer {
         if (this.has('*') && this.has_ahead('/')) {
           this.skip();
           this.skip();
+          this.insert_newline();
           this.emit_token('comment');
           if (this.has('\n')) {
             this.skip();
+            this.currentLine += 1;
           }
         }
         else {
@@ -160,8 +170,10 @@ class Lexer {
         while (this.hasNot('\n')) {
           this.capture();
         }
-        this.skip();
-        this.emit_token("single_line_comment");
+        this.insert_newline();
+        this.emit_token('single_line_comment');
+        this.skip(); // newline after comment
+        this.currentLine += 1;
 
       } else if (this.has("/")) {
         this.capture();
@@ -840,6 +852,9 @@ class Parser {
     } else if (this.has('(')) {
       result.type = NODETYPES.FUNCDECL;
       result.returnType = vartype;
+      if (type == NODETYPES.ARRAY_ASSIGNMENT) {
+        result.returnType += "[]";
+      }
       this.match_and_discard_next_token('(');
       var params = [];
       var stopLoop = 0;

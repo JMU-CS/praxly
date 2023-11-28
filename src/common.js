@@ -7,16 +7,25 @@ import 'ace-builds/src-min-noconflict/mode-java.js';
  * this is the 'enum' that I use when I refer to types.
  */
 export const TYPES = {
-    INT:            "int",
-    DOUBLE:         "double",
-    STRING:         "String",
     BOOLEAN:        "boolean",
-    FLOAT:          "float",
-    SHORT:          "short",
     CHAR:           "char",
-    VOID:           "void",
+    DOUBLE:         "double",
+    FLOAT:          "float",
+    INT:            "int",
+    SHORT:          "short",
+    STRING:         "String",
+
+    BOOLEAN_ARRAY:  "boolean[]",
+    CHAR_ARRAY:     "char[]",
+    DOUBLE_ARRAY:   "double[]",
+    FLOAT_ARRAY:    "float[]",
+    INT_ARRAY:      "int[]",
+    SHORT_ARRAY:    "short[]",
+    STRING_ARRAY:   "String[]",
+
     INVALID:        "INVALID",
-    NULL:           "null"
+    NULL:           "null",
+    VOID:           "void",
   };
 
 
@@ -51,7 +60,7 @@ export const NODETYPES = {
     PRINTLN:                        "PRINTLN",
     INPUT:                          "INPUT",
     CODEBLOCK:                      "CODEBLOCK",
-    PROGRAM:                         "PROGRAM",
+    PROGRAM:                        "PROGRAM",
     STATEMENT:                      "STATEMENT",
     IF:                             "IF",
     IF_ELSE:                        "IF_ELSE",
@@ -78,7 +87,7 @@ export const NODETYPES = {
 //   PRINT:                          "print",
 //   PRINTLN:                        "println",
 //   CODEBLOCK:                      "codeblock",
-//   PROGRAM:                         "program",
+//   PROGRAM:                        "program",
 //   STATEMENT:                      "statement",
 //   IF:                             "if",
 //   IF_ELSE:                        "if_else",

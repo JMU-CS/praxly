@@ -233,9 +233,23 @@ export const makeGenerator = () => {
         }
     }
 
+    praxlyGenerator['praxly_vardecl_block'] = (block) => {
+        var varType = block.getFieldValue('VARTYPE');
+        var variableName = block.getFieldValue('VARIABLENAME');
+        return {
+            type: NODETYPES.VARDECL,
+            name: variableName,
+            blockID: block.id,
+            varType: varType,
+            location: {
+                name: variableName,
+                type: NODETYPES.LOCATION,
+            },
+        }
+    }
+
     praxlyGenerator['praxly_assignment_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var value = praxlyGenerator[expression.type](expression);

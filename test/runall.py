@@ -52,8 +52,8 @@ def main(filename):
         test_id += 1
         name = row[0]
         code = row[1]
-        expect_out = row[2].rstrip()
-        expect_err = row[3].rstrip()
+        expect_out = row[2].rstrip().replace("\r", "")
+        expect_err = row[3].rstrip().replace("\r", "")
 
         print(f"Test {test_id}: {name}...", end="", flush=True)
         time.sleep(PAUSE)

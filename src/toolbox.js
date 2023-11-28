@@ -150,6 +150,10 @@ export const toolbox = {
       "contents": [
         {
           'kind': 'block',
+          'type': 'praxly_vardecl_block',
+        },
+        {
+          'kind': 'block',
           'type': 'praxly_assignment_block',
           'inputs': {
             'EXPRESSION': {

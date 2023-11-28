@@ -201,11 +201,17 @@ export const tree2blocks = (workspace, blockjson) => {
             break;
 
         case NODETYPES.VARDECL:
-            var result = workspace.newBlock('praxly_assignment_block');
-            var expression = tree2blocks(workspace, blockjson?.value);
-            result.setFieldValue(blockjson.varType, "VARTYPE");
-            result.setFieldValue(blockjson.name, "VARIABLENAME");
-            result.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
+            if (blockjson.value !== undefined) {
+                var result = workspace.newBlock('praxly_assignment_block');
+                var expression = tree2blocks(workspace, blockjson?.value);
+                result.setFieldValue(blockjson.varType, "VARTYPE");
+                result.setFieldValue(blockjson.name, "VARIABLENAME");
+                result.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
+            } else {
+                var result = workspace.newBlock('praxly_vardecl_block');
+                result.setFieldValue(blockjson.varType, "VARTYPE");
+                result.setFieldValue(blockjson.name, "VARIABLENAME");
+            }
             break;
 
         case NODETYPES.WHILE:
