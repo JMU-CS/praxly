@@ -477,5 +477,26 @@ export const makeGenerator = () => {
         }
     }
 
+    praxlyGenerator['praxly_StringFunc_block'] = (block) => {
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        var procedureName = block.getFieldValue('FUNCTYPE');
+        var args = block.getInputTargetBlock('PARAMS');
+        var argschildren = args.getChildren(true);
+        var argsList = [];
+        argschildren.forEach(element => {
+            argsList.push(praxlyGenerator[element.type](element));
+        });
+        return {
+            blockID: block.id,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName, 
+                args: argsList ,
+                type: NODETYPES.FUNCCALL
+            }
+        }
+    }
+
     return praxlyGenerator;
 }

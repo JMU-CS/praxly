@@ -276,6 +276,23 @@ export const tree2blocks = (workspace, blockjson) => {
             params.initSvg();
             break;
 
+        case NODETYPES.SPECIAL_STRING_FUNCCALL:
+            var result = workspace.newBlock('praxly_StringFunc_block');
+            var params = workspace.newBlock('praxly_parameter_block');
+            var recipient = tree2blocks(workspace, blockjson.left);
+            result.setFieldValue(blockjson?.right?.name, 'FUNCTYPE');
+            result.getInput('PARAMS').connection.connect(params?.outputConnection);
+            var argsList = blockjson?.right?.args;
+            for (var i = 0; i < (argsList?.length ?? 0); i++) {
+                params.appendValueInput(`PARAM_${i}`);
+                var argument = tree2blocks(workspace, argsList[i]);
+                params.getInput(`PARAM_${i}`).connection.connect(argument?.outputConnection);
+            }
+            result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            params.initSvg();
+            break;
+            
+
         case NODETYPES.FUNCDECL:
             var returnType = blockjson?.returnType;
             var argsList = blockjson?.params;

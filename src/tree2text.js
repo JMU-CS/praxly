@@ -288,6 +288,20 @@ export const tree2text = (blockjson, indentation) => {
             result += ')';
             return result;
 
+        case NODETYPES.SPECIAL_STRING_FUNCCALL:
+            var result = '\t'.repeat(indentation) + tree2text(blockjson.left, indentation) + '.' + blockjson.right.name;
+            result += '(';
+            var argsList = blockjson.right.args;
+            if (argsList !== null && argsList.length !== 0) {
+                argsList.forEach(element => {
+                    result += tree2text(element, indentation) + ', ';
+                });
+                result = result.slice(0, result.length - 2)
+            }
+            result += ')';
+            return result;
+
+
         case NODETYPES.ARRAY_LITERAL:
             var result = '{';
             var argsList = blockjson.params;

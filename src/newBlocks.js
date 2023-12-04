@@ -1,5 +1,5 @@
 import Blockly, { Block } from 'blockly';
-import { NODETYPES } from './common';
+import { NODETYPES, StringFuncs } from './common';
 
 export function definePraxlyBlocks(workspace) {
   let callbacks = {
@@ -1029,6 +1029,40 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "",
       "helpUrl": "",
       "output": null
+    },
+    {
+      "type": "praxly_StringFunc_block",
+      "message0": "%1.%2(%3)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "FUNCTYPE",
+          "options": [
+            ["charAt", StringFuncs.CHARAT],
+            ["contains", StringFuncs.CONTAINS],
+            ['indexOf', StringFuncs.INDEXOF], 
+            ["length", StringFuncs.LENGTH],
+            ["substring", StringFuncs.SUBSTRING], 
+            ["toLowerCase", StringFuncs.TOLOWERCSE], 
+            ["toUpperCase", StringFuncs.TOUPPERCASE],
+          ]
+        },
+     
+        {
+          "type": "input_value",
+          "name": "PARAMS",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'procedure_blocks',
+      "tooltip": "",
+      "helpUrl": ""
     },
   ]);
 }

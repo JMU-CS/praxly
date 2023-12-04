@@ -79,6 +79,7 @@ export const NODETYPES = {
     ARRAY_LITERAL:                  "ARRAY_LITERAL",
     ARRAY_REFERENCE:                "ARRAY_REFERENCE",
     ARRAY_REFERENCE_ASSIGNMENT:     "ARRAY_REFERENCE_ASSIGNMENT", // remove?
+    SPECIAL_STRING_FUNCCALL:        "SPECIAL_STRING_FUNCCALL"
 }
 
 // export const NODETYPES = {
@@ -240,3 +241,14 @@ export const indextoAceRange = (line) => {
 // ace.config.set('basePath', './node_modules/ace-builds/src-min-noconflict');
 // ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.5.1');
 export const textEditor = ace.edit("aceCode", { fontSize: 19, mode: 'ace/mode/java' });
+
+
+export const StringFuncs = {
+  CHARAT: "charAt",
+  CONTAINS:  "contains",
+  INDEXOF: "indexOf",
+  LENGTH:  "length",
+  SUBSTRING: "substring",
+  TOLOWERCSE: "toLowerCase",
+  TOUPPERCASE: "toUpperCase"
+}

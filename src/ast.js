@@ -1,4 +1,5 @@
-import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput } from "./common";
+
+import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs} from "./common";
 
 var SCOPES = {};
 
@@ -17,6 +18,7 @@ class ReturnException extends Error {
 }
 
 export const createExecutable = (blockjson) => {
+    // console.error(blockjson.type);
     if (typeof blockjson === 'undefined' || typeof blockjson.type === 'undefined') {
         if (errorOutput.length === 0) {
             defaultError("invalid program.");
@@ -96,6 +98,14 @@ export const createExecutable = (blockjson) => {
 
         case NODETYPES.INPUT:
             return new Praxly_input(blockjson);
+
+        case NODETYPES.SPECIAL_STRING_FUNCCALL:
+            var args = [];
+            // console.error(blockjson.right);
+            blockjson.right.args.forEach((arg) => {
+                args.push(createExecutable(arg));
+            });
+            return new Praxly_String_funccall(blockjson, createExecutable(blockjson.left), blockjson.right.name, args);
 
         case NODETYPES.CODEBLOCK:
             let statements = blockjson.statements;
@@ -1284,6 +1294,57 @@ class Praxly_function_call {
     }
 }
 
+class Praxly_String_funccall {
+    constructor(blockjson, reciever, name, args){
+        this.args = args;
+        this.blockjson = blockjson;
+        this.name = name;
+        this.reciever = reciever
+    }
+
+    typecheckhelper(argument, expected_types){
+        if (!expected_types.includes(argument.realType)){
+            throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`);
+        }
+    }
+    evaluate(environment){
+        var str = this.reciever.evaluate(environment);
+        var result;
+        switch (this.name){
+            case StringFuncs.CHARAT:
+                var index = this.args[0].evaluate(environment);
+                this.typecheckhelper(index, [TYPES.INT, TYPES.SHORT]);
+                result = str.value[index.value];
+                return new Praxly_char(result);
+            case StringFuncs.CONTAINS:
+                var char = this.args[0].evaluate(environment);
+                this.typecheckhelper(char, [TYPES.STRING, TYPES.CHAR]);
+                result = str.includes(char.value)
+                return new Praxly_boolean(result);
+            case StringFuncs.INDEXOF:
+                var index = this.args[0].evaluate(environment);
+                this.typecheckhelper(char, [TYPES.CHAR]);
+                result = str.value.indexOf(index.value);
+                return new Praxly_int(result);
+            case StringFuncs.LENGTH:
+                return new Praxly_int(str.value.length);
+            case StringFuncs.TOLOWERCSE:
+                return new Praxly_String(str.value.toLowerCase());
+            case StringFuncs.TOUPPERCASE:
+                return new Praxly_String(str.value.toUpperCase());
+            case StringFuncs.SUBSTRING:
+                var startIndex = this.args[0].evaluate(environment);
+                var endIndex = this.args[1].evaluate(environment);
+                this.typecheckhelper(startIndex, [TYPES.INT, TYPES.SHORT]);
+                this.typecheckhelper(endIndex, [TYPES.INT, TYPES.SHORT]);
+                result = str.value.substring(startIndex.value, endIndex.value);
+                return new Praxly_String(result);
+            default: 
+                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.blockjson.line);
+        }
+    }
+
+}
 class Praxly_emptyLine {
 
     constructor(blockjson) {

@@ -167,6 +167,7 @@ window.onclick = function (event) {
  * this function gets called every time the run button is pressed.
  */
 function runTasks() {
+  console.log(mainTree);
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
     return;

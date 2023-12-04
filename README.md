@@ -37,3 +37,12 @@ To run locally:
 ```
 $ python runall.py [CSV_FILE]
 ```
+
+## Deployment
+
+Note: This process is automated via GitHub actions.
+
+To build for production:
+```
+PRAXLY_PATH=/relative/path/on/server npm run build
+```

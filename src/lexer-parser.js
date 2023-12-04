@@ -331,6 +331,10 @@ class Lexer {
         this.capture();
         this.emit_token("]");
 
+      } else if (this.has(".")) {
+        this.capture();
+        this.emit_token(".");
+
       } else if (this.has("\n")) {
         this.capture();
         this.emit_token("\n");
@@ -366,6 +370,7 @@ class Parser {
     this.eof = false;
     this.keywords = ["if", "else", "then", "done"];
     this.statementKeywords = ['if', 'print', 'for', 'while', 'println'];
+    this.specialStringFunctionKEywords = ["charAt", "contains", "indexOf", "length", "substring", "toLowerCase", "toUpperCase"];
   }
 
   hasNot(type) {
@@ -569,15 +574,42 @@ class Parser {
           value: value,
           args: args
         }
+        // this is used to give different behavior to these functions in particular
+        // if (this.specialStringFunctionKEywords.includes(l.name)){
+        //   l.type = NODETYPES.SPECIAL_STRING_FUNCCALL;
+        // }
       }
       return l;
 
+    
+    
+    
     } else if (this.has("\n")) {
       return;
 
     } else {
       textError("parsing", "missing or invalid base expression. most likely due to a missing operand", line);
     }
+  }
+
+  parse_dotOperator(){
+    var l = this.parse_atom();
+    if (this.has('.')){
+      var line = this.tokens[this.i].line;
+      this.advance();
+      var r = this.parse_atom();
+      if (r.type != NODETYPES.FUNCCALL){
+        textError("compile-time", "classes are not fully supported yet. the right side of the . operator must be a supported string function", line);
+      }
+      l = {
+        left: l,
+        right: r,
+        type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+        blockID: "code",
+        line: line
+      }
+    }
+    return l;
   }
 
   exponent() {
@@ -680,7 +712,7 @@ class Parser {
 
   unary() {
     if (!this.has('not') && !this.has('SUBTRACT')) {
-      return this.parse_atom();
+      return this.parse_dotOperator();
     }
     var line = this.tokens[this.i].line;
     var result = {
@@ -689,14 +721,14 @@ class Parser {
     };
     if (this.has('not')) {
       this.advance();
-      var expression = this.parse_atom();
+      var expression = this.parse_dotOperator();
       result.type = NODETYPES.NOT;
       result.value = expression;
       return result;
     }
     else if (this.has("SUBTRACT")) {
       this.advance();
-      var expression = this.parse_atom();
+      var expression = this.parse_dotOperator();
       if (expression.type === TYPES.INT || expression.type === TYPES.SHORT
         || expression.type === TYPES.DOUBLE || expression.type === TYPES.FLOAT) {
         // negative literal value
