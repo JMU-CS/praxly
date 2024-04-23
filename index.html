@@ -7,14 +7,15 @@
   <link id="ToolboxCss" rel="stylesheet" href="./toolbox-light.css">
   <link rel="icon" href="/jmu.ico" type="image/x-icon">
   <div id="toast" class="toast">URL copied to clipboard</div>
-  <script type="module" crossorigin src="/assets/index-a1c83d2c.js"></script>
+  <div id="comingSoon" class="toast">Coming Soon!</div>
+  <script type="module" crossorigin src="/assets/index-bfe4a855.js"></script>
 </head>
 <body>
   <header class="nav-bar">
 
     <div id="title-version">
       <h1 id="titleRefresh">Praxly 🍂</h1>
-      version <a href="changelog.html">12/01/2023</a>
+      version <a href="changelog.html">02/24/2024</a>
     </div>
 
     <div id="myModal" class="modal">
@@ -24,11 +25,11 @@
 
         <h2>Welcome To Praxly!</h2>
         <ul id="helpMenu">
-          <button class="helpMenuButtons" id="FeaturesButton">Features ✨</button>
-          <button class="helpMenuButtons" id="ChangelogButton">Changelog 📈</button>
-          <button class="helpMenuButtons" id="BugButton">Report a bug 🐞</button>
-          <button class="helpMenuButtons" id="GitHubButton">github 😺</button>
-          <button class="helpMenuButtons" id="AboutButton">About the creator 😎</button>
+          <button class="helpMenuButtons" id="FeaturesButton">features (outdated)</button>
+          <button class="helpMenuButtons" id="ChangelogButton">Changelog</button>
+          <button class="helpMenuButtons" id="BugButton">Report a bug</button>
+          <button class="helpMenuButtons" id="GitHubButton">github</button>
+          <button class="helpMenuButtons" id="AboutButton">People </button>
         </ul>
 
         <p>This is a place to try the pseudocode that will be used in the praxis exam.
@@ -48,25 +49,49 @@
 
     <ul>
       <li>
-        <button id="runButton" class="run-button" title="Run Code">
+        <button id="runButton" class="MainMenu-button" title="Run Code">
           <span class="button-text">Run Code</span>
         </button>
       </li>
-      <li><button id="share" class="share-button" title="Share">
+      <li id="debug">
+        <button id="DebugButton" class="MainMenu-button" title="Debugger">
+          <span class="button-text">Debug Mode</span>
+        </button>
+      </li>
+      <li class="debugOptions">
+        <button id="stepButton" class="MainMenu-button" title="Step Over">
+          <span class="button-text">Step Over</span>
+        </button>
+      </li>
+      <li class="debugOptions">
+        <button id="stepIntoButton" class="MainMenu-button" title="Step Into">
+          <span class="button-text">Step Into</span>
+        </button>
+      </li>
+      <li class="debugOptions">
+        <button id="stopButton" class="MainMenu-button" title="Stop Debugger">
+          <span class="button-text">Exit Debug</span>
+        </button>
+      </li>
+      <li><button id="share" class="MainMenu-button" title="Share">
           <span class="button-text">Share</span>
         </button>
       </li>
-      <li><button id="darkMode" class="dark-mode-button" title="Dark Mode">
+      <li><button id="reference" class="MainMenu-button" title="reference">
+          <span class="button-text">manual</span>
+        </button></li>
+      <li class="settingsOptions"><button id="darkMode" class="MainMenu-button" title="Dark Mode">
           <span class="button-text">Dark Mode</span>
         </button>
       </li>
-      <li><button id="reference" class="manual-button" title="reference">
-          <span class="button-text">manual</span>
-        </button></li>
-      <li><button id="help" class="help-button" title="Help">
-          <span class="button-text">Help</span>
+      <li><button id="settings" class="MainMenu-button" title="Settings">
+          <span class="button-text">settings</span>
         </button>
       </li>
+      <li><button id="info" class="MainMenu-button" title="About Praxly">
+        <span class="button-text">About</span>
+      </button>
+    </li>
     </ul>
 
   </header>
@@ -79,7 +104,7 @@
       <!-- this will be full of examples  -->
     </div>
     <!-- <div>Example Programs</div> -->
-    <div id="exampleTable"></div>
+    <select id="exampleTable"></select>
   </div>
 
   <main>
@@ -88,11 +113,29 @@
     <div id="blocklyDiv"></div>
   </main>
 
-  <div class="output">
-    <div class="clearOut">🗑</div>
-    <p class="stdout">output is here</p>
-    <p class="stderr"></p>
+  <div class="bottom-part">
+    <div id="Variable-table-container">
+      <!-- <p>Variables</p> -->
+      <table id="Variable-table-outer">
+        <thead>
+          <tr>
+            <td>Variable Name</td>
+            <td>Type</td>
+            <td>Value</td>
+            <td>Scope</td>
+          </tr>
+        </thead>
+        <tbody id="Variable-table"></tbody>
+      </table>
+    </div>  
+    
+    <div class="output">
+      <div class="clearOut">🗑</div>
+      <p class="stdout">output is here</p>
+      <p class="stderr"></p>
+    </div>
   </div>
+
 
   
 </body>

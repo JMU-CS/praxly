@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 20px auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .team-member {
+    width: calc(33.33% - 20px);
+    background-color: #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 40px; /* Increased padding to compensate for larger images */
+    box-sizing: border-box;
+  }
+  
+  .team-member img {
+    max-width: 100%;
+    border-radius: 50%; /* Ensure the image is a perfect circle */
+    height: 300px;
+    width: 300px; /* Adjust the size as needed */
+    display: block;
+    margin: 0 auto 20px; /* Increased margin to provide more space */
+    object-fit: cover; /* Ensure the image fills the circle without stretching */
+  }
+  
+  .team-member h3 {
+    margin: 0 0 15px; /* Increased margin bottom for better separation */
+    font-size: 24px; /* Increased font size */
+  }
+  
+  .team-member p {
+    margin: 0;
+    font-size: 16px; /* Increased font size */
+  }
+  
+  .team-member a {
+    display: inline-block;
+    margin-top: 20px; /* Increased margin top */
+    font-size: 16px; /* Increased font size */
+    color: #007bff;
+    text-decoration: none;
+  }
+  
