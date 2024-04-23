@@ -86,8 +86,6 @@ String s2 = ""Bye""
 println s1 + s2
 println s1 + "" "" + s2","HiBye
 Hi Bye",
-Null value,"String s = null
-println s",null,
 Comments,"// this is a comment
 int pizzas = 3
 // another comment

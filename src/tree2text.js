@@ -1,17 +1,16 @@
 import { NODETYPES, TYPES } from "./common";
 
-export const tree2text = (blockjson, indentation) => {
-    if (!blockjson.type) {
+export const tree2text = (node, indentation) => {
+    if (!node.type) {
         return;  // undefined
     }
-    // console.log(blockjson.type);
 
-    switch (blockjson.type) {
+    switch (node.type) {
         case TYPES.BOOLEAN:
         case TYPES.DOUBLE:
         case TYPES.INT:
             try {
-                var result = blockjson.value.toString();
+                var result = node.value.toString();
                 return result;
             } catch (error) {
                 return " ";
@@ -19,9 +18,9 @@ export const tree2text = (blockjson, indentation) => {
 
         case NODETYPES.LOCATION:
             try {
-                var result = blockjson.name.toString();
-                if (blockjson.isArray) {
-                    result += `[${tree2text(blockjson.index)}]`;
+                var result = node.name.toString();
+                if (node.isArray) {
+                    result += `[${tree2text(node.index)}]`;
                 }
                 return result;
             } catch (error) {
@@ -30,7 +29,7 @@ export const tree2text = (blockjson, indentation) => {
 
         case TYPES.CHAR:
             try {
-                var result = '\'' + blockjson.value + '\'';
+                var result = '\'' + node.value + '\'';
                 return result;
             } catch (error) {
                 return " ";
@@ -38,7 +37,7 @@ export const tree2text = (blockjson, indentation) => {
 
         case TYPES.STRING:
             try {
-                var result = '\"' + blockjson.value + '\"';
+                var result = '\"' + node.value + '\"';
                 return result;
             } catch (error) {
                 return " ";
@@ -46,112 +45,118 @@ export const tree2text = (blockjson, indentation) => {
 
         case NODETYPES.COMMENT:
             try {
-                var result = '\t'.repeat(indentation) + '/*' + blockjson.value + '*/\n';
+                var result = '\t'.repeat(indentation) + '/*' + node.value + '*/\n';
                 return result;
             } catch (error) {
                 return " ";
             }
-
+        case NODETYPES.NEWLINE:
+            try {
+                var result = '\n';
+                return result;
+            } catch (error) {
+                return " ";
+            }
         case NODETYPES.SINGLE_LINE_COMMENT:
             try {
-                var result = '\t'.repeat(indentation) + '//' + blockjson.value + '\n';
+                var result = '\t'.repeat(indentation) + '//' + node.value + '\n';
                 return result;
             } catch (error) {
                 return " ";
             }
 
         case NODETYPES.ADDITION:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " + ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.SUBTRACTION:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " - ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.MULTIPLICATION:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " * ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.DIVISION:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " / ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.EXPONENTIATION:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " ^ ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.MODULUS:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " % ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.AND:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " and ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.OR:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " or ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.EQUALITY:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " == ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.LESS_THAN_OR_EQUAL:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " ≤ ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.GREATER_THAN_OR_EQUAL:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " ≥ ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.GREATER_THAN:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " > ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.LESS_THAN:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " < ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.INEQUALITY:
-            var a_operand = tree2text(blockjson.left, indentation);
+            var a_operand = tree2text(node.left, indentation);
             var operator = " ≠ ";
-            var b_operand = tree2text(blockjson.right, blockjson.endIndex, indentation);
+            var b_operand = tree2text(node.right, node.endIndex, indentation);
             return a_operand + operator + b_operand;
 
         case NODETYPES.PRINT:
             var result = '\t'.repeat(indentation) + "print ";
-            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+            var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
             return result + expression;
 
         case NODETYPES.PRINTLN:
             var result = '\t'.repeat(indentation) + "println ";
-            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+            var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
             return result + expression;
 
         case NODETYPES.INPUT:
@@ -159,19 +164,19 @@ export const tree2text = (blockjson, indentation) => {
 
         case NODETYPES.RETURN:
             var result = '\t'.repeat(indentation) + "return ";
-            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+            var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
             return result + expression;
 
         case NODETYPES.PROGRAM:
-            return tree2text(blockjson.value, indentation);
+            return tree2text(node.value, indentation);
 
         case NODETYPES.STATEMENT:
             var result = '\t'.repeat(indentation);
-            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+            var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
             return result + expression;
 
         case NODETYPES.CODEBLOCK:
-            var statements = blockjson.statements.map(element => {
+            var statements = node.statements.map(element => {
                 try {
                     return tree2text(element, indentation);
                 } catch (error) {
@@ -183,33 +188,33 @@ export const tree2text = (blockjson, indentation) => {
 
         case NODETYPES.IF:
             var result = '\t'.repeat(indentation) + "if (";
-            var condition = tree2text(blockjson.condition, indentation) + ")\n";
-            var contents = tree2text(blockjson.statement, indentation + 1) +
+            var condition = tree2text(node.condition, 0) + ")\n";
+            var contents = tree2text(node.statement, indentation + 1) +
                 '\t'.repeat(indentation) + 'end if\n';
             return result + condition + contents;
 
         case NODETYPES.IF_ELSE:
             var result = '\t'.repeat(indentation) + "if (";
-            var condition = tree2text(blockjson.condition, indentation) + ")\n";
-            var contents = tree2text(blockjson.statement, indentation + 1);
+            var condition = tree2text(node.condition, indentation) + ")\n";
+            var contents = tree2text(node.statement, indentation + 1);
             var alternative = '\t'.repeat(indentation) + '\else\n' +
-                tree2text(blockjson.alternative, indentation + 1) +
+                tree2text(node.alternative, indentation + 1) +
                 '\t'.repeat(indentation) + 'end if\n';
             return result + condition + contents + alternative;
 
         case NODETYPES.ASSIGNMENT:
-            var varname = tree2text(blockjson.location, blockjson.endIndex, indentation);
+            var varname = tree2text(node.location, node.endIndex, indentation);
             var operator = ' ← ';
-            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation);
+            var expression = tree2text(node.value, node.endIndex, indentation);
             return varname + operator + expression;
 
         case NODETYPES.VARDECL:
             try {
-                var vartype = blockjson.varType.toString()
-                var varname = vartype + ' ' + blockjson.name.toString();
-                if (blockjson.value !== undefined) {
+                var vartype = node.varType.toString()
+                var varname = vartype + ' ' + node.name.toString();
+                if (node.value !== undefined) {
                     var operator = ' ← ';
-                    var expression = tree2text(blockjson.value, blockjson.endIndex, indentation);
+                    var expression = tree2text(node.value, node.endIndex, indentation);
                     return '\t'.repeat(indentation) + varname + operator + expression + '\n';
                 } else {
                     return '\t'.repeat(indentation) + varname + '\n';
@@ -221,48 +226,48 @@ export const tree2text = (blockjson, indentation) => {
 
         case NODETYPES.WHILE:
             var result = '\t'.repeat(indentation) + "while";
-            var condition = " (" + tree2text(blockjson.condition, indentation) + ")\n";
-            var contents = tree2text(blockjson.statement, indentation + 1) +
+            var condition = " (" + tree2text(node.condition, indentation) + ")\n";
+            var contents = tree2text(node.statement, indentation + 1) +
                 '\t'.repeat(indentation) + 'end while\n';
             return result + condition + contents;
 
         case NODETYPES.DO_WHILE:
             var result = '\t'.repeat(indentation) + 'do\n';
-            var contents = '\t'.repeat(indentation) + tree2text(blockjson.statement, indentation + 1);
-            var condition = '\t'.repeat(indentation) + "while (" + tree2text(blockjson.condition, indentation) + ")\n";
+            var contents = '\t'.repeat(indentation) + tree2text(node.statement, indentation + 1);
+            var condition = '\t'.repeat(indentation) + "while (" + tree2text(node.condition, indentation) + ")\n";
             return result + contents + condition;
 
         case NODETYPES.REPEAT_UNTIL:
             var result = '\t'.repeat(indentation) + 'repeat\n';
-            var contents = '\t'.repeat(indentation) + tree2text(blockjson.statement, indentation + 1);
-            var condition = '\t'.repeat(indentation) + "until (" + tree2text(blockjson.condition, indentation) + ")\n";
+            var contents = '\t'.repeat(indentation) + tree2text(node.statement, indentation + 1);
+            var condition = '\t'.repeat(indentation) + "until (" + tree2text(node.condition, indentation) + ")\n";
             return result + contents + condition;
 
         case NODETYPES.NOT:
             var result = "not ";
-            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation);
+            var expression = tree2text(node.value, node.endIndex, indentation);
             return result + expression;
 
         case NODETYPES.NEGATE:
             var result = "-";
-            var expression = tree2text(blockjson.value, blockjson.endIndex, indentation);
+            var expression = tree2text(node.value, node.endIndex, indentation);
             return result + expression;
 
         case NODETYPES.FOR:
             var result = '\t'.repeat(indentation) + "for";
-            var initialization = " (" + tree2text(blockjson.initialization, 0);
+            var initialization = " (" + tree2text(node.initialization, 0);
             initialization = initialization.replace("\n", "") + '; ';
-            var condition = tree2text(blockjson.condition, 0) + '; ';
-            var increment = tree2text(blockjson.increment, 0);
+            var condition = tree2text(node.condition, 0) + '; ';
+            var increment = tree2text(node.increment, 0);
             increment = increment + ")\n";
-            var contents = '\t'.repeat(indentation) + tree2text(blockjson.statement, indentation + 1) +
+            var contents = '\t'.repeat(indentation) + tree2text(node.statement, indentation + 1) +
                 '\t'.repeat(indentation) + 'end for\n';
             return result + initialization + condition + increment + contents;
 
         case NODETYPES.FUNCDECL:
-            var vartype = blockjson.returnType.toString();
-            var result = vartype + ' ' + blockjson.name + '(';
-            var argsList = blockjson.params;
+            var vartype = node.returnType.toString();
+            var result = vartype + ' ' + node.name + '(';
+            var argsList = node.params;
             if (argsList !== null && argsList.length !== 0) {
                 argsList.forEach(element => {
                     result += element[0] + ' ' + element[1] + ', ';
@@ -271,14 +276,14 @@ export const tree2text = (blockjson, indentation) => {
             }
             result += ')';
             result += '\n';
-            var contents = '\t'.repeat(indentation) + tree2text(blockjson.contents, indentation + 1);
+            var contents = '\t'.repeat(indentation) + tree2text(node.contents, indentation + 1);
             result += contents;
-            result += '\t'.repeat(indentation) + `end ${blockjson.name}\n`;
+            result += '\t'.repeat(indentation) + `end ${node.name}\n`;
             return result;
 
         case NODETYPES.FUNCCALL:
-            var result = blockjson.name + '(';
-            var argsList = blockjson.args;
+            var result = node.name + '(';
+            var argsList = node.args;
             if (argsList !== null && argsList.length > 0) {
                 argsList.forEach(element => {
                     result += tree2text(element, indentation) + ', ';
@@ -289,9 +294,9 @@ export const tree2text = (blockjson, indentation) => {
             return result;
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
-            var result = '\t'.repeat(indentation) + tree2text(blockjson.left, indentation) + '.' + blockjson.right.name;
+            var result = '\t'.repeat(indentation) + tree2text(node.left, indentation) + '.' + node.right.name;
             result += '(';
-            var argsList = blockjson.right.args;
+            var argsList = node.right.args;
             if (argsList !== null && argsList.length !== 0) {
                 argsList.forEach(element => {
                     result += tree2text(element, indentation) + ', ';
@@ -304,7 +309,7 @@ export const tree2text = (blockjson, indentation) => {
 
         case NODETYPES.ARRAY_LITERAL:
             var result = '{';
-            var argsList = blockjson.params;
+            var argsList = node.params;
             if (argsList !== null && argsList.length > 0) {
                 argsList.forEach(element => {
                     result += tree2text(element, indentation) + ', ';
@@ -315,16 +320,16 @@ export const tree2text = (blockjson, indentation) => {
             return result;
 
         case NODETYPES.ARRAY_REFERENCE:
-            result = blockjson.name + '[';
-            var expression = tree2text(blockjson.index, blockjson.endIndex, indentation) + ']';
+            result = node.name + '[';
+            var expression = tree2text(node.index, node.endIndex, indentation) + ']';
             return result + expression;
 
         case NODETYPES.ARRAY_ASSIGNMENT:
             try {
-                var varname = blockjson.varType.toString().toLowerCase() + '[] ' + blockjson.name.toString();
+                var varname = node.varType.toString().toLowerCase() + '[] ' + node.name.toString();
                 var operator = ' ← ';
                 var result = '{';
-                var argsList = blockjson.value.params;
+                var argsList = node.value.params;
                 if (argsList !== null && argsList.length > 0) {
                     argsList.forEach(element => {
                         result += tree2text(element, indentation) + ', ';
@@ -340,17 +345,17 @@ export const tree2text = (blockjson, indentation) => {
 
         case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
             try {
-                var index = tree2text(blockjson.index, blockjson.endIndex, indentation) + ']';
-                var varname = blockjson.name.toString() + '[' + index;
+                var index = tree2text(node.index, node.endIndex, indentation) + ']';
+                var varname = node.name.toString() + '[' + index;
                 var operator = ' ← ';
-                var expression = tree2text(blockjson.value, blockjson.endIndex, indentation) + '\n';
+                var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
                 return '\t'.repeat(indentation) + varname + operator + expression;
             } catch (error) {
                 return " ";
             }
 
         default:
-            console.warn("Unknown blockjson.type:" + blockjson.type);
+            console.warn("Unknown node.type:" + node.type);
             break;
     }
 }

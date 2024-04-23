@@ -1,5 +1,7 @@
 
-import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs} from "./common";
+import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs, highlightLine,  getDebugMode, highlightAstNode, textEditor, setStepInto, getStepInto} from "./common";
+import {generateVariableTable, waitForStep } from "./debugger";
+
 
 var SCOPES = {};
 
@@ -17,139 +19,140 @@ class ReturnException extends Error {
     }
 }
 
-export const createExecutable = (blockjson) => {
-    // console.error(blockjson.type);
-    if (typeof blockjson === 'undefined' || typeof blockjson.type === 'undefined') {
+/**
+ * This function will take the Intermediate Representation of the AST and creates an executable version of the tree. 
+ * This also gives it a chance to run static analysis. 
+ * @param {*} tree  the abstract Syntax tree Intermediate Representation.
+ * @returns 
+ */
+export function createExecutable(tree){
+    if (typeof tree === 'undefined' || typeof tree.type === 'undefined') {
         if (errorOutput.length === 0) {
             defaultError("invalid program.");
         }
-        // console.error(blockjson);
-        return new Praxly_invalid(blockjson);
+        return new Praxly_invalid(tree);
     }
 
-    // console.warn(blockjson.type);
-    switch (blockjson.type) {
+    switch (tree.type) {
 
         case TYPES.INT:
-            return new Praxly_int(blockjson.value, blockjson);
+            return new Praxly_int(tree.value, tree);
 
         case TYPES.STRING:
-            return new Praxly_String(blockjson.value, blockjson);
+            return new Praxly_String(tree.value, tree);
 
         case TYPES.CHAR:
-            return new Praxly_char(blockjson.value, blockjson);
+            return new Praxly_char(tree.value, tree);
 
         case TYPES.BOOLEAN:
-            return new Praxly_boolean(blockjson.value, blockjson);
+            return new Praxly_boolean(tree.value, tree);
 
         case TYPES.DOUBLE:
-            return new Praxly_double(blockjson.value, blockjson);
+            return new Praxly_double(tree.value, tree);
 
         case TYPES.NULL:
-            return new Praxly_null(blockjson.value, blockjson);
+            return new Praxly_null(tree.value, tree);
 
         case NODETYPES.ADDITION:
-            return new Praxly_addition(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_addition(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.SUBTRACTION:
-            return new Praxly_subtraction(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_subtraction(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.MULTIPLICATION:
-            return new Praxly_multiplication(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_multiplication(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.DIVISION:
-            return new Praxly_division(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_division(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.EXPONENTIATION:
-            return new Praxly_exponent(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_exponent(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.MODULUS:
-            return new Praxly_modulo(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_modulo(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.AND:
-            return new Praxly_and(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_and(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.OR:
-            return new Praxly_or(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_or(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.EQUALITY:
-            return new Praxly_equals(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_equals(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.LESS_THAN_OR_EQUAL:
-            return new Praxly_less_than_equal(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_less_than_equal(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.GREATER_THAN_OR_EQUAL:
-            return new Praxly_greater_than_equal(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_greater_than_equal(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.GREATER_THAN:
-            return new Praxly_greater_than(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_greater_than(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.LESS_THAN:
-            return new Praxly_less_than(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_less_than(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.INEQUALITY:
-            return new Praxly_not_equals(createExecutable(blockjson.left), createExecutable(blockjson.right), blockjson);
+            return new Praxly_not_equals(createExecutable(tree.left), createExecutable(tree.right), tree);
 
         case NODETYPES.PRINT:
-            return new Praxly_print(createExecutable(blockjson.value), blockjson);
+            return new Praxly_print(createExecutable(tree.value), tree);
 
         case NODETYPES.PRINTLN:
-            return new Praxly_println(createExecutable(blockjson.value), blockjson);
+            return new Praxly_println(createExecutable(tree.value), tree);
 
         case NODETYPES.INPUT:
-            return new Praxly_input(blockjson);
+            return new Praxly_input(tree);
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
             var args = [];
-            // console.error(blockjson.right);
-            blockjson.right.args.forEach((arg) => {
+            tree.right.args.forEach((arg) => {
                 args.push(createExecutable(arg));
             });
-            return new Praxly_String_funccall(blockjson, createExecutable(blockjson.left), blockjson.right.name, args);
+            return new Praxly_String_funccall(tree, createExecutable(tree.left), tree.right.name, args);
 
         case NODETYPES.CODEBLOCK:
-            let statements = blockjson.statements;
+            let statements = tree.statements;
             let result = statements.map((statement) => {
-                // console.error(statement);
                 return createExecutable(statement);
             });
             return new Praxly_codeBlock(result);
 
         case NODETYPES.PROGRAM:
-            // variableList = {};
             SCOPES = {
                 global: {
+                    name: 'global',
                     parent: "root",
                     variableList: {},
                     functionList: {},
                 }
             };
-            return new Praxly_program(createExecutable(blockjson.value));
+            return new Praxly_program(createExecutable(tree.value));
 
         case NODETYPES.STATEMENT:
-            return new Praxly_statement(createExecutable(blockjson.value), blockjson);
+            return new Praxly_statement(createExecutable(tree.value), tree);
 
         case NODETYPES.IF:
             try {
-                return new Praxly_if(createExecutable(blockjson.condition), createExecutable(blockjson.statement), blockjson);
+                return new Praxly_if(createExecutable(tree.condition), createExecutable(tree.statement), tree);
             }
             catch (error) {
-                // console.error('An error occurred: empty statement', error);
+                
                 return new Praxly_statement(null);
             }
 
         case NODETYPES.IF_ELSE:
             try {
-                return new Praxly_if_else(createExecutable(blockjson.condition), createExecutable(blockjson.statement), createExecutable(blockjson.alternative), blockjson);
+                return new Praxly_if_else(createExecutable(tree.condition), createExecutable(tree.statement), createExecutable(tree.alternative), tree);
             }
             catch (error) {
-                // console.error('An error occurred: empty statement', error);
+                
                 return new Praxly_statement(null);
             }
 
         case NODETYPES.ASSIGNMENT:
             try {
-                return new Praxly_assignment(blockjson, createExecutable(blockjson.location), createExecutable(blockjson.value), blockjson);
+                return new Praxly_assignment(tree, createExecutable(tree.location), createExecutable(tree.value), tree);
             }
             catch (error) {
                 console.error('assignment error: ', error);
@@ -157,16 +160,16 @@ export const createExecutable = (blockjson) => {
             }
 
         case NODETYPES.VARDECL:
-            var location = createExecutable(blockjson.location);
-            if (blockjson.value !== undefined) {
-                return new Praxly_vardecl(blockjson, location, createExecutable(blockjson.value));
+            var location = createExecutable(tree.location);
+            if (tree.value !== undefined) {
+                return new Praxly_vardecl(tree, location, createExecutable(tree.value));
             } else {
-                return new Praxly_vardecl(blockjson, location, undefined);
+                return new Praxly_vardecl(tree, location, undefined);
             }
 
         case NODETYPES.ARRAY_ASSIGNMENT:
             try {
-                return new Praxly_array_assignment(blockjson, createExecutable(blockjson.location), createExecutable(blockjson.value));
+                return new Praxly_array_assignment(tree, createExecutable(tree.location), createExecutable(tree.value));
             }
             catch (error) {
                 console.error('assignment error: ', error);
@@ -176,23 +179,22 @@ export const createExecutable = (blockjson) => {
         case NODETYPES.LOCATION:
             try {
                 var index = null;
-                if (blockjson.isArray) {
-                    index = createExecutable(blockjson.index);
+                if (tree.isArray) {
+                    index = createExecutable(tree.index);
                 }
-                return new Praxly_Location(blockjson, index);
+                return new Praxly_Location(tree, index);
             }
             catch (error) {
-                // console.error('assignment error: ', error);
                 return;
             }
 
         case NODETYPES.FOR:
             try {
-                var initialization = createExecutable(blockjson.initialization);
-                var condition = createExecutable(blockjson.condition);
-                var incrementation = createExecutable(blockjson.increment);
-                var statement = createExecutable(blockjson.statement);
-                return new Praxly_for(initialization, condition, incrementation, statement, blockjson);
+                var initialization = createExecutable(tree.initialization);
+                var condition = createExecutable(tree.condition);
+                var incrementation = createExecutable(tree.increment);
+                var statement = createExecutable(tree.statement);
+                return new Praxly_for(initialization, condition, incrementation, statement, tree);
             }
             catch (error) {
                 console.error(error);
@@ -201,9 +203,9 @@ export const createExecutable = (blockjson) => {
 
         case NODETYPES.WHILE:
             try {
-                var condition = createExecutable(blockjson.condition);
-                var statement = createExecutable(blockjson.statement);
-                return new Praxly_while(condition, statement, blockjson);
+                var condition = createExecutable(tree.condition);
+                var statement = createExecutable(tree.statement);
+                return new Praxly_while(condition, statement, tree);
             }
             catch (error) {
                 console.error(error);
@@ -212,9 +214,9 @@ export const createExecutable = (blockjson) => {
 
         case NODETYPES.DO_WHILE:
             try {
-                var condition = createExecutable(blockjson.condition);
-                var statement = createExecutable(blockjson.statement);
-                return new Praxly_do_while(condition, statement, blockjson);
+                var condition = createExecutable(tree.condition);
+                var statement = createExecutable(tree.statement);
+                return new Praxly_do_while(condition, statement, tree);
             }
             catch (error) {
                 console.error('An error occurred: empty statement', error);
@@ -223,9 +225,9 @@ export const createExecutable = (blockjson) => {
 
         case NODETYPES.REPEAT_UNTIL:
             try {
-                var condition = createExecutable(blockjson.condition);
-                var statement = createExecutable(blockjson.statement);
-                return new Praxly_repeat_until(condition, statement, blockjson);
+                var condition = createExecutable(tree.condition);
+                var statement = createExecutable(tree.statement);
+                return new Praxly_repeat_until(condition, statement, tree);
             }
             catch (error) {
                 console.error('An error occurred: empty statement', error);
@@ -233,213 +235,212 @@ export const createExecutable = (blockjson) => {
             }
 
         case NODETYPES.NOT:
-            return new Praxly_not(createExecutable(blockjson.value), blockjson);
+            return new Praxly_not(createExecutable(tree.value), tree);
 
         case NODETYPES.NEGATE:
-            return new Praxly_negate(createExecutable(blockjson.value), blockjson);
+            return new Praxly_negate(createExecutable(tree.value), tree);
 
         case NODETYPES.COMMENT:
-            return new Praxly_comment(blockjson.value, blockjson);
+            return new Praxly_comment(tree.value, tree);
 
         case NODETYPES.SINGLE_LINE_COMMENT:
-            return new Praxly_single_line_comment(blockjson.value, blockjson);
+            return new Praxly_single_line_comment(tree.value, tree);
 
         case NODETYPES.FUNCDECL:
-            var contents = createExecutable(blockjson.contents);
-            return new Praxly_function_declaration(blockjson.returnType, blockjson.name, blockjson.params, contents, blockjson);
+            var contents = createExecutable(tree.contents);
+            return new Praxly_function_declaration(tree.returnType, tree.name, tree.params, contents, tree);
 
         case NODETYPES.FUNCCALL:
             var args = [];
-            blockjson.args.forEach((arg) => {
+            tree.args.forEach((arg) => {
                 args.push(createExecutable(arg));
             });
-            return new Praxly_function_call(blockjson.name, args, blockjson);
+            return new Praxly_function_call(tree.name, args, tree);
 
         case NODETYPES.RETURN:
-            return new Praxly_return(createExecutable(blockjson.value), blockjson);
+            return new Praxly_return(createExecutable(tree.value), tree);
 
         case NODETYPES.ARRAY_LITERAL:
             var args = [];
-            blockjson.params.forEach((arg) => {
+            tree.params.forEach((arg) => {
                 args.push(createExecutable(arg));
             });
-            return new Praxly_array_literal(args, blockjson);
+            return new Praxly_array_literal(args, tree);
 
         case NODETYPES.ARRAY_REFERENCE:
-            // console.error(createExecutable(blockjson.index));
-            return new Praxly_array_reference(blockjson.name, createExecutable(blockjson.index), blockjson);
-
-        //gohere
+            return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
 
         case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
-            return new Praxly_array_reference_assignment(blockjson.name, createExecutable(blockjson.index), createExecutable(blockjson.value), blockjson);
+            return new Praxly_array_reference_assignment(tree.name, createExecutable(tree.index), createExecutable(tree.value), tree);
 
         case 'INVALID':
-            return new Praxly_invalid(blockjson);
+            return new Praxly_invalid(tree);
 
-        case 'EMPTYLINE':
-            return new Praxly_emptyLine(blockjson);
+        case NODETYPES.NEWLINE:
+            return new Praxly_emptyLine(tree);
 
         default:
-            console.error(`I don't recognize this type: ${blockjson.type}}`);
+            console.error(`I don't recognize this type: ${tree.type}}`);
     }
 }
 
 class Praxly_array_reference_assignment {
 
-    constructor(name, index, value, blockjson) {
-        this.json = blockjson;
+    constructor(name, index, value, node) {
+        this.json = node;
         this.name = name;
         this.value = value;
         this.index = index;
     }
 
-    evaluate(environment) {
-        environment.variableList[this.name].elements[this.index.evaluate(environment).value] = this.value.evaluate(environment);
+    async evaluate(environment) {
+        var index = await this.index.evaluate(environment);
+        environment.variableList[this.name].elements[index.value] = await this.value.evaluate(environment);
     }
 }
 
 class Praxly_single_line_comment {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_single_line_comment';
-        this.json = blockjson;
+        this.json = node;
         this.value = value;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
     }
 }
 
 class Praxly_comment {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_comment';
-        this.json = blockjson;
+        this.json = node;
         this.value = value;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
     }
 }
 
 class Praxly_int {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_int';
-        this.json = blockjson;
+        this.json = node;
         this.value = Math.floor(value);
         this.realType = TYPES.INT;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_short {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_int';
-        this.json = blockjson;
+        this.json = node;
         this.value = Math.floor(value);
         this.realType = TYPES.SHORT;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_double {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_double';
-        this.json = blockjson;
+        this.json = node;
         this.value = parseFloat(value);
         this.realType = TYPES.DOUBLE;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_float {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_double';
-        this.json = blockjson;
+        this.json = node;
         this.value = parseFloat(value);
         this.realType = TYPES.FLOAT;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_boolean {
 
-    constructor(value, blockjson) {
-        this.json = blockjson;
+    constructor(value, node) {
+        this.json = node;
         this.jsonType = 'Praxly_boolean';
         this.value = value;
         this.realType = TYPES.BOOLEAN;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_char {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.value = value;
-        this.json = blockjson;
+        this.json = node;
         this.jsonType = 'Praxly_String';
         this.realType = TYPES.CHAR;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_String {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_String';
-        this.json = blockjson;
+        this.json = node;
         this.value = value;
         this.realType = TYPES.STRING;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_null {
 
-    constructor(value, blockjson) {
+    constructor(value, node) {
         this.jsonType = 'Praxly_null';
-        this.json = blockjson;
+        this.json = node;
         this.value = value;
         this.realType = TYPES.NULL;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
 
 class Praxly_array_literal {
 
-    constructor(elements, blockjson) {
+    constructor(elements, node) {
         this.elements = elements;
-        this.blockjson = blockjson;
+        this.node = node;
+        this.json = node;
         this.jsonType = 'Praxly_array';
 
         // set array type to "largest type" of element
@@ -454,7 +455,7 @@ class Praxly_array_literal {
         this.realType = types[max_type] + "[]";
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         return this;
     }
 }
@@ -480,13 +481,13 @@ function valueToString(child, json) {
 
 class Praxly_print {
 
-    constructor(value, blockjson) {
-        this.json = blockjson;
+    constructor(value, node) {
+        this.json = node;
         this.expression = value;
     }
 
-    evaluate(environment) {
-        var child = this.expression.evaluate(environment);
+    async evaluate(environment) {
+        var child = await (this.expression.evaluate(environment));
         var result = valueToString(child, this.json);
         addToPrintBuffer(result);
         return null;
@@ -495,13 +496,13 @@ class Praxly_print {
 
 class Praxly_println {
 
-    constructor(value, blockjson) {
-        this.json = blockjson;
+    constructor(value, node) {
+        this.json = node;
         this.expression = value;
     }
 
-    evaluate(environment) {
-        var child = this.expression.evaluate(environment);
+    async evaluate(environment) {
+        var child = await this.expression.evaluate(environment);
         var result = valueToString(child, this.json);
         addToPrintBuffer(result + '<br>');
         return null;
@@ -510,11 +511,11 @@ class Praxly_println {
 
 class Praxly_input {
 
-    constructor(blockjson) {
-        this.json = blockjson;
+    constructor(node) {
+        this.json = node;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         var result = prompt("input");
         if (result === null) {
             throw new PraxlyError("input canceled", this.json.line);
@@ -526,16 +527,14 @@ class Praxly_input {
 
 class Praxly_return {
 
-    constructor(value, blockjson) {
-        this.json = blockjson;
+    constructor(value, node) {
+        this.json = node;
         this.expression = value;
-        this.isreturn = true;
+        // this.isreturn = true;
     }
 
-    evaluate(environment) {
-        // console.log(this.expression.evaluate(environment));
-        throw new ReturnException(this.expression.evaluate(environment));
-        // return this.expression.evaluate(environment);
+    async evaluate(environment) {
+        throw new ReturnException( await this.expression.evaluate(environment));
     }
 }
 
@@ -543,15 +542,20 @@ class Praxly_addition {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         return litNode_new(binop_typecheck(OP.ADDITION, a.realType, b.realType, this.json), a.value + b.value);
     }
 }
@@ -560,15 +564,20 @@ class Praxly_subtraction {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         return litNode_new(binop_typecheck(OP.SUBTRACTION, a.realType, b.realType, this.json), a.value - b.value);
     }
 }
@@ -577,15 +586,20 @@ class Praxly_multiplication {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         return litNode_new(binop_typecheck(OP.MULTIPLICATION, a.realType, b.realType, this.json), a.value * b.value);
     }
 }
@@ -594,17 +608,22 @@ class Praxly_division {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
+        }
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
         }
         return litNode_new(binop_typecheck(OP.DIVISION, a.realType, b.realType, this.json), a.value / b.value);
     }
@@ -614,17 +633,22 @@ class Praxly_modulo {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
+        }
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
         }
         return litNode_new(binop_typecheck(OP.MODULUS, a.realType, b.realType, this.json), a.value % b.value);
     }
@@ -634,15 +658,20 @@ class Praxly_exponent {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         return litNode_new(binop_typecheck(OP.EXPONENTIATION, a.realType, b.realType, this.json), a.value ** b.value);
     }
 }
@@ -651,15 +680,20 @@ class Praxly_and {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         return litNode_new(binop_typecheck(OP.AND, a.realType, b.realType, this.json), a.value && b.value);
     }
 }
@@ -668,15 +702,20 @@ class Praxly_or {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        let a = this.a_operand.evaluate(environment);
-        let b = this.b_operand.evaluate(environment);
+    async evaluate(environment) {
+        let a = await this.a_operand.evaluate(environment);
+        let b = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         return litNode_new(binop_typecheck(OP.OR, a.realType, b.realType, this.json), a.value || b.value);
     }
 }
@@ -685,14 +724,21 @@ class Praxly_equals {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        return new Praxly_boolean(this.a_operand.evaluate(environment).value === this.b_operand.evaluate(environment).value);
+    async evaluate(environment) {
+        var left = await this.a_operand.evaluate(environment);
+        var right = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
+        return new Praxly_boolean(left.value === right.value);
     }
 }
 
@@ -700,14 +746,21 @@ class Praxly_not_equals {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        return new Praxly_boolean(this.a_operand.evaluate(environment).value != this.b_operand.evaluate(environment).value);
+    async evaluate(environment) {
+        var left = await this.a_operand.evaluate(environment);
+        var right = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
+        return new Praxly_boolean(left.value != await right.value);
     }
 }
 
@@ -715,14 +768,21 @@ class Praxly_greater_than {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        return new Praxly_boolean(this.a_operand.evaluate(environment).value > this.b_operand.evaluate(environment).value);
+    async evaluate(environment) {
+        var left = await this.a_operand.evaluate(environment);
+        var right = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
+        return new Praxly_boolean(left.value > right.value);
     }
 }
 
@@ -730,14 +790,21 @@ class Praxly_less_than {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        return new Praxly_boolean(this.a_operand.evaluate(environment).value < this.b_operand.evaluate(environment).value);
+    async evaluate(environment) {
+        var left = await this.a_operand.evaluate(environment);
+        var right = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
+        return new Praxly_boolean(left.value < right.value);
     }
 }
 
@@ -745,14 +812,21 @@ class Praxly_greater_than_equal {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        return new Praxly_boolean(this.a_operand.evaluate(environment).value >= this.b_operand.evaluate(environment).value);
+    async evaluate(environment) {
+        var left = await this.a_operand.evaluate(environment);
+        var right = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
+        return new Praxly_boolean(left.value >= right.value);
     }
 }
 
@@ -760,28 +834,36 @@ class Praxly_less_than_equal {
     a_operand;
     b_operand;
 
-    constructor(a, b, blockjson) {
-        this.json = blockjson;
+    constructor(a, b, node) {
+        this.json = node;
         this.a_operand = a;
         this.b_operand = b;
     }
 
-    evaluate(environment) {
-        return new Praxly_boolean(this.a_operand.evaluate(environment).value <= this.b_operand.evaluate(environment).value);
+    async evaluate(environment) {
+        var left = await this.a_operand.evaluate(environment);
+        var right = await this.b_operand.evaluate(environment);
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
+        return new Praxly_boolean(left.value <= right.value);
     }
 }
 
 class Praxly_if {
 
-    constructor(condition, code, blockjson) {
-        this.json = blockjson;
+    constructor(condition, code, node) {
+        this.json = node;
         this.condition = condition;
         this.code = code;
     }
 
-    evaluate(environment) {
-        if (this.condition.evaluate(environment).value) {
-            this.code.evaluate(environment);
+    async evaluate(environment) {
+        var cond = await this.condition.evaluate(environment);
+        if (cond.value) {
+            await this.code.evaluate(environment);
         }
         return 'success';
     }
@@ -789,38 +871,37 @@ class Praxly_if {
 
 class Praxly_if_else {
 
-    constructor(condition, code, alternative, blockjson) {
-        this.json = blockjson;
+    constructor(condition, code, alternative, node) {
+        this.json = node;
         this.condition = condition;
         this.code = code;
         this.alternative = alternative;
     }
 
-    evaluate(environment) {
-        if (this.condition.evaluate(environment).value) {
-            this.code.evaluate(environment);
+    async evaluate(environment) {
+        var cond = await this.condition.evaluate(environment);
+        if (cond.value) {
+            await this.code.evaluate(environment);
         } else {
-            this.alternative.evaluate(environment);
+            await this.alternative.evaluate(environment);
         }
         return 'success';
     }
 }
 
-// this might be useless but it is meant to package statements
 class Praxly_statement {
 
-    constructor(contents) {
+    constructor(contents, node) {
         this.contents = contents;
+        this.json = node;
     }
 
-    evaluate(environment) {
-        try {
-            return this.contents.evaluate(environment);
-        } catch (error) {
-            // addError('error from index ');
-            // console.error('An error occurred: empty statement', error);
-            return;
-        }
+    async evaluate(environment) {
+        // if (debugMode){
+        //     highlightLine(this.json.line, true);
+        // }
+        var result = this.contents.evaluate(environment);
+        return result;
     }
 }
 
@@ -831,8 +912,8 @@ class Praxly_program {
         this.codeBlock = codeblockk;
     }
 
-    evaluate() {
-        return this.codeBlock.evaluate(SCOPES.global);
+    async evaluate() {
+        return await (this.codeBlock.evaluate(SCOPES.global));
     }
 }
 
@@ -842,23 +923,30 @@ class Praxly_codeBlock {
         // console.log(this.praxly_blocks);
     }
 
-    evaluate(environment) {
-        var newScope = {
-            parent: environment,
-            functionList: {},
-            variableList: {},
-        };
+    async evaluate(environment) {
 
+        // I originally had what I would call 'extreme shadowing'. We changed this for the debugger. 
+        // var newScope = {
+        //     parent: environment,
+        //     name: 'for loop',
+        //     functionList: {},
+        //     variableList: {},
+        // };
         for (let i = 0; i < this.praxly_blocks.length; i++) {
             const element = this.praxly_blocks[i];
-
-            //aborts if it detects a return statement. Hopefully this doesn't cause problems later ahaha
-            if (element?.isreturn) {
-                return element.evaluate(newScope);
-            } else {
-                // console.error(element);
-                element.evaluate(newScope);
+            if (element.json.type == NODETYPES.NEWLINE || element.json.type === NODETYPES.COMMENT || element.json.type === NODETYPES.SINGLE_LINE_COMMENT){
+                continue;
             }
+            if (getDebugMode()) {
+                let markerId = highlightAstNode(element.json);
+                let table = document.getElementById('Variable-table');
+                table.innerHTML = "";
+                generateVariableTable(environment, 1);
+                await waitForStep();
+                textEditor.session.removeMarker(markerId);
+            }
+            await element.evaluate(environment);
+            setStepInto(false);
         }
         return "Exit_Success";
     }
@@ -866,14 +954,10 @@ class Praxly_codeBlock {
 
 // searches through the linked list to find the nearest match to enable shadowing.
 function accessLocation(environment, json) {
-    // console.error(`looking for ${json.name}`);
-    // console.warn(environment.variableList);
-
     if (environment.variableList.hasOwnProperty(json.name)) {
         return environment.variableList;
     } else if (environment.parent === "root") {
         return null;
-        // throw new PraxlyError(`Variable ${json.name} does not exist.`, json.line);
     } else {
         return accessLocation(environment.parent, json);
     }
@@ -915,33 +999,39 @@ function typeCoercion(varType, praxlyObj) {
 
 class Praxly_assignment {
 
-    constructor(json, location, expression, blockjson) {
-        this.json = blockjson;
+    constructor(json, location, expression, node) {
+        this.json = node;
         this.location = location;
         this.value = expression;
-        // console.error(this.value);
+        
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         // if it is a reassignment, the variable must be in the list and have a matching type.
-        let valueEvaluated = this.value.evaluate(environment);
+        let valueEvaluated = await this.value.evaluate(environment);
         var storage = accessLocation(environment, this.location);
         if (!storage) {
-            throw new PraxlyError(`Variable ${this.location.name} does not exist.`, this.json.line);
+            throw new PraxlyError(`Variable ${this.location.name} does not exist in this scope.`, this.json.line);
         }
-
-        let currentStoredVariableEvaluated = this.location.evaluate(environment);
+        
+        let currentStoredVariableEvaluated = await this.location.evaluate(environment);
         if (!can_assign(currentStoredVariableEvaluated.realType, valueEvaluated.realType, this.json.line)) {
             throw new PraxlyError(`Error: variable reassignment does not match declared type: \n\t Expected: `
-                + `${currentStoredVariableEvaluated.realType}, \n\t Actual: ${valueEvaluated.realType}`, this.json.line);
+            + `${currentStoredVariableEvaluated.realType}, \n\t Actual: ${valueEvaluated.realType}`, this.json.line);
         }
-
+        
         // console.warn(storage);
         valueEvaluated = typeCoercion(currentStoredVariableEvaluated.realType, valueEvaluated);
         if (this.location.isArray) {
-            storage[this.location.name].elements[this.location.index.evaluate(environment).value] = valueEvaluated;
+            var index = await this.location.index.evaluate(environment);
+            storage[this.location.name].elements[index.value] = valueEvaluated;
         } else {
             storage[this.location.name] = valueEvaluated;
+        }
+        if (getStepInto()) {
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
         }
         return valueEvaluated;
     }
@@ -954,13 +1044,13 @@ class Praxly_vardecl {
         this.location = location;
         this.value = expression;
         this.name = location.name;
-        // console.error(this.value);
+         
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         let valueEvaluated;
         if (this.value !== undefined) {
-            valueEvaluated = this.value.evaluate(environment);
+            valueEvaluated = await this.value.evaluate(environment);
         } else {
             // assign default value (declaration without assignment)
             switch (this.json.varType) {
@@ -993,13 +1083,13 @@ class Praxly_vardecl {
         if (environment.variableList.hasOwnProperty(this.name)) {
             throw new PraxlyError(`variable ${this.name} has already been declared in this scope. `, this.json.line);
         }
-        // console.error(this.json);
+        
         if (!can_assign(this.json.varType, valueEvaluated.realType, this.json.line)) {
             throw new PraxlyError(`incompatible types: ${valueEvaluated.realType} cannot be converted to ${this.json.varType}`, this.json.line);
         }
         valueEvaluated = typeCoercion(this.json.varType, valueEvaluated);
         environment.variableList[this.name] = valueEvaluated;
-        // console.log(environment);
+        
         return;
     }
 }
@@ -1011,12 +1101,12 @@ class Praxly_array_assignment {
         this.location = location;
         this.value = expression;
         this.name = location.name;
-        // console.error(this.value);
+         
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         // if it is a reassignment, the variable must be in the list and have a matching type.
-        let valueEvaluated = this.value.evaluate(environment);
+        let valueEvaluated = await this.value.evaluate(environment);
         for (var k = 0; k < valueEvaluated.elements.length; k++) {
             if (!can_assign(this.json.varType, valueEvaluated.elements[k].realType, this.json.line)) {
                 throw new PraxlyError(`at least one element in the array did not match declared type:\n\texpected type: ${this.json.varType} \n\texpression type: ${valueEvaluated.realType}`, this.json.line);
@@ -1029,12 +1119,12 @@ class Praxly_array_assignment {
 
 class Praxly_variable {
 
-    constructor(json, name, blockjson) {
-        this.json = blockjson;
+    constructor(json, name, node) {
+        this.json = node;
         this.name = name;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         if (!environment.variableList.hasOwnProperty(this.name)) {
             throw new PraxlyError(`the variable \'${this.name}\' is not recognized by the program. \n\tPerhaps you forgot to initialize it?`, this.json.line);
             // return new Praxly_invalid(this.json);
@@ -1052,45 +1142,51 @@ class Praxly_Location {
         this.index = index;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         var storage = accessLocation(environment, this.json);
         if (!storage) {
             throw new PraxlyError(`Variable ${this.name} does not exist.`, this.json.line);
         }
 
         if (this.isArray) {
-            var index = this.index.evaluate(environment).value;
+            var index = await this.index.evaluate(environment).value;
             if (index >= storage[this.name].elements.length) {
                 throw new PraxlyError(`index ${index} out of bounds for array named ${this.name}`, this.json.line);
             }
-            return storage[this.name].elements[this.index.evaluate(environment).value].evaluate(environment);
+            var ind = await this.index.evaluate(environment);
+            return await storage[this.name].elements[ind.value].evaluate(environment);
         } else {
-            // console.warn(storage);
-            // console.warn(this.name);
-            // console.warn(storage[this.name]);
-            // console.warn(storage[this.name].evaluate(environment));
-            return storage[this.name].evaluate(environment);
+            return await storage[this.name].evaluate(environment);
         }
     }
 }
 
 class Praxly_for {
 
-    constructor(initialization, condition, incrementation, statement, blockjson) {
-        this.json = blockjson;
+    constructor(initialization, condition, incrementation, statement, node) {
+        this.json = node;
         this.initialization = initialization;
         this.condition = condition;
         this.incrementation = incrementation;
         this.statement = statement;
     }
 
-    evaluate(environment) {
-        this.initialization.evaluate(environment);
+    async evaluate(environment) {
+        
+        await this.initialization.evaluate(environment);
         var loopCount = 0;
-        while (loopCount < FOR_LOOP_LIMIT && this.condition.evaluate(environment).value) {
+        var cond = await this.condition.evaluate(environment);
+        while (loopCount < FOR_LOOP_LIMIT && cond.value) {
+            var newScope = {
+                parent: environment,
+                name: 'for loop',
+                functionList: {},
+                variableList: {},
+            };
             loopCount += 1;
-            this.statement.evaluate(environment);
-            this.incrementation.evaluate(environment);
+            await this.statement.evaluate(newScope);
+            await this.incrementation.evaluate(newScope);
+            cond = await this.condition.evaluate(newScope);
         }
         if (loopCount === FOR_LOOP_LIMIT) {
             throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
@@ -1099,87 +1195,105 @@ class Praxly_for {
 }
 
 class Praxly_while {
-    constructor(condition, statement, blockjson) {
-        this.json = blockjson;
+    constructor(condition, statement, node) {
+        this.json = node;
         this.condition = condition;
         this.statement = statement;
     }
-    evaluate(environment) {
+    async evaluate(environment) {
         var loopCount = 0;
-        while (loopCount < WHILE_LOOP_LIMIT && this.condition.evaluate(environment).value) {
+        var cond = await (this.condition.evaluate(environment));
+        while (loopCount < WHILE_LOOP_LIMIT && cond.value) {
             loopCount += 1;
-            this.statement.evaluate(environment);
-        }
-        if (loopCount === WHILE_LOOP_LIMIT) {
-            throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
+            await this.statement.evaluate(environment);
+            if (loopCount === WHILE_LOOP_LIMIT) {
+                throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
+            }
+            cond = await this.condition.evaluate(environment);
         }
     }
 }
 
 class Praxly_do_while {
 
-    constructor(condition, statement, blockjson) {
-        this.json = blockjson;
+    constructor(condition, statement, node) {
+        this.json = node;
         this.condition = condition;
         this.statement = statement;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         var loopCount = 1;
-        this.statement.evaluate(environment);
-        while (loopCount < WHILE_LOOP_LIMIT && this.condition.evaluate(environment).value) {
+        await this.statement.evaluate(environment);
+        var cond = await this.condition.evaluate(environment);
+        while (loopCount < WHILE_LOOP_LIMIT && cond.value) {
+            var newScope = {
+                parent: environment,
+                name: 'do while loop',
+                functionList: {},
+                variableList: {},
+            };
             loopCount += 1;
-            this.statement.evaluate(environment);
+            await this.statement.evaluate(newScope);
         }
         if (loopCount == WHILE_LOOP_LIMIT) {
             throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
         }
+        cond = await this.condition.evaluate(environment);
     }
 }
 
 class Praxly_repeat_until {
 
-    constructor(condition, statement, blockjson) {
-        this.json = blockjson;
+    constructor(condition, statement, node) {
+        this.json = node;
         this.condition = condition;
         this.statement = statement;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         var loopCount = 1;
-        this.statement.evaluate(environment);
-        while (loopCount < WHILE_LOOP_LIMIT && !this.condition.evaluate(environment).value) {
+        await this.statement.evaluate(environment);
+        var cond = await this.condition.evaluate(environment);
+        while (loopCount < WHILE_LOOP_LIMIT && !cond.value) {
+            var newScope = {
+                parent: environment,
+                name: 'repeat until loop',
+                functionList: {},
+                variableList: {},
+            };
             loopCount += 1;
-            this.statement.evaluate(environment);
+            await this.statement.evaluate(newScope);
         }
         if (loopCount == WHILE_LOOP_LIMIT) {
             throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
         }
+        cond = await this.condition.evaluate(environment);
     }
 }
 
 class Praxly_not {
 
-    constructor(value, blockjson) {
-        this.json = blockjson;
+    constructor(value, node) {
+        this.json = node;
         this.expression = value;
     }
 
-    evaluate(environment) {
-        var a = this.expression.evaluate(environment);
+    async evaluate(environment) {
+        var a = await this.expression.evaluate(environment);
         return new litNode_new(binop_typecheck(OP.NOT, a.realType, this.json), !a.value, this.json);
     }
 }
 
 class Praxly_negate {
 
-    constructor(value, blockjson) {
-        this.json = blockjson;
+    constructor(value, node) {
+        this.json = node;
         this.expression = value;
     }
 
-    evaluate(environment) {
-        var a = this.expression.evaluate(environment);
+    async evaluate(environment) {
+        var a = await  this.expression.evaluate(environment);
         return new litNode_new(binop_typecheck(OP.NEGATE, a.realType, this.json), -1 * a.value, this.json);
     }
 }
@@ -1190,23 +1304,22 @@ class Praxly_invalid {
         this.value = 'error';
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         console.info(`invalid tree. Problem detected here:`);
-        // throw new Error('problem');
     }
 }
 
 class Praxly_function_declaration {
 
-    constructor(returnType, name, params, contents, blockjson) {
+    constructor(returnType, name, params, contents, node) {
         this.returnType = returnType;
         this.name = name;
         this.params = params;
         this.contents = contents;
-        this.json = blockjson;
+        this.json = node;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         environment.functionList[this.name] = {
             returnType: this.returnType,
             params: this.params,
@@ -1227,14 +1340,14 @@ function findFunction(name, environment, json) {
 
 class Praxly_function_call {
 
-    constructor(name, args, blockjson) {
+    constructor(name, args, node) {
         this.args = args;
         this.name = name;
-        this.json = blockjson;
+        this.json = node;
     }
 
     //this one was tricky
-    evaluate(environment) {
+    async evaluate(environment) {
         var func = findFunction(this.name, environment, this.json);
         var functionParams = func.params;
         var functionContents = func.contents;
@@ -1245,14 +1358,15 @@ class Praxly_function_call {
 
         //NEW: parameter list is now a linkedList. expect some errors till I fix it.
         var newScope = {
-            parent: environment,
+            parent: SCOPES.global,
+            name: `function: ${this.name}`,
             functionList: {},
             variableList: {},
         };
         for (let i = 0; i < this.args.length; i++) {
             let parameterName = functionParams[i][1];
             let parameterType = functionParams[i][0];
-            let argument = this.args[i].evaluate(environment);
+            let argument = await this.args[i].evaluate(environment);
 
             if (can_assign(parameterType, argument.realType, this.json.line)) {
                 newScope.variableList[parameterName] = argument;
@@ -1260,14 +1374,11 @@ class Praxly_function_call {
                 throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${parameterType}\n\tActual: ${argument.realType}`);
             }
         }
-        // console.log(`here is the new scope in the function named ${this.name}`);
-        // console.log(newScope);
 
         // call the user's function
         let result = null;
         try {
-            // console.log(functionContents);
-            result = functionContents.evaluate(newScope);
+            result = await functionContents.evaluate(newScope);
         }
         catch (error) {
             if (error instanceof ReturnException) {
@@ -1295,9 +1406,9 @@ class Praxly_function_call {
 }
 
 class Praxly_String_funccall {
-    constructor(blockjson, reciever, name, args){
+    constructor(node, reciever, name, args){
         this.args = args;
-        this.blockjson = blockjson;
+        this.node = node;
         this.name = name;
         this.reciever = reciever
     }
@@ -1307,22 +1418,22 @@ class Praxly_String_funccall {
             throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`);
         }
     }
-    evaluate(environment){
-        var str = this.reciever.evaluate(environment);
+    async evaluate(environment){
+        var str = await this.reciever.evaluate(environment);
         var result;
         switch (this.name){
             case StringFuncs.CHARAT:
-                var index = this.args[0].evaluate(environment);
+                var index = await this.args[0].evaluate(environment);
                 this.typecheckhelper(index, [TYPES.INT, TYPES.SHORT]);
                 result = str.value[index.value];
                 return new Praxly_char(result);
             case StringFuncs.CONTAINS:
-                var char = this.args[0].evaluate(environment);
+                var char = await this.args[0].evaluate(environment);
                 this.typecheckhelper(char, [TYPES.STRING, TYPES.CHAR]);
                 result = str.includes(char.value)
                 return new Praxly_boolean(result);
             case StringFuncs.INDEXOF:
-                var index = this.args[0].evaluate(environment);
+                var index = await this.args[0].evaluate(environment);
                 this.typecheckhelper(char, [TYPES.CHAR]);
                 result = str.value.indexOf(index.value);
                 return new Praxly_int(result);
@@ -1333,29 +1444,38 @@ class Praxly_String_funccall {
             case StringFuncs.TOUPPERCASE:
                 return new Praxly_String(str.value.toUpperCase());
             case StringFuncs.SUBSTRING:
-                var startIndex = this.args[0].evaluate(environment);
-                var endIndex = this.args[1].evaluate(environment);
+                var startIndex = await this.args[0].evaluate(environment);
+                var endIndex = await this.args[1].evaluate(environment);
                 this.typecheckhelper(startIndex, [TYPES.INT, TYPES.SHORT]);
                 this.typecheckhelper(endIndex, [TYPES.INT, TYPES.SHORT]);
                 result = str.value.substring(startIndex.value, endIndex.value);
                 return new Praxly_String(result);
             default: 
-                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.blockjson.line);
+                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.node.line);
         }
     }
 
 }
+
+// The only reason this is a part of the tree is so that I can preserve the empty lines when I transfer between blocks and text
 class Praxly_emptyLine {
 
-    constructor(blockjson) {
-        this.blockjson = blockjson;
+    constructor(node) {
+        this.json = node;
     }
 
-    evaluate(environment) {
+    async evaluate(environment) {
         //do nothing
     }
 }
 
+/**
+ * This function is used to determine if something can be assigned. 
+ * @param {*} varType 
+ * @param {*} expressionType 
+ * @param {*} line 
+ * @returns 
+ */
 function can_assign(varType, expressionType, line) {
     if (varType === expressionType) {
         return true;

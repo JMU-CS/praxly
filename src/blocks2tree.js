@@ -209,6 +209,13 @@ export const makeGenerator = () => {
         };
     }
 
+    praxlyGenerator['praxly_emptyline_block'] = (block) => {
+        return {
+            blockID: block.id,
+            type: NODETYPES.NEWLINE,
+        };
+    }
+
     praxlyGenerator['praxly_if_block'] = (block) => {
         const condition = block.getInputTargetBlock("CONDITION");
         const statements = block.getInputTargetBlock("STATEMENT");

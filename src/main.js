@@ -6,8 +6,8 @@ import { toolbox } from './toolbox';
 // import {textEditor } from './lexer-parser';
 import { tree2text } from './tree2text';
 import { definePraxlyBlocks } from './newBlocks';
-import { makeGenerator } from './generators';
-import { blocks2tree } from './generators';
+import { makeGenerator } from './blocks2tree';
+import { blocks2tree } from './blocks2tree';
 import { createExecutable } from './ast';
 
 // import ace from 'ace-builds';
@@ -15,12 +15,13 @@ import "ace-builds/src-min-noconflict/theme-twilight";
 import "ace-builds/src-min-noconflict/theme-katzenmilch";
 import { tree2blocks } from './tree2blocks';
 // import { errorOutput } from './lexer-parser';
-import { text2tree } from './lexer-parser';
+import { text2tree } from './text2tree';
 import { generateUrl, loadFromUrl } from './share';
 
 // import { readFileSync } from 'fs';
 import { codeText } from './examples';
-import { addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, printBuffer, textEditor } from './common';
+import { DEV_LOG, DebugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, comingSoon, defaultError, errorOutput, getDebugMode, printBuffer, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
+import { hideDebug, showDebug } from './debugger';
 
 const praxlyGenerator = makeGenerator();
 export const workspace = Blockly.inject('blocklyDiv', {
@@ -40,11 +41,12 @@ export const workspace = Blockly.inject('blocklyDiv', {
   },
   renderer: 'zelos'
 });
-
 const runButton = document.getElementById('runButton');
+
 const shareButton = document.getElementById('share');
 const darkModeButton = document.getElementById('darkMode');
-const helpButton = document.getElementById("help");
+const settingsButton = document.getElementById("settings");
+const infoButton = document.getElementById('info');
 const manualButton = document.getElementById("reference");
 const resizeBar = document.querySelector('.resizeBar');
 const blockPane = document.querySelector('#blocklyDiv');
@@ -59,15 +61,18 @@ const bugButton = document.getElementById("BugButton");
 const changelogButton = document.getElementById('ChangelogButton');
 const exampleDiv = document.getElementById('exampleTable');
 const githubButton = document.getElementById('GitHubButton');
-const BenButton = document.getElementById('AboutButton');
+const peopleButton = document.getElementById('AboutButton');
 const titleRefresh = document.getElementById('titleRefresh');
+
 
 var mainTree = null;
 let darkMode = false;
 let live = true;
 let isResizing = false;
 
-runButton.addEventListener('mouseup', runTasks);
+
+
+runButton.addEventListener('click', runTasks);
 darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
 clearOut.addEventListener('click', () => {
   clearOutput();
@@ -77,7 +82,6 @@ clearOut.addEventListener('click', () => {
 });
 definePraxlyBlocks(workspace);
 
-// blockUpdatesButton.innerText = 'block updates: live ';
 workspace.addChangeListener(turnBlocksToCode);
 textEditor.addEventListener("input", turnCodeToBLocks);
 
@@ -115,8 +119,8 @@ githubButton.addEventListener('click', function () {
   window.open("https://github.com/sauppb/praxly", '_blank');
 });
 
-BenButton.addEventListener('click', function () {
-  window.open('https://sauppb.github.io/website/');
+peopleButton.addEventListener('click', function () {
+  window.open('people.html');
 });
 
 titleRefresh.addEventListener('click', function () {
@@ -144,9 +148,22 @@ textPane.addEventListener('click', () => {
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal
-helpButton.onclick = function () {
+infoButton.onclick = function () {
   setLight();
   modal.style.display = "block";
+}
+
+//quick and dirty way of making this gone by default. 
+let darkmodediv = document.querySelector('.settingsOptions');
+darkmodediv.style.display = 'none';
+
+settingsButton.onclick = function () {
+  let darkmodediv = document.querySelector('.settingsOptions');
+  if (darkmodediv.style.display === 'none') {
+    darkmodediv.style.display = ''; // Show the button
+  } else {
+    darkmodediv.style.display = 'none'; // Hide the button
+  }
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -166,28 +183,28 @@ window.onclick = function (event) {
 /**
  * this function gets called every time the run button is pressed.
  */
-function runTasks() {
-  console.log(mainTree);
+async function runTasks() {
+  
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
     return;
   }
   const executable = createExecutable(mainTree);
-  // console.info('here is the executable');
-  // console.log(executable);
   try {
-    executable.evaluate();
+    await executable.evaluate();
+    setDebugMode(false);
   } catch (error) {
+    
     // if not previously handled (by PraxlyError)
     if (!errorOutput) {
       defaultError(error);
-      console.error(error.message);
+      console.error(error);
     }
   }
-  stdOut.innerHTML = printBuffer;
-  stdErr.innerHTML = errorOutput;
+  // stdOut.innerHTML = printBuffer;
   if (errorOutput) {
     textEditor.session.setAnnotations(annotationsBuffer);
+    stdErr.innerHTML = errorOutput;
     addBlockErrors(workspace);
     clearErrors();
   } else {
@@ -203,12 +220,23 @@ function runTasks() {
 export function turnCodeToBLocks() {
   // I need to make the listeners only be one at a time to prevent an infinite loop.
   workspace.removeChangeListener(turnBlocksToCode);
+  if (getDebugMode()){
+    setDebugMode(false);
+    setStepInto(false);
+    stepButton.click();
+    
+  }
   clearOutput();
   clearErrors();
   mainTree = text2tree();
+  
+  if (DEV_LOG) {
+    console.log(mainTree);
+  }
   workspace.clear();
   tree2blocks(workspace, mainTree);
   workspace.render();
+  //comment this out to stop the live error feedback. 
   textEditor.session.setAnnotations(annotationsBuffer);
   addBlockErrors(workspace);
 }
@@ -274,12 +302,6 @@ document.addEventListener("keydown", function (event) {
     // Prevent the default save action (e.g., opening the save dialog, reloading the page)
     event.preventDefault();
     runTasks();
-    // clearOutput();
-    // clearErrors();
-    // const trees = createExecutable(mainTree);
-    // trees.evaluate();
-    // stdOut.innerHTML = printBuffer;
-    // stdErr.innerHTML = errorOutput;
     // console.log(trees);
   }
 });
@@ -315,32 +337,30 @@ bothButton.click();
 
 function GenerateExamples() {
   const dataArray = codeText.split('##');
-  const result = {};
-
+  var selectDropdown = document.getElementById("exampleTable");
   for (let i = 1; i < dataArray.length - 1; i += 2) {
     const label = dataArray[i].trim();
-    var newButton = document.createElement("button");
-    newButton.textContent = label;
-    newButton.classList.add("example_links");
-    newButton.addEventListener('click', function () {
-      // generateUrl();
-      applyExample(label);
-    });
-    exampleDiv.appendChild(newButton);
-
+    var option = document.createElement("option");
+    option.textContent = label;
     const value = dataArray[i + 1].trim();
-    result[label] = value + "\n";
+    option.value = value;
+
+    selectDropdown.appendChild(option);
   }
 
-  return result;
+  selectDropdown.addEventListener('change', function () {
+    textEditor.setValue(selectDropdown.value, -1);
+    textPane.click();
+  });
+
 }
 
-let examples = GenerateExamples();
-// console.log(`the examples are: ${Object.keys(examples)}`);
+ 
+GenerateExamples();
 
-function applyExample(exampleName) {
+function applyExample(code) {
   // append the example to the code
-  textEditor.setValue(examples[exampleName], -1);
+  textEditor.setValue(code, -1);
   textPane.click();
 }
 
@@ -348,3 +368,45 @@ document.addEventListener('DOMContentLoaded', function() {
   loadFromUrl();
   textEditor.focus();
 });
+
+
+
+/**
+ * Event listeners for the main circular buttons along the top. 
+ */
+
+DebugButton.addEventListener('mouseup', function() {
+  // comingSoon();
+  showDebug();
+  setDebugMode(true);
+  runTasks();
+});
+stopButton.addEventListener('click', function() {
+  hideDebug();
+  setDebugMode(false);
+  setStepInto(false);
+  stepButton.click();
+});
+
+stepIntoButton.addEventListener('mouseup', function() {
+  // comingSoon();
+  if (!getDebugMode()){
+    endDebugPrompt();
+  }
+  setDebugMode(true);
+  setStepInto(true);
+});
+stepButton.addEventListener('mouseup', function() {
+  // comingSoon();
+  if (!getDebugMode()){
+    endDebugPrompt();
+  }
+  setDebugMode(true);
+});
+
+function endDebugPrompt() {
+  let exitDebug = confirm('the program has completed. Would you like to exit the debugger?');
+  if (exitDebug){
+    stopButton.click();
+  }
+}

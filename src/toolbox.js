@@ -1,24 +1,11 @@
-// import Blockly from 'blockly';
-// import { block } from 'blockly/core/tooltip';
-// import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
+
+
+import { NODETYPES } from "./common";
 
 export const toolbox = {
   'kind': 'categoryToolbox',
   'contents': [
-    // {
-    //   'kind': 'block',
-    //   'type': 'controls_repeat_ext',
-    //   'inputs': {
-    //     'TIMES': {
-    //       'shadow': {
-    //         'type': 'math_number',
-    //         'fields': {
-    //           'NUM': 5
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
+
     {
       "kind": "category",
       "name": "common",
@@ -27,6 +14,10 @@ export const toolbox = {
         {
           'kind': 'block',
           'type': 'praxly_comment_block'
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_emptyline_block'
         },
         {
           'kind': 'block',
@@ -319,6 +310,9 @@ export const toolbox = {
             'INITIALIZATION': {
               'block': {
                 'type': 'praxly_assignment_expression_block',
+                'fields': {
+                  'VARTYPE': NODETYPES.INT,
+                },
                 'inputs': {
                   'EXPRESSION': {
                     'shadow': {

@@ -3,6 +3,7 @@ import 'ace-builds/src-min-noconflict/mode-java.js';
 
 // this is going to be the place where all shared enums and constants.
 
+
 /**
  * this is the 'enum' that I use when I refer to types.
  */
@@ -28,6 +29,11 @@ export const TYPES = {
     VOID:           "void",
   };
 
+  
+  export function isPrimative(type){
+    const primatives = ["boolean","char","double","float","int","short","String"];
+    return primatives.includes(type);
+  }
 
   /**
    * this is the 'enum' that I refer to when dealing with operations.
@@ -79,44 +85,22 @@ export const NODETYPES = {
     ARRAY_LITERAL:                  "ARRAY_LITERAL",
     ARRAY_REFERENCE:                "ARRAY_REFERENCE",
     ARRAY_REFERENCE_ASSIGNMENT:     "ARRAY_REFERENCE_ASSIGNMENT", // remove?
-    SPECIAL_STRING_FUNCCALL:        "SPECIAL_STRING_FUNCCALL"
+    SPECIAL_STRING_FUNCCALL:        "SPECIAL_STRING_FUNCCALL",
+    NEWLINE:                        "NEWLINE",
 }
 
-// export const NODETYPES = {
-//   ...OP,
-//   ...TYPES,
-//   PRINT:                          "print",
-//   PRINTLN:                        "println",
-//   CODEBLOCK:                      "codeblock",
-//   PROGRAM:                        "program",
-//   STATEMENT:                      "statement",
-//   IF:                             "if",
-//   IF_ELSE:                        "if_else",
-//   VARDECL:                        "vardecl",
-//   ARRAY_ASSIGNMENT:               "array_assignment",
-//   LOCATION:                       "location",
-//   FOR:                            "for",
-//   WHILE:                          "while",
-//   DO_WHILE:                       "do_while",
-//   REPEAT_UNTIL:                   "repeat_until",
-//   COMMENT:                        "comment",
-//   SINGLE_LINE_COMMENT:            "single_line_comment",
-//   FUNCDECL:                       "funcdecl",
-//   FUNCCALL:                       "function_call",
-//   RETURN:                         "return",
-//   ARRAY_LITERAL:                  "array_literal",
-//   ARRAY_REFERENCE:                "array_reference",
-//   ARRAY_REFERENCE_ASSIGNMENT:     "array_reference_assignment", // remove?
-// }
 
+// this is the special Error type that is thrown when there is in error in the ide. 
 export class PraxlyError extends Error {
   constructor(message, line) {
     super(`<pre>error occurred on line ${line}:\n\t${message}</pre>`);
     this.errorMessage = this.message;
     appendAnnotation(message, line);
+
     errorOutput = this.message;       // not appending run-time error
   }
 }
+
 
 export const MAX_LOOP = 100;  // prevents accidental infinite loops
 export var printBuffer = "";
@@ -127,6 +111,10 @@ export var markersBuffer = [];
 
 export function addToPrintBuffer(message) {
   printBuffer += message;
+
+  //new: displays the live output
+  const stdOut = document.querySelector('.stdout');
+  stdOut.innerHTML = printBuffer;
 }
 
 /**
@@ -135,12 +123,6 @@ export function addToPrintBuffer(message) {
  */
 export function clearOutput() {
   printBuffer = "";
-  // annotationsBuffer = [];
-  // errorOutput = "";
-  // blockErrorsBuffer = {};
-  // markersBuffer.forEach((markerId)=> {
-  //   textEditor.session.removeMarker(markerId);
-  // });
 }
 
 export function clearErrors() {
@@ -182,13 +164,16 @@ export function addBlockErrors(workspace) {
  */
 export function appendAnnotation(errorMessage, line) {
   var annotation = {
-    row: line - 1, // no idea why the rows start with zero here but start with 1 everywhere else, but okay
+    row: line,
     column: 0,
     text: errorMessage,
     type: "error"
   };
   annotationsBuffer.push(annotation);
-  highlightLine(line);
+
+  //gohere
+  // might cause a bug depending on how line is calculated. 
+  highlightLine(line + 1);
 
 }
 
@@ -198,19 +183,20 @@ export function appendAnnotation(errorMessage, line) {
  * @param {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
  * @returns the marker id associated with the marker. This should not be needed.
  */
-function highlightLine(line, debug = false) {
+export function highlightLine(line) {
   var session = textEditor.session;
 
   // var errorRange = indextoAceRange(line - 1);
   var Range = ace.require('ace/range').Range;
   var errorRange = new Range(line, 0, line - 1, 1);
   var markerId = session.addMarker(errorRange, 'error-marker', 'fullLine');
+  var color =`rgba(255, 0, 0, 0.2)`;
 
   var markerCss = `
       .error-marker {
         position: absolute;
         z-index: 1;
-        background-color: rgba(255, 0, 0, 0.2);
+        background-color: ${color};
         border-bottom: 2px solid red;
       }
     `;
@@ -233,14 +219,59 @@ function highlightLine(line, debug = false) {
   return markerId;
 }
 
-export const indextoAceRange = (line) => {
+
+
+
+/**
+ * This will highlight a line of code
+ * @param {number} line the desired line that you want to highlight
+ * @param {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
+ * @returns the marker id associated with the marker. This should not be needed.
+ */
+export function highlightAstNode(node) {
+  // console.log(`attempting to highlight index [${node.startIndex[0]},${ node.startIndex[1]}] to [${ node.endIndex[0]}, ${ node.endIndex[1] - 1}]`)
+  var session = textEditor.session;
+
+  // var errorRange = indextoAceRange(line - 1);
+  var Range = ace.require('ace/range').Range;
+  var errorRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
+  var markerId = session.addMarker(errorRange, 'error-marker', 'text');
+  var color = getStepInto()? `rgba(255, 255, 0, 0.4)` : `rgba(0, 255, 0, 0.2)`;
+
+  var markerCss = `
+      .error-marker {
+        position: absolute;
+        z-index: 1;
+        background-color: ${color};
+      }
+    `;
+
+  // Check if the style tag already exists
+  var existingStyleTag = document.getElementById('custom-style');
+  if (!existingStyleTag) {
+    // If it doesn't exist, create a new style tag and set its ID
+    existingStyleTag = document.createElement('style');
+    existingStyleTag.setAttribute('id', 'custom-style');
+    document.head.appendChild(existingStyleTag);
+  }
+
+  // Append the error-marker rules to the existing style tag
+  existingStyleTag.appendChild(document.createTextNode(markerCss));
+
+  // console.log(`attempted to highlight ${line}`);
+  markersBuffer.push(markerId);
+  return markerId;
+}
+
+export const lineToAceRange = (line) => {
   var Range = ace.require('ace/range').Range;
   return new Range(line, 0, line, 1);
 };
 
-// ace.config.set('basePath', './node_modules/ace-builds/src-min-noconflict');
-// ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.5.1');
-export const textEditor = ace.edit("aceCode", { fontSize: 19, mode: 'ace/mode/java' });
+export function indexToAceRange (startIndex, endIndex){
+  var Range = ace.require('ace/range').Range;
+  return new Range(startIndex[0], startIndex[1], endIndex[0], endIndex[1]);
+};
 
 
 export const StringFuncs = {
@@ -252,3 +283,48 @@ export const StringFuncs = {
   TOLOWERCSE: "toLowerCase",
   TOUPPERCASE: "toUpperCase"
 }
+
+
+let debugMode = false;
+export function setDebugMode(value) {
+  debugMode = value;
+}
+
+export function getDebugMode() {
+  return debugMode;
+}
+let stepInto = false;
+export function setStepInto(value) {
+  stepInto = value;
+}
+
+export function getStepInto() {
+  return stepInto;
+}
+
+
+export const textEditor = ace.edit("aceCode", { fontSize: 19, mode: 'ace/mode/java' });
+
+
+export const DebugButton = document.getElementById('DebugButton');
+export const stepButton = document.getElementById('stepButton');
+export const stopButton = document.getElementById('stopButton');
+export const stepIntoButton = document.getElementById('stepIntoButton');
+
+
+/**
+ * This function will present a coming soon toast. 
+ * This works as a great eventListener for buttons that are not yet implemented.
+ */
+export function comingSoon() {
+  const ComingSoonToast = document.getElementById('comingSoon');
+
+  ComingSoonToast.style.display = 'block';
+  setTimeout(function () {
+    ComingSoonToast.style.display = 'none';
+  }, 3000); // Hide the toast after 3 seconds (adjust as needed)
+}
+
+
+//this will let information that I deemed important to be logged to the console. 
+export const DEV_LOG = true;

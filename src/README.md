@@ -3,7 +3,7 @@
 The main purpose of each source file is described below.
 
 The intermediate representation (IR) of the user's program is
-referred to as `mainTree` or `blockjson` in the source code.
+referred to as `mainTree` or `node` in the source code.
 On change, the IR is rebuilt and the other editor is updated.
 
 * When the text editor changes:
@@ -30,8 +30,8 @@ which displays an error message and line number.
 
 ## Program Editors
 
-* generators.js -- blocks2tree: compile IR from blocks
-* lexer-parser.js -- text2tree: compile IR from text
+* blocks2tree.js -- blocks2tree: compile IR from blocks
+* text2tree.js -- text2tree: compile IR from text
 * tree2blocks.js -- update blocks based on current IR
 * tree2text.js -- update program based on current IR
 

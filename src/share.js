@@ -2,10 +2,8 @@ import { textEditor } from "./common";
 
 export function generateUrl() {
     // yank the text in ace
-    // console.log(textEditor.getValue());
     var code = textEditor.getValue();
     let encoded = encodeURIComponent(code);
-    // console.log(encoded);
     window.location.hash = ''; //this should clear it before replacing it
     window.location.hash = `code=${encoded}`
     saveToLocal();
@@ -35,10 +33,7 @@ export function loadFromUrl() {
     let decoded = decodeURIComponent(urlSrc);
     textEditor.setValue(decoded, 1);
 
-    //take everything after that
-    // decode the encoding
-    // set the editor text to the encoded text
-    // trigger the function that generates the code
+  
 }
 
 // this seems to work, but we should trigger it automatically at some frequency so that teacher doesn't accidentally lose their work
