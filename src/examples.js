@@ -80,17 +80,16 @@ println fibonacci(10)
 ##mystery
 ##//this is from question 12 of the example problems
 void mystery(int n)
-while (n≠1)
-		if (n % 2 == 1)
-		n ← 3 * n + 1
-	else
-		n ← n / 2
-	end if
-	print n
-end while
+    while (n ≠ 1)
+        if (n % 2 == 1)
+            n ← 3 * n + 1
+        else
+            n ← n / 2
+        end if
+        print n
+    end while
 end mystery
 mystery(6)
-
 
 ##Bubble Sort
 ##// Global array declaration
@@ -158,107 +157,65 @@ end printArray
 // Example usage
 selectionSort()
 printArray()
+##Calculate Change
+##// Function to calculate change
+void calculateChange(int paidAmount, int itemCost)
+	int change ← paidAmount - itemCost
+	int cents ← change
+
+	int quarters ← cents / 25
+	cents ← cents % 25
+	int dimes ← cents / 10
+	cents ← cents % 10
+	int nickels ← cents / 5
+	int pennies ← cents % 5
+
+	// Print change breakdown
+	println "Change to be given:"
+	println "Quarters: " + quarters
+	println "Dimes: " + dimes
+	println "Nickels: " + nickels
+	println "Pennies: " + pennies
+end calculateChange
+
+// Main function
+void main()
+	int itemCost ← 1789
+	int paidAmount ← 2000
+
+	// Check if paid amount is sufficient
+	if (paidAmount < itemCost)
+		println "Insufficient amount paid."
+	else
+		// Calculate and print change
+		calculateChange(paidAmount, itemCost)
+	end if
+end main
+
+// Run the main function
+main()
+##Count Characters
+##// Count character function
+int countCharacter(String str, char targetChar)
+	int count ← 0
+	for (int i ← 0; i < str.length(); i ← i + 1)
+			if (str.charAt(i) == targetChar)
+			count ← count + 1
+		end if
+	end for
+	return count
+end countCharacter
+
+println "Enter a string: "
+String userString ← input
+int occurrences ← countCharacter(userString, 'a')
+println "Number of occurrences of '" + "a" + "' in " + userString + ":" + occurrences
+
+
+
 
 `;
 
 
-const testLater = `
-
-##Insertion Sort
-##// Global array declaration
-int[] myArray = {5, 2, 9, 1, 5, 6};
-
-// Insertion sort function
-void insertionSort()
-    int n = 6
-    for (int i = 1; i < n; i = i + 1)
-        int key = myArray[i]
-        int j = i - 1
-
-        // Move elements of myArray[0..i-1] that are greater than key to one position ahead of their current position
-        while (j >= 0 and myArray[j] > key)
-            myArray[j + 1] = myArray[j]
-            j = j - 1
-        end while
-
-        myArray[j + 1] = key
-    end for
-end insertionSort
-
-// Print array function
-void printArray()
-    int n = 6
-    for (int i = 0; i < n; i = i + 1)
-        println myArray[i]
-    end for
-end printArray
-
-// Example usage
-insertionSort()
-printArray()
 
 
-##Merge Sort
-##// Global array declaration
-int[] myArray = {5, 2, 9, 1, 5, 6};
-
-// Merge sort function
-void mergeSort(int left, int right)
-    if (left < right)
-        int mid = left + (right - left) / 2
-
-        // Sort first and second halves
-        mergeSort(left, mid)
-        mergeSort(mid + 1, right)
-
-        // Merge the sorted halves
-        int i = left
-        int j = mid + 1
-        int k = 0
-        int[6] temp
-
-        while (i <= mid and j <= right)
-            if (myArray[i] <= myArray[j])
-                temp[k] = myArray[i]
-                i = i + 1
-            else
-                temp[k] = myArray[j]
-                j = j + 1
-            end if
-            k = k + 1
-        end while
-
-        // Copy the remaining elements of left[], if there are any
-        while (i <= mid)
-            temp[k] = myArray[i]
-            i = i + 1
-            k = k + 1
-        end while
-
-        // Copy the remaining elements of right[], if there are any
-        while (j <= right)
-            temp[k] = myArray[j]
-            j = j + 1
-            k = k + 1
-        end while
-
-        // Copy the merged elements back to myArray
-        for (int p = 0; p < k; p = p + 1)
-            myArray[left + p] = temp[p]
-        end for
-    end if
-end mergeSort
-
-// Print array function
-void printArray()
-    int n = 6
-    for (int i = 0; i < n; i = i + 1)
-        println myArray[i]
-    end for
-end printArray
-
-// Example usage
-mergeSort(0, 5)
-printArray()
-
-`

@@ -852,6 +852,7 @@ class Parser {
       result.type = NODETYPES.IF;
       this.advance();
       result.condition = this.parse_expression(9);
+      result.endIndex = this.getCurrentToken().endIndex;
       if (this.has('\n')) {
         this.advance();
         result.statement = this.parse_block('else', 'end if');
@@ -890,6 +891,7 @@ class Parser {
         }
         this.advance();
         if (this.has('\n')) {
+          result.endIndex = this.getCurrentToken().endIndex;
           this.advance();
           result.statement = this.parse_block('end for');
           if (this.has('end for')) {
@@ -909,6 +911,7 @@ class Parser {
       result.type = NODETYPES.WHILE;
       this.advance();
       result.condition = this.parse_expression(9);
+      result.endIndex = this.getCurrentToken().endIndex;
       if (this.has('\n')) {
         this.advance();
         result.statement = this.parse_block('end while');
@@ -981,6 +984,7 @@ class Parser {
     else if (this.has("print")) {
       this.advance();
       const expression = this.parse_expression(9);
+      result.endIndex = expression.endIndex;
       if (this.has(';')) {
         this.advance();
       }

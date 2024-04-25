@@ -556,7 +556,8 @@ class Praxly_addition {
             await waitForStep();
             textEditor.session.removeMarker(markerId);
         }
-        return litNode_new(binop_typecheck(OP.ADDITION, a.realType, b.realType, this.json), a.value + b.value);
+        return litNode_new(binop_typecheck(OP.ADDITION, a.realType,
+             b.realType, this.json), a.value + b.value);
     }
 }
 

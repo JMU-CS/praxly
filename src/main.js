@@ -358,11 +358,6 @@ function GenerateExamples() {
  
 GenerateExamples();
 
-function applyExample(code) {
-  // append the example to the code
-  textEditor.setValue(code, -1);
-  textPane.click();
-}
 
 document.addEventListener('DOMContentLoaded', function() {
   loadFromUrl();

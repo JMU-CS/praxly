@@ -234,6 +234,10 @@ export function highlightAstNode(node) {
 
   // var errorRange = indextoAceRange(line - 1);
   var Range = ace.require('ace/range').Range;
+  if (DEV_LOG){
+    console.log(`attempting to highlight: `, node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
+  }
+
   var errorRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
   var markerId = session.addMarker(errorRange, 'error-marker', 'text');
   var color = getStepInto()? `rgba(255, 255, 0, 0.4)` : `rgba(0, 255, 0, 0.2)`;
