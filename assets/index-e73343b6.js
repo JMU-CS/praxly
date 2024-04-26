@@ -2584,7 +2584,7 @@ main()
 int countCharacter(String str, char targetChar)
 	int count ← 0
 	for (int i ← 0; i < str.length(); i ← i + 1)
-			if (str.charAt(i) == targetChar)
+		if (str.charAt(i) == targetChar)
 			count ← count + 1
 		end if
 	end for
