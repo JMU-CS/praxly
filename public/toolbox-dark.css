@@ -3,6 +3,22 @@ body {
   background-color: black;
 }
 
+.nav-bar {
+  background-color: #3a3939;
+}
+
+.tab {
+  background-color: #3a3939;
+}
+
+#tab1_button, #tab2_button, #tab3_button {
+  color: white;
+}
+
+a {
+  color: white;
+}
+
 /* Makes our label white. */
 .blocklyTreeLabel {
   color: rgb(255, 255, 255);
