@@ -18,14 +18,14 @@ body {
   padding: 10px;
   margin-bottom: 0.5em;
   border-radius: 4px;
-  background-color: rgb(255, 255, 255);;
+  background-color: rgb(255, 255, 255);
 }
 
 /* .customIcon {
     color: rgb(255, 21, 21);
   } */
 
-  /* Stacks the icon on top of the label. */
+/* Stacks the icon on top of the label. */
 .blocklyTreeRowContentContainer {
   display: flex;
   flex-direction: row;
