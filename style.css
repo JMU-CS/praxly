@@ -196,7 +196,6 @@ h1 {
 
 #reference {
   background-image: url('./images/books-icon.png');
-  
 }
 
 #reference:hover {
@@ -419,7 +418,7 @@ main {
 
 .bottom-part {
   display: flex; /* Add this */
-  flex-direction: row; /* Add this */  
+  flex-direction: row; /* Add this */
   height: 25%;
 }
 
@@ -432,7 +431,6 @@ main {
   font-size: large;
   border-radius: 10px;
   overflow: auto;
-  
   height: 100%;
 }
 
@@ -533,7 +531,6 @@ main {
   border-radius: 10px;
   overflow: auto;
   background-color: #ffffff;
-  
   height: 100%;
 }
 
