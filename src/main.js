@@ -278,6 +278,16 @@ function resizeHandlerY(e){
 
   document.querySelector('main').style.height = topHeight + 'px';
   document.querySelector('.bottom-part').style.height = 100% - (topHeight + 'px');
+
+  const change = window.innerHeight - mouseY - 25 + '%'
+
+  const output = document.querySelector('.output');
+  output.style.height = change;
+
+  const table = document.querySelector('#Variable-table-container');
+  if (!table.classList.contains('hidden')) {
+    table.style.height = change;
+  }
 }
 
 var toolboxstylesheet = document.getElementById("ToolboxCss");
