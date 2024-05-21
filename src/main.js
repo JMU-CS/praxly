@@ -257,7 +257,7 @@ function turnBlocksToCode() {
     textEditor.setValue(text, -1);
 };
 
-function resizeHandler(e) {
+function resizeHandlerX(e) {
   if (!isResizing) return;
 
     const containerWidth = document.querySelector('main').offsetWidth;
@@ -329,21 +329,21 @@ const bothButton = document.getElementById("tab1_button");
 const textButton = document.getElementById('tab2_button');
 const blocksButton = document.getElementById('tab3_button');
 blocksButton.addEventListener('click', function (event) {
-  resizeBar.style.display = 'none';
+  resizeBarX.style.display = 'none';
   textPane.style.display = 'none';
   blockPane.style.display = 'block';
   Blockly.svgResize(workspace);
   textEditor.resize();
 });
 textButton.addEventListener('click', function (event) {
-  resizeBar.style.display = 'none';
+  resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
   textPane.style.display = 'block';
   Blockly.svgResize(workspace);
   textEditor.resize();
 });
 bothButton.addEventListener('click', function (event) {
-  resizeBar.style.display = 'block';
+  resizeBarX.style.display = 'block';
   blockPane.style.display = 'block';
   textPane.style.display = 'block';
   Blockly.svgResize(workspace);
