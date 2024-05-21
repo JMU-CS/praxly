@@ -50,6 +50,7 @@ export const tree2text = (node, indentation) => {
             } catch (error) {
                 return " ";
             }
+
         case NODETYPES.NEWLINE:
             try {
                 var result = '\n';
@@ -57,6 +58,7 @@ export const tree2text = (node, indentation) => {
             } catch (error) {
                 return " ";
             }
+
         case NODETYPES.SINGLE_LINE_COMMENT:
             try {
                 var result = '    '.repeat(indentation) + '//' + node.value + '\n';

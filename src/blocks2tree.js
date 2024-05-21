@@ -498,8 +498,8 @@ export const makeGenerator = () => {
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
             left: praxlyGenerator[expression.type](expression),
             right: {
-                name: procedureName, 
-                args: argsList ,
+                name: procedureName,
+                args: argsList,
                 type: NODETYPES.FUNCCALL
             }
         }

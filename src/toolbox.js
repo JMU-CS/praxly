@@ -1,5 +1,3 @@
-
-
 import { NODETYPES } from "./common";
 
 export const toolbox = {
@@ -64,10 +62,10 @@ export const toolbox = {
               },
             },
             'PARAMS': {
-                'block': {
-                  'type': 'praxly_parameter_block',
-                }
+              'block': {
+                'type': 'praxly_parameter_block',
               }
+            }
           }
         },
         {

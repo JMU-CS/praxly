@@ -1,7 +1,7 @@
 /**
- * this is my "csv" file for generating example programs. 
- * Javascript does not have file i/o, so this is what I am using for 
- * this project. 
+ * this is my "csv" file for generating example programs.
+ * Javascript does not have file i/o, so this is what I am using for
+ * this project.
  */
 export const codeText = `
 
@@ -215,7 +215,3 @@ println "Number of occurrences of '" + "a" + "' in " + userString + ":" + occurr
 
 
 `;
-
-
-
-
