@@ -94,7 +94,7 @@ resizeBarX.addEventListener('mousedown', function (e) {
 
 resizeBarY.addEventListener('mousedown', function(e){
   isResizing = true;
-  document.addEventListener('mousemove', resizeYHandler);
+  document.addEventListener('mousemove', resizeHandlerY);
 })
 
 document.addEventListener('mouseup', function (e) {
@@ -270,18 +270,15 @@ function resizeHandlerX(e) {
   blockPane.style.flex = rightPaneWidth;
 }
 
-function resizeYHandler(e){
+function resizeHandlerY(e){
   if (!isResizing) return;
 
-  const containerHeight = document.querySelector('.bottom-part').offsetHeight;
   const mouseY = e.pageY;
+  const main = document.querySelector('main').getBoundingClientRect();
+  const topHeight = mouseY - main.top;
 
-  const newTopHeight = (mouseY / containerHeight) * 100; // might need to change containerHeight here
-  const newBottomHeight = 100 - newTopHeight; // containerHeight - (mouseY - topContainerHeight)
-
-  document.querySelector('main').style.height = newTopHeight + 'vh';
-  document.querySelector('.bottom-part').style.height = newBottomHeight + '%';
-
+  document.querySelector('main').style.height = topHeight + 'px';
+  document.querySelector('.bottom-part').style.height = 100% - (topHeight + 'px');
 }
 
 var toolboxstylesheet = document.getElementById("ToolboxCss");
