@@ -405,13 +405,13 @@ main {
   flex: 1;
 }
 
-.resizeBar {
+.resizeBarX {
   width: 5px;
   cursor: col-resize;
   background-color: rgb(27, 65, 178);
 }
 
-.resizeBar2 {
+.resizeBarY {
   height: 5px;
   cursor: row-resize;
   background-color: rgb(27, 65, 178);

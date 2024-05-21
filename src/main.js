@@ -48,7 +48,8 @@ const darkModeButton = document.getElementById('darkMode');
 const settingsButton = document.getElementById("settings");
 const infoButton = document.getElementById('info');
 const manualButton = document.getElementById("reference");
-const resizeBar = document.querySelector('.resizeBar');
+const resizeBarX = document.querySelector('.resizeBarX');
+const resizeBarY = document.querySelector('.resizeBarY');
 const blockPane = document.querySelector('#blocklyDiv');
 const textPane = document.querySelector('#aceCode');
 const stdOut = document.querySelector('.stdout');
@@ -86,14 +87,19 @@ workspace.addChangeListener(turnBlocksToCode);
 textEditor.addEventListener("input", turnCodeToBLocks);
 
 //resizing things with the purple bar
-resizeBar.addEventListener('mousedown', function (e) {
+resizeBarX.addEventListener('mousedown', function (e) {
   isResizing = true;
-  document.addEventListener('mousemove', resizeHandler);
+  document.addEventListener('mousemove', resizeHandlerX);
 });
+
+resizeBarY.addEventListener('mousedown', function(e){
+  isResizing = true;
+  document.addEventListener('mousemove', resizeYHandler);
+})
 
 document.addEventListener('mouseup', function (e) {
   isResizing = false;
-  document.removeEventListener('mousemove', resizeHandler);
+  document.removeEventListener('mousemove', resizeHandlerX);
   Blockly.svgResize(workspace);
   textEditor.resize();
 });
@@ -153,7 +159,7 @@ infoButton.onclick = function () {
   modal.style.display = "block";
 }
 
-//quick and dirty way of making this gone by default. 
+//quick and dirty way of making this gone by default.
 let darkmodediv = document.querySelector('.settingsOptions');
 darkmodediv.style.display = 'none';
 
@@ -184,7 +190,7 @@ window.onclick = function (event) {
  * this function gets called every time the run button is pressed.
  */
 async function runTasks() {
-  
+
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
     return;
@@ -194,7 +200,7 @@ async function runTasks() {
     await executable.evaluate();
     setDebugMode(false);
   } catch (error) {
-    
+
     // if not previously handled (by PraxlyError)
     if (!errorOutput) {
       defaultError(error);
@@ -220,23 +226,23 @@ async function runTasks() {
 export function turnCodeToBLocks() {
   // I need to make the listeners only be one at a time to prevent an infinite loop.
   workspace.removeChangeListener(turnBlocksToCode);
-  if (getDebugMode()){
+  if (getDebugMode()) {
     setDebugMode(false);
     setStepInto(false);
     stepButton.click();
-    
+
   }
   clearOutput();
   clearErrors();
   mainTree = text2tree();
-  
+
   if (DEV_LOG) {
     console.log(mainTree);
   }
   workspace.clear();
   tree2blocks(workspace, mainTree);
   workspace.render();
-  //comment this out to stop the live error feedback. 
+  //comment this out to stop the live error feedback.
   textEditor.session.setAnnotations(annotationsBuffer);
   addBlockErrors(workspace);
 }
@@ -252,7 +258,7 @@ function turnBlocksToCode() {
   textEditor.setValue(text, -1);
 };
 
-function resizeHandler(e) {
+function resizeHandlerX(e) {
   if (!isResizing) return;
 
   const containerWidth = document.querySelector('main').offsetWidth;
@@ -262,6 +268,20 @@ function resizeHandler(e) {
 
   textPane.style.flex = leftPaneWidth;
   blockPane.style.flex = rightPaneWidth;
+}
+
+function resizeYHandler(e){
+  if (!isResizing) return;
+
+  const containerHeight = document.querySelector('.bottom-part').offsetHeight;
+  const mouseY = e.pageY;
+
+  const newTopHeight = (mouseY / containerHeight) * 100; // might need to change containerHeight here
+  const newBottomHeight = 100 - newTopHeight; // containerHeight - (mouseY - topContainerHeight)
+
+  document.querySelector('main').style.height = newTopHeight + 'vh';
+  document.querySelector('.bottom-part').style.height = newBottomHeight + '%';
+
 }
 
 var toolboxstylesheet = document.getElementById("ToolboxCss");
@@ -313,21 +333,21 @@ const bothButton = document.getElementById("tab1_button");
 const textButton = document.getElementById('tab2_button');
 const blocksButton = document.getElementById('tab3_button');
 blocksButton.addEventListener('click', function (event) {
-  resizeBar.style.display = 'none';
+  resizeBarX.style.display = 'none';
   textPane.style.display = 'none';
   blockPane.style.display = 'block';
   Blockly.svgResize(workspace);
   textEditor.resize();
 });
 textButton.addEventListener('click', function (event) {
-  resizeBar.style.display = 'none';
+  resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
   textPane.style.display = 'block';
   Blockly.svgResize(workspace);
   textEditor.resize();
 });
 bothButton.addEventListener('click', function (event) {
-  resizeBar.style.display = 'block';
+  resizeBarX.style.display = 'block';
   blockPane.style.display = 'block';
   textPane.style.display = 'block';
   Blockly.svgResize(workspace);
@@ -355,11 +375,11 @@ function GenerateExamples() {
 
 }
 
- 
+
 GenerateExamples();
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   loadFromUrl();
   textEditor.focus();
 });
@@ -367,33 +387,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 /**
- * Event listeners for the main circular buttons along the top. 
+ * Event listeners for the main circular buttons along the top.
  */
 
-DebugButton.addEventListener('mouseup', function() {
+DebugButton.addEventListener('mouseup', function () {
   // comingSoon();
   showDebug();
   setDebugMode(true);
   runTasks();
 });
-stopButton.addEventListener('click', function() {
+stopButton.addEventListener('click', function () {
   hideDebug();
   setDebugMode(false);
   setStepInto(false);
   stepButton.click();
 });
 
-stepIntoButton.addEventListener('mouseup', function() {
+stepIntoButton.addEventListener('mouseup', function () {
   // comingSoon();
-  if (!getDebugMode()){
+  if (!getDebugMode()) {
     endDebugPrompt();
   }
   setDebugMode(true);
   setStepInto(true);
 });
-stepButton.addEventListener('mouseup', function() {
+stepButton.addEventListener('mouseup', function () {
   // comingSoon();
-  if (!getDebugMode()){
+  if (!getDebugMode()) {
     endDebugPrompt();
   }
   setDebugMode(true);
@@ -401,7 +421,7 @@ stepButton.addEventListener('mouseup', function() {
 
 function endDebugPrompt() {
   let exitDebug = confirm('the program has completed. Would you like to exit the debugger?');
-  if (exitDebug){
+  if (exitDebug) {
     stopButton.click();
   }
 }
