@@ -32,8 +32,6 @@ export function loadFromUrl() {
     urlSrc = urlSrc.substring(fragmentPattern.length);
     let decoded = decodeURIComponent(urlSrc);
     textEditor.setValue(decoded, 1);
-
-  
 }
 
 // this seems to work, but we should trigger it automatically at some frequency so that teacher doesn't accidentally lose their work

@@ -213,8 +213,8 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'loop_blocks',
-      "tooltip": "This is a loop block. the first hole in this block is for initializing a vairable. The second is the condition in which the loop will hault. " + 
-      "The final hole is for the expression that specifies how you incriment the variable. The code below is what will get called over and over again in the loop. ",
+      "tooltip": "This is a loop block. the first hole in this block is for initializing a vairable. The second is the condition in which the loop will hault. " +
+        "The final hole is for the expression that specifies how you incriment the variable. The code below is what will get called over and over again in the loop. ",
       "helpUrl": ""
     },
     {
@@ -1054,14 +1054,13 @@ export function definePraxlyBlocks(workspace) {
           "options": [
             ["charAt", StringFuncs.CHARAT],
             ["contains", StringFuncs.CONTAINS],
-            ['indexOf', StringFuncs.INDEXOF], 
+            ['indexOf', StringFuncs.INDEXOF],
             ["length", StringFuncs.LENGTH],
-            ["substring", StringFuncs.SUBSTRING], 
-            ["toLowerCase", StringFuncs.TOLOWERCSE], 
+            ["substring", StringFuncs.SUBSTRING],
+            ["toLowerCase", StringFuncs.TOLOWERCSE],
             ["toUpperCase", StringFuncs.TOUPPERCASE],
           ]
         },
-     
         {
           "type": "input_value",
           "name": "PARAMS",

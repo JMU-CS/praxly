@@ -12,6 +12,3 @@ steps to adding a block
 7. update tree2blocks for block generation from text
 8. update tree2text for text generation from blocks
 ** TEST FOR EVERY POSSIBILITY YOU CAN THINK OF **
-
-
-

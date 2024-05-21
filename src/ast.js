@@ -1,7 +1,6 @@
 
-import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs, highlightLine,  getDebugMode, highlightAstNode, textEditor, setStepInto, getStepInto} from "./common";
-import {generateVariableTable, waitForStep } from "./debugger";
-
+import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs, highlightLine, getDebugMode, highlightAstNode, textEditor, setStepInto, getStepInto } from "./common";
+import { generateVariableTable, waitForStep } from "./debugger";
 
 var SCOPES = {};
 
@@ -20,12 +19,12 @@ class ReturnException extends Error {
 }
 
 /**
- * This function will take the Intermediate Representation of the AST and creates an executable version of the tree. 
- * This also gives it a chance to run static analysis. 
+ * This function will take the Intermediate Representation of the AST and creates an executable version of the tree.
+ * This also gives it a chance to run static analysis.
  * @param {*} tree  the abstract Syntax tree Intermediate Representation.
- * @returns 
+ * @returns
  */
-export function createExecutable(tree){
+export function createExecutable(tree) {
     if (typeof tree === 'undefined' || typeof tree.type === 'undefined') {
         if (errorOutput.length === 0) {
             defaultError("invalid program.");
@@ -137,7 +136,6 @@ export function createExecutable(tree){
                 return new Praxly_if(createExecutable(tree.condition), createExecutable(tree.statement), tree);
             }
             catch (error) {
-                
                 return new Praxly_statement(null);
             }
 
@@ -146,7 +144,6 @@ export function createExecutable(tree){
                 return new Praxly_if_else(createExecutable(tree.condition), createExecutable(tree.statement), createExecutable(tree.alternative), tree);
             }
             catch (error) {
-                
                 return new Praxly_statement(null);
             }
 
@@ -534,7 +531,7 @@ class Praxly_return {
     }
 
     async evaluate(environment) {
-        throw new ReturnException( await this.expression.evaluate(environment));
+        throw new ReturnException(await this.expression.evaluate(environment));
     }
 }
 
@@ -557,7 +554,7 @@ class Praxly_addition {
             textEditor.session.removeMarker(markerId);
         }
         return litNode_new(binop_typecheck(OP.ADDITION, a.realType,
-             b.realType, this.json), a.value + b.value);
+            b.realType, this.json), a.value + b.value);
     }
 }
 
@@ -926,7 +923,7 @@ class Praxly_codeBlock {
 
     async evaluate(environment) {
 
-        // I originally had what I would call 'extreme shadowing'. We changed this for the debugger. 
+        // I originally had what I would call 'extreme shadowing'. We changed this for the debugger.
         // var newScope = {
         //     parent: environment,
         //     name: 'for loop',
@@ -935,7 +932,7 @@ class Praxly_codeBlock {
         // };
         for (let i = 0; i < this.praxly_blocks.length; i++) {
             const element = this.praxly_blocks[i];
-            if (element.json.type == NODETYPES.NEWLINE || element.json.type === NODETYPES.COMMENT || element.json.type === NODETYPES.SINGLE_LINE_COMMENT){
+            if (element.json.type == NODETYPES.NEWLINE || element.json.type === NODETYPES.COMMENT || element.json.type === NODETYPES.SINGLE_LINE_COMMENT) {
                 continue;
             }
             if (getDebugMode()) {
@@ -1004,7 +1001,6 @@ class Praxly_assignment {
         this.json = node;
         this.location = location;
         this.value = expression;
-        
     }
 
     async evaluate(environment) {
@@ -1014,13 +1010,13 @@ class Praxly_assignment {
         if (!storage) {
             throw new PraxlyError(`Variable ${this.location.name} does not exist in this scope.`, this.json.line);
         }
-        
+
         let currentStoredVariableEvaluated = await this.location.evaluate(environment);
         if (!can_assign(currentStoredVariableEvaluated.realType, valueEvaluated.realType, this.json.line)) {
             throw new PraxlyError(`Error: variable reassignment does not match declared type: \n\t Expected: `
-            + `${currentStoredVariableEvaluated.realType}, \n\t Actual: ${valueEvaluated.realType}`, this.json.line);
+                + `${currentStoredVariableEvaluated.realType}, \n\t Actual: ${valueEvaluated.realType}`, this.json.line);
         }
-        
+
         // console.warn(storage);
         valueEvaluated = typeCoercion(currentStoredVariableEvaluated.realType, valueEvaluated);
         if (this.location.isArray) {
@@ -1045,7 +1041,6 @@ class Praxly_vardecl {
         this.location = location;
         this.value = expression;
         this.name = location.name;
-         
     }
 
     async evaluate(environment) {
@@ -1084,13 +1079,13 @@ class Praxly_vardecl {
         if (environment.variableList.hasOwnProperty(this.name)) {
             throw new PraxlyError(`variable ${this.name} has already been declared in this scope. `, this.json.line);
         }
-        
+
         if (!can_assign(this.json.varType, valueEvaluated.realType, this.json.line)) {
             throw new PraxlyError(`incompatible types: ${valueEvaluated.realType} cannot be converted to ${this.json.varType}`, this.json.line);
         }
         valueEvaluated = typeCoercion(this.json.varType, valueEvaluated);
         environment.variableList[this.name] = valueEvaluated;
-        
+
         return;
     }
 }
@@ -1102,7 +1097,6 @@ class Praxly_array_assignment {
         this.location = location;
         this.value = expression;
         this.name = location.name;
-         
     }
 
     async evaluate(environment) {
@@ -1173,7 +1167,6 @@ class Praxly_for {
     }
 
     async evaluate(environment) {
-        
         await this.initialization.evaluate(environment);
         var loopCount = 0;
         var cond = await this.condition.evaluate(environment);
@@ -1294,7 +1287,7 @@ class Praxly_negate {
     }
 
     async evaluate(environment) {
-        var a = await  this.expression.evaluate(environment);
+        var a = await this.expression.evaluate(environment);
         return new litNode_new(binop_typecheck(OP.NEGATE, a.realType, this.json), -1 * a.value, this.json);
     }
 }
@@ -1407,22 +1400,22 @@ class Praxly_function_call {
 }
 
 class Praxly_String_funccall {
-    constructor(node, reciever, name, args){
+    constructor(node, reciever, name, args) {
         this.args = args;
         this.node = node;
         this.name = name;
         this.reciever = reciever
     }
 
-    typecheckhelper(argument, expected_types){
-        if (!expected_types.includes(argument.realType)){
+    typecheckhelper(argument, expected_types) {
+        if (!expected_types.includes(argument.realType)) {
             throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`);
         }
     }
-    async evaluate(environment){
+    async evaluate(environment) {
         var str = await this.reciever.evaluate(environment);
         var result;
-        switch (this.name){
+        switch (this.name) {
             case StringFuncs.CHARAT:
                 var index = await this.args[0].evaluate(environment);
                 this.typecheckhelper(index, [TYPES.INT, TYPES.SHORT]);
@@ -1451,7 +1444,7 @@ class Praxly_String_funccall {
                 this.typecheckhelper(endIndex, [TYPES.INT, TYPES.SHORT]);
                 result = str.value.substring(startIndex.value, endIndex.value);
                 return new Praxly_String(result);
-            default: 
+            default:
                 throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.node.line);
         }
     }
@@ -1471,11 +1464,11 @@ class Praxly_emptyLine {
 }
 
 /**
- * This function is used to determine if something can be assigned. 
- * @param {*} varType 
- * @param {*} expressionType 
- * @param {*} line 
- * @returns 
+ * This function is used to determine if something can be assigned.
+ * @param {*} varType
+ * @param {*} expressionType
+ * @param {*} line
+ * @returns
  */
 function can_assign(varType, expressionType, line) {
     if (varType === expressionType) {

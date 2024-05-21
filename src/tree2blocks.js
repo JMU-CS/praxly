@@ -1,4 +1,3 @@
-
 import { NODETYPES, TYPES } from "./common";
 
 function connectStatements(statements) {
@@ -23,7 +22,7 @@ function connectStatements(statements) {
         }
     }
 }
- 
+
 export const tree2blocks = (workspace, node) => {
 
     switch (node?.type) {
@@ -31,6 +30,7 @@ export const tree2blocks = (workspace, node) => {
         case NODETYPES.NEWLINE:
             var result = workspace.newBlock('praxly_emptyline_block');
             break;
+
         case NODETYPES.COMMENT:
             var result = workspace.newBlock('praxly_comment_block');
             result.setFieldValue(node.value, "COMMENT");
@@ -288,7 +288,7 @@ export const tree2blocks = (workspace, node) => {
             result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
             params.initSvg();
             break;
-            
+
 
         case NODETYPES.FUNCDECL:
             var returnType = node?.returnType;
@@ -316,12 +316,12 @@ export const tree2blocks = (workspace, node) => {
 
         case NODETYPES.FOR:
             var result = workspace.newBlock('praxly_for_loop_block');
-            
+
             //gohere
             try {
                 var initialization = tree2blocks(workspace, node?.initialization);
                 // console.error(initialization?.type);
-                if (!initialization || initialization.type !== 'praxly_statement_block'){
+                if (!initialization || initialization.type !== 'praxly_statement_block') {
                     initialization.dispose();
                     var initialization = workspace.newBlock('praxly_assignment_expression_block');
                     var expression = tree2blocks(workspace, node?.initialization?.value);
@@ -332,7 +332,7 @@ export const tree2blocks = (workspace, node) => {
                 } else {
                     var container = initialization;
                     initialization = initialization.getInputTargetBlock('EXPRESSION');
-                    
+
                 }
 
                 // var increment = workspace.newBlock('praxly_reassignment_expression_block');
@@ -356,8 +356,8 @@ export const tree2blocks = (workspace, node) => {
             catch (error) {
                 console.error('An error occurred: could not generate the nested block', error);
                 initialization?.dispose();
-                increment?.dispose(); // the question marks here helped the for loop block generate when just typing 
-                // the word "for", giving a little bit of predictive block rendering. 
+                increment?.dispose(); // the question marks here helped the for loop block generate when just typing
+                // the word "for", giving a little bit of predictive block rendering.
             }
             break;
 
