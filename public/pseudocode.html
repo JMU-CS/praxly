@@ -123,12 +123,12 @@
         </td>
         <td>Note lowercase spelling</td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td class="showBlockImage">block example here</td>
         <td>Null</td>
         <td><b>null</b></td>
         <td>Represents nothing; no reference</td>
-      </tr>
+      </tr> -->
       <tr>
         <td class="showBlockImage">block example here</td>
         <td>Comments</td>
@@ -166,7 +166,7 @@
             <b>float</b><br>
             <b>int</b><br>
             <b>int[ ]</b><br>
-            <b>int[ ][ ]</b><br>
+            <!-- <b>int[ ][ ]</b><br> -->
             <b>short</b><br>
             <b>String</b><br>
           </td>
@@ -178,7 +178,7 @@
         <td>
           <b>int[ ]</b> a ← {1, 2, 3}<br>
           <b>int</b> b[0..2] ← {1, 2, 3}<br>
-          <b>int[ ][ ]</b> c<br>
+          <!-- <b>int[ ][ ]</b> c<br> -->
           a[0]<br>
         </td>
         <td>a[0] refers to "a at index 0"</td>
@@ -249,8 +249,25 @@ end if
         </td>
         <td>procedures are used to write code with a input(s), run the desired code, and return a result.</td>
       </tr>
+    </table>
+
+    <br>
+    <!--
+      * block image column & comments should be hidden
+    -->
+    <h2>Unsupported Features</h2>
+    <table id="reference-table">
       <tr>
-        <td class="showBlockImage">block example here</td>
+        <td>Null</td>
+        <td><b>null</b></td>
+        <td>Represents nothing; no reference</td>
+      </tr>
+      <tr>
+        <td>Data Types (2 Dimensional Arrays)</td>
+        <td><b>int[][]</b></td>
+        <td>Not yet supported by Praxly...</td>
+      </tr>
+      <tr>
         <td>Classes</td>
         <td>
           <b>class</b> <i>className</i><br>
@@ -261,7 +278,6 @@ end if
         <td>Not yet supported by Praxly...</td>
       </tr>
       <tr>
-        <td class="showBlockImage">block example here</td>
         <td>Object-oriented keywords</td>
         <td>
           <b>extends</b><br>
@@ -272,6 +288,9 @@ end if
         <td>Not yet supported by Praxly...</td>
       </tr>
     </table>
+
   </div>
+
+
 </body>
 </html>
