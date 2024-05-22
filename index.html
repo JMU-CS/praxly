@@ -10,43 +10,57 @@
   <div id="comingSoon" class="toast">Coming Soon!</div>
 </head>
 <body>
-  <header class="nav-bar">
 
+  <!-- Welcome/About screen -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+
+      <h2>Welcome To Praxly!</h2>
+      <ul id="helpMenu">
+        <button class="helpMenuButtons" id="FeaturesButton">features (outdated)</button>
+        <button class="helpMenuButtons" id="ChangelogButton">Changelog</button>
+        <button class="helpMenuButtons" id="BugButton">Report a bug</button>
+        <button class="helpMenuButtons" id="GitHubButton">github</button>
+        <button class="helpMenuButtons" id="AboutButton">People </button>
+      </ul>
+
+      <p>This is a place to try the pseudocode that will be used in the praxis exam.
+        Feel free to switch between the blocks and the text whenever you please!</p>
+      <p>📕 The <b>Book</b> Icon is the manual, which is the reference to the pseudocode that this was made for.
+      </p>
+      <p>🔗The Blue links are example programs.
+        Feel free to submit your own example to me through the bug report form.</p>
+
+      <h4>Notes</h4>
+      <ol>
+        <li>✅ This is in very early release, but as of now everything on the blocks list will work properly.
+        </li>
+        <li>🚨 error messages are probably going to be inconsistent.
+          I'm sure there will be many scenarios I didn't think of that will cause errors.</li>
+        <li>😔 There is currently no support for object oriented programming </li>
+      </ol>
+    </div>
+  </div>
+
+  <header class="nav-bar">
     <div id="title-version">
       <h1 id="titleRefresh">Praxly 🍂</h1>
-      version <a href="changelog.html">04/25/2024</a>
+      <!-- version <a href="changelog.html">04/25/2024</a> -->
     </div>
 
-    <div id="myModal" class="modal">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
-
-        <h2>Welcome To Praxly!</h2>
-        <ul id="helpMenu">
-          <button class="helpMenuButtons" id="FeaturesButton">features (outdated)</button>
-          <button class="helpMenuButtons" id="ChangelogButton">Changelog</button>
-          <button class="helpMenuButtons" id="BugButton">Report a bug</button>
-          <button class="helpMenuButtons" id="GitHubButton">github</button>
-          <button class="helpMenuButtons" id="AboutButton">People </button>
-        </ul>
-
-        <p>This is a place to try the pseudocode that will be used in the praxis exam.
-           Feel free to switch between the blocks and the text whenever you please!</p>
-        <p>📕 The <b>Book</b> Icon is the manual, which is the reference to the pseudocode that this was made for.</p>
-        <p>🔗The Blue links are example programs.
-           Feel free to submit your own example to me through the bug report form.</p>
-
-        <h4>Notes</h4>
-        <ol>
-          <li>✅ This is in very early release, but as of now everything on the blocks list will work properly.</li>
-          <li>🚨 error messages are probably going to be inconsistent.
-              I'm sure there will be many scenarios I didn't think of that will cause errors.</li>
-          <li>😔 There is currently no support for object oriented programming </li>
-        </ol>
+    <div id="secondary_bar">
+      <!-- Editor modes -->
+      <div class="tab">
+        <button id="tab1_button" class="tablinks">Default</button>
+        <button id="tab2_button" class="tablinks">Text only</button>
+        <button id="tab3_button" class="tablinks">Blocks only</button>
       </div>
+      <!-- Example programs  -->
+      <select id="exampleTable"></select>
     </div>
 
+    <!-- Toolbar buttons -->
     <ul>
       <li>
         <button id="runButton" class="MainMenu-button" title="Run Code">
@@ -93,19 +107,7 @@
         </button>
       </li>
     </ul>
-
   </header>
-
-  <div id="secondary_bar">
-    <div class="tab">
-      <button id="tab1_button" class="tablinks">Default</button>
-      <button id="tab2_button" class="tablinks">Text only</button>
-      <button id="tab3_button" class="tablinks">Blocks only</button>
-      <!-- this will be full of examples  -->
-    </div>
-    <!-- <div>Example Programs</div> -->
-    <select id="exampleTable"></select>
-  </div>
 
   <main>
     <div id="aceCode" class="codeEditor"></div>

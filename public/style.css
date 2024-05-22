@@ -6,7 +6,6 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
-  padding: 2px;
 }
 
 /* header and toolbar */
@@ -351,8 +350,7 @@ h1 {
 #secondary_bar {
   display: flex;
   background-color: #e7e5e5;
-  border-style: solid;
-  border-color: #aaaaaa;
+  border: 1px solid #aaa;
 }
 
 /* Style the tab */
