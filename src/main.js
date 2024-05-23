@@ -275,11 +275,16 @@ function resizeHandlerY(e){
   const mouseY = e.pageY;
   const main = document.querySelector('main').getBoundingClientRect();
   const topHeight = mouseY - main.top;
+  const mainHeight = main.height;
 
+  // set the height for main
   document.querySelector('main').style.height = topHeight + 'px';
-  document.querySelector('.bottom-part').style.height = 100% - (topHeight + 'px');
 
-  const change = window.innerHeight - mouseY - 25 + '%'
+  // set the height for the whole bottom div
+  document.querySelector('.bottom-part').style.height = (mainHeight - topHeight) + 'px';
+
+  // controls the change when moving
+  const change = window.innerHeight - mouseY - 25 + 'px';
 
   const output = document.querySelector('.output');
   output.style.height = change;

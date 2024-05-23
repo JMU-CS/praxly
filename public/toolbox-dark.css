@@ -9,6 +9,7 @@ body {
 
 .tab {
   background-color: #3a3939;
+  /* border-color: #2B5E7D; */
 }
 
 #tab1_button, #tab2_button, #tab3_button {
@@ -18,6 +19,10 @@ body {
 a {
   color: white;
 }
+
+/* #secondary_bar {
+  border-color: #2B5E7D;
+} */
 
 /* Makes our label white. */
 .blocklyTreeLabel {

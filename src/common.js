@@ -1,7 +1,7 @@
 import ace from 'ace-builds';
 import 'ace-builds/src-min-noconflict/mode-java.js';
 
-// this is going to be the place where all shared enums and constants.
+// this is going to be the place where all shared enums and constants. (this is the place for all shared enums and constants.)
 
 /**
  * this is the 'enum' that I use when I refer to types.
