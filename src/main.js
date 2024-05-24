@@ -103,6 +103,13 @@ document.addEventListener('mouseup', function (e) {
     textEditor.resize();
 });
 
+document.addEventListener('mouseup', function (e) {
+    isResizing = false;
+    document.removeEventListener('mousemove', resizeHandlerY);
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+});
+
 
 document.addEventListener('mouseup', function (e) {
     isResizing = false;
@@ -281,27 +288,16 @@ function resizeHandlerX(e) {
 function resizeHandlerY(e){
   if (!isResizing) return;
 
+  const main = document.querySelector('main');
+  const bottom = document.querySelector('#bottom-part');
+
+  const containerHeight = document.body.clientHeight;
   const mouseY = e.pageY;
-  const main = document.querySelector('main').getBoundingClientRect();
-  const topHeight = mouseY - main.top;
-  const mainHeight = main.height;
+  const topHeight = (mouseY / containerHeight) * 100;
+  const bottomHeight = 100 - topHeight;
 
-  // set the height for main
-  document.querySelector('main').style.height = topHeight + 'px';
-
-  // set the height for the whole bottom div
-  document.querySelector('.bottom-part').style.height = (mainHeight - topHeight) + 'px';
-
-  // controls the change when moving
-  const change = window.innerHeight - mouseY - 25 + 'px';
-
-  const output = document.querySelector('.output');
-  output.style.height = change;
-
-  const table = document.querySelector('#Variable-table-container');
-  if (!table.classList.contains('hidden')) {
-    table.style.height = change;
-  }
+  main.style.flex = topHeight + '%';
+  bottom.style.flex = bottomHeight + '%';
 }
 
 var toolboxstylesheet = document.getElementById("ToolboxCss");

@@ -441,8 +441,8 @@ main {
   font-size: large;
   border-radius: 10px;
   overflow: auto;
-  height: 100%;
-  /* flex-basis: 0%; */
+  /* height: 100%; */
+  /* flex-basis: 100%; */
 }
 
 
