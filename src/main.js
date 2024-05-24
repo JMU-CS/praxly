@@ -103,6 +103,15 @@ document.addEventListener('mouseup', function (e) {
     textEditor.resize();
 });
 
+
+document.addEventListener('mouseup', function (e) {
+    isResizing = false;
+    document.removeEventListener('mousemove', resizeHandlerY);
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+
+})
+
 manualButton.addEventListener('click', function () {
     var linkUrl = 'pseudocode.html';
     window.open(linkUrl, '_blank');
