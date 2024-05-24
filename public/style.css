@@ -394,12 +394,14 @@ h1 {
 
 main {
   display: flex;
-  height: 60vh;
+  flex-basis: 60%;
+  flex-grow: 1;
   background-color: #ddc8f5;
 }
 
 #blocklyDiv {
   flex: 1;
+  flex-grow: 1;
 }
 
 .resizeBarX {
@@ -419,10 +421,10 @@ main {
   width: 100%;
 }
 
-.bottom-part {
+#bottom-part {
   display: flex; /* Add this */
   flex-direction: row; /* Add this */
-  height: 25%;
+  flex-basis: 25%;
 }
 
 .output {
@@ -435,6 +437,7 @@ main {
   border-radius: 10px;
   overflow: auto;
   height: 100%;
+  /* flex-basis: 0%; */
 }
 
 

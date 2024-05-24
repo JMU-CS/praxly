@@ -334,11 +334,12 @@ function resizeHandlerY(e) {
   const mouseY = e.pageY;
   const main = document.querySelector('main').getBoundingClientRect();
   const topHeight = mouseY - main.top;
+  const mainHeight = main.height;
 
   document.querySelector('main').style.height = topHeight + 'px';
-  document.querySelector('#bottom-part').style.height = 100% - (topHeight + 'px');
+  document.querySelector('#bottom-part').style.height = (mainHeight - topHeight) + 'px';
 
-  const change = window.innerHeight - mouseY - 25 + '%'
+  const change = window.innerHeight - mouseY - 25 + 'px'
 
   const output = document.querySelector('.output');
   output.style.height = change;
@@ -459,6 +460,8 @@ function parseUrlParameters() {
 
   if (parameters.get('output') === 'false') {
     bottomPart.style.display = 'none';
+    resizeBarY.style.display = 'none';
+    Blockly.svgResize(workspace);
   }
 }
 
