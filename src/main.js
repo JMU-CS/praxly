@@ -23,9 +23,6 @@ import { codeText } from './examples';
 import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, comingSoon, defaultError, errorOutput, getDebugMode, printBuffer, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
 import { hideDebug, showDebug } from './debugger';
 
-const praxlyGenerator = makeGenerator();
-export let workspace;
-
 const runButton = document.getElementById('runButton');
 const shareButton = document.getElementById('share');
 const darkModeButton = document.getElementById('darkMode');
@@ -51,14 +48,14 @@ const titleRefresh = document.getElementById('titleRefresh');
 const bothButton = document.getElementById("tab1_button");
 const textButton = document.getElementById('tab2_button');
 const blocksButton = document.getElementById('tab3_button');
+const bottomPart = document.getElementById('bottom-part');
+const toolboxstylesheet = document.getElementById("ToolboxCss");
+const span = document.getElementsByClassName("close")[0];
+const darkmodediv = document.querySelector('.settingsOptions');
 
-var toolboxstylesheet = document.getElementById("ToolboxCss");
-var span = document.getElementsByClassName("close")[0];
-
-//quick and dirty way of making this gone by default.
-let darkmodediv = document.querySelector('.settingsOptions');
-
-var mainTree = null;
+export let workspace;
+let praxlyGenerator;
+let mainTree;
 let darkMode = false;
 let live = true;
 let isResizing = false;
@@ -183,35 +180,9 @@ function registerListeners() {
     }
   });
 
-  blocksButton.addEventListener('click', function (event) {
-    resizeBarX.style.display = 'none';
-    textPane.style.display = 'none';
-    blockPane.style.display = 'block';
-    Blockly.svgResize(workspace);
-    textEditor.resize();
-  });
-
-  textButton.addEventListener('click', function (event) {
-    resizeBarX.style.display = 'none';
-    blockPane.style.display = 'none';
-    textPane.style.display = 'block';
-    Blockly.svgResize(workspace);
-    textEditor.resize();
-  });
-
-  bothButton.addEventListener('click', function (event) {
-    resizeBarX.style.display = 'block';
-    blockPane.style.display = 'block';
-    textPane.style.display = 'block';
-    Blockly.svgResize(workspace);
-    textEditor.resize();
-  });
-
-  // document.addEventListener('DOMContentLoaded', function() {
-    // console.log("hi");
-    // loadFromUrl();
-    // textEditor.focus();
-  // });
+  blocksButton.addEventListener('click', showBlocksOnly);
+  textButton.addEventListener('click', showTextOnly);
+  bothButton.addEventListener('click', showTextAndBlocks);
 
   /**
    * Event listeners for the main circular buttons along the top.
@@ -247,6 +218,30 @@ function registerListeners() {
     }
     setDebugMode(true);
   });
+}
+
+function showBlocksOnly() {
+  resizeBarX.style.display = 'none';
+  textPane.style.display = 'none';
+  blockPane.style.display = 'block';
+  Blockly.svgResize(workspace);
+  textEditor.resize();
+}
+
+function showTextOnly() {
+  resizeBarX.style.display = 'none';
+  blockPane.style.display = 'none';
+  textPane.style.display = 'block';
+  Blockly.svgResize(workspace);
+  textEditor.resize();
+}
+
+function showTextAndBlocks() {
+  resizeBarX.style.display = 'block';
+  blockPane.style.display = 'block';
+  textPane.style.display = 'block';
+  Blockly.svgResize(workspace);
+  textEditor.resize();
 }
 
 /**
@@ -341,7 +336,7 @@ function resizeHandlerY(e) {
   const topHeight = mouseY - main.top;
 
   document.querySelector('main').style.height = topHeight + 'px';
-  document.querySelector('.bottom-part').style.height = 100% - (topHeight + 'px');
+  document.querySelector('#bottom-part').style.height = 100% - (topHeight + 'px');
 
   const change = window.innerHeight - mouseY - 25 + '%'
 
@@ -359,7 +354,7 @@ function setDark() {
   workspace.setTheme(PraxlyDark);
   textEditor.setTheme("ace/theme/twilight");
   // textEditor.setMode("ace/modes/java")
-  var bodyElement = document.body;
+  // var bodyElement = document.body;
   // bodyElement.style.backgroundColor = "black";
   var elements = document.querySelectorAll(".output, #secondary_bar, example_links, #exampleTable");
   for (var i = 0; i < elements.length; i++) {
@@ -373,7 +368,7 @@ function setLight() {
   darkMode = false;
   workspace.setTheme(praxlyDefaultTheme);
   textEditor.setTheme('ace/theme/katzenmilch');
-  var bodyElement = document.body;
+  // var bodyElement = document.body;
   // bodyElement.style.backgroundColor = "white";
   var elements = document.querySelectorAll(".output, #secondary_bar, example_links, #exampleTable");
   for (var i = 0; i < elements.length; i++) {
@@ -436,7 +431,7 @@ function parseUrlParameters() {
   // fragment identifiers are not sent up to the web server. The code can get
   // quite long, and URLs sent to a server have a maximum length.
 
-  // Load the code baked into the URL.
+  // Load the code baked into the URL. It's necessarily text, not blocks.
   const hash = window.location.hash;
   const pattern = '#code=';
   if (hash.startsWith(pattern)) {
@@ -445,17 +440,33 @@ function parseUrlParameters() {
     textEditor.setValue(source, 1);
   }
 
+  // Configure according to the ?key1=value1&key2 parameters.
   let parameters = new URLSearchParams(window.location.search);
   if (parameters.has('embed')) {
-    console.log("embed");
+    document.body.classList.add('embed');
+  }
+
+  const editorMode = parameters.get('editor') ?? 'both';
+  if (editorMode === 'text') {
+    showTextOnly();
+    textEditor.focus();
+  } else if (editorMode === 'blocks') {
+    showBlocksOnly();
+  } else {
+    showTextAndBlocks();
+    textEditor.focus();
+  }
+
+  if (parameters.get('output') === 'false') {
+    bottomPart.style.display = 'none';
   }
 }
 
 function initialize() {
+  praxlyGenerator = makeGenerator();
   initializeBlockly();
   darkmodediv.style.display = 'none';
   registerListeners();
-  bothButton.click();
   generateExamples();
   parseUrlParameters();
 }
