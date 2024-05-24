@@ -26,6 +26,10 @@ h1 {
   background-color: #ccc;
 }
 
+body.embed > .nav-bar {
+  display: none;
+}
+
 .nav-bar img {
   height: 40px;
   width: 120px;
@@ -565,4 +569,40 @@ main {
 /* Hover effect */
 #Variable-table-outer tbody tr:hover {
   background-color: #e2e2e2;
+}
+
+#embed-toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+}
+
+body:not(.embed) > #embed-toolbar {
+  display: none;
+}
+
+.embed-button {
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  line-height: 0;
+}
+
+.material-icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.8em;
+  line-height: 0;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 }
