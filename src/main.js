@@ -23,35 +23,42 @@ import { codeText } from './examples';
 import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, comingSoon, defaultError, errorOutput, getDebugMode, printBuffer, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
 import { hideDebug, showDebug } from './debugger';
 
-const runButton = document.getElementById('runButton');
-const shareButton = document.getElementById('share');
-const darkModeButton = document.getElementById('darkMode');
-const settingsButton = document.getElementById("settings");
-const infoButton = document.getElementById('info');
-const manualButton = document.getElementById("reference");
-const resizeBarX = document.querySelector('.resizeBarX');
-const resizeBarY = document.querySelector('.resizeBarY');
-const blockPane = document.querySelector('#blocklyDiv');
-const textPane = document.querySelector('#aceCode');
-const stdOut = document.querySelector('.stdout');
-const stdErr = document.querySelector('.stderr');
-const clearOut = document.querySelector('.clearOut');
-const modal = document.getElementById("myModal");
-const manual = document.getElementById("manual");
-const featuresButton = document.getElementById('FeaturesButton');
-const bugButton = document.getElementById("BugButton");
-const changelogButton = document.getElementById('ChangelogButton');
-const exampleDiv = document.getElementById('exampleTable');
-const githubButton = document.getElementById('GitHubButton');
-const peopleButton = document.getElementById('AboutButton');
-const titleRefresh = document.getElementById('titleRefresh');
-const bothButton = document.getElementById("tab1_button");
-const textButton = document.getElementById('tab2_button');
-const blocksButton = document.getElementById('tab3_button');
-const bottomPart = document.getElementById('bottom-part');
-const toolboxstylesheet = document.getElementById("ToolboxCss");
-const span = document.getElementsByClassName("close")[0];
-const darkmodediv = document.querySelector('.settingsOptions');
+let runButton;
+let shareButton;
+let darkModeButton;
+let settingsButton;
+let infoButton;
+let manualButton;
+let resizeBarX;
+let resizeBarY;
+let blockPane;
+let textPane;
+let stdOut;
+let stdErr;
+let clearOut;
+let modal;
+let manual;
+let featuresButton;
+let bugButton;
+let changelogButton;
+let exampleDiv;
+let githubButton;
+let peopleButton;
+let titleRefresh;
+let bothButton;
+let textButton;
+let blocksButton;
+let bottomPart;
+let toolboxstylesheet;
+let span;
+let darkmodediv;
+
+let configuration = {
+  code: null,
+  editorMode: 'both',
+  showOutput: true,
+  isEmbedded: null,
+};
 
 export let workspace;
 let praxlyGenerator;
@@ -59,6 +66,42 @@ let mainTree;
 let darkMode = false;
 let live = true;
 let isResizing = false;
+
+function initializeGlobals() {
+  if (configuration.isEmbedded) {
+    runButton = document.getElementById('embed-run-button');
+  } else {
+    runButton = document.getElementById('runButton');
+  }
+  shareButton = document.getElementById('share');
+  darkModeButton = document.getElementById('darkMode');
+  settingsButton = document.getElementById("settings");
+  infoButton = document.getElementById('info');
+  manualButton = document.getElementById("reference");
+  resizeBarX = document.querySelector('.resizeBarX');
+  resizeBarY = document.querySelector('.resizeBarY');
+  blockPane = document.querySelector('#blocklyDiv');
+  textPane = document.querySelector('#aceCode');
+  stdOut = document.querySelector('.stdout');
+  stdErr = document.querySelector('.stderr');
+  clearOut = document.querySelector('.clearOut');
+  modal = document.getElementById("myModal");
+  manual = document.getElementById("manual");
+  featuresButton = document.getElementById('FeaturesButton');
+  bugButton = document.getElementById("BugButton");
+  changelogButton = document.getElementById('ChangelogButton');
+  exampleDiv = document.getElementById('exampleTable');
+  githubButton = document.getElementById('GitHubButton');
+  peopleButton = document.getElementById('AboutButton');
+  titleRefresh = document.getElementById('titleRefresh');
+  bothButton = document.getElementById("tab1_button");
+  textButton = document.getElementById('tab2_button');
+  blocksButton = document.getElementById('tab3_button');
+  bottomPart = document.getElementById('bottom-part');
+  toolboxstylesheet = document.getElementById("ToolboxCss");
+  span = document.getElementsByClassName("close")[0];
+  darkmodediv = document.querySelector('.settingsOptions');
+}
 
 function registerListeners() {
   runButton.addEventListener('click', runTasks);
@@ -69,7 +112,7 @@ function registerListeners() {
     stdOut.innerHTML = "";
     stdErr.innerHTML = "";
   });
-  workspace.addChangeListener(turnBlocksToCode);
+  workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
 
   //resizing things with the purple bar
@@ -128,8 +171,8 @@ function registerListeners() {
 
   // these make it so that the blocks and text take turns.
   blockPane.addEventListener('click', () => {
-    workspace.removeChangeListener(turnBlocksToCode);
-    workspace.addChangeListener(turnBlocksToCode);
+    workspace.removeChangeListener(onBlocklyChange);
+    workspace.addChangeListener(onBlocklyChange);
   });
 
   textPane.addEventListener('click', () => {
@@ -248,6 +291,7 @@ function showTextAndBlocks() {
  * this function gets called every time the run button is pressed.
  */
 async function runTasks() {
+  console.log("runTasks");
 
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
@@ -283,7 +327,7 @@ async function runTasks() {
 
 export function turnCodeToBLocks() {
   // I need to make the listeners only be one at a time to prevent an infinite loop.
-  workspace.removeChangeListener(turnBlocksToCode);
+  workspace.removeChangeListener(onBlocklyChange);
   if (getDebugMode()){
     setDebugMode(false);
     setStepInto(false);
@@ -303,6 +347,14 @@ export function turnCodeToBLocks() {
   //comment this out to stop the live error feedback.
   textEditor.session.setAnnotations(annotationsBuffer);
   addBlockErrors(workspace);
+}
+
+function onBlocklyChange(event) {
+  // Not every change event warrants rebuilding the program. For example,
+  // switching themes.
+  if (event.type !== 'theme_change') {
+    turnBlocksToCode();
+  }
 }
 
 function turnBlocksToCode() {
@@ -354,9 +406,6 @@ function setDark() {
   darkMode = true;
   workspace.setTheme(PraxlyDark);
   textEditor.setTheme("ace/theme/twilight");
-  // textEditor.setMode("ace/modes/java")
-  // var bodyElement = document.body;
-  // bodyElement.style.backgroundColor = "black";
   var elements = document.querySelectorAll(".output, #secondary_bar, example_links, #exampleTable");
   for (var i = 0; i < elements.length; i++) {
     elements[i].style.backgroundColor = "#303030";
@@ -426,39 +475,51 @@ function initializeBlockly() {
   definePraxlyBlocks(workspace);
 }
 
-function parseUrlParameters() {
+function parseUrlConfiguration() {
   // The URL may be of the form https://.../?key1=value1&key2#code=... The code
   // is provided as a fragment identifier (that is, succeeding #) because
   // fragment identifiers are not sent up to the web server. The code can get
   // quite long, and URLs sent to a server have a maximum length.
 
-  // Load the code baked into the URL. It's necessarily text, not blocks.
+  // Grab the code baked into the URL.
   const hash = window.location.hash;
   const pattern = '#code=';
   if (hash.startsWith(pattern)) {
     let source = hash.substring(pattern.length);
-    source = decodeURIComponent(source);
-    textEditor.setValue(source, 1);
+    configuration.source = decodeURIComponent(source);
   }
 
   // Configure according to the ?key1=value1&key2 parameters.
   let parameters = new URLSearchParams(window.location.search);
-  if (parameters.has('embed')) {
-    document.body.classList.add('embed');
+  configuration.isEmbedded = parameters.has('embed');
+  configuration.editorMode = parameters.get('editor') ?? 'both';
+  configuration.showOutput = parameters.get('output') !== 'false';
+}
+
+function synchronizeToConfiguration() {
+  // The initial code is necessarily text, not blocks.
+  if (configuration.source) {
+    textEditor.setValue(configuration.source, 1);
   }
 
-  const editorMode = parameters.get('editor') ?? 'both';
-  if (editorMode === 'text') {
+  if (configuration.isEmbedded) {
+    document.body.classList.add('embed');
+    // Embeds in the CodeVA Canvas are in high contrast. Let's go
+    // with dark mode for the time being.
+    setDark();
+  }
+
+  if (configuration.editorMode === 'text') {
     showTextOnly();
     textEditor.focus();
-  } else if (editorMode === 'blocks') {
+  } else if (configuration.editorMode === 'blocks') {
     showBlocksOnly();
   } else {
     showTextAndBlocks();
     textEditor.focus();
   }
 
-  if (parameters.get('output') === 'false') {
+  if (!configuration.showOutput) {
     bottomPart.style.display = 'none';
     resizeBarY.style.display = 'none';
     Blockly.svgResize(workspace);
@@ -466,12 +527,15 @@ function parseUrlParameters() {
 }
 
 function initialize() {
+  // We parse the configuration first because it influences the UI.
+  parseUrlConfiguration();
+  initializeGlobals();
   praxlyGenerator = makeGenerator();
   initializeBlockly();
   darkmodediv.style.display = 'none';
   registerListeners();
   generateExamples();
-  parseUrlParameters();
+  synchronizeToConfiguration();
 }
 
 initialize();
