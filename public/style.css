@@ -587,8 +587,8 @@ body:not(.embed) > #embed-toolbar {
 
 .embed-button {
   border-radius: 50%;
-  width: 3em;
-  height: 3em;
+  width: 4em;
+  height: 4em;
   line-height: 0;
 }
 
@@ -596,7 +596,7 @@ body:not(.embed) > #embed-toolbar {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 1.8em;
+  font-size: 2em;
   line-height: 0;
   display: inline-block;
   line-height: 1;
