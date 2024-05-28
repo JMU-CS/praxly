@@ -296,29 +296,36 @@ function setDark() {
     darkMode = true;
     workspace.setTheme(PraxlyDark);
     textEditor.setTheme("ace/theme/twilight");
-    // textEditor.setMode("ace/modes/java")
-    var bodyElement = document.body;
-    // bodyElement.style.backgroundColor = "black";
-    var elements = document.querySelectorAll(".output, #secondary_bar, example_links, #exampleTable");
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].style.backgroundColor = "#303030";
-        elements[i].style.color = "white";
-    }
-    toolboxstylesheet.href = "toolbox-dark.css";
+
+    document.body.classList.toggle('dark-mode');
+
+    // // textEditor.setMode("ace/modes/java")
+    // var bodyElement = document.body;
+    // // bodyElement.style.backgroundColor = "black";
+    // var elements = document.querySelectorAll(".output, #secondary_bar, example_links, #exampleTable");
+    // for (var i = 0; i < elements.length; i++) {
+    //     elements[i].style.backgroundColor = "#303030";
+    //     elements[i].style.color = "white";
+    // }
+    // toolboxstylesheet.href = "toolbox-dark.css";
 }
 
 function setLight() {
     darkMode = false;
     workspace.setTheme(praxlyDefaultTheme);
     textEditor.setTheme('ace/theme/katzenmilch');
-    var bodyElement = document.body;
-    // bodyElement.style.backgroundColor = "white";
-    var elements = document.querySelectorAll(".output, #secondary_bar, example_links, #exampleTable");
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].style.backgroundColor = "#e3e6e4";
-        elements[i].style.color = "black";
-    }
-    toolboxstylesheet.href = "toolbox-light.css";
+
+    document.body.classList.toggle('dark-mode', false);
+
+
+    // var bodyElement = document.body;
+    // // bodyElement.style.backgroundColor = "white";
+    // var elements = document.querySelectorAll(".output, #secondary_bar, example_links, #exampleTable");
+    // for (var i = 0; i < elements.length; i++) {
+    //     elements[i].style.backgroundColor = "#e3e6e4";
+    //     elements[i].style.color = "black";
+    // }
+    // toolboxstylesheet.href = "toolbox-light.css";
 }
 
 // this is how you add custom keybinds!
