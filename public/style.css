@@ -563,6 +563,7 @@ main {
 #Variable-table-outer td {
   padding: 10px;
   border: 1px solid #000000; /* Pretty borders for entries */
+  color: black;
 }
 
 
