@@ -111,14 +111,6 @@ document.addEventListener('mouseup', function (e) {
 });
 
 
-document.addEventListener('mouseup', function (e) {
-    isResizing = false;
-    document.removeEventListener('mousemove', resizeHandlerY);
-    Blockly.svgResize(workspace);
-    textEditor.resize();
-
-})
-
 manualButton.addEventListener('click', function () {
     var linkUrl = 'pseudocode.html';
     window.open(linkUrl, '_blank');
@@ -283,6 +275,8 @@ function resizeHandlerX(e) {
 
     textPane.style.flex = leftPaneWidth;
     blockPane.style.flex = rightPaneWidth;
+
+    Blockly.svgResize(workspace);
 }
 
 function resizeHandlerY(e){
@@ -298,6 +292,8 @@ function resizeHandlerY(e){
 
   main.style.flex = topHeight + '%';
   bottom.style.flex = bottomHeight + '%';
+
+  Blockly.svgResize(workspace);
 }
 
 var toolboxstylesheet = document.getElementById("ToolboxCss");
