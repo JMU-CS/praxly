@@ -26,6 +26,7 @@ h1 {
   background-color: #ccc;
 }
 
+
 body.embed > .nav-bar {
   display: none;
 }
@@ -400,7 +401,7 @@ main {
   display: flex;
   flex-basis: 60%;
   flex-grow: 1;
-  background-color: #ddc8f5;
+  background-color: #74ceff;
 }
 
 #blocklyDiv {
@@ -435,10 +436,10 @@ main {
   flex: 1;
   box-sizing: border-box;
   position: relative;
-  margin: 10px;
+  /* margin: 10px; */
   padding: 10px;
   font-size: large;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   overflow: auto;
   height: 100%;
   /* flex-basis: 0%; */
@@ -562,6 +563,7 @@ main {
 #Variable-table-outer td {
   padding: 10px;
   border: 1px solid #000000; /* Pretty borders for entries */
+  color: black;
 }
 
 

@@ -121,7 +121,7 @@ function registerListeners() {
     document.addEventListener('mousemove', resizeHandlerX);
   });
 
-  resizeBarY.addEventListener('mousedown', function(e){
+  resizeBarY.addEventListener('mousedown', function (e) {
     isResizing = true;
     document.addEventListener('mousemove', resizeHandlerY);
   })
@@ -132,6 +132,14 @@ function registerListeners() {
     Blockly.svgResize(workspace);
     textEditor.resize();
   });
+
+  document.addEventListener('mouseup', function (e) {
+    isResizing = false;
+    document.removeEventListener('mousemove', resizeHandlerY);
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+  });
+
 
   manualButton.addEventListener('click', function () {
     var linkUrl = 'pseudocode.html';
@@ -231,32 +239,32 @@ function registerListeners() {
    * Event listeners for the main circular buttons along the top.
    */
 
-  debugButton.addEventListener('mouseup', function() {
+  debugButton.addEventListener('mouseup', function () {
     // comingSoon();
     showDebug();
     setDebugMode(true);
     runTasks();
   });
 
-  stopButton.addEventListener('click', function() {
+  stopButton.addEventListener('click', function () {
     hideDebug();
     setDebugMode(false);
     setStepInto(false);
     stepButton.click();
   });
 
-  stepIntoButton.addEventListener('mouseup', function() {
+  stepIntoButton.addEventListener('mouseup', function () {
     // comingSoon();
-    if (!getDebugMode()){
+    if (!getDebugMode()) {
       endDebugPrompt();
     }
     setDebugMode(true);
     setStepInto(true);
   });
 
-  stepButton.addEventListener('mouseup', function() {
+  stepButton.addEventListener('mouseup', function () {
     // comingSoon();
-    if (!getDebugMode()){
+    if (!getDebugMode()) {
       endDebugPrompt();
     }
     setDebugMode(true);
@@ -328,7 +336,7 @@ async function runTasks() {
 export function turnCodeToBLocks() {
   // I need to make the listeners only be one at a time to prevent an infinite loop.
   workspace.removeChangeListener(onBlocklyChange);
-  if (getDebugMode()){
+  if (getDebugMode()) {
     setDebugMode(false);
     setStepInto(false);
     stepButton.click();
@@ -378,28 +386,26 @@ function resizeHandlerX(e) {
 
   textPane.style.flex = leftPaneWidth;
   blockPane.style.flex = rightPaneWidth;
+
+  Blockly.svgResize(workspace);
 }
 
 function resizeHandlerY(e) {
   if (!isResizing) return;
 
+
+  const main = document.querySelector('main');
+  const bottom = document.querySelector('#bottom-part');
+
+  const containerHeight = document.body.clientHeight;
   const mouseY = e.pageY;
-  const main = document.querySelector('main').getBoundingClientRect();
-  const topHeight = mouseY - main.top;
-  const mainHeight = main.height;
+  const topHeight = (mouseY / containerHeight) * 100;
+  const bottomHeight = 100 - topHeight;
 
-  document.querySelector('main').style.height = topHeight + 'px';
-  document.querySelector('#bottom-part').style.height = (mainHeight - topHeight) + 'px';
+  main.style.flex = topHeight + '%';
+  bottom.style.flex = bottomHeight + '%';
 
-  const change = window.innerHeight - mouseY - 25 + 'px'
-
-  const output = document.querySelector('.output');
-  output.style.height = change;
-
-  const table = document.querySelector('#Variable-table-container');
-  if (!table.classList.contains('hidden')) {
-    table.style.height = change;
-  }
+  Blockly.svgResize(workspace);
 }
 
 function setDark() {
@@ -449,7 +455,7 @@ function generateExamples() {
 
 function endDebugPrompt() {
   let exitDebug = confirm('the program has completed. Would you like to exit the debugger?');
-  if (exitDebug){
+  if (exitDebug) {
     stopButton.click();
   }
 }
