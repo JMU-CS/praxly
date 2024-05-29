@@ -1,0 +1,655 @@
+/* Default*/
+:root {
+    --body-bg-color: #36759C;
+    --text-color: black;
+    --nav-bar-bg: #ccc;
+
+    --tab-bg-color: #f1f1f1;
+    --tab-border-color: #ccc;
+    --tab-text-color: black;
+
+    --example-table-bg-color: #e7e5e5;
+
+    --blockly-tree-row-bg-color: white;
+    --blockly-tree-label-color: black;
+
+    --output-bg-color: #e3e6e4;
+    --output-text-color: black;
+}
+
+/* Dark Mode*/
+.dark-mode {
+    --body-bg-color: black;
+    --text-color: whitesmoke;
+    --nav-bar-bg: #3a3939;
+
+    --tab-bg-color: #3a3939;
+    --tab-border-color: black;
+    --tab-text-color: white;
+
+    --example-table-bg-color: #3a3939;
+
+
+    --blockly-tree-row-bg-color: black;
+    --blockly-tree-label-color: white;
+
+    --output-bg-color: #3a3939;
+    --output-text-color: whitesmoke;
+}
+
+/* style.css*/
+html,body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--body-bg-color);
+    color: var(--text-color);
+}
+
+/* header and toolbar */
+
+h1 {
+    font-family: sans-serif;
+  }
+
+  #titleRefresh {
+    cursor: pointer;
+  }
+
+  .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: var(--nav-bar-bg);
+  }
+
+  .nav-bar img {
+    height: 40px;
+    width: 120px;
+  }
+
+  .nav-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-bar ul li {
+    margin-left: 10px;
+  }
+
+  .nav-bar ul li a {
+    text-decoration: none;
+  }
+
+  /* nav-bar buttons */
+
+.button-text {
+    display: none;
+  }
+
+  #runButton::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 15px solid white;
+    left: 40%; /* Adjusted value */
+    top: 50%;
+    transform: translateY(-50%);
+    transition: none; /* Removed transition property */
+  }
+
+  .MainMenu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+  }
+
+  #runButton {
+    background-color: green;
+  }
+
+  #DebugButton {
+    background-color: rgb(79, 5, 163);
+    background-image: url('./images/bug44.png');
+  }
+
+  #DebugButton:hover {
+    background-image: none;
+    background-color: #8f45f6;
+  }
+
+  #stepButton {
+    background-color: rgb(10, 239, 147);
+    background-image: url('./images/ladder45.png');
+  }
+
+  #stepButton:hover {
+    background-image: none;
+    background-color: #74a25f;
+  }
+
+  #stepIntoButton {
+    background-color: rgb(196, 217, 8);
+    background-image: url('./images/magnify_36.png');
+  }
+
+  #stepIntoButton:hover {
+    background-image: none;
+    background-color: #a8ba25;
+  }
+
+  #stopButton {
+    background-color: rgb(136, 6, 43);
+    background-image: url('./images/stop.png');
+  }
+
+  #stopButton:hover {
+    background-image: none;
+    background-color: #f30e0e;
+  }
+
+  #runButton:hover {
+    background-image: none;
+    background-color: #00c800;
+  }
+
+  .MainMenu-button:hover .button-text {
+    display: inline;
+  }
+
+  .MainMenu-button:hover::before {
+    display: none;
+  }
+
+  .MainMenu-button-icon {
+    font-size: 30px;
+  }
+
+  #share {
+    background-image: url('./images/sharebuttonicon.png');
+  }
+
+  .MainMenu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+
+  }
+
+  #share:hover {
+    background-image: none;
+    background-color: #0077ff; /* Lighter blue color */
+  }
+
+
+
+  #darkMode {
+    background-image: url("./images/darkmodeicon.png");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+  }
+
+  #darkMode:hover {
+    background-image: none;
+    background-color: #333333;
+  }
+
+
+
+  #reference {
+    background-image: url('./images/books-icon.png');
+  }
+
+  #reference:hover {
+    background-image: none;
+    background-color: #ec2323; /* Lighter blue color */
+  }
+
+
+
+  #settings {
+    background-image: url('./images/settings.png');
+    background-color: #616161;
+  }
+
+  #settings:hover {
+    background-image: none;
+    background-color: #9e9e9e; /* Lighter blue color */
+  }
+
+  #info {
+    background-image: url('./images/info.png');
+    background-color: lightskyblue;
+  }
+
+  #info:hover {
+    background-image: none;
+    background-color: rgb(11, 161, 230); /* Lighter blue color */
+  }
+
+
+
+
+
+
+/* The help menu */
+
+#helpMenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    display: flex;
+  }
+
+  .helpMenuButtons {
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 5px; /* Added right margin of 5 pixels */
+    transition: background-color 0.3s;
+    font-family: 'Arial', sans-serif;
+    border-radius: 15px;
+  }
+
+  .helpMenuButtons:hover {
+    background-color: #ddd;
+  }
+
+  #FeaturesButton {
+    background-color: #4caf50;
+    color: #ffffff;
+  }
+
+  #ChangelogButton {
+    background-color: #2196f3;
+    color: #ffffff;
+  }
+
+  #BugButton {
+    background-color: #f44336;
+    color: #ffffff;
+  }
+
+  #GitHubButton {
+    background-color: #673ab7;
+    color: #ffffff;
+  }
+
+  #AboutButton {
+    background-color: #ff5722;
+    color: #ffffff;
+  }
+
+  #exampleTable {
+    color: #2196f3;
+    background-color: var(--example-table-bg-color);
+    display: flex;
+  }
+
+  .example_links {
+    color: blue;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 10px;
+    cursor: pointer; /* Optional: add a pointer cursor to indicate interactivity */
+    color: inherit; /* Inherit the text color from its parent element */
+    text-decoration: underline;
+  }
+
+  /* The Modal (background) */
+
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 99; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+
+  @keyframes fadeEffect {
+    /* Go from zero to full opacity */
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* Secondary menu bar */
+
+  #secondary_bar {
+    display: flex;
+    background-color: #e7e5e5;
+    border: 1px solid #aaa;
+  }
+
+  /* Style the tab */
+  .tab {
+    overflow: hidden;
+    border: 1px solid var(--tab-border-color); /* change might be necessary */
+    background-color: var(--tab-bg-color);
+  }
+
+  #tab1_button, #tab2_button, #tab3_button {
+    color: var(--tab-text-color);
+  }
+
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    animation: fadeEffect 1s; /* Fading effect takes 1 second */
+  }
+
+  /* main blockly and ace editor */
+
+  main {
+    display: flex;
+    height: 60vh;
+    background-color: #ddc8f5;
+  }
+
+  #blocklyDiv {
+    flex: 1;
+  }
+
+  .resizeBarX {
+    width: 5px;
+    cursor: col-resize;
+    background-color: #2B5E7D;
+  }
+
+  .resizeBarY {
+    height: 5px;
+    cursor: row-resize;
+    background-color: #2B5E7D;
+  }
+
+  .codeEditor {
+    flex: 1;
+    width: 100%;
+  }
+
+  .bottom-part {
+    display: flex; /* Add this */
+    flex-direction: row; /* Add this */
+    height: 25%;
+  }
+
+  .output {
+    flex: 1;
+    box-sizing: border-box;
+    position: relative;
+    margin: 10px;
+    padding: 10px;
+    font-size: large;
+    border-radius: 10px;
+    overflow: auto;
+    height: 100%;
+    background-color: var(--output-bg-color);
+    color: var(--output-text-color);
+  }
+
+  .clearOut {
+    position: absolute;
+    font-size: x-large;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .stdout {
+    margin-top: 0;
+  }
+
+  .stderr {
+    color: red;
+  }
+
+  /* not sure where any of this goes */
+
+  .menuButtons {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .menuButtons li {
+    float: right;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0; /* Adjusted property */
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .toast {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    padding: 15px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+    transform: translateX(-50%);
+    z-index: 9999;
+  }
+
+
+  .debugOptions {
+    display: none;
+  }
+
+  .debugButton {
+    display: block;
+  }
+
+  /* Style for the table container */
+#Variable-table-container {
+    display: none;
+    flex: 1;
+    box-sizing: border-box;
+    position: relative;
+    margin: 10px;
+    padding: 10px;
+    font-size: large;
+    border-radius: 10px;
+    overflow: auto;
+    background-color: #ffffff;
+    height: 100%;
+  }
+
+  /* Style for the table */
+#Variable-table-outer {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Style for table headers */
+  #Variable-table-outer th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: left;
+    border: 2px solid #000000; /* Distinct header row */
+  }
+
+  /* Style for table cells */
+#Variable-table-outer td {
+    padding: 10px;
+    border: 1px solid #000000; /* Pretty borders for entries */
+    color: black;
+  }
+
+  /* Hover effect */
+#Variable-table-outer tbody tr:hover {
+    background-color: #e2e2e2;
+  }
+
+
+/* toolbox.css*/
+
+/* Makes our label white. */
+.blocklyTreeLabel {
+    color: var(--blockly-tree-label-color);
+  }
+
+  /* Adds padding around the group of categories and separators. */
+.blocklyToolboxContents {
+    padding: 0.5em;
+  }
+
+  /* Adds space between the categories, rounds the corners and adds space around the label. */
+.blocklyTreeRow {
+    padding: 10px;
+    margin-bottom: 0.5em;
+    border-radius: 4px;
+    background-color: var(--blockly-tree-row-bg-color);
+  }
+
+  /* .customIcon {
+    color: rgb(255, 21, 21);
+  } */
+
+/* Stacks the icon on top of the label. */
+.blocklyTreeRowContentContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .blocklyTreeRow {
+    height: initial;
+  }
+
+  .blocklyTreeIcon {
+    visibility: visible;
+  }
+
+  .output {
+    background: var(--output-bg-color);
+    color: var(--output-text-color);
+  }
