@@ -1,7 +1,7 @@
 import ace from 'ace-builds';
 import './mode-praxly.js';
 
-// this is going to be the place where all shared enums and constants.
+// this is going to be the place where all shared enums and constants. (this is the place for all shared enums and constants.)
 
 /**
  * this is the 'enum' that I use when I refer to types.
@@ -306,7 +306,7 @@ export const textEditor = ace.edit("aceCode", {
   mode: 'ace/mode/praxly',
 });
 
-export const DebugButton = document.getElementById('DebugButton');
+export const debugButton = document.getElementById('DebugButton');
 export const stepButton = document.getElementById('stepButton');
 export const stopButton = document.getElementById('stopButton');
 export const stepIntoButton = document.getElementById('stepIntoButton');
