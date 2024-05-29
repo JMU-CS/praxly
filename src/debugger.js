@@ -1,4 +1,4 @@
-import { DebugButton, getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stopButton } from "./common";
+import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stopButton } from "./common";
 
 
 export function showDebug() {

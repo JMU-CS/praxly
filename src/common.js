@@ -306,7 +306,7 @@ export const textEditor = ace.edit("aceCode", {
   mode: 'ace/mode/praxly',
 });
 
-export const DebugButton = document.getElementById('DebugButton');
+export const debugButton = document.getElementById('DebugButton');
 export const stepButton = document.getElementById('stepButton');
 export const stopButton = document.getElementById('stopButton');
 export const stepIntoButton = document.getElementById('stepIntoButton');

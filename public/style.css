@@ -26,6 +26,10 @@ h1 {
   background-color: #ccc;
 }
 
+body.embed > .nav-bar {
+  display: none;
+}
+
 .nav-bar img {
   height: 40px;
   width: 120px;
@@ -394,12 +398,14 @@ h1 {
 
 main {
   display: flex;
-  height: 60vh;
+  flex-basis: 60%;
+  flex-grow: 1;
   background-color: #ddc8f5;
 }
 
 #blocklyDiv {
   flex: 1;
+  flex-grow: 1;
 }
 
 .resizeBarX {
@@ -419,10 +425,10 @@ main {
   width: 100%;
 }
 
-.bottom-part {
+#bottom-part {
   display: flex; /* Add this */
   flex-direction: row; /* Add this */
-  height: 25%;
+  flex-basis: 25%;
 }
 
 .output {
@@ -435,6 +441,7 @@ main {
   border-radius: 10px;
   overflow: auto;
   height: 100%;
+  /* flex-basis: 0%; */
 }
 
 
@@ -562,4 +569,40 @@ main {
 /* Hover effect */
 #Variable-table-outer tbody tr:hover {
   background-color: #e2e2e2;
+}
+
+#embed-toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+}
+
+body:not(.embed) > #embed-toolbar {
+  display: none;
+}
+
+.embed-button {
+  border-radius: 50%;
+  width: 4em;
+  height: 4em;
+  line-height: 0;
+}
+
+.material-icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 2em;
+  line-height: 0;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 }
