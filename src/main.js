@@ -272,6 +272,7 @@ function registerListeners() {
 }
 
 function showBlocksOnly() {
+  document.querySelector('header').style.display = 'none';
   resizeBarX.style.display = 'none';
   textPane.style.display = 'none';
   blockPane.style.display = 'block';
@@ -280,6 +281,7 @@ function showBlocksOnly() {
 }
 
 function showTextOnly() {
+  document.querySelector('header').style.display = 'none';
   resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
   textPane.style.display = 'block';
