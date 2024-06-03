@@ -418,7 +418,7 @@ function setDark() {
     workspace.setTheme(PraxlyDark);
     textEditor.setTheme("ace/theme/twilight");
 
-    document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('light-mode', false);
 }
 
 function setLight() {
@@ -426,7 +426,7 @@ function setLight() {
     workspace.setTheme(praxlyDefaultTheme);
     textEditor.setTheme('ace/theme/katzenmilch');
 
-    document.body.classList.toggle('dark-mode', false);
+    document.body.classList.toggle('light-mode');
 }
 
 function generateExamples() {
@@ -461,7 +461,7 @@ function initializeBlockly() {
     // scrollbars: false,
     horizontalLayout: false,
     toolboxPosition: "start",
-    theme: praxlyDefaultTheme,
+    theme: PraxlyDark,
     zoom: {
       controls: true,
       wheel: true,
@@ -473,8 +473,10 @@ function initializeBlockly() {
     },
     renderer: 'zelos'
   });
+  textEditor.setTheme("ace/theme/twilight");
   definePraxlyBlocks(workspace);
 }
+
 
 function parseUrlConfiguration() {
   // The URL may be of the form https://.../?key1=value1&key2#code=... The code

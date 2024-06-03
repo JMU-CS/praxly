@@ -10,7 +10,7 @@ export function showDebug() {
         button.style.display = 'block';
     }
     debugButton.style.display = 'none';
-
+    document.querySelector('#runButton').style.display = 'none';
 }
 
 export function hideDebug() {
@@ -22,6 +22,7 @@ export function hideDebug() {
     }
     debug.style.display = 'block';
     variableTableContainer.style.display = 'none';
+    document.querySelector('#runButton').style.display = 'block';
 
 }
 

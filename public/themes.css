@@ -1,24 +1,5 @@
-/* Default*/
+/* Default - Dark mode */
 :root {
-  --body-bg-color: #36759C;
-  --text-color: black;
-  --nav-bar-bg: #ccc;
-
-  --tab-bg-color: #f1f1f1;
-  --tab-border-color: #ccc;
-  --tab-text-color: black;
-
-  --example-table-bg-color: #e7e5e5;
-
-  --blockly-tree-row-bg-color: white;
-  --blockly-tree-label-color: black;
-
-  --output-bg-color: #e3e6e4;
-  --output-text-color: black;
-}
-
-/* Dark Mode*/
-.dark-mode {
   --body-bg-color: black;
   --text-color: whitesmoke;
   --nav-bar-bg: #3a3939;
@@ -35,6 +16,33 @@
 
   --output-bg-color: #3a3939;
   --output-text-color: whitesmoke;
+
+  --debug-color: #8f45f6;
+  --stop-color: #f30e0e;
+  /* --step-color: */
+}
+
+/* Light Mode*/
+.light-mode {
+  --body-bg-color: #36759C;
+  --text-color: black;
+  --nav-bar-bg: #ccc;
+
+  --tab-bg-color: #f1f1f1;
+  --tab-border-color: #ccc;
+  --tab-text-color: black;
+
+  --example-table-bg-color: #e7e5e5;
+
+  --blockly-tree-row-bg-color: white;
+  --blockly-tree-label-color: black;
+
+  --output-bg-color: #e3e6e4;
+  --output-text-color: black;
+
+  --debug-color: rgb(79, 5, 163);
+  --stop-color: rgb(136, 6, 43);
+  /* --step-color: */
 }
 
 /* style.css*/
@@ -146,10 +154,10 @@ h1 {
   background-color: #8f45f6;
 }
 
-#stepButton {
+/* #stepButton {
   background-color: rgb(10, 239, 147);
   background-image: url('./images/ladder45.png');
-}
+} */
 
 #stepButton:hover {
   background-image: none;
@@ -157,6 +165,7 @@ h1 {
 }
 
 #stepIntoButton {
+  display: none;
   background-color: rgb(196, 217, 8);
   background-image: url('./images/magnify_36.png');
 }
@@ -166,10 +175,10 @@ h1 {
   background-color: #a8ba25;
 }
 
-#stopButton {
+/* #stopButton {
   background-color: rgb(136, 6, 43);
   background-image: url('./images/stop.png');
-}
+} */
 
 #stopButton:hover {
   background-image: none;
@@ -666,7 +675,21 @@ body:not(.embed)>#embed-toolbar {
   width: 4em;
   height: 4em;
   line-height: 0;
+  background-color: transparent;
+  border-color: transparent;
 }
+
+/* #embed-run-button:hover {
+  background-color: #00c800;
+}
+
+#embed-run-button:hover .material-symbols-rounded {
+  display: none;
+}
+
+#embed-run-button:hover .button-text {
+  display: block;
+} */
 
 .material-symbols-rounded {
   font-variation-settings:
@@ -688,32 +711,48 @@ body:not(.embed)>#embed-toolbar {
   direction: ltr;
 }
 
+/* Run Code */
 .material-symbols-rounded.play {
   color: green;
   font-size: 36px;
 }
 
+/* Debug Mode */
 .material-symbols-rounded.bug {
-  color: rgb(79, 5, 163);
+  color: var(--debug-color);
   font-size: 30px;
   transform: rotate(-45deg);
 }
 
+/* Share */
 .material-symbols-rounded.spread {
   color: #4985c5;
   font-size: 30px;
 }
 
+/* Manual */
 .material-symbols-rounded.manual {
   color: #c91827;
   font-size: 30px;
 }
 
-/*Reference*/
+/* Reference */
 .material-symbols-rounded.extra {
   color: lightskyblue;
   background-color: white;
   border-radius: 50%;
+  font-size: 36px;
+}
+
+/* Step */
+.material-symbols-rounded.step {
+  color: rgb(10, 239, 147);
+  font-size: 36px;
+}
+
+/* Stop */
+.material-symbols-rounded.stop {
+  color: var(--stop-color);
   font-size: 36px;
 }
 
@@ -754,9 +793,4 @@ body:not(.embed)>#embed-toolbar {
 
 .blocklyTreeIcon {
   visibility: visible;
-}
-
-.output {
-  background: var(--output-bg-color);
-  color: var(--output-text-color);
 }
