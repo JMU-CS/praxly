@@ -19,7 +19,8 @@
 
   --debug-color: #8f45f6;
   --stop-color: #f30e0e;
-  /* --step-color: */
+  --table-row-color: #272727;
+  --table-bg-color: var(--output-bg-color)
 }
 
 /* Light Mode*/
@@ -41,8 +42,10 @@
   --output-text-color: black;
 
   --debug-color: rgb(79, 5, 163);
-  --stop-color: rgb(136, 6, 43);
-  /* --step-color: */
+  /* --stop-color: rgb(136, 6, 43); */
+  --table-row-color: #bebdbd;
+  --table-bg-color: white;
+  /* add a color for step in light mode */
 }
 
 /* style.css*/
@@ -630,7 +633,7 @@ main {
   font-size: large;
   /* border-radius: 10px; */
   overflow: auto;
-  background-color: #ffffff;
+  background-color: var(--output-bg-color); /* #ffffff */
   height: 100%;
 }
 
@@ -652,14 +655,18 @@ main {
 /* Style for table cells */
 #Variable-table-outer td {
   padding: 10px;
-  border: 1px solid #000000;
+  border: 1px solid var(--text-color); /* 000000 */
   /* Pretty borders for entries */
-  color: black;
+  color: var(--text-color);
 }
 
 /* Hover effect */
-#Variable-table-outer tbody tr:hover {
+/* #Variable-table-outer tbody tr:hover {
   background-color: #e2e2e2;
+} */
+
+#Variable-table-outer tbody tr:nth-child(even) {
+  background-color: var(--table-row-color);
 }
 
 #embed-toolbar {

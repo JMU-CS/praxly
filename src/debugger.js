@@ -21,7 +21,7 @@ export function hideDebug() {
         button.style.display = 'none';
     }
     debug.style.display = 'block';
-    variableTableContainer.style.display = 'none';
+    // variableTableContainer.style.display = 'none';
     document.querySelector('#runButton').style.display = 'block';
 
 }

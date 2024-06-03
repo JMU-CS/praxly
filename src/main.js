@@ -65,7 +65,7 @@ let configuration = {
 export let workspace;
 let praxlyGenerator;
 let mainTree;
-let darkMode = false;
+let darkMode = true;
 let live = true;
 let isResizing = false;
 
@@ -488,7 +488,7 @@ function initializeBlockly() {
     // scrollbars: false,
     horizontalLayout: false,
     toolboxPosition: "start",
-    theme: PraxlyDark,
+    theme: darkMode ? PraxlyDark : praxlyDefaultTheme,
     zoom: {
       controls: true,
       wheel: true,
@@ -500,7 +500,8 @@ function initializeBlockly() {
     },
     renderer: 'zelos'
   });
-  textEditor.setTheme("ace/theme/twilight");
+  // darkMode ? setLight() : setDark();
+  darkMode ? textEditor.setTheme("ace/theme/twilight") : textEditor.setTheme('ace/theme/katzenmilch');
   definePraxlyBlocks(workspace);
 }
 
