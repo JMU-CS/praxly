@@ -109,7 +109,9 @@ h1 {
 /* top: 50%;
     transform: translateY(-50%);
     transition: none; /* Removed transition property */
-*/ */ .MainMenu-button {
+*/ */
+
+.MainMenu-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,14 +132,14 @@ h1 {
   display: none;
 }
 
-#runButton {
-  /* background-color: green; */
-}
+/* #runButton {
+  background-color: green;
+} */
 
-#DebugButton {
-  /* background-color: rgb(79, 5, 163); */
-  /* background-image: url('./images/bug44.png'); */
-}
+/* #DebugButton {
+  background-color: rgb(79, 5, 163);
+  background-image: url('./images/bug44.png');
+} */
 
 #DebugButton:hover {
   background-image: none;
@@ -191,9 +193,9 @@ h1 {
   font-size: 30px;
 }
 
-#share {
-  /* background-image: url('./images/sharebuttonicon.png'); */
-}
+/* #share {
+  background-image: url('./images/sharebuttonicon.png');
+} */
 
 .MainMenu-button {
   display: flex;
@@ -242,9 +244,9 @@ h1 {
 
 
 
-#reference {
-  /* background-image: url('./images/books-icon.png'); */
-}
+/* #reference {
+  background-image: url('./images/books-icon.png');
+} */
 
 #reference:hover {
   background-image: none;
@@ -266,10 +268,10 @@ h1 {
   /* Lighter blue color */
 }
 
-#info {
-  /* background-image: url('./images/info.png'); */
-  /* background-color: lightskyblue; */
-}
+/* #info {
+  background-image: url('./images/info.png');
+  background-color: lightskyblue;
+} */
 
 #info:hover {
   background-image: none;

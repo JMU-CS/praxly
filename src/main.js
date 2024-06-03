@@ -52,6 +52,7 @@ let bottomPart;
 let toolboxstylesheet;
 let span;
 let darkmodediv;
+let runEmbedButton;
 
 let configuration = {
   code: null,
@@ -101,10 +102,12 @@ function initializeGlobals() {
   toolboxstylesheet = document.getElementById("ToolboxCss");
   span = document.getElementsByClassName("close")[0];
   darkmodediv = document.querySelector('.settingsOptions');
+  runEmbedButton = document.querySelector('#embed-run-button');
 }
 
 function registerListeners() {
   runButton.addEventListener('click', runTasks);
+  runEmbedButton.addEventListener('click', runTasks);
   darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
   clearOut.addEventListener('click', () => {
     clearOutput();
