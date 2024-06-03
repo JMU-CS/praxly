@@ -53,6 +53,7 @@ let toolboxstylesheet;
 let span;
 let darkmodediv;
 let runEmbedButton;
+let resizeBarBott;
 
 let configuration = {
   code: null,
@@ -64,7 +65,7 @@ let configuration = {
 export let workspace;
 let praxlyGenerator;
 let mainTree;
-let darkMode = false;
+let darkMode = true;
 let live = true;
 let isResizing = false;
 
@@ -103,6 +104,7 @@ function initializeGlobals() {
   span = document.getElementsByClassName("close")[0];
   darkmodediv = document.querySelector('.settingsOptions');
   runEmbedButton = document.querySelector('#embed-run-button');
+  resizeBarBott = document.querySelector('.resizeBarBott');
 }
 
 function registerListeners() {
@@ -129,6 +131,11 @@ function registerListeners() {
     document.addEventListener('mousemove', resizeHandlerY);
   })
 
+  resizeBarBott.addEventListener('mousedown', function (e) {
+    isResizing = true;
+    document.addEventListener('mousemove', resizeHandlerBott);
+  });
+
   document.addEventListener('mouseup', function (e) {
     isResizing = false;
     document.removeEventListener('mousemove', resizeHandlerX);
@@ -143,6 +150,10 @@ function registerListeners() {
     textEditor.resize();
   });
 
+  document.addEventListener('mouseup', function (e) {
+    isResizing = false;
+    document.removeEventListener('mousemove', resizeHandlerBott);
+  });
 
   manualButton.addEventListener('click', function () {
     var linkUrl = 'pseudocode.html';
@@ -398,7 +409,6 @@ function resizeHandlerX(e) {
 function resizeHandlerY(e) {
   if (!isResizing) return;
 
-
   const main = document.querySelector('main');
   const bottom = document.querySelector('#bottom-part');
 
@@ -411,6 +421,23 @@ function resizeHandlerY(e) {
   bottom.style.flex = bottomHeight + '%';
 
   Blockly.svgResize(workspace);
+}
+
+function resizeHandlerBott(e) {
+  if (!isResizing) return;
+
+  const output = document.querySelector('.output');
+  const variables = document.querySelector('#Variable-table-container');
+  const bottom = bottomPart;
+
+  const containerWidth = bottom.offsetWidth;
+  const mouseX = e.pageX;
+  const left = (mouseX / containerWidth) * 100;
+  const right = 100 - left;
+
+  output.style.flex = left;
+  variables.style.flex = right;
+
 }
 
 function setDark() {
@@ -461,7 +488,7 @@ function initializeBlockly() {
     // scrollbars: false,
     horizontalLayout: false,
     toolboxPosition: "start",
-    theme: PraxlyDark,
+    theme: darkMode ? PraxlyDark : praxlyDefaultTheme,
     zoom: {
       controls: true,
       wheel: true,
@@ -473,7 +500,8 @@ function initializeBlockly() {
     },
     renderer: 'zelos'
   });
-  textEditor.setTheme("ace/theme/twilight");
+  // darkMode ? setLight() : setDark();
+  darkMode ? textEditor.setTheme("ace/theme/twilight") : textEditor.setTheme('ace/theme/katzenmilch');
   definePraxlyBlocks(workspace);
 }
 
