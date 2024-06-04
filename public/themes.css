@@ -688,7 +688,7 @@ body:not(.embed)>#embed-toolbar {
 }
 
 .embed-button {
-  border-radius: 50%;
+  /* border-radius: 50%; */
   width: 4em;
   height: 4em;
   line-height: 0;
