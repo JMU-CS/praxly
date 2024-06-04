@@ -693,7 +693,7 @@ body:not(.embed)>#embed-toolbar {
   height: 4em;
   line-height: 0;
   /* background-color: transparent; */
-  border-color: transparent;
+  /* border-color: transparent; */
 }
 
 #embed-toolbar button:hover {
