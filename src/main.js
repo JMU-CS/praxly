@@ -1,4 +1,4 @@
-import Blockly from 'blockly';
+import Blockly, { Block, config } from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
@@ -53,6 +53,9 @@ let toolboxstylesheet;
 let span;
 let darkmodediv;
 let runEmbedButton;
+let debugEmbedButton;
+let stopEmbedButton;
+let stepEmbedButton;
 let resizeBarBott;
 
 let configuration = {
@@ -104,12 +107,31 @@ function initializeGlobals() {
   span = document.getElementsByClassName("close")[0];
   darkmodediv = document.querySelector('.settingsOptions');
   runEmbedButton = document.querySelector('#embed-run-button');
+  debugEmbedButton = document.querySelector('#embed-debug-button');
+  stepEmbedButton = document.querySelector('#embed-step-button');
+  stopEmbedButton = document.querySelector('#embed-stop-button');
   resizeBarBott = document.querySelector('.resizeBarBott');
 }
 
 function registerListeners() {
   runButton.addEventListener('click', runTasks);
   runEmbedButton.addEventListener('click', runTasks);
+  debugEmbedButton.addEventListener('mouseup', function () {
+    showDebugEmbedMode();
+    setDebugMode(true);
+    runTasks();
+  });
+  stepEmbedButton.addEventListener('mouseup', function () {
+    if (!getDebugMode){
+      endDebugPrompt();
+    }
+    setDebugMode(true);
+  });
+  stopEmbedButton.addEventListener('click', function () {
+    hideDebugEmbedMode();
+    setDebugMode(false);
+    stepEmbedButton.click();
+  });
   darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
   clearOut.addEventListener('click', () => {
     clearOutput();
@@ -294,11 +316,17 @@ function showBlocksOnly() {
   textEditor.resize();
 }
 
+/* Default */
 function showTextOnly() {
+  textPane.style.display = 'block';
+
   document.querySelector('header').style.display = 'none';
   resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
-  textPane.style.display = 'block';
+
+  document.querySelector('#Variable-table-container').style.display = 'none';
+  resizeBarBott.style.display = 'none';
+
   Blockly.svgResize(workspace);
   textEditor.resize();
 }
@@ -307,8 +335,28 @@ function showTextAndBlocks() {
   resizeBarX.style.display = 'block';
   blockPane.style.display = 'block';
   textPane.style.display = 'block';
+  document.querySelector('header').style.display = 'none';
+
   Blockly.svgResize(workspace);
   textEditor.resize();
+}
+
+function showDebugEmbedMode() {
+  let buttons = document.querySelectorAll('.debugOptionsEmbed');
+  for (let button of buttons) {
+    button.style.display = 'block';
+  }
+  document.querySelector('#embed-debug-button').style.display = 'none';
+  document.querySelector('#embed-run-button').style.display = 'none';
+}
+
+function hideDebugEmbedMode() {
+  let buttons = document.querySelectorAll('.debugOptionsEmbed');
+  for (let button of buttons) {
+    button.style.display = 'none';
+  }
+  document.querySelector('#embed-debug-button').style.display = 'block';
+
 }
 
 /**
@@ -524,7 +572,9 @@ function parseUrlConfiguration() {
   let parameters = new URLSearchParams(window.location.search);
   configuration.isEmbedded = parameters.has('embed');
   configuration.editorMode = parameters.get('editor') ?? 'both';
-  configuration.showOutput = parameters.get('output') !== 'false';
+  configuration.buttonOption = parameters.get('button');
+  configuration.results = parameters.get('result');
+  // configuration.showOutput = parameters.get('output') !== 'false';
 }
 
 function synchronizeToConfiguration() {
@@ -538,23 +588,62 @@ function synchronizeToConfiguration() {
     // Embeds in the CodeVA Canvas are in high contrast. Let's go
     // with dark mode for the time being.
     setDark();
-  }
-
-  if (configuration.editorMode === 'text') {
     showTextOnly();
-    textEditor.focus();
-  } else if (configuration.editorMode === 'blocks') {
-    showBlocksOnly();
-  } else {
-    showTextAndBlocks();
-    textEditor.focus();
   }
 
-  if (!configuration.showOutput) {
-    bottomPart.style.display = 'none';
-    resizeBarY.style.display = 'none';
+
+  // editor
+  if (configuration.editorMode === 'blocks') {
+    showBlocksOnly();
+  } else if (configuration.editorMode === 'both') {
+    document.querySelector('header').style.display = 'none';
+    textEditor.resize
     Blockly.svgResize(workspace);
+  } else {
+    showTextOnly();
   }
+
+  // button
+  if (configuration.buttonOption === 'debug'){
+    debugEmbedButton.style.display = 'block';
+    runEmbedButton.style.display = 'none';
+  } else if (configuration.buttonOption === 'both'){
+    runEmbedButton.style.display = 'block';
+    debugEmbedButton.style.display = 'block';
+  } else { // run
+    runEmbedButton.style.display = 'block';
+    debugEmbedButton.style.display = 'none';
+  }
+
+  // result
+  if (configuration.results === 'vars'){
+    document.querySelector('#Variable-table-container').style.display = 'block';
+    document.querySelector('.output').style.display = 'none';
+  } else if (configuration.results === 'both') {
+    document.querySelector('.output').style.display = 'block';
+    resizeBarBott.style.display = 'block';
+    document.querySelector('#Variable-table-container').style.display = 'block';
+  } else {
+    document.querySelector('.output').style.display = 'block';
+    document.querySelector('#Variable-table-container').style.display = 'none';
+  }
+
+
+  // if (configuration.editorMode === 'text') {
+  //   showTextOnly();
+  //   textEditor.focus();
+  // } else if (configuration.editorMode === 'blocks') {
+  //   showBlocksOnly();
+  // } else {
+  //   showTextAndBlocks();
+  //   textEditor.focus();
+  // }
+
+  // if (!configuration.showOutput) {
+  //   bottomPart.style.display = 'none';
+  //   resizeBarY.style.display = 'none';
+  //   Blockly.svgResize(workspace);
+  // }
 }
 
 function initialize() {

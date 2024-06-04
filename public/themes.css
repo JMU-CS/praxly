@@ -618,6 +618,10 @@ main {
   display: none;
 }
 
+.debugOptionsEmbed {
+  display: none;
+}
+
 .debugButton {
   display: block;
 }
