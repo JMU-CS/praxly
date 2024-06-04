@@ -73,7 +73,7 @@ let live = true;
 let isResizing = false;
 
 function initializeGlobals() {
-  if (configuration.isEmbedded) {
+  if (configuration.embed) {
     runButton = document.getElementById('embed-run-button');
   } else {
     runButton = document.getElementById('runButton');
@@ -122,7 +122,7 @@ function registerListeners() {
     runTasks();
   });
   stepEmbedButton.addEventListener('mouseup', function () {
-    if (!getDebugMode){
+    if (!getDebugMode) {
       endDebugPrompt();
     }
     setDebugMode(true);
@@ -489,19 +489,19 @@ function resizeHandlerBott(e) {
 }
 
 function setDark() {
-    darkMode = true;
-    workspace.setTheme(PraxlyDark);
-    textEditor.setTheme("ace/theme/twilight");
+  darkMode = true;
+  workspace.setTheme(PraxlyDark);
+  textEditor.setTheme("ace/theme/twilight");
 
-    document.body.classList.toggle('light-mode', false);
+  document.body.classList.toggle('light-mode', false);
 }
 
 function setLight() {
-    darkMode = false;
-    workspace.setTheme(praxlyDefaultTheme);
-    textEditor.setTheme('ace/theme/katzenmilch');
+  darkMode = false;
+  workspace.setTheme(praxlyDefaultTheme);
+  textEditor.setTheme('ace/theme/katzenmilch');
 
-    document.body.classList.toggle('light-mode');
+  document.body.classList.toggle('light-mode');
 }
 
 function generateExamples() {
@@ -565,25 +565,27 @@ function parseUrlConfiguration() {
   const pattern = '#code=';
   if (hash.startsWith(pattern)) {
     let source = hash.substring(pattern.length);
-    configuration.source = decodeURIComponent(source);
+    configuration.code = decodeURIComponent(source);
   }
 
   // Configure according to the ?key1=value1&key2 parameters.
   let parameters = new URLSearchParams(window.location.search);
-  configuration.isEmbedded = parameters.has('embed');
-  configuration.editorMode = parameters.get('editor') ?? 'both';
-  configuration.buttonOption = parameters.get('button');
-  configuration.results = parameters.get('result');
-  // configuration.showOutput = parameters.get('output') !== 'false';
+  configuration.embed = parameters.has('embed');
+  const defaultEditor = configuration.embed ? 'text' : 'both';
+  const defaultButton = configuration.embed ? 'run' : 'both';
+  const defaultResult = configuration.embed ? 'output' : 'both';
+  configuration.editor = parameters.get('editor') ?? defaultEditor;
+  configuration.button = parameters.get('button') ?? defaultButton;
+  configuration.result = parameters.get('result') ?? defaultResult;
 }
 
 function synchronizeToConfiguration() {
   // The initial code is necessarily text, not blocks.
-  if (configuration.source) {
-    textEditor.setValue(configuration.source, 1);
+  if (configuration.code) {
+    textEditor.setValue(configuration.code, 1);
   }
 
-  if (configuration.isEmbedded) {
+  if (configuration.embed) {
     document.body.classList.add('embed');
     // Embeds in the CodeVA Canvas are in high contrast. Let's go
     // with dark mode for the time being.
@@ -591,11 +593,10 @@ function synchronizeToConfiguration() {
     showTextOnly();
   }
 
-
   // editor
-  if (configuration.editorMode === 'blocks') {
+  if (configuration.editor === 'blocks') {
     showBlocksOnly();
-  } else if (configuration.editorMode === 'both') {
+  } else if (configuration.editor === 'both') {
     document.querySelector('header').style.display = 'none';
     textEditor.resize
     Blockly.svgResize(workspace);
@@ -604,10 +605,10 @@ function synchronizeToConfiguration() {
   }
 
   // button
-  if (configuration.buttonOption === 'debug'){
+  if (configuration.button === 'debug') {
     debugEmbedButton.style.display = 'block';
     runEmbedButton.style.display = 'none';
-  } else if (configuration.buttonOption === 'both'){
+  } else if (configuration.button === 'both') {
     runEmbedButton.style.display = 'block';
     debugEmbedButton.style.display = 'block';
   } else { // run
@@ -616,10 +617,10 @@ function synchronizeToConfiguration() {
   }
 
   // result
-  if (configuration.results === 'vars'){
+  if (configuration.result === 'vars') {
     document.querySelector('#Variable-table-container').style.display = 'block';
     document.querySelector('.output').style.display = 'none';
-  } else if (configuration.results === 'both') {
+  } else if (configuration.result === 'both') {
     document.querySelector('.output').style.display = 'block';
     resizeBarBott.style.display = 'block';
     document.querySelector('#Variable-table-container').style.display = 'block';
@@ -629,10 +630,10 @@ function synchronizeToConfiguration() {
   }
 
 
-  // if (configuration.editorMode === 'text') {
+  // if (configuration.editor === 'text') {
   //   showTextOnly();
   //   textEditor.focus();
-  // } else if (configuration.editorMode === 'blocks') {
+  // } else if (configuration.editor === 'blocks') {
   //   showBlocksOnly();
   // } else {
   //   showTextAndBlocks();
