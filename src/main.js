@@ -1,4 +1,4 @@
-import Blockly from 'blockly';
+import Blockly, { Block } from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
@@ -54,6 +54,7 @@ let span;
 let darkmodediv;
 let runEmbedButton;
 let resizeBarBott;
+let toggleText, toggleBlocks, toggleOutput, toggleVars;
 
 let configuration = {
   code: null,
@@ -68,6 +69,7 @@ let mainTree;
 let darkMode = true;
 let live = true;
 let isResizing = false;
+let varsOn, outputOn = false;
 
 function initializeGlobals() {
   if (configuration.isEmbedded) {
@@ -105,6 +107,10 @@ function initializeGlobals() {
   darkmodediv = document.querySelector('.settingsOptions');
   runEmbedButton = document.querySelector('#embed-run-button');
   resizeBarBott = document.querySelector('.resizeBarBott');
+  toggleText = document.querySelector('#toggle-text');
+  toggleBlocks = document.querySelector('#toggle-blocks');
+  toggleOutput = document.querySelector('#toggle-output');
+  toggleVars = document.querySelector('#toggle-vars');
 }
 
 function registerListeners() {
@@ -119,6 +125,12 @@ function registerListeners() {
   });
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
+
+  // toggle buttons
+  toggleText.addEventListener('click', toggleTextOn);
+  toggleBlocks.addEventListener('click', toggleBlocksOn);
+  toggleOutput.addEventListener('click', toggleOutputOn);
+  toggleVars.addEventListener('click', toggleVarsOn);
 
   //resizing things with the purple bar
   resizeBarX.addEventListener('mousedown', function (e) {
@@ -292,6 +304,85 @@ function showBlocksOnly() {
   blockPane.style.display = 'block';
   Blockly.svgResize(workspace);
   textEditor.resize();
+}
+
+function toggleTextOn() {
+  let isOn = textPane.style.display == 'block';
+
+  if (isOn){
+    textPane.style.display = 'none';
+    resizeBarX.style.display = 'none';
+    Blockly.svgResize(workspace);
+    toggleText.style.backgroundColor = 'white';
+  } else {
+    textPane.style.display = 'block'
+    resizeBarX.style.display = 'block';
+    toggleText.style.backgroundColor = 'black';
+  }
+}
+
+function toggleBlocksOn() {
+  let isOn = blockPane.style.display == 'block';
+
+  if (isOn){
+    blockPane.style.display = 'none';
+    resizeBarX.style.display = 'none';
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+    toggleBlocks.style.backgroundColor = 'white';
+  } else {
+    blockPane.style.display = 'block';
+    resizeBarX.style.display = 'block';
+    Blockly.svgResize(workspace);
+    toggleBlocks.style.backgroundColor = 'black';
+  }
+}
+
+function toggleOutputOn() {
+  let isOn = document.querySelector('.output').style.display == 'block';
+
+  if (!varsOn && !outputOn){
+    if (isOn){
+      outputOn = true;
+      document.querySelector('.output').style.display = 'none';
+      resizeBarBott.style.display = 'none';
+      toggleOutput.style.backgroundColor = 'white';
+    } else {
+      outputOn = false;
+      document.querySelector('.output').style.display = 'block';
+      resizeBarBott.style.display = 'block';
+      toggleOutput.style.backgroundColor = 'black';
+    }
+  } else if (varsOn && outputOn) {
+    bottomPart.style.display = 'none';
+    resizeBarY.style.display = 'none';
+    Blockly.svgResize(workspace);
+    toggleOutput.style.backgroundColor = 'white';
+  }
+}
+
+function toggleVarsOn() {
+  let isOn = document.querySelector('#Variable-table-container').style.display == 'block';
+
+  if (!varsOn && !outputOn){
+    if (isOn) { // toggle is on, turn variables off
+      varsOn = true;
+      document.querySelector('#Variable-table-container').style.display = 'none';
+      resizeBarBott.style.display = 'none';
+      toggleVars.style.backgroundColor = 'white';
+    } else { // toggles is off, turn variables
+      varsOn = false;
+      document.querySelector('#Variable-table-container').style.display = 'block';
+      resizeBarBott.style.display = 'block';
+      toggleVars.style.backgroundColor = 'black';
+    }
+  } else if (varsOn && outputOn) {
+    bottomPart.style.display = 'none';
+    resizeBarY.style.display = 'none';
+    Blockly.svgResize(workspace);
+    toggleVars.style.backgroundColor = 'white';
+  }
+
 }
 
 function showTextOnly() {
