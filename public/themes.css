@@ -692,21 +692,14 @@ body:not(.embed)>#embed-toolbar {
   width: 4em;
   height: 4em;
   line-height: 0;
-  background-color: transparent;
+  /* background-color: transparent; */
   border-color: transparent;
 }
 
-/* #embed-run-button:hover {
-  background-color: #00c800;
+#embed-toolbar button:hover {
+  background-color: lightgray;
 }
 
-#embed-run-button:hover .material-symbols-rounded {
-  display: none;
-}
-
-#embed-run-button:hover .button-text {
-  display: block;
-} */
 
 .material-symbols-rounded {
   font-variation-settings:
