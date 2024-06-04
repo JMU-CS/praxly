@@ -63,6 +63,28 @@ body {
   color: var(--text-color);
 }
 
+/* toggle buttons */
+
+.toggle-container {
+  background-color: var(--nav-bar-bg);
+  border: 2px solid var(--text-color);
+}
+
+.toggle-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.toggle-choice {
+  box-sizing: border-box;
+  flex: 1
+}
+
+.toggle-container .item {
+  height: 40px;
+  width: 40px;
+}
+
 /* header and toolbar */
 
 h1 {
@@ -71,6 +93,11 @@ h1 {
 
 #titleRefresh {
   cursor: pointer;
+}
+
+#title-version {
+  display: flex;
+  gap: 20px;
 }
 
 .nav-bar {
