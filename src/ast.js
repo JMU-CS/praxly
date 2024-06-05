@@ -938,7 +938,9 @@ class Praxly_codeBlock {
             if (getDebugMode()) {
                 let markerId = highlightAstNode(element.json);
                 generateVariableTable(environment, 1);
-                await waitForStep();
+                if (element.json.type != NODETYPES.FUNCDECL) {
+                    await waitForStep();
+                }
                 textEditor.session.removeMarker(markerId);
             }
             await element.evaluate(environment);

@@ -401,7 +401,7 @@ main {
   display: flex;
   flex-basis: 60%;
   flex-grow: 1;
-  background-color: var(--output-bg-color);
+  background-color: #74ceff;
 }
 
 #blocklyDiv {

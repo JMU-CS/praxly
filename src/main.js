@@ -600,6 +600,13 @@ function synchronizeToConfiguration() {
     document.querySelector('.output').style.display = 'block';
     document.querySelector('#Variable-table-container').style.display = 'none';
   }
+
+  // use same font as text editor
+  let style = window.getComputedStyle(textPane);
+  let output = document.querySelector('.output');
+  let vartab = document.querySelector('#Variable-table-container');
+  output.style.fontFamily = style.fontFamily;
+  vartab.style.fontFamily = style.fontFamily;
 }
 
 function initialize() {
