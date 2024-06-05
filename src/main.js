@@ -555,7 +555,7 @@ function parseUrlConfiguration() {
 
   // Configure according to the ?key1=value1&key2 parameters.
   let parameters = new URLSearchParams(window.location.search);
-  configuration.embed = parameters.has('embed');
+  configuration.embed = window.location.pathname.includes("embed") || parameters.has('embed');
   const defaultEditor = configuration.embed ? 'text' : 'both';
   const defaultButton = configuration.embed ? 'run' : 'both';
   const defaultResult = configuration.embed ? 'output' : 'both';

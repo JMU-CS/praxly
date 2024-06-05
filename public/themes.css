@@ -10,7 +10,6 @@
 
   --example-table-bg-color: #3a3939;
 
-
   --blockly-tree-row-bg-color: black;
   --blockly-tree-label-color: white;
 
@@ -485,7 +484,7 @@ main {
   display: flex;
   flex-basis: 60%;
   flex-grow: 1;
-  background-color: #74ceff;
+  background-color: var(--output-bg-color);
 }
 
 #blocklyDiv {
