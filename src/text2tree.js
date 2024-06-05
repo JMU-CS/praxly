@@ -10,8 +10,8 @@ export function text2tree() {
   let lexer = new Lexer(code);
   let ir;
   let tokens = lexer.lex();
-  console.info('here are the tokens:');
-  console.debug(tokens);
+  // console.info('here are the tokens:');
+  // console.debug(tokens);
   let parser = new Parser(tokens);
   ir = parser?.parse();
   return ir;

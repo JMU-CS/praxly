@@ -937,15 +937,17 @@ class Praxly_codeBlock {
             }
             if (getDebugMode()) {
                 let markerId = highlightAstNode(element.json);
-                let table = document.getElementById('Variable-table');
-                table.innerHTML = "";
                 generateVariableTable(environment, 1);
-                await waitForStep();
+                if (element.json.type != NODETYPES.FUNCDECL) {
+                    await waitForStep();
+                }
                 textEditor.session.removeMarker(markerId);
             }
             await element.evaluate(environment);
             setStepInto(false);
         }
+        // update variable list at the end of the program
+        generateVariableTable(environment, 1);
         return "Exit_Success";
     }
 }

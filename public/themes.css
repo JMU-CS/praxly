@@ -10,7 +10,6 @@
 
   --example-table-bg-color: #3a3939;
 
-
   --blockly-tree-row-bg-color: black;
   --blockly-tree-label-color: white;
 
@@ -512,7 +511,7 @@ main {
   display: flex;
   flex-basis: 60%;
   flex-grow: 1;
-  background-color: #74ceff;
+  background-color: var(--output-bg-color);
 }
 
 #blocklyDiv {
@@ -571,6 +570,11 @@ main {
   top: 5px;
   right: 10px;
   cursor: pointer;
+}
+
+.material-symbols-rounded.trash {
+  color: darkgray;
+  font-size: 36px;
 }
 
 .stdout {
@@ -645,6 +649,10 @@ main {
   display: none;
 }
 
+.debugOptionsEmbed {
+  display: none;
+}
+
 .debugButton {
   display: block;
 }
@@ -657,7 +665,6 @@ main {
   position: relative;
   /* margin: 10px; */
   padding: 10px;
-  font-size: large;
   /* border-radius: 10px; */
   overflow: auto;
   background-color: var(--output-bg-color); /* #ffffff */
@@ -672,28 +679,18 @@ main {
 
 /* Style for table headers */
 #Variable-table-outer th {
-  background-color: #f2f2f2;
-  padding: 10px;
+  background-color: var(--table-row-color);
+  border: 1px solid var(--text-color); /* 000000 */
+  color: var(--text-color);
+  padding: 1ex;
   text-align: left;
-  border: 2px solid #000000;
-  /* Distinct header row */
 }
 
 /* Style for table cells */
 #Variable-table-outer td {
-  padding: 10px;
   border: 1px solid var(--text-color); /* 000000 */
-  /* Pretty borders for entries */
   color: var(--text-color);
-}
-
-/* Hover effect */
-/* #Variable-table-outer tbody tr:hover {
-  background-color: #e2e2e2;
-} */
-
-#Variable-table-outer tbody tr:nth-child(even) {
-  background-color: var(--table-row-color);
+  padding: 1ex;
 }
 
 #embed-toolbar {
@@ -711,25 +708,18 @@ body:not(.embed)>#embed-toolbar {
 }
 
 .embed-button {
-  border-radius: 50%;
+  /* border-radius: 50%; */
   width: 4em;
   height: 4em;
   line-height: 0;
-  background-color: transparent;
-  border-color: transparent;
+  /* background-color: transparent; */
+  /* border-color: transparent; */
 }
 
-/* #embed-run-button:hover {
-  background-color: #00c800;
+#embed-toolbar button:hover {
+  background-color: lightgray;
 }
 
-#embed-run-button:hover .material-symbols-rounded {
-  display: none;
-}
-
-#embed-run-button:hover .button-text {
-  display: block;
-} */
 
 .material-symbols-rounded {
   font-variation-settings:
