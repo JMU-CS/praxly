@@ -1,5 +1,5 @@
 import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stopButton } from "./common";
-
+import { embedMode } from "./main";
 
 export function showDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
@@ -15,14 +15,15 @@ export function showDebug() {
 
 export function hideDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
-    let debug = document.getElementById('debug');
+    let debug = document.getElementById('debug') ?? document.getElementById('DebugButton');
     let variableTableContainer = document.getElementById('Variable-table-container');
     for (let button of debugOptions) {
         button.style.display = 'none';
     }
+    if (!embedMode) document.querySelector('#runButton').style.display = 'block';
     debug.style.display = 'block';
     // variableTableContainer.style.display = 'none';
-    document.querySelector('#runButton').style.display = 'block';
+
 
 }
 

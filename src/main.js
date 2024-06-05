@@ -56,7 +56,7 @@ let praxlyGenerator;
 let mainTree;
 let darkMode = true;
 let isResizing = false;
-let embedMode;
+export let embedMode;
 
 function initializeGlobals() {
   // if (configuration.embed) {
