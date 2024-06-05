@@ -1,26 +1,22 @@
-import Blockly from 'blockly';
+import Blockly, { Block } from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
 
-// import {textEditor } from './lexer-parser';
 import { tree2text } from './tree2text';
 import { definePraxlyBlocks } from './newBlocks';
 import { makeGenerator } from './blocks2tree';
 import { blocks2tree } from './blocks2tree';
 import { createExecutable } from './ast';
 
-// import ace from 'ace-builds';
 import "ace-builds/src-min-noconflict/theme-twilight";
 import "ace-builds/src-min-noconflict/theme-katzenmilch";
 import { tree2blocks } from './tree2blocks';
-// import { errorOutput } from './lexer-parser';
 import { text2tree } from './text2tree';
-import { generateUrl, loadFromUrl } from './share';
+import { generateUrl } from './share';
 
-// import { readFileSync } from 'fs';
 import { codeText } from './examples';
-import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, comingSoon, defaultError, errorOutput, getDebugMode, printBuffer, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
+import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
 import { hideDebug, showDebug } from './debugger';
 
 let runButton;
@@ -49,33 +45,53 @@ let bothButton;
 let textButton;
 let blocksButton;
 let bottomPart;
-let toolboxstylesheet;
 let span;
 let darkmodediv;
+let resizeBarBott;
+let toggleText, toggleBlocks, toggleOutput, toggleVars;
 
-let configuration = {
-  code: null,
-  editorMode: 'both',
-  showOutput: true,
-  isEmbedded: null,
-};
+
+let configuration = {};  // see parseUrlConfiguration()
 
 export let workspace;
 let praxlyGenerator;
 let mainTree;
-let darkMode = false;
-let live = true;
+let darkMode = true;
 let isResizing = false;
+let varsOn, outputOn = false;
+export let embedMode;
+export let parameters;
 
 function initializeGlobals() {
-  if (configuration.isEmbedded) {
-    runButton = document.getElementById('embed-run-button');
+  // if (configuration.embed) {
+  //   runButton = document.getElementById('embed-run-button');
+  // } else {
+  if (!configuration.embed){
+    embedMode = false;
+    darkModeButton = document.getElementById('darkMode');
+    settingsButton = document.getElementById("settings");
+    modal = document.getElementById("myModal");
+    featuresButton = document.getElementById('FeaturesButton');
+    bugButton = document.getElementById("BugButton");
+    changelogButton = document.getElementById('ChangelogButton');
+    exampleDiv = document.getElementById('exampleTable');
+    githubButton = document.getElementById('GitHubButton');
+    peopleButton = document.getElementById('AboutButton');
+    titleRefresh = document.getElementById('titleRefresh');
+    bothButton = document.getElementById("tab1_button");
+    textButton = document.getElementById('tab2_button');
+    blocksButton = document.getElementById('tab3_button');
+    darkmodediv = document.querySelector('.settingsOptions');
+    span = document.getElementsByClassName("close")[0];
+    toggleText = document.querySelector('#toggle-text');
+    toggleBlocks = document.querySelector('#toggle-blocks');
+    toggleOutput = document.querySelector('#toggle-output');
+    toggleVars = document.querySelector('#toggle-vars');
   } else {
-    runButton = document.getElementById('runButton');
+    embedMode = true;
   }
+  runButton = document.getElementById('runButton');
   shareButton = document.getElementById('share');
-  darkModeButton = document.getElementById('darkMode');
-  settingsButton = document.getElementById("settings");
   infoButton = document.getElementById('info');
   manualButton = document.getElementById("reference");
   resizeBarX = document.querySelector('.resizeBarX');
@@ -85,27 +101,103 @@ function initializeGlobals() {
   stdOut = document.querySelector('.stdout');
   stdErr = document.querySelector('.stderr');
   clearOut = document.querySelector('.clearOut');
-  modal = document.getElementById("myModal");
   manual = document.getElementById("manual");
-  featuresButton = document.getElementById('FeaturesButton');
-  bugButton = document.getElementById("BugButton");
-  changelogButton = document.getElementById('ChangelogButton');
-  exampleDiv = document.getElementById('exampleTable');
-  githubButton = document.getElementById('GitHubButton');
-  peopleButton = document.getElementById('AboutButton');
-  titleRefresh = document.getElementById('titleRefresh');
-  bothButton = document.getElementById("tab1_button");
-  textButton = document.getElementById('tab2_button');
-  blocksButton = document.getElementById('tab3_button');
   bottomPart = document.getElementById('bottom-part');
-  toolboxstylesheet = document.getElementById("ToolboxCss");
-  span = document.getElementsByClassName("close")[0];
-  darkmodediv = document.querySelector('.settingsOptions');
+  resizeBarBott = document.querySelector('.resizeBarBott');
 }
 
 function registerListeners() {
+  if (!embedMode) { // if embed mode is not on, add usual listeners
+    darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
+    manualButton.addEventListener('click', function () {
+      var linkUrl = 'pseudocode.html';
+      window.open(linkUrl, '_blank');
+    });
+
+    bugButton.addEventListener('click', function () {
+      window.open("BugsList.html", '_blank');
+    });
+
+    changelogButton.addEventListener('click', function () {
+      window.open("changelog.html", '_blank');
+    });
+
+    featuresButton.addEventListener('click', function () {
+      window.open("features.html", '_blank');
+    });
+
+    githubButton.addEventListener('click', function () {
+      window.open("https://github.com/sauppb/praxly", '_blank');
+    });
+
+    peopleButton.addEventListener('click', function () {
+      window.open('people.html');
+    });
+
+    titleRefresh.addEventListener('click', function () {
+      clearOutput();
+      clearErrors();
+      stdOut.innerHTML = "";
+      stdErr.innerHTML = "";
+      window.location.hash = '';
+      textEditor.setValue('', -1);
+      textPane.click();
+      textEditor.focus();
+    });
+
+    // When the user clicks the button, open the modal
+    infoButton.onclick = function () {
+      setLight();
+      modal.style.display = "block";
+    }
+
+    settingsButton.onclick = function () {
+      let darkmodediv = document.querySelector('.settingsOptions');
+      if (darkmodediv.style.display === 'none') {
+        darkmodediv.style.display = ''; // Show the button
+      } else {
+        darkmodediv.style.display = 'none'; // Hide the button
+      }
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+      modal.style.display = "none";
+      manual.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == modal || event.target == manual) {
+        modal.style.display = "none";
+        manual.style.display = "none";
+      }
+    }
+
+    //share button
+    shareButton.addEventListener('click', generateUrl);
+
+    blocksButton.addEventListener('click', showBlocksOnly);
+    textButton.addEventListener('click', showTextOnly);
+    bothButton.addEventListener('click', showTextAndBlocks);
+
+    stepIntoButton.addEventListener('mouseup', function () {
+      // comingSoon();
+      if (!getDebugMode()) {
+        endDebugPrompt();
+      }
+      setDebugMode(true);
+      setStepInto(true);
+    });
+
+    // toggle buttons
+    toggleText.addEventListener('click', toggleTextOn);
+    toggleBlocks.addEventListener('click', toggleBlocksOn);
+    toggleOutput.addEventListener('click', toggleOutputOn);
+    toggleVars.addEventListener('click', toggleVarsOn);
+  }
+
   runButton.addEventListener('click', runTasks);
-  darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
   clearOut.addEventListener('click', () => {
     clearOutput();
     clearErrors();
@@ -126,6 +218,11 @@ function registerListeners() {
     document.addEventListener('mousemove', resizeHandlerY);
   })
 
+  resizeBarBott.addEventListener('mousedown', function (e) {
+    isResizing = true;
+    document.addEventListener('mousemove', resizeHandlerBott);
+  });
+
   document.addEventListener('mouseup', function (e) {
     isResizing = false;
     document.removeEventListener('mousemove', resizeHandlerX);
@@ -140,41 +237,9 @@ function registerListeners() {
     textEditor.resize();
   });
 
-
-  manualButton.addEventListener('click', function () {
-    var linkUrl = 'pseudocode.html';
-    window.open(linkUrl, '_blank');
-  });
-
-  bugButton.addEventListener('click', function () {
-    window.open("BugsList.html", '_blank');
-  });
-
-  changelogButton.addEventListener('click', function () {
-    window.open("changelog.html", '_blank');
-  });
-
-  featuresButton.addEventListener('click', function () {
-    window.open("features.html", '_blank');
-  });
-
-  githubButton.addEventListener('click', function () {
-    window.open("https://github.com/sauppb/praxly", '_blank');
-  });
-
-  peopleButton.addEventListener('click', function () {
-    window.open('people.html');
-  });
-
-  titleRefresh.addEventListener('click', function () {
-    clearOutput();
-    clearErrors();
-    stdOut.innerHTML = "";
-    stdErr.innerHTML = "";
-    window.location.hash = '';
-    textEditor.setValue('', -1);
-    textPane.click();
-    textEditor.focus();
+  document.addEventListener('mouseup', function (e) {
+    isResizing = false;
+    document.removeEventListener('mousemove', resizeHandlerBott);
   });
 
   // these make it so that the blocks and text take turns.
@@ -188,37 +253,6 @@ function registerListeners() {
     textEditor.addEventListener("input", turnCodeToBLocks);
   });
 
-  // When the user clicks the button, open the modal
-  infoButton.onclick = function () {
-    setLight();
-    modal.style.display = "block";
-  }
-
-  settingsButton.onclick = function () {
-    let darkmodediv = document.querySelector('.settingsOptions');
-    if (darkmodediv.style.display === 'none') {
-      darkmodediv.style.display = ''; // Show the button
-    } else {
-      darkmodediv.style.display = 'none'; // Hide the button
-    }
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function () {
-    modal.style.display = "none";
-    manual.style.display = "none";
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function (event) {
-    if (event.target == modal || event.target == manual) {
-      modal.style.display = "none";
-      manual.style.display = "none";
-    }
-  }
-
-  //share button
-  shareButton.addEventListener('click', generateUrl);
 
   // this is how you add custom keybinds!
   document.addEventListener("keydown", function (event) {
@@ -231,9 +265,6 @@ function registerListeners() {
     }
   });
 
-  blocksButton.addEventListener('click', showBlocksOnly);
-  textButton.addEventListener('click', showTextOnly);
-  bothButton.addEventListener('click', showTextAndBlocks);
 
   /**
    * Event listeners for the main circular buttons along the top.
@@ -253,14 +284,6 @@ function registerListeners() {
     stepButton.click();
   });
 
-  stepIntoButton.addEventListener('mouseup', function () {
-    // comingSoon();
-    if (!getDebugMode()) {
-      endDebugPrompt();
-    }
-    setDebugMode(true);
-    setStepInto(true);
-  });
 
   stepButton.addEventListener('mouseup', function () {
     // comingSoon();
@@ -268,6 +291,96 @@ function registerListeners() {
       endDebugPrompt();
     }
     setDebugMode(true);
+  });
+
+}
+
+function toggleTextOn() {
+  let isOn = textPane.style.display == 'block';
+
+  if (isOn){
+    textPane.style.display = 'none';
+    resizeBarX.style.display = 'none';
+    Blockly.svgResize(workspace);
+    toggleText.style.backgroundColor = 'white';
+  } else {
+    textPane.style.display = 'block'
+    resizeBarX.style.display = 'block';
+    toggleText.style.backgroundColor = 'black';
+  }
+}
+
+function toggleBlocksOn() {
+  let isOn = blockPane.style.display == 'block';
+
+  if (isOn){
+    blockPane.style.display = 'none';
+    resizeBarX.style.display = 'none';
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+    toggleBlocks.style.backgroundColor = 'white';
+  } else {
+    blockPane.style.display = 'block';
+    resizeBarX.style.display = 'block';
+    Blockly.svgResize(workspace);
+    toggleBlocks.style.backgroundColor = 'black';
+  }
+}
+
+let isOutputOn = true;
+function toggleOutputOn() {
+  isOutputOn = !isOutputOn;
+
+  const output = document.querySelector('.output');
+  output.style.display = isOutputOn ? 'block' : 'none';
+  resizeBarBott.style.display = isOutputOn ? 'block' : 'none';
+  toggleOutput.style.backgroundColor = isOutputOn ? 'black' : 'white';
+  isBottomOff();
+}
+
+let isVarsOn = true;
+function toggleVarsOn() {
+  isVarsOn = !isVarsOn;
+
+  const variables = document.querySelector('#Variable-table-container');
+  variables.style.display = isVarsOn ? 'block' : 'none';
+  resizeBarBott.style.display = isVarsOn ? 'block' : 'none';
+  toggleVars.style.backgroundColor = isVarsOn ? 'black' : 'white';
+  isBottomOff();
+}
+
+function isBottomOff() {
+  let leftOff = document.querySelector('#Variable-table-container');
+  let rightOff = document.querySelector('.output');
+
+  if (leftOff.style.display === 'none' && rightOff.style.display === 'none'){
+    resizeBarY.style.display = 'none';
+    bottomPart.style.display = 'none';
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+  } else {
+    resizeBarY.style.display = 'block';
+    bottomPart.style.display = 'flex';
+  }
+}
+
+
+function generateExamples() {
+  const dataArray = codeText.split('##');
+  var selectDropdown = document.getElementById("exampleTable");
+  for (let i = 1; i < dataArray.length - 1; i += 2) {
+    const label = dataArray[i].trim();
+    var option = document.createElement("option");
+    option.textContent = label;
+    const value = dataArray[i + 1].trim();
+    option.value = value;
+
+    selectDropdown.appendChild(option);
+  }
+
+  selectDropdown.addEventListener('change', function () {
+    textEditor.setValue(selectDropdown.value, -1);
+    textPane.click();
   });
 }
 
@@ -279,10 +392,18 @@ function showBlocksOnly() {
   textEditor.resize();
 }
 
+
+/* Default */
+
 function showTextOnly() {
+  textPane.style.display = 'block';
+
   resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
-  textPane.style.display = 'block';
+
+  document.querySelector('#Variable-table-container').style.display = 'none';
+  resizeBarBott.style.display = 'none';
+
   Blockly.svgResize(workspace);
   textEditor.resize();
 }
@@ -291,15 +412,34 @@ function showTextAndBlocks() {
   resizeBarX.style.display = 'block';
   blockPane.style.display = 'block';
   textPane.style.display = 'block';
+
   Blockly.svgResize(workspace);
   textEditor.resize();
 }
+
+// function showDebugEmbedMode() {
+//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
+//   for (let button of buttons) {
+//     button.style.display = 'block';
+//   }
+//   document.querySelector('#embed-debug-button').style.display = 'none';
+//   document.querySelector('#embed-run-button').style.display = 'none';
+// }
+
+// function hideDebugEmbedMode() {
+//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
+//   for (let button of buttons) {
+//     button.style.display = 'none';
+//   }
+//   document.querySelector('#embed-debug-button').style.display = 'block';
+
+// }
 
 /**
  * this function gets called every time the run button is pressed.
  */
 async function runTasks() {
-  console.log("runTasks");
+  // console.log("runTasks");
 
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
@@ -393,7 +533,6 @@ function resizeHandlerX(e) {
 function resizeHandlerY(e) {
   if (!isResizing) return;
 
-
   const main = document.querySelector('main');
   const bottom = document.querySelector('#bottom-part');
 
@@ -408,40 +547,39 @@ function resizeHandlerY(e) {
   Blockly.svgResize(workspace);
 }
 
-function setDark() {
-    darkMode = true;
-    workspace.setTheme(PraxlyDark);
-    textEditor.setTheme("ace/theme/twilight");
+function resizeHandlerBott(e) {
+  if (!isResizing) return;
 
-    document.body.classList.toggle('dark-mode');
+  const output = document.querySelector('.output');
+  const variables = document.querySelector('#Variable-table-container');
+  const bottom = bottomPart;
+
+  const containerWidth = bottom.offsetWidth;
+  const mouseX = e.pageX;
+  const left = (mouseX / containerWidth) * 100;
+  const right = 100 - left;
+
+  output.style.flex = left;
+  variables.style.flex = right;
+}
+
+function setDark() {
+  darkMode = true;
+  workspace.setTheme(PraxlyDark);
+  textEditor.setTheme("ace/theme/twilight");
+
+  document.body.classList.toggle('light-mode', false);
 }
 
 function setLight() {
-    darkMode = false;
-    workspace.setTheme(praxlyDefaultTheme);
-    textEditor.setTheme('ace/theme/katzenmilch');
+  darkMode = false;
+  workspace.setTheme(praxlyDefaultTheme);
+  textEditor.setTheme('ace/theme/katzenmilch');
 
-    document.body.classList.toggle('dark-mode', false);
+  document.body.classList.toggle('light-mode');
 }
 
-function generateExamples() {
-  const dataArray = codeText.split('##');
-  var selectDropdown = document.getElementById("exampleTable");
-  for (let i = 1; i < dataArray.length - 1; i += 2) {
-    const label = dataArray[i].trim();
-    var option = document.createElement("option");
-    option.textContent = label;
-    const value = dataArray[i + 1].trim();
-    option.value = value;
 
-    selectDropdown.appendChild(option);
-  }
-
-  selectDropdown.addEventListener('change', function () {
-    textEditor.setValue(selectDropdown.value, -1);
-    textPane.click();
-  });
-}
 
 function endDebugPrompt() {
   let exitDebug = confirm('the program has completed. Would you like to exit the debugger?');
@@ -456,7 +594,7 @@ function initializeBlockly() {
     // scrollbars: false,
     horizontalLayout: false,
     toolboxPosition: "start",
-    theme: praxlyDefaultTheme,
+    theme: darkMode ? PraxlyDark : praxlyDefaultTheme,
     zoom: {
       controls: true,
       wheel: true,
@@ -468,6 +606,8 @@ function initializeBlockly() {
     },
     renderer: 'zelos'
   });
+  // darkMode ? setLight() : setDark();
+  darkMode ? textEditor.setTheme("ace/theme/twilight") : textEditor.setTheme('ace/theme/katzenmilch');
   definePraxlyBlocks(workspace);
 }
 
@@ -482,44 +622,78 @@ function parseUrlConfiguration() {
   const pattern = '#code=';
   if (hash.startsWith(pattern)) {
     let source = hash.substring(pattern.length);
-    configuration.source = decodeURIComponent(source);
+    configuration.code = decodeURIComponent(source);
+  } else {
+    configuration.code = null;
   }
 
   // Configure according to the ?key1=value1&key2 parameters.
-  let parameters = new URLSearchParams(window.location.search);
-  configuration.isEmbedded = parameters.has('embed');
-  configuration.editorMode = parameters.get('editor') ?? 'both';
-  configuration.showOutput = parameters.get('output') !== 'false';
+  parameters = new URLSearchParams(window.location.search);
+  configuration.embed = window.location.pathname.includes("embed") || parameters.has('embed');
+  const defaultEditor = configuration.embed ? 'text' : 'both';
+  const defaultButton = configuration.embed ? 'run' : 'both';
+  const defaultResult = configuration.embed ? 'output' : 'both';
+  configuration.editor = parameters.get('editor') ?? defaultEditor;
+  configuration.button = parameters.get('button') ?? defaultButton;
+  configuration.result = parameters.get('result') ?? defaultResult;
 }
 
 function synchronizeToConfiguration() {
   // The initial code is necessarily text, not blocks.
-  if (configuration.source) {
-    textEditor.setValue(configuration.source, 1);
+  if (configuration.code) {
+    textEditor.setValue(configuration.code, 1);
   }
 
-  if (configuration.isEmbedded) {
+  if (configuration.embed) {
     document.body.classList.add('embed');
-    // Embeds in the CodeVA Canvas are in high contrast. Let's go
-    // with dark mode for the time being.
+    // document.querySelector('header').style.display = 'none';
+    // Embeds in the CodeVA Canvas are in high contrast.
+    // Let's go with dark mode for the time being.
     setDark();
-  }
-
-  if (configuration.editorMode === 'text') {
     showTextOnly();
-    textEditor.focus();
-  } else if (configuration.editorMode === 'blocks') {
-    showBlocksOnly();
-  } else {
-    showTextAndBlocks();
-    textEditor.focus();
   }
 
-  if (!configuration.showOutput) {
-    bottomPart.style.display = 'none';
-    resizeBarY.style.display = 'none';
+  // editor
+  if (configuration.editor === 'blocks') {
+    showBlocksOnly();
+  } else if (configuration.editor === 'both') {
+    textEditor.resize();
     Blockly.svgResize(workspace);
+  } else { // text
+    showTextOnly();
   }
+
+  // button
+  if (configuration.button === 'debug') {
+    debugButton.style.display = 'block';
+    runButton.style.display = 'none';
+  } else if (configuration.button === 'both') {
+    runButton.style.display = 'block';
+    debugButton.style.display = 'block';
+  } else { // run
+    runButton.style.display = 'block';
+    debugButton.style.display = 'none';
+  }
+
+  // result
+  if (configuration.result === 'vars') {
+    document.querySelector('#Variable-table-container').style.display = 'block';
+    document.querySelector('.output').style.display = 'none';
+  } else if (configuration.result === 'both') {
+    document.querySelector('.output').style.display = 'block';
+    resizeBarBott.style.display = 'block';
+    document.querySelector('#Variable-table-container').style.display = 'block';
+  } else { // output
+    document.querySelector('.output').style.display = 'block';
+    document.querySelector('#Variable-table-container').style.display = 'none';
+  }
+
+  // use same font as text editor
+  let style = window.getComputedStyle(textPane);
+  let output = document.querySelector('.output');
+  let vartab = document.querySelector('#Variable-table-container');
+  output.style.fontFamily = style.fontFamily;
+  vartab.style.fontFamily = style.fontFamily;
 }
 
 function initialize() {
@@ -528,9 +702,9 @@ function initialize() {
   initializeGlobals();
   praxlyGenerator = makeGenerator();
   initializeBlockly();
-  darkmodediv.style.display = 'none';
+  !embedMode && (darkmodediv.style.display = 'none');  // TODO remove or move div
   registerListeners();
-  generateExamples();
+  !embedMode && generateExamples(); // generate examples if its not in embed mode
   synchronizeToConfiguration();
 }
 

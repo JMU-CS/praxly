@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Praxly</title>
   <link id="Theme" rel="stylesheet" href="./themes.css">
   <link rel="icon" href="/jmu.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
+
 <body>
   <div id="toast" class="toast">URL copied to clipboard</div>
   <div id="comingSoon" class="toast">Coming Soon!</div>
@@ -35,10 +38,10 @@
       <h4>Notes</h4>
       <ol>
         <li>✅ This is in very early release, but as of now everything on the blocks list will work properly.
-        </li>
+        </li>ß
         <li>🚨 error messages are probably going to be inconsistent.
           I'm sure there will be many scenarios I didn't think of that will cause errors.</li>
-        <li>😔 There is currently no support for object oriented programming </li>
+        <li>😔 There is currently no support for object-oriented programming.</li>
       </ol>
     </div>
   </div>
@@ -47,7 +50,20 @@
     <div id="title-version">
       <h1 id="titleRefresh">Praxly 🍂</h1>
       <!-- version <a href="changelog.html">04/25/2024</a> -->
+
+      <div class="toggle-container"> <!--button holder-->
+        <div class="toggle-row"> <!--Button row one (text & blocks)-->
+          <button id="toggle-text" class="item"></button>
+          <button id="toggle-blocks" class="item"></button>
+        </div>
+        <div class="toggle-row"> <!--Button row two (output & variables)-->
+          <button id="toggle-output" class="item"></button>
+          <button id="toggle-vars" class="item"></button>
+        </div>
+      </div>
+
     </div>
+
 
     <div id="secondary_bar">
       <!-- Editor modes -->
@@ -64,34 +80,40 @@
     <ul>
       <li>
         <button id="runButton" class="MainMenu-button" title="Run Code">
+          <span class="material-symbols-rounded play">play_arrow</span>
           <span class="button-text">Run Code</span>
         </button>
       </li>
       <li id="debug">
         <button id="DebugButton" class="MainMenu-button" title="Debugger">
+          <span class="material-symbols-rounded bug">pest_control</span>
           <span class="button-text">Debug Mode</span>
         </button>
       </li>
       <li class="debugOptions">
         <button id="stepButton" class="MainMenu-button" title="Step Over">
+          <span class="material-symbols-rounded step">tools_ladder</span>
           <span class="button-text">Step Over</span>
         </button>
       </li>
-      <li class="debugOptions">
+      <li class="">
         <button id="stepIntoButton" class="MainMenu-button" title="Step Into">
           <span class="button-text">Step Into</span>
         </button>
       </li>
       <li class="debugOptions">
         <button id="stopButton" class="MainMenu-button" title="Stop Debugger">
+          <span class="material-symbols-rounded stop">stop</span>
           <span class="button-text">Exit Debug</span>
         </button>
       </li>
       <li><button id="share" class="MainMenu-button" title="Share">
+          <span class="material-symbols-rounded spread">share</span>
           <span class="button-text">Share</span>
         </button>
       </li>
       <li><button id="reference" class="MainMenu-button" title="reference">
+          <span class="material-symbols-rounded manual">book_2</span>
           <span class="button-text">manual</span>
         </button></li>
       <li class="settingsOptions"><button id="darkMode" class="MainMenu-button" title="Dark Mode">
@@ -103,24 +125,31 @@
         </button>
       </li>
       <li><button id="info" class="MainMenu-button" title="About Praxly">
+          <span class="material-symbols-rounded extra">info</span>
           <span class="button-text">About</span>
         </button>
       </li>
     </ul>
   </header>
 
-  <div id="embed-toolbar">
+  <!-- <div id="embed-toolbar">
     <button id="embed-run-button" class="embed-button">
-      <span class="material-icon">play_arrow</span>
+      <span class="material-symbols-rounded play">play_arrow</span>
+      <span class="button-text">Run Code</span>
     </button>
     <button id="embed-debug-button" class="embed-button">
-      <span class="material-icon">pest_control</span>
+      <span class="material-symbols-rounded bug">pest_control</span>
+      <span class="button-text">Debug Mode</span>
     </button>
-    </div>
-    <!-- <button class="embed-button"> -->
-      <!-- <span class="material-icon">bug_report</span> -->
-    <!-- </button> -->
-  </div>
+    <button id="embed-step-button" class="debugOptionsEmbed embed-button">
+      <span class="material-symbols-rounded step">tools_ladder</span>
+      <span class="button-text">Step Over</span>
+    </button>
+    <button id="embed-stop-button" class="debugOptionsEmbed embed-button">
+      <span class="material-symbols-rounded stop">stop</span>
+      <span class="button-text">Exit Debug</span>
+    </button>
+  </div> -->
 
   <main>
     <div id="aceCode" class="codeEditor"></div>
@@ -145,8 +174,9 @@
         <tbody id="Variable-table"></tbody>
       </table>
     </div>
+    <div class="resizeBarBott"></div>
     <div class="output">
-      <div class="clearOut">🗑</div>
+      <div class="clearOut"><span class="material-symbols-rounded trash">delete</span></div>
       <p class="stdout">output is here</p>
       <p class="stderr"></p>
     </div>
@@ -154,4 +184,5 @@
 
   <script src="./src/main.js" type="module"></script>
 </body>
+
 </html>
