@@ -4,8 +4,8 @@ import { embedMode } from "./main";
 export function showDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
     let debugButton = document.getElementById('debug') ?? document.getElementById('DebugButton');
-    let variableTableContainer = document.getElementById('Variable-table-container');
-    variableTableContainer.style.display = 'block';
+    // let variableTableContainer = document.getElementById('Variable-table-container');
+    // variableTableContainer.style.display = 'block';
     for (let button of debugOptions) {
         button.style.display = 'block';
     }

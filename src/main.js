@@ -182,26 +182,8 @@ function registerListeners() {
       setStepInto(true);
     });
 
-    function generateExamples() {
-      const dataArray = codeText.split('##');
-      var selectDropdown = document.getElementById("exampleTable");
-      for (let i = 1; i < dataArray.length - 1; i += 2) {
-        const label = dataArray[i].trim();
-        var option = document.createElement("option");
-        option.textContent = label;
-        const value = dataArray[i + 1].trim();
-        option.value = value;
-
-        selectDropdown.appendChild(option);
-      }
-
-      selectDropdown.addEventListener('change', function () {
-        textEditor.setValue(selectDropdown.value, -1);
-        textPane.click();
-      });
-    }
-
   }
+
   runButton.addEventListener('click', runTasks);
   clearOut.addEventListener('click', () => {
     clearOutput();
@@ -296,6 +278,26 @@ function registerListeners() {
       endDebugPrompt();
     }
     setDebugMode(true);
+  });
+
+}
+
+function generateExamples() {
+  const dataArray = codeText.split('##');
+  var selectDropdown = document.getElementById("exampleTable");
+  for (let i = 1; i < dataArray.length - 1; i += 2) {
+    const label = dataArray[i].trim();
+    var option = document.createElement("option");
+    option.textContent = label;
+    const value = dataArray[i + 1].trim();
+    option.value = value;
+
+    selectDropdown.appendChild(option);
+  }
+
+  selectDropdown.addEventListener('change', function () {
+    textEditor.setValue(selectDropdown.value, -1);
+    textPane.click();
   });
 }
 
@@ -608,7 +610,7 @@ function initialize() {
   initializeGlobals();
   praxlyGenerator = makeGenerator();
   initializeBlockly();
-  //darkmodediv.style.display = 'none';  // TODO remove or move div
+  !embedMode && (darkmodediv.style.display = 'none');  // TODO remove or move div
   registerListeners();
   !embedMode && generateExamples(); // generate examples if its not in embed mode
   synchronizeToConfiguration();
