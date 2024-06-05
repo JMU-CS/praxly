@@ -1,4 +1,4 @@
-import Blockly from 'blockly';
+import Blockly, { Block } from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
@@ -48,6 +48,7 @@ let bottomPart;
 let span;
 let darkmodediv;
 let resizeBarBott;
+let toggleText, toggleBlocks, toggleOutput, toggleVars;
 
 let configuration = {};  // see parseUrlConfiguration()
 
@@ -56,6 +57,7 @@ let praxlyGenerator;
 let mainTree;
 let darkMode = true;
 let isResizing = false;
+let varsOn, outputOn = false;
 export let embedMode;
 export let parameters;
 
@@ -97,6 +99,10 @@ function initializeGlobals() {
   manual = document.getElementById("manual");
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
+  toggleText = document.querySelector('#toggle-text');
+  toggleBlocks = document.querySelector('#toggle-blocks');
+  toggleOutput = document.querySelector('#toggle-output');
+  toggleVars = document.querySelector('#toggle-vars');
 }
 
 function registerListeners() {
@@ -194,6 +200,12 @@ function registerListeners() {
   });
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
+
+  // toggle buttons
+  toggleText.addEventListener('click', toggleTextOn);
+  toggleBlocks.addEventListener('click', toggleBlocksOn);
+  toggleOutput.addEventListener('click', toggleOutputOn);
+  toggleVars.addEventListener('click', toggleVarsOn);
 
   //resizing things with the purple bar
   resizeBarX.addEventListener('mousedown', function (e) {
@@ -310,7 +322,78 @@ function showBlocksOnly() {
   textEditor.resize();
 }
 
+function toggleTextOn() {
+  let isOn = textPane.style.display == 'block';
+
+  if (isOn){
+    textPane.style.display = 'none';
+    resizeBarX.style.display = 'none';
+    Blockly.svgResize(workspace);
+    toggleText.style.backgroundColor = 'white';
+  } else {
+    textPane.style.display = 'block'
+    resizeBarX.style.display = 'block';
+    toggleText.style.backgroundColor = 'black';
+  }
+}
+
+function toggleBlocksOn() {
+  let isOn = blockPane.style.display == 'block';
+
+  if (isOn){
+    blockPane.style.display = 'none';
+    resizeBarX.style.display = 'none';
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+    toggleBlocks.style.backgroundColor = 'white';
+  } else {
+    blockPane.style.display = 'block';
+    resizeBarX.style.display = 'block';
+    Blockly.svgResize(workspace);
+    toggleBlocks.style.backgroundColor = 'black';
+  }
+}
+
+let isOutputOn = true;
+function toggleOutputOn() {
+  isOutputOn = !isOutputOn;
+
+  const output = document.querySelector('.output');
+  output.style.display = isOutputOn ? 'block' : 'none';
+  resizeBarBott.style.display = isOutputOn ? 'block' : 'none';
+  toggleOutput.style.backgroundColor = isOutputOn ? 'black' : 'white';
+  isBottomOff();
+}
+
+let isVarsOn = true;
+function toggleVarsOn() {
+  isVarsOn = !isVarsOn;
+
+  const variables = document.querySelector('#Variable-table-container');
+  variables.style.display = isVarsOn ? 'block' : 'none';
+  resizeBarBott.style.display = isVarsOn ? 'block' : 'none';
+  toggleVars.style.backgroundColor = isVarsOn ? 'black' : 'white';
+  isBottomOff();
+}
+
+function isBottomOff() {
+  let leftOff = document.querySelector('#Variable-table-container');
+  let rightOff = document.querySelector('.output');
+
+  if (leftOff.style.display === 'none' && rightOff.style.display === 'none'){
+    resizeBarY.style.display = 'none';
+    bottomPart.style.display = 'none';
+    Blockly.svgResize(workspace);
+    textEditor.resize();
+  } else {
+    resizeBarY.style.display = 'block';
+    bottomPart.style.display = 'flex';
+  }
+}
+
+
 /* Default */
+
 function showTextOnly() {
   textPane.style.display = 'block';
 

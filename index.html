@@ -38,7 +38,7 @@
       <h4>Notes</h4>
       <ol>
         <li>✅ This is in very early release, but as of now everything on the blocks list will work properly.
-        </li>
+        </li>ß
         <li>🚨 error messages are probably going to be inconsistent.
           I'm sure there will be many scenarios I didn't think of that will cause errors.</li>
         <li>😔 There is currently no support for object-oriented programming.</li>
@@ -50,7 +50,20 @@
     <div id="title-version">
       <h1 id="titleRefresh">Praxly 🍂</h1>
       <!-- version <a href="changelog.html">04/25/2024</a> -->
+
+      <div class="toggle-container"> <!--button holder-->
+        <div class="toggle-row"> <!--Button row one (text & blocks)-->
+          <button id="toggle-text" class="item"></button>
+          <button id="toggle-blocks" class="item"></button>
+        </div>
+        <div class="toggle-row"> <!--Button row two (output & variables)-->
+          <button id="toggle-output" class="item"></button>
+          <button id="toggle-vars" class="item"></button>
+        </div>
+      </div>
+
     </div>
+
 
     <div id="secondary_bar">
       <!-- Editor modes -->
