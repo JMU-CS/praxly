@@ -1,4 +1,4 @@
-import Blockly from 'blockly';
+import Blockly, { Block } from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
@@ -393,7 +393,9 @@ function showBlocksOnly() {
   textEditor.resize();
 }
 
+
 /* Default */
+
 function showTextOnly() {
   textPane.style.display = 'block';
 
