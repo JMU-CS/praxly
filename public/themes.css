@@ -545,6 +545,11 @@ main {
   cursor: pointer;
 }
 
+.material-symbols-rounded.trash {
+  color: darkgray;
+  font-size: 36px;
+}
+
 .stdout {
   margin-top: 0;
 }
