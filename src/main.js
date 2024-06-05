@@ -1,26 +1,22 @@
-import Blockly, { Block, config } from 'blockly';
+import Blockly from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
 
-// import {textEditor } from './lexer-parser';
 import { tree2text } from './tree2text';
 import { definePraxlyBlocks } from './newBlocks';
 import { makeGenerator } from './blocks2tree';
 import { blocks2tree } from './blocks2tree';
 import { createExecutable } from './ast';
 
-// import ace from 'ace-builds';
 import "ace-builds/src-min-noconflict/theme-twilight";
 import "ace-builds/src-min-noconflict/theme-katzenmilch";
 import { tree2blocks } from './tree2blocks';
-// import { errorOutput } from './lexer-parser';
 import { text2tree } from './text2tree';
-import { generateUrl, loadFromUrl } from './share';
+import { generateUrl } from './share';
 
-// import { readFileSync } from 'fs';
 import { codeText } from './examples';
-import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, comingSoon, defaultError, errorOutput, getDebugMode, printBuffer, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
+import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
 import { hideDebug, showDebug } from './debugger';
 
 let runButton;
@@ -49,7 +45,6 @@ let bothButton;
 let textButton;
 let blocksButton;
 let bottomPart;
-let toolboxstylesheet;
 let span;
 let darkmodediv;
 let runEmbedButton;
@@ -64,7 +59,6 @@ export let workspace;
 let praxlyGenerator;
 let mainTree;
 let darkMode = true;
-let live = true;
 let isResizing = false;
 
 function initializeGlobals() {
@@ -98,7 +92,6 @@ function initializeGlobals() {
   textButton = document.getElementById('tab2_button');
   blocksButton = document.getElementById('tab3_button');
   bottomPart = document.getElementById('bottom-part');
-  toolboxstylesheet = document.getElementById("ToolboxCss");
   span = document.getElementsByClassName("close")[0];
   darkmodediv = document.querySelector('.settingsOptions');
   runEmbedButton = document.querySelector('#embed-run-button');
@@ -477,7 +470,6 @@ function resizeHandlerBott(e) {
 
   output.style.flex = left;
   variables.style.flex = right;
-
 }
 
 function setDark() {
@@ -544,7 +536,6 @@ function initializeBlockly() {
   darkMode ? textEditor.setTheme("ace/theme/twilight") : textEditor.setTheme('ace/theme/katzenmilch');
   definePraxlyBlocks(workspace);
 }
-
 
 function parseUrlConfiguration() {
   // The URL may be of the form https://.../?key1=value1&key2#code=... The code
