@@ -338,51 +338,41 @@ function toggleBlocksOn() {
   }
 }
 
+let isOutputOn = true;
 function toggleOutputOn() {
-  let isOn = document.querySelector('.output').style.display == 'block';
+  isOutputOn = !isOutputOn;
 
-  if (!varsOn && !outputOn){
-    if (isOn){
-      outputOn = true;
-      document.querySelector('.output').style.display = 'none';
-      resizeBarBott.style.display = 'none';
-      toggleOutput.style.backgroundColor = 'white';
-    } else {
-      outputOn = false;
-      document.querySelector('.output').style.display = 'block';
-      resizeBarBott.style.display = 'block';
-      toggleOutput.style.backgroundColor = 'black';
-    }
-  } else if (varsOn && outputOn) {
-    bottomPart.style.display = 'none';
-    resizeBarY.style.display = 'none';
-    Blockly.svgResize(workspace);
-    toggleOutput.style.backgroundColor = 'white';
-  }
+  const output = document.querySelector('.output');
+  output.style.display = isOutputOn ? 'block' : 'none';
+  resizeBarBott.style.display = isOutputOn ? 'block' : 'none';
+  toggleOutput.style.backgroundColor = isOutputOn ? 'black' : 'white';
+  isBottomOff();
 }
 
+let isVarsOn = true;
 function toggleVarsOn() {
-  let isOn = document.querySelector('#Variable-table-container').style.display == 'block';
+  isVarsOn = !isVarsOn;
 
-  if (!varsOn && !outputOn){
-    if (isOn) { // toggle is on, turn variables off
-      varsOn = true;
-      document.querySelector('#Variable-table-container').style.display = 'none';
-      resizeBarBott.style.display = 'none';
-      toggleVars.style.backgroundColor = 'white';
-    } else { // toggles is off, turn variables
-      varsOn = false;
-      document.querySelector('#Variable-table-container').style.display = 'block';
-      resizeBarBott.style.display = 'block';
-      toggleVars.style.backgroundColor = 'black';
-    }
-  } else if (varsOn && outputOn) {
-    bottomPart.style.display = 'none';
+  const variables = document.querySelector('#Variable-table-container');
+  variables.style.display = isVarsOn ? 'block' : 'none';
+  resizeBarBott.style.display = isVarsOn ? 'block' : 'none';
+  toggleVars.style.backgroundColor = isVarsOn ? 'black' : 'white';
+  isBottomOff();
+}
+
+function isBottomOff() {
+  let leftOff = document.querySelector('#Variable-table-container');
+  let rightOff = document.querySelector('.output');
+
+  if (leftOff.style.display === 'none' && rightOff.style.display === 'none'){
     resizeBarY.style.display = 'none';
+    bottomPart.style.display = 'none';
     Blockly.svgResize(workspace);
-    toggleVars.style.backgroundColor = 'white';
+    textEditor.resize();
+  } else {
+    resizeBarY.style.display = 'block';
+    bottomPart.style.display = 'flex';
   }
-
 }
 
 function showTextOnly() {
