@@ -3,7 +3,7 @@ import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stop
 
 export function showDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
-    let debugButton = document.getElementById('debug');
+    let debugButton = document.getElementById('debug') ?? document.getElementById('DebugButton');
     let variableTableContainer = document.getElementById('Variable-table-container');
     variableTableContainer.style.display = 'block';
     for (let button of debugOptions) {

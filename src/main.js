@@ -47,10 +47,6 @@ let blocksButton;
 let bottomPart;
 let span;
 let darkmodediv;
-let runEmbedButton;
-let debugEmbedButton;
-let stopEmbedButton;
-let stepEmbedButton;
 let resizeBarBott;
 
 let configuration = {};  // see parseUrlConfiguration()
@@ -60,16 +56,34 @@ let praxlyGenerator;
 let mainTree;
 let darkMode = true;
 let isResizing = false;
+let embedMode;
 
 function initializeGlobals() {
-  if (configuration.embed) {
-    runButton = document.getElementById('embed-run-button');
+  // if (configuration.embed) {
+  //   runButton = document.getElementById('embed-run-button');
+  // } else {
+  if (!configuration.embed){
+    embedMode = false;
+    darkModeButton = document.getElementById('darkMode');
+    settingsButton = document.getElementById("settings");
+    modal = document.getElementById("myModal");
+    featuresButton = document.getElementById('FeaturesButton');
+    bugButton = document.getElementById("BugButton");
+    changelogButton = document.getElementById('ChangelogButton');
+    exampleDiv = document.getElementById('exampleTable');
+    githubButton = document.getElementById('GitHubButton');
+    peopleButton = document.getElementById('AboutButton');
+    titleRefresh = document.getElementById('titleRefresh');
+    bothButton = document.getElementById("tab1_button");
+    textButton = document.getElementById('tab2_button');
+    blocksButton = document.getElementById('tab3_button');
+    darkmodediv = document.querySelector('.settingsOptions');
+    span = document.getElementsByClassName("close")[0];
   } else {
-    runButton = document.getElementById('runButton');
+    embedMode = true;
   }
+  runButton = document.getElementById('runButton');
   shareButton = document.getElementById('share');
-  darkModeButton = document.getElementById('darkMode');
-  settingsButton = document.getElementById("settings");
   infoButton = document.getElementById('info');
   manualButton = document.getElementById("reference");
   resizeBarX = document.querySelector('.resizeBarX');
@@ -79,48 +93,116 @@ function initializeGlobals() {
   stdOut = document.querySelector('.stdout');
   stdErr = document.querySelector('.stderr');
   clearOut = document.querySelector('.clearOut');
-  modal = document.getElementById("myModal");
   manual = document.getElementById("manual");
-  featuresButton = document.getElementById('FeaturesButton');
-  bugButton = document.getElementById("BugButton");
-  changelogButton = document.getElementById('ChangelogButton');
-  exampleDiv = document.getElementById('exampleTable');
-  githubButton = document.getElementById('GitHubButton');
-  peopleButton = document.getElementById('AboutButton');
-  titleRefresh = document.getElementById('titleRefresh');
-  bothButton = document.getElementById("tab1_button");
-  textButton = document.getElementById('tab2_button');
-  blocksButton = document.getElementById('tab3_button');
   bottomPart = document.getElementById('bottom-part');
-  span = document.getElementsByClassName("close")[0];
-  darkmodediv = document.querySelector('.settingsOptions');
-  runEmbedButton = document.querySelector('#embed-run-button');
-  debugEmbedButton = document.querySelector('#embed-debug-button');
-  stepEmbedButton = document.querySelector('#embed-step-button');
-  stopEmbedButton = document.querySelector('#embed-stop-button');
   resizeBarBott = document.querySelector('.resizeBarBott');
 }
 
 function registerListeners() {
-  runButton.addEventListener('click', runTasks);
-  runEmbedButton.addEventListener('click', runTasks);
-  debugEmbedButton.addEventListener('mouseup', function () {
-    showDebugEmbedMode();
-    setDebugMode(true);
-    runTasks();
-  });
-  stepEmbedButton.addEventListener('mouseup', function () {
-    if (!getDebugMode) {
-      endDebugPrompt();
+  if (!embedMode) { // if embed mode is not on, add usual listeners
+    darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
+    manualButton.addEventListener('click', function () {
+      var linkUrl = 'pseudocode.html';
+      window.open(linkUrl, '_blank');
+    });
+
+    bugButton.addEventListener('click', function () {
+      window.open("BugsList.html", '_blank');
+    });
+
+    changelogButton.addEventListener('click', function () {
+      window.open("changelog.html", '_blank');
+    });
+
+    featuresButton.addEventListener('click', function () {
+      window.open("features.html", '_blank');
+    });
+
+    githubButton.addEventListener('click', function () {
+      window.open("https://github.com/sauppb/praxly", '_blank');
+    });
+
+    peopleButton.addEventListener('click', function () {
+      window.open('people.html');
+    });
+
+    titleRefresh.addEventListener('click', function () {
+      clearOutput();
+      clearErrors();
+      stdOut.innerHTML = "";
+      stdErr.innerHTML = "";
+      window.location.hash = '';
+      textEditor.setValue('', -1);
+      textPane.click();
+      textEditor.focus();
+    });
+
+    // When the user clicks the button, open the modal
+    infoButton.onclick = function () {
+      setLight();
+      modal.style.display = "block";
     }
-    setDebugMode(true);
-  });
-  stopEmbedButton.addEventListener('click', function () {
-    hideDebugEmbedMode();
-    setDebugMode(false);
-    stepEmbedButton.click();
-  });
-  darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
+
+    settingsButton.onclick = function () {
+      let darkmodediv = document.querySelector('.settingsOptions');
+      if (darkmodediv.style.display === 'none') {
+        darkmodediv.style.display = ''; // Show the button
+      } else {
+        darkmodediv.style.display = 'none'; // Hide the button
+      }
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+      modal.style.display = "none";
+      manual.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == modal || event.target == manual) {
+        modal.style.display = "none";
+        manual.style.display = "none";
+      }
+    }
+
+    //share button
+    shareButton.addEventListener('click', generateUrl);
+
+    blocksButton.addEventListener('click', showBlocksOnly);
+    textButton.addEventListener('click', showTextOnly);
+    bothButton.addEventListener('click', showTextAndBlocks);
+
+    stepIntoButton.addEventListener('mouseup', function () {
+      // comingSoon();
+      if (!getDebugMode()) {
+        endDebugPrompt();
+      }
+      setDebugMode(true);
+      setStepInto(true);
+    });
+
+    function generateExamples() {
+      const dataArray = codeText.split('##');
+      var selectDropdown = document.getElementById("exampleTable");
+      for (let i = 1; i < dataArray.length - 1; i += 2) {
+        const label = dataArray[i].trim();
+        var option = document.createElement("option");
+        option.textContent = label;
+        const value = dataArray[i + 1].trim();
+        option.value = value;
+
+        selectDropdown.appendChild(option);
+      }
+
+      selectDropdown.addEventListener('change', function () {
+        textEditor.setValue(selectDropdown.value, -1);
+        textPane.click();
+      });
+    }
+
+  }
+  runButton.addEventListener('click', runTasks);
   clearOut.addEventListener('click', () => {
     clearOutput();
     clearErrors();
@@ -165,42 +247,6 @@ function registerListeners() {
     document.removeEventListener('mousemove', resizeHandlerBott);
   });
 
-  manualButton.addEventListener('click', function () {
-    var linkUrl = 'pseudocode.html';
-    window.open(linkUrl, '_blank');
-  });
-
-  bugButton.addEventListener('click', function () {
-    window.open("BugsList.html", '_blank');
-  });
-
-  changelogButton.addEventListener('click', function () {
-    window.open("changelog.html", '_blank');
-  });
-
-  featuresButton.addEventListener('click', function () {
-    window.open("features.html", '_blank');
-  });
-
-  githubButton.addEventListener('click', function () {
-    window.open("https://github.com/sauppb/praxly", '_blank');
-  });
-
-  peopleButton.addEventListener('click', function () {
-    window.open('people.html');
-  });
-
-  titleRefresh.addEventListener('click', function () {
-    clearOutput();
-    clearErrors();
-    stdOut.innerHTML = "";
-    stdErr.innerHTML = "";
-    window.location.hash = '';
-    textEditor.setValue('', -1);
-    textPane.click();
-    textEditor.focus();
-  });
-
   // these make it so that the blocks and text take turns.
   blockPane.addEventListener('click', () => {
     workspace.removeChangeListener(onBlocklyChange);
@@ -212,37 +258,6 @@ function registerListeners() {
     textEditor.addEventListener("input", turnCodeToBLocks);
   });
 
-  // When the user clicks the button, open the modal
-  infoButton.onclick = function () {
-    setLight();
-    modal.style.display = "block";
-  }
-
-  settingsButton.onclick = function () {
-    let darkmodediv = document.querySelector('.settingsOptions');
-    if (darkmodediv.style.display === 'none') {
-      darkmodediv.style.display = ''; // Show the button
-    } else {
-      darkmodediv.style.display = 'none'; // Hide the button
-    }
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function () {
-    modal.style.display = "none";
-    manual.style.display = "none";
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function (event) {
-    if (event.target == modal || event.target == manual) {
-      modal.style.display = "none";
-      manual.style.display = "none";
-    }
-  }
-
-  //share button
-  shareButton.addEventListener('click', generateUrl);
 
   // this is how you add custom keybinds!
   document.addEventListener("keydown", function (event) {
@@ -255,9 +270,6 @@ function registerListeners() {
     }
   });
 
-  blocksButton.addEventListener('click', showBlocksOnly);
-  textButton.addEventListener('click', showTextOnly);
-  bothButton.addEventListener('click', showTextAndBlocks);
 
   /**
    * Event listeners for the main circular buttons along the top.
@@ -277,14 +289,6 @@ function registerListeners() {
     stepButton.click();
   });
 
-  stepIntoButton.addEventListener('mouseup', function () {
-    // comingSoon();
-    if (!getDebugMode()) {
-      endDebugPrompt();
-    }
-    setDebugMode(true);
-    setStepInto(true);
-  });
 
   stepButton.addEventListener('mouseup', function () {
     // comingSoon();
@@ -326,23 +330,23 @@ function showTextAndBlocks() {
   textEditor.resize();
 }
 
-function showDebugEmbedMode() {
-  let buttons = document.querySelectorAll('.debugOptionsEmbed');
-  for (let button of buttons) {
-    button.style.display = 'block';
-  }
-  document.querySelector('#embed-debug-button').style.display = 'none';
-  document.querySelector('#embed-run-button').style.display = 'none';
-}
+// function showDebugEmbedMode() {
+//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
+//   for (let button of buttons) {
+//     button.style.display = 'block';
+//   }
+//   document.querySelector('#embed-debug-button').style.display = 'none';
+//   document.querySelector('#embed-run-button').style.display = 'none';
+// }
 
-function hideDebugEmbedMode() {
-  let buttons = document.querySelectorAll('.debugOptionsEmbed');
-  for (let button of buttons) {
-    button.style.display = 'none';
-  }
-  document.querySelector('#embed-debug-button').style.display = 'block';
+// function hideDebugEmbedMode() {
+//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
+//   for (let button of buttons) {
+//     button.style.display = 'none';
+//   }
+//   document.querySelector('#embed-debug-button').style.display = 'block';
 
-}
+// }
 
 /**
  * this function gets called every time the run button is pressed.
@@ -488,24 +492,7 @@ function setLight() {
   document.body.classList.toggle('light-mode');
 }
 
-function generateExamples() {
-  const dataArray = codeText.split('##');
-  var selectDropdown = document.getElementById("exampleTable");
-  for (let i = 1; i < dataArray.length - 1; i += 2) {
-    const label = dataArray[i].trim();
-    var option = document.createElement("option");
-    option.textContent = label;
-    const value = dataArray[i + 1].trim();
-    option.value = value;
 
-    selectDropdown.appendChild(option);
-  }
-
-  selectDropdown.addEventListener('change', function () {
-    textEditor.setValue(selectDropdown.value, -1);
-    textPane.click();
-  });
-}
 
 function endDebugPrompt() {
   let exitDebug = confirm('the program has completed. Would you like to exit the debugger?');
@@ -572,7 +559,7 @@ function synchronizeToConfiguration() {
 
   if (configuration.embed) {
     document.body.classList.add('embed');
-    document.querySelector('header').style.display = 'none';
+    // document.querySelector('header').style.display = 'none';
     // Embeds in the CodeVA Canvas are in high contrast.
     // Let's go with dark mode for the time being.
     setDark();
@@ -591,14 +578,14 @@ function synchronizeToConfiguration() {
 
   // button
   if (configuration.button === 'debug') {
-    debugEmbedButton.style.display = 'block';
-    runEmbedButton.style.display = 'none';
+    debugButton.style.display = 'block';
+    runButton.style.display = 'none';
   } else if (configuration.button === 'both') {
-    runEmbedButton.style.display = 'block';
-    debugEmbedButton.style.display = 'block';
+    runButton.style.display = 'block';
+    debugButton.style.display = 'block';
   } else { // run
-    runEmbedButton.style.display = 'block';
-    debugEmbedButton.style.display = 'none';
+    runButton.style.display = 'block';
+    debugButton.style.display = 'none';
   }
 
   // result
@@ -621,9 +608,9 @@ function initialize() {
   initializeGlobals();
   praxlyGenerator = makeGenerator();
   initializeBlockly();
-  darkmodediv.style.display = 'none';  // TODO remove or move div
+  //darkmodediv.style.display = 'none';  // TODO remove or move div
   registerListeners();
-  generateExamples();
+  !embedMode && generateExamples(); // generate examples if its not in embed mode
   synchronizeToConfiguration();
 }
 
