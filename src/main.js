@@ -57,6 +57,7 @@ let mainTree;
 let darkMode = true;
 let isResizing = false;
 export let embedMode;
+export let parameters;
 
 function initializeGlobals() {
   // if (configuration.embed) {
@@ -543,7 +544,7 @@ function parseUrlConfiguration() {
   }
 
   // Configure according to the ?key1=value1&key2 parameters.
-  let parameters = new URLSearchParams(window.location.search);
+  parameters = new URLSearchParams(window.location.search);
   configuration.embed = window.location.pathname.includes("embed") || parameters.has('embed');
   const defaultEditor = configuration.embed ? 'text' : 'both';
   const defaultButton = configuration.embed ? 'run' : 'both';
