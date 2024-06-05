@@ -327,4 +327,4 @@ export function comingSoon() {
 
 
 //this will let information that I deemed important to be logged to the console.
-export const DEV_LOG = true;
+export const DEV_LOG = false;

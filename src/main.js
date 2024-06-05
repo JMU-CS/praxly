@@ -352,7 +352,7 @@ function showTextAndBlocks() {
  * this function gets called every time the run button is pressed.
  */
 async function runTasks() {
-  console.log("runTasks");
+  // console.log("runTasks");
 
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');

@@ -58,6 +58,7 @@ export async function generateVariableTable(environment, level) {
     let stepIn = getStepInto();
     setStepInto(false);
     let table = document.getElementById('Variable-table');
+    table.innerHTML = "";
     let parent = environment.parent;
     const variableList = environment.variableList;
     // console.error(variableList);
