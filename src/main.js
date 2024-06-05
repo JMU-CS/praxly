@@ -295,35 +295,37 @@ function registerListeners() {
 
 }
 
+let isTextOn = true;
 function toggleTextOn() {
-  let isOn = textPane.style.display == 'block';
+  isTextOn = !isTextOn;
 
-  if (isOn){
+  if (isTextOn){
+    textPane.style.display = 'block'
+    resizeBarX.style.display = 'block';
+    toggleText.style.backgroundColor = 'black';
+  } else {
     textPane.style.display = 'none';
     resizeBarX.style.display = 'none';
     Blockly.svgResize(workspace);
     toggleText.style.backgroundColor = 'white';
-  } else {
-    textPane.style.display = 'block'
-    resizeBarX.style.display = 'block';
-    toggleText.style.backgroundColor = 'black';
   }
 }
 
+let isBlocksOn = true;
 function toggleBlocksOn() {
-  let isOn = blockPane.style.display == 'block';
+  isBlocksOn = !isBlocksOn;
 
-  if (isOn){
+  if (isBlocksOn){
+    blockPane.style.display = 'block';
+    resizeBarX.style.display = 'block';
+    Blockly.svgResize(workspace);
+    toggleBlocks.style.backgroundColor = 'black';
+  } else {
     blockPane.style.display = 'none';
     resizeBarX.style.display = 'none';
     Blockly.svgResize(workspace);
     textEditor.resize();
     toggleBlocks.style.backgroundColor = 'white';
-  } else {
-    blockPane.style.display = 'block';
-    resizeBarX.style.display = 'block';
-    Blockly.svgResize(workspace);
-    toggleBlocks.style.backgroundColor = 'black';
   }
 }
 
@@ -440,6 +442,12 @@ function showTextAndBlocks() {
  */
 async function runTasks() {
   // console.log("runTasks");
+
+  // TODO these four lines are in multiple places and should be a function
+  clearOutput();
+  clearErrors();
+  stdOut.innerHTML = "";
+  stdErr.innerHTML = "";
 
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');

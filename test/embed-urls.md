@@ -42,4 +42,5 @@ http://localhost:5173/embed.html?button=both&result=both#code=%2F%2F%20Function%
 
 
 ## Test debugger with Fibonacci
+
 http://localhost:5173/embed.html?editor=blocks&button=both#code=int%20fibonacci(int%20n)%0A%09if%20(n%20%3C%3D%201)%0A%09%09return%20n%0A%09else%0A%09%09return%20fibonacci(n%20-%201)%20%2B%20fibonacci(n%20-%202)%0A%09end%20if%0Aend%20fibonacci%0Aprintln%20fibonacci(10)
