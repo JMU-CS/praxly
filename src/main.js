@@ -58,12 +58,7 @@ let stopEmbedButton;
 let stepEmbedButton;
 let resizeBarBott;
 
-let configuration = {
-  code: null,
-  editorMode: 'both',
-  showOutput: true,
-  isEmbedded: null,
-};
+let configuration = {};  // see parseUrlConfiguration()
 
 export let workspace;
 let praxlyGenerator;
@@ -308,7 +303,6 @@ function registerListeners() {
 }
 
 function showBlocksOnly() {
-  document.querySelector('header').style.display = 'none';
   resizeBarX.style.display = 'none';
   textPane.style.display = 'none';
   blockPane.style.display = 'block';
@@ -320,7 +314,6 @@ function showBlocksOnly() {
 function showTextOnly() {
   textPane.style.display = 'block';
 
-  document.querySelector('header').style.display = 'none';
   resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
 
@@ -335,7 +328,6 @@ function showTextAndBlocks() {
   resizeBarX.style.display = 'block';
   blockPane.style.display = 'block';
   textPane.style.display = 'block';
-  document.querySelector('header').style.display = 'none';
 
   Blockly.svgResize(workspace);
   textEditor.resize();
@@ -566,6 +558,8 @@ function parseUrlConfiguration() {
   if (hash.startsWith(pattern)) {
     let source = hash.substring(pattern.length);
     configuration.code = decodeURIComponent(source);
+  } else {
+    configuration.code = null;
   }
 
   // Configure according to the ?key1=value1&key2 parameters.
@@ -587,8 +581,9 @@ function synchronizeToConfiguration() {
 
   if (configuration.embed) {
     document.body.classList.add('embed');
-    // Embeds in the CodeVA Canvas are in high contrast. Let's go
-    // with dark mode for the time being.
+    document.querySelector('header').style.display = 'none';
+    // Embeds in the CodeVA Canvas are in high contrast.
+    // Let's go with dark mode for the time being.
     setDark();
     showTextOnly();
   }
@@ -597,10 +592,9 @@ function synchronizeToConfiguration() {
   if (configuration.editor === 'blocks') {
     showBlocksOnly();
   } else if (configuration.editor === 'both') {
-    document.querySelector('header').style.display = 'none';
-    textEditor.resize
+    textEditor.resize();
     Blockly.svgResize(workspace);
-  } else {
+  } else { // text
     showTextOnly();
   }
 
@@ -624,27 +618,10 @@ function synchronizeToConfiguration() {
     document.querySelector('.output').style.display = 'block';
     resizeBarBott.style.display = 'block';
     document.querySelector('#Variable-table-container').style.display = 'block';
-  } else {
+  } else { // output
     document.querySelector('.output').style.display = 'block';
     document.querySelector('#Variable-table-container').style.display = 'none';
   }
-
-
-  // if (configuration.editor === 'text') {
-  //   showTextOnly();
-  //   textEditor.focus();
-  // } else if (configuration.editor === 'blocks') {
-  //   showBlocksOnly();
-  // } else {
-  //   showTextAndBlocks();
-  //   textEditor.focus();
-  // }
-
-  // if (!configuration.showOutput) {
-  //   bottomPart.style.display = 'none';
-  //   resizeBarY.style.display = 'none';
-  //   Blockly.svgResize(workspace);
-  // }
 }
 
 function initialize() {
@@ -653,7 +630,7 @@ function initialize() {
   initializeGlobals();
   praxlyGenerator = makeGenerator();
   initializeBlockly();
-  darkmodediv.style.display = 'none';
+  darkmodediv.style.display = 'none';  // TODO remove or move div
   registerListeners();
   generateExamples();
   synchronizeToConfiguration();
