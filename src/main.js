@@ -83,6 +83,10 @@ function initializeGlobals() {
     blocksButton = document.getElementById('tab3_button');
     darkmodediv = document.querySelector('.settingsOptions');
     span = document.getElementsByClassName("close")[0];
+    toggleText = document.querySelector('#toggle-text');
+    toggleBlocks = document.querySelector('#toggle-blocks');
+    toggleOutput = document.querySelector('#toggle-output');
+    toggleVars = document.querySelector('#toggle-vars');
   } else {
     embedMode = true;
   }
@@ -100,10 +104,6 @@ function initializeGlobals() {
   manual = document.getElementById("manual");
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
-  toggleText = document.querySelector('#toggle-text');
-  toggleBlocks = document.querySelector('#toggle-blocks');
-  toggleOutput = document.querySelector('#toggle-output');
-  toggleVars = document.querySelector('#toggle-vars');
 }
 
 function registerListeners() {
@@ -190,6 +190,11 @@ function registerListeners() {
       setStepInto(true);
     });
 
+    // toggle buttons
+    toggleText.addEventListener('click', toggleTextOn);
+    toggleBlocks.addEventListener('click', toggleBlocksOn);
+    toggleOutput.addEventListener('click', toggleOutputOn);
+    toggleVars.addEventListener('click', toggleVarsOn);
   }
 
   runButton.addEventListener('click', runTasks);
@@ -201,12 +206,6 @@ function registerListeners() {
   });
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
-
-  // toggle buttons
-  toggleText.addEventListener('click', toggleTextOn);
-  toggleBlocks.addEventListener('click', toggleBlocksOn);
-  toggleOutput.addEventListener('click', toggleOutputOn);
-  toggleVars.addEventListener('click', toggleVarsOn);
 
   //resizing things with the purple bar
   resizeBarX.addEventListener('mousedown', function (e) {
