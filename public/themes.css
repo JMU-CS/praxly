@@ -558,6 +558,11 @@ main {
   background-color: #2B5E7D;
 }
 
+#aceCode.ace-dracula {
+  /* The Dracula theme background is a bit too dark. */
+  background-color: #141414;
+}
+
 .codeEditor {
   flex: 1;
   width: 100%;
