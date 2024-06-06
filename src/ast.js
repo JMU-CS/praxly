@@ -1354,7 +1354,7 @@ class Praxly_function_call {
 
         //NEW: parameter list is now a linkedList. expect some errors till I fix it.
         var newScope = {
-            parent: SCOPES.global,
+            parent: environment,
             name: `function: ${this.name}`,
             functionList: {},
             variableList: {},
@@ -1397,6 +1397,12 @@ class Praxly_function_call {
         } else if (!can_assign(returnType, result.realType, this.json.line)) {
             throw new PraxlyError(`function ${this.name} returned the wrong type.\n\tExpected: ${returnType}\n\tActual: ${result.realType}`, this.json.line);
         }
+
+        // extra debugger step to highlight the function call after returning
+        let markerId = highlightAstNode(this.json);
+        await waitForStep();
+        textEditor.session.removeMarker(markerId);
+
         return result;
     }
 }
