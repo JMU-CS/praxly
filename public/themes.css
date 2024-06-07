@@ -851,6 +851,7 @@ body.embed main {
 .resize-side-view {
   height: 5px;
   background-color: #2B5E7D;
+  cursor: row-resize;
 }
 
 #embed-toolbar {

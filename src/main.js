@@ -440,9 +440,7 @@ function showTextAndBlocks() {
   textEditor.resize();
 }
 
-function resizeHandlerSideEmbed(){
 
-}
 
 /**
  * this function gets called every time the run button is pressed.
@@ -591,6 +589,20 @@ function resizeHandlerBott(e) {
 
   output.style.flex = left;
   variables.style.flex = right;
+}
+
+function resizeHandlerSideEmbed(e) {
+  const output = document.querySelector('.output');
+  const vars = document.querySelector('#Variable-table-container');
+
+  const containerHeight = document.querySelector('.side-view').clientHeight;
+  const mouseY = e.pageY;
+  const topHeight = (mouseY / containerHeight) * 100;
+  const bottomHeight = 100 - topHeight;
+
+  output.style.flex = topHeight;
+  vars.style.flex = bottomHeight;
+
 }
 
 function setDark() {
