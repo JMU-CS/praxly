@@ -12,24 +12,6 @@
 
 <body class="embed">
 
-  <div id="embed-toolbar">
-    <button id="runButton" class="embed-button">
-      <span class="material-symbols-rounded play">play_arrow</span>
-      <span class="button-text">Run Program</span>
-    </button>
-    <button id="DebugButton" class="embed-button">
-      <span class="material-symbols-rounded bug">pest_control</span>
-      <span class="button-text">Debug Mode</span>
-    </button>
-    <button id="stepButton" class="debugOptions embed-button">
-      <span class="material-symbols-rounded step">step</span>
-      <span class="button-text">Step Over</span>
-    </button>
-    <button id="stopButton" class="debugOptions embed-button">
-      <span class="material-symbols-rounded stop">stop</span>
-      <span class="button-text">Exit Debug</span>
-    </button>
-  </div>
 
   <main>
     <div id="aceCode" class="codeEditor"></div>
@@ -38,6 +20,54 @@
   </main>
 
   <div class="resizeBarY"></div>
+
+  <div class="side-view">
+
+    <!--Top bar view-->
+    <div id="embed-toolbar">
+      <button id="runButton" class="embed-button">
+        <span class="material-symbols-rounded play">play_arrow</span>
+        <span class="button-text">Run Program</span>
+      </button>
+      <button id="DebugButton" class="embed-button">
+        <span class="material-symbols-rounded bug">pest_control</span>
+        <span class="button-text">Debug Mode</span>
+      </button>
+      <button id="stepButton" class="debugOptions embed-button">
+        <span class="material-symbols-rounded step">step</span>
+        <span class="button-text">Step Over</span>
+      </button>
+      <button id="stopButton" class="debugOptions embed-button">
+        <span class="material-symbols-rounded stop">stop</span>
+        <span class="button-text">Exit Debug</span>
+      </button>
+    </div>
+
+    <!--Output-->
+    <div class="output">
+      <div class="clearOut">🗑</div>
+      <p class="stdout"></p>
+      <p class="stderr"></p>
+    </div>
+
+    <div class="resize-side-view"></div>
+
+    <!--Variables-->
+    <div id="Variable-table-container">
+      <table id="Variable-table-outer">
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Scope</th>
+          </tr>
+        </thead>
+        <tbody id="Variable-table"></tbody>
+      </table>
+    </div>
+
+  </div>
 
   <div id="bottom-part">
     <div id="Variable-table-container">

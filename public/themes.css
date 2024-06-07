@@ -541,12 +541,13 @@ main {
 }
 
 .resizeBarX {
+  display: block;
   width: 5px;
   cursor: col-resize;
   background-color: #2B5E7D;
 }
 
-.resizeBarY {
+body:not(.embed) .resizeBarY {
   height: 5px;
   cursor: row-resize;
   background-color: #2B5E7D;
@@ -563,7 +564,7 @@ main {
   width: 100%;
 }
 
-#bottom-part {
+body:not(.embed) #bottom-part {
   display: flex;
   /* Add this */
   flex-direction: row-reverse;
@@ -714,33 +715,6 @@ main {
   padding: 1ex;
 }
 
-#embed-toolbar {
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 999;
-}
-
-body:not(.embed)>#embed-toolbar {
-  display: none;
-}
-
-.embed-button {
-  /* border-radius: 50%; */
-  width: 4em;
-  height: 4em;
-  line-height: 0;
-  /* background-color: transparent; */
-  /* border-color: transparent; */
-}
-
-#embed-toolbar button:hover {
-  background-color: lightgray;
-}
-
 
 .material-symbols-rounded {
   font-variation-settings:
@@ -844,4 +818,63 @@ body:not(.embed)>#embed-toolbar {
 
 .blocklyTreeIcon {
   visibility: visible;
+}
+
+/* Embed Mode */
+
+body.embed {
+  display: flex;
+  flex-direction: row;
+}
+
+body.embed .resizeBarY {
+  display: none;
+}
+body.embed #bottom-part {
+  display: none;
+}
+
+body.embed main {
+  flex-basis: 60%; /* = 60% width */
+  flex-grow: 1;
+  flex: 1
+
+}
+
+.side-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  flex-grow: 1;
+}
+
+.resize-side-view {
+  height: 5px;
+  background-color: #2B5E7D;
+}
+
+#embed-toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  /* position: fixed; */
+  justify-content: flex-end;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+  background-color: #36759C;
+}
+
+body:not(.embed)>#embed-toolbar {
+  display: none;
+}
+
+.embed-button {
+  width: 4em;
+  height: 4em;
+  line-height: 0;
+}
+
+#embed-toolbar button:hover {
+  background-color: lightgray;
 }

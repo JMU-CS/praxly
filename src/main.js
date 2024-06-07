@@ -25,6 +25,7 @@ let darkModeButton;
 let settingsButton;
 let infoButton;
 let manualButton;
+
 let resizeBarX;
 let resizeBarY;
 let blockPane;
@@ -32,26 +33,33 @@ let textPane;
 let stdOut;
 let stdErr;
 let clearOut;
+
 let modal;
 let manual;
 let featuresButton;
 let bugButton;
 let changelogButton;
+
 let exampleDiv;
+
 let githubButton;
 let peopleButton;
 let titleRefresh;
+
 let bothButton;
 let textButton;
 let blocksButton;
 let bottomPart;
+
 let span;
 let darkmodediv;
+
 let resizeBarBott;
+let resizeSideInEmbed;
 let toggleText, toggleBlocks, toggleOutput, toggleVars;
 
-
-let configuration = {};  // see parseUrlConfiguration()
+// make sure this works fine in gui
+export let configuration = {};  // see parseUrlConfiguration()
 
 export let workspace;
 let praxlyGenerator;
@@ -63,9 +71,6 @@ export let embedMode;
 export let parameters;
 
 function initializeGlobals() {
-  // if (configuration.embed) {
-  //   runButton = document.getElementById('embed-run-button');
-  // } else {
   if (!configuration.embed){
     embedMode = false;
     darkModeButton = document.getElementById('darkMode');
@@ -104,6 +109,8 @@ function initializeGlobals() {
   manual = document.getElementById("manual");
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
+  resizeSideInEmbed = document.querySelector('.resize-side-view');
+
 }
 
 function registerListeners() {
@@ -293,7 +300,19 @@ function registerListeners() {
     setDebugMode(true);
   });
 
+  resizeSideInEmbed.addEventListener('mousedown', function (e) {
+    isResizing = true;
+    document.addEventListener('mousemove', resizeHandlerSideEmbed);
+  });
+
+  document.addEventListener('mouseup', function (e) {
+    isResizing = false;
+    document.removeEventListener('mousemove', resizeHandlerSideEmbed);
+  })
+
 }
+
+
 
 let isTextOn = true;
 function toggleTextOn() {
@@ -310,6 +329,8 @@ function toggleTextOn() {
     toggleText.style.backgroundColor = 'white';
   }
 }
+
+
 
 let isBlocksOn = true;
 function toggleBlocksOn() {
@@ -400,7 +421,7 @@ function showBlocksOnly() {
 function showTextOnly() {
   textPane.style.display = 'block';
 
-  resizeBarX.style.display = 'none';
+  // resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
 
   document.querySelector('#Variable-table-container').style.display = 'none';
@@ -419,23 +440,9 @@ function showTextAndBlocks() {
   textEditor.resize();
 }
 
-// function showDebugEmbedMode() {
-//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
-//   for (let button of buttons) {
-//     button.style.display = 'block';
-//   }
-//   document.querySelector('#embed-debug-button').style.display = 'none';
-//   document.querySelector('#embed-run-button').style.display = 'none';
-// }
+function resizeHandlerSideEmbed(){
 
-// function hideDebugEmbedMode() {
-//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
-//   for (let button of buttons) {
-//     button.style.display = 'none';
-//   }
-//   document.querySelector('#embed-debug-button').style.display = 'block';
-
-// }
+}
 
 /**
  * this function gets called every time the run button is pressed.
@@ -527,15 +534,30 @@ function turnBlocksToCode() {
 function resizeHandlerX(e) {
   if (!isResizing) return;
 
-  const containerWidth = document.querySelector('main').offsetWidth;
-  const mouseX = e.pageX;
-  const leftPaneWidth = (mouseX / containerWidth) * 100;
-  const rightPaneWidth = 100 - leftPaneWidth;
+  if (configuration.embed) {
+    const containerWidth = document.body.offsetWidth;
+    const mouseX = e.pageX;
+    const leftPaneWidth = (mouseX / containerWidth) * 100;
+    const rightPaneWidth = 100 - leftPaneWidth;
 
-  textPane.style.flex = leftPaneWidth;
-  blockPane.style.flex = rightPaneWidth;
+    document.querySelector('.side-view').style.flex = rightPaneWidth;
+    document.querySelector('main').style.flex = leftPaneWidth;
 
-  Blockly.svgResize(workspace);
+    Blockly.svgResize(workspace);
+  } else {
+    const containerWidth = document.querySelector('main').offsetWidth;
+    const mouseX = e.pageX;
+    const leftPaneWidth = (mouseX / containerWidth) * 100;
+    const rightPaneWidth = 100 - leftPaneWidth;
+
+    textPane.style.flex = leftPaneWidth;
+    blockPane.style.flex = rightPaneWidth;
+
+    Blockly.svgResize(workspace);
+  }
+
+
+
 }
 
 function resizeHandlerY(e) {
@@ -658,17 +680,23 @@ function synchronizeToConfiguration() {
     // Embeds in the CodeVA Canvas are in high contrast.
     // Let's go with dark mode for the time being.
     setDark();
-    showTextOnly();
+    // showTextOnly();
   }
 
   // editor
   if (configuration.editor === 'blocks') {
     showBlocksOnly();
   } else if (configuration.editor === 'both') {
+    showTextAndBlocks();
     textEditor.resize();
     Blockly.svgResize(workspace);
   } else { // text
-    showTextOnly();
+
+    textPane.style.display = 'block';
+    blockPane.style.display = 'none';
+    resizeBarX.style.display = 'block';
+    // document.querySelector('.side-view').style.display = 'flex';
+    bottomPart.style.display = 'none';
   }
 
   // button
@@ -692,8 +720,8 @@ function synchronizeToConfiguration() {
     resizeBarBott.style.display = 'block';
     document.querySelector('#Variable-table-container').style.display = 'block';
   } else { // output
-    document.querySelector('.output').style.display = 'block';
-    document.querySelector('#Variable-table-container').style.display = 'none';
+    // document.querySelector('.output').style.display = 'block';
+    // document.querySelector('#Variable-table-container').style.display = 'none';
   }
 
   // use same font as text editor
