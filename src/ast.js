@@ -522,6 +522,17 @@ class Praxly_input {
     }
 }
 
+class Praxly_random {
+
+    constructor(node) {
+        this.json = node;
+    }
+
+    async evaluate(environment) {
+        return new Praxly_float(Math.random(), this.json);
+    }
+}
+
 class Praxly_return {
 
     constructor(value, node) {
