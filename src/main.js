@@ -202,6 +202,16 @@ function registerListeners() {
     toggleBlocks.addEventListener('click', toggleBlocksOn);
     toggleOutput.addEventListener('click', toggleOutputOn);
     toggleVars.addEventListener('click', toggleVarsOn);
+
+    resizeBarBott.addEventListener('mousedown', function (e) {
+      isResizing = true;
+      document.addEventListener('mousemove', resizeHandlerBott);
+    });
+
+    document.addEventListener('mouseup', function (e) {
+      isResizing = false;
+      document.removeEventListener('mousemove', resizeHandlerBott);
+    });
   } else {
     resizeSideInEmbed.addEventListener('mousedown', function (e) {
       isResizing = true;
@@ -235,10 +245,7 @@ function registerListeners() {
     document.addEventListener('mousemove', resizeHandlerY);
   })
 
-  resizeBarBott.addEventListener('mousedown', function (e) {
-    isResizing = true;
-    document.addEventListener('mousemove', resizeHandlerBott);
-  });
+
 
   document.addEventListener('mouseup', function (e) {
     isResizing = false;
@@ -254,10 +261,7 @@ function registerListeners() {
     textEditor.resize();
   });
 
-  document.addEventListener('mouseup', function (e) {
-    isResizing = false;
-    document.removeEventListener('mousemove', resizeHandlerBott);
-  });
+
 
   // these make it so that the blocks and text take turns.
   blockPane.addEventListener('click', () => {
@@ -540,9 +544,15 @@ function resizeHandlerX(e) {
     const rightPaneWidth = 100 - leftPaneWidth;
 
     document.querySelector('.side-view').style.flex = rightPaneWidth;
-    document.querySelector('main').style.flex = leftPaneWidth;
+
+    if (configuration.editor === 'blocks'){
+      blockPane.style.flex = leftPaneWidth;
+    } else if (configuration.editor === 'text') {
+      document.querySelector('main').style.flex = leftPaneWidth;
+    }
 
     Blockly.svgResize(workspace);
+
   } else {
     const containerWidth = document.querySelector('main').offsetWidth;
     const mouseX = e.pageX;
@@ -622,6 +632,29 @@ function setLight() {
   document.body.classList.toggle('light-mode');
 }
 
+function debugSettings(value) {
+  if (!value) {
+    debugButton.style.display = 'none';
+    stepButton.style.display = 'none';
+    stopButton.style.display = 'none';
+  } else {
+    debugButton.style.display = 'block';
+  }
+}
+
+function toggleEditor(value) {
+  if (!value) { // blocks on
+    blockPane.style.display = 'block';
+    textPane.style.display = 'none';
+  } else {
+   // text on (default)
+   blockPane.style.display = 'none';
+   textPane.style.display = 'block';
+  }
+
+  Blockly.svgResize(workspace);
+}
+
 
 
 function endDebugPrompt() {
@@ -692,49 +725,26 @@ function synchronizeToConfiguration() {
     // document.querySelector('header').style.display = 'none';
     // Embeds in the CodeVA Canvas are in high contrast.
     // Let's go with dark mode for the time being.
-    setDark();
-    // showTextOnly();
+    // setDark();
+
+    blockPane.style.display = 'none'
+    debugSettings(false); // turn off debug for default embed
+  }
+
+  // buttons
+  if (configuration.button === 'debug') {
+    runButton.style.display = 'none';
+    debugSettings(true);
+  } else if (configuration.button === 'both') {
+    runButton.style.display = 'block';
+    debugSettings(true);
   }
 
   // editor
-  if (configuration.editor === 'blocks') {
-    showBlocksOnly();
-  } else if (configuration.editor === 'both') {
-    showTextAndBlocks();
-    textEditor.resize();
-    Blockly.svgResize(workspace);
-  } else { // text
-
-    textPane.style.display = 'block';
-    blockPane.style.display = 'none';
-    resizeBarX.style.display = 'block';
-    // document.querySelector('.side-view').style.display = 'flex';
-    bottomPart.style.display = 'none';
-  }
-
-  // button
-  if (configuration.button === 'debug') {
-    debugButton.style.display = 'block';
-    runButton.style.display = 'none';
-  } else if (configuration.button === 'both') {
-    runButton.style.display = 'block';
-    debugButton.style.display = 'block';
-  } else { // run
-    runButton.style.display = 'block';
-    debugButton.style.display = 'none';
-  }
-
-  // result
-  if (configuration.result === 'vars') {
-    document.querySelector('#Variable-table-container').style.display = 'block';
-    document.querySelector('.output').style.display = 'none';
-  } else if (configuration.result === 'both') {
-    document.querySelector('.output').style.display = 'block';
-    resizeBarBott.style.display = 'block';
-    document.querySelector('#Variable-table-container').style.display = 'block';
-  } else { // output
-    // document.querySelector('.output').style.display = 'block';
-    // document.querySelector('#Variable-table-container').style.display = 'none';
+  if (configuration.editor === 'text'){
+    toggleEditor(true);
+  } else if (configuration.editor === 'blocks') {
+    toggleEditor(false);
   }
 
   // use same font as text editor

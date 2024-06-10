@@ -819,7 +819,6 @@ body:not(.embed) #bottom-part {
 /* Embed Mode */
 
 body.embed {
-  display: flex;
   flex-direction: row;
 }
 
@@ -830,12 +829,7 @@ body.embed #bottom-part {
   display: none;
 }
 
-body.embed main {
-  flex-basis: 60%; /* = 60% width */
-  flex-grow: 1;
-  flex: 1
 
-}
 
 .side-view {
   display: flex;
@@ -854,7 +848,6 @@ body.embed main {
   display: flex;
   flex-direction: row;
   gap: 2px;
-  /* position: fixed; */
   justify-content: flex-end;
   top: 10px;
   right: 10px;
@@ -879,3 +872,7 @@ body:not(.embed)>#embed-toolbar {
 #embed-toolbar button:hover {
   background-color: lightgray;
 }
+
+/* #embed-toolbar button {
+  display: block;
+} */
