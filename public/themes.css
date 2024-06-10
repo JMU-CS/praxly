@@ -671,10 +671,6 @@ body:not(.embed) #bottom-part {
   display: none;
 }
 
-.debugOptionsEmbed {
-  display: none;
-}
-
 .debugButton {
   display: block;
 }
@@ -871,9 +867,13 @@ body:not(.embed)>#embed-toolbar {
 }
 
 .embed-button {
-  width: 4em;
-  height: 4em;
-  line-height: 0;
+  /* display: flex; */
+  /* align-items: center;
+  justify-content: center; */
+  width: 70px; /* 6em */
+  height: 50px; /* 4em */
+  /* line-height: 0; */
+  position: relative;
 }
 
 #embed-toolbar button:hover {

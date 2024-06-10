@@ -71,7 +71,7 @@ export let embedMode;
 export let parameters;
 
 function initializeGlobals() {
-  if (!configuration.embed){
+  if (!configuration.embed) {
     embedMode = false;
     darkModeButton = document.getElementById('darkMode');
     settingsButton = document.getElementById("settings");
@@ -202,6 +202,16 @@ function registerListeners() {
     toggleBlocks.addEventListener('click', toggleBlocksOn);
     toggleOutput.addEventListener('click', toggleOutputOn);
     toggleVars.addEventListener('click', toggleVarsOn);
+  } else {
+    resizeSideInEmbed.addEventListener('mousedown', function (e) {
+      isResizing = true;
+      document.addEventListener('mousemove', resizeHandlerSideEmbed);
+    });
+
+    document.addEventListener('mouseup', function (e) {
+      isResizing = false;
+      document.removeEventListener('mousemove', resizeHandlerSideEmbed);
+    });
   }
 
   runButton.addEventListener('click', runTasks);
@@ -300,15 +310,6 @@ function registerListeners() {
     setDebugMode(true);
   });
 
-  resizeSideInEmbed.addEventListener('mousedown', function (e) {
-    isResizing = true;
-    document.addEventListener('mousemove', resizeHandlerSideEmbed);
-  });
-
-  document.addEventListener('mouseup', function (e) {
-    isResizing = false;
-    document.removeEventListener('mousemove', resizeHandlerSideEmbed);
-  })
 
 }
 
@@ -318,7 +319,7 @@ let isTextOn = true;
 function toggleTextOn() {
   isTextOn = !isTextOn;
 
-  if (isTextOn){
+  if (isTextOn) {
     textPane.style.display = 'block'
     resizeBarX.style.display = 'block';
     toggleText.style.backgroundColor = 'black';
@@ -336,7 +337,7 @@ let isBlocksOn = true;
 function toggleBlocksOn() {
   isBlocksOn = !isBlocksOn;
 
-  if (isBlocksOn){
+  if (isBlocksOn) {
     blockPane.style.display = 'block';
     resizeBarX.style.display = 'block';
     Blockly.svgResize(workspace);
@@ -376,7 +377,7 @@ function isBottomOff() {
   let leftOff = document.querySelector('#Variable-table-container');
   let rightOff = document.querySelector('.output');
 
-  if (leftOff.style.display === 'none' && rightOff.style.display === 'none'){
+  if (leftOff.style.display === 'none' && rightOff.style.display === 'none') {
     resizeBarY.style.display = 'none';
     bottomPart.style.display = 'none';
     Blockly.svgResize(workspace);
