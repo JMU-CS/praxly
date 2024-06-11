@@ -21,9 +21,9 @@ export function hideDebug() {
         button.style.display = 'none';
     }
     if (!embedMode) {
-        document.querySelector('#runButton').style.display = 'block';
+        document.querySelector('#runButton').style.display = 'inline-flex';
     } else if (embedMode && (parameters.get('button') === 'both')){
-        document.querySelector('#runButton').style.display = 'block';
+        document.querySelector('#runButton').style.display = 'inline-flex';
     }
     debug.style.display = 'inline-flex';
     // variableTableContainer.style.display = 'none';

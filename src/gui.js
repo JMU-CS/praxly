@@ -1,4 +1,4 @@
-import { configuration } from "./main";
+import { configuration, embedMode } from "./main";
 
 // main
 let resizeBarX;
@@ -10,5 +10,9 @@ let resizeBarBott;
 
 
 if (!configuration.embed) {
-
+  // embed mode OFF
+  embedMode = false;
+} else {
+  // embed mode ON
+  embedMode = true;
 }
