@@ -230,6 +230,8 @@ function registerListeners() {
     clearErrors();
     stdOut.innerHTML = "";
     stdErr.innerHTML = "";
+    const vartab = document.querySelector('#Variable-table');
+    vartab.innerHTML = "";
   });
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
