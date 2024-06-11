@@ -278,7 +278,7 @@ function registerListeners() {
   });
 
   stopButton.addEventListener('click', function () {
-    hideDebug();
+    hideDebug(!embedMode || parameters.get('button') === 'both');
     setDebugMode(false);
     setStepInto(false);
     stepButton.click();
