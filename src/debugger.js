@@ -12,22 +12,18 @@ export function showDebug() {
     document.querySelector('#runButton').style.display = 'none';
 }
 
-export function hideDebug(embedMode) {
+export function hideDebug(configuration) {
     let debugOptions = document.querySelectorAll('.debugOptions');
     let debug = document.getElementById('debug') ?? document.getElementById('DebugButton');
-    let variableTableContainer = document.getElementById('Variable-table-container');
+    // let variableTableContainer = document.getElementById('Variable-table-container');
     for (let button of debugOptions) {
         button.style.display = 'none';
     }
-    if (!embedMode) {
-        document.querySelector('#runButton').style.display = 'inline-flex';
-    } else if (embedMode && (parameters.get('button') === 'both')){
+    if (!configuration.embed || configuration.button === 'both') {
         document.querySelector('#runButton').style.display = 'inline-flex';
     }
     debug.style.display = 'inline-flex';
     // variableTableContainer.style.display = 'none';
-
-
 }
 
 
