@@ -7,7 +7,7 @@ export function showDebug() {
     // let variableTableContainer = document.getElementById('Variable-table-container');
     // variableTableContainer.style.display = 'block';
     for (let button of debugOptions) {
-        button.style.display = 'block';
+        button.style.display = 'inline-flex';
     }
     debugButton.style.display = 'none';
     document.querySelector('#runButton').style.display = 'none';
@@ -25,7 +25,7 @@ export function hideDebug() {
     } else if (embedMode && (parameters.get('button') === 'both')){
         document.querySelector('#runButton').style.display = 'block';
     }
-    debug.style.display = 'block';
+    debug.style.display = 'inline-flex';
     // variableTableContainer.style.display = 'none';
 
 

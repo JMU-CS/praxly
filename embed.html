@@ -17,7 +17,6 @@
     <div id="aceCode" class="codeEditor"></div>
     <div id="blocklyDiv"></div>
     <div class="resizeBarX"></div>
-
   </main>
 
   <div class="resizeBarY"></div>
@@ -27,20 +26,20 @@
     <!--Top bar view-->
     <div id="embed-toolbar">
       <button id="runButton" class="embed-button">
+        <span class="">Run</span>
         <span class="material-symbols-rounded play">play_arrow</span>
-        <span class="button-text">Run Program</span>
       </button>
       <button id="DebugButton" class="embed-button">
+        <span class="">Debug</span>
         <span class="material-symbols-rounded bug">pest_control</span>
-        <span class="button-text">Debug Mode</span>
       </button>
       <button id="stepButton" class="debugOptions embed-button">
+        <span class="">Step</span>
         <span class="material-symbols-rounded step">step</span>
-        <span class="button-text">Step Over</span>
       </button>
       <button id="stopButton" class="debugOptions embed-button">
+        <span class="">Exit</span>
         <span class="material-symbols-rounded stop">stop</span>
-        <span class="button-text">Exit Debug</span>
       </button>
     </div>
 
@@ -69,28 +68,6 @@
     </div>
 
   </div>
-
-  <!-- <div id="bottom-part">
-    <div id="Variable-table-container">
-      <table id="Variable-table-outer">
-        <thead>
-          <tr>
-            <th>Variable</th>
-            <th>Type</th>
-            <th>Value</th>
-            <th>Scope</th>
-          </tr>
-        </thead>
-        <tbody id="Variable-table"></tbody>
-      </table>
-    </div>
-    <div class="resizeBarBott"></div>
-    <div class="output">
-      <div class="clearOut">🗑</div>
-      <p class="stdout"></p>
-      <p class="stderr"></p>
-    </div>
-  </div> -->
 
   <script src="./src/main.js" type="module"></script>
 </body>

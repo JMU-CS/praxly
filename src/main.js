@@ -638,7 +638,7 @@ function debugSettings(value) {
     stepButton.style.display = 'none';
     stopButton.style.display = 'none';
   } else {
-    debugButton.style.display = 'block';
+    debugButton.style.display = 'inline-flex';
   }
 }
 
@@ -736,7 +736,7 @@ function synchronizeToConfiguration() {
     runButton.style.display = 'none';
     debugSettings(true);
   } else if (configuration.button === 'both') {
-    runButton.style.display = 'block';
+    runButton.style.display = 'inline-flex';
     debugSettings(true);
   }
 
