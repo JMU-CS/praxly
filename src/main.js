@@ -57,6 +57,11 @@ let darkmodediv;
 let resizeBarBott;
 let resizeSideInEmbed;
 let toggleText, toggleBlocks, toggleOutput, toggleVars;
+let clearButton;
+let varContainer;
+let varTable;
+let output;
+let main;
 
 // make sure this works fine in gui
 export let configuration = {};  // see parseUrlConfiguration()
@@ -110,6 +115,11 @@ function initializeGlobals() {
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
   resizeSideInEmbed = document.querySelector('.resize-side-view');
+  clearButton = document.querySelector('#clearButton');
+  varContainer = document.querySelector('#Variable-table-container');
+  varTable = document.querySelector('#Variable-table');
+  output = document.querySelector('.output');
+  main = document.querySelector('main');
 
 }
 
@@ -225,14 +235,8 @@ function registerListeners() {
   }
 
   runButton.addEventListener('click', runTasks);
-  clearOut.addEventListener('click', () => {
-    clearOutput();
-    clearErrors();
-    stdOut.innerHTML = "";
-    stdErr.innerHTML = "";
-    const vartab = document.querySelector('#Variable-table');
-    vartab.innerHTML = "";
-  });
+  clearButton.addEventListener('click', clear);
+  clearOut.addEventListener('click', clear);
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
 
@@ -361,7 +365,6 @@ let isOutputOn = true;
 function toggleOutputOn() {
   isOutputOn = !isOutputOn;
 
-  const output = document.querySelector('.output');
   output.style.display = isOutputOn ? 'block' : 'none';
   resizeBarBott.style.display = isOutputOn ? 'block' : 'none';
   toggleOutput.style.backgroundColor = isOutputOn ? 'black' : 'white';
@@ -372,18 +375,15 @@ let isVarsOn = true;
 function toggleVarsOn() {
   isVarsOn = !isVarsOn;
 
-  const variables = document.querySelector('#Variable-table-container');
-  variables.style.display = isVarsOn ? 'block' : 'none';
+  varContainer.style.display = isVarsOn ? 'block' : 'none';
   resizeBarBott.style.display = isVarsOn ? 'block' : 'none';
   toggleVars.style.backgroundColor = isVarsOn ? 'black' : 'white';
   isBottomOff();
 }
 
 function isBottomOff() {
-  let leftOff = document.querySelector('#Variable-table-container');
-  let rightOff = document.querySelector('.output');
 
-  if (leftOff.style.display === 'none' && rightOff.style.display === 'none') {
+  if (varContainer.style.display === 'none' && output.style.display === 'none') {
     resizeBarY.style.display = 'none';
     bottomPart.style.display = 'none';
     Blockly.svgResize(workspace);
@@ -431,7 +431,7 @@ function showTextOnly() {
   // resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
 
-  document.querySelector('#Variable-table-container').style.display = 'none';
+  varContainer.style.display = 'none';
   resizeBarBott.style.display = 'none';
 
   Blockly.svgResize(workspace);
@@ -447,6 +447,14 @@ function showTextAndBlocks() {
   textEditor.resize();
 }
 
+function clear() {
+  clearOutput();
+  clearErrors();
+  stdOut.innerHTML = "";
+  stdErr.innerHTML = "";
+  varTable.innerHTML = "";
+}
+
 
 
 /**
@@ -455,11 +463,7 @@ function showTextAndBlocks() {
 async function runTasks() {
   // console.log("runTasks");
 
-  // TODO these four lines are in multiple places and should be a function
-  clearOutput();
-  clearErrors();
-  stdOut.innerHTML = "";
-  stdErr.innerHTML = "";
+  clear();
 
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
@@ -550,13 +554,13 @@ function resizeHandlerX(e) {
     if (configuration.editor === 'blocks'){
       blockPane.style.flex = leftPaneWidth;
     } else if (configuration.editor === 'text') {
-      document.querySelector('main').style.flex = leftPaneWidth;
+      main.style.flex = leftPaneWidth;
     }
 
     Blockly.svgResize(workspace);
 
   } else {
-    const containerWidth = document.querySelector('main').offsetWidth;
+    const containerWidth = main.offsetWidth;
     const mouseX = e.pageX;
     const leftPaneWidth = (mouseX / containerWidth) * 100;
     const rightPaneWidth = 100 - leftPaneWidth;
@@ -574,16 +578,13 @@ function resizeHandlerX(e) {
 function resizeHandlerY(e) {
   if (!isResizing) return;
 
-  const main = document.querySelector('main');
-  const bottom = document.querySelector('#bottom-part');
-
   const containerHeight = document.body.clientHeight;
   const mouseY = e.pageY;
   const topHeight = (mouseY / containerHeight) * 100;
   const bottomHeight = 100 - topHeight;
 
   main.style.flex = topHeight + '%';
-  bottom.style.flex = bottomHeight + '%';
+  bottomPart.style.flex = bottomHeight + '%';
 
   Blockly.svgResize(workspace);
 }
@@ -591,30 +592,23 @@ function resizeHandlerY(e) {
 function resizeHandlerBott(e) {
   if (!isResizing) return;
 
-  const output = document.querySelector('.output');
-  const variables = document.querySelector('#Variable-table-container');
-  const bottom = bottomPart;
-
-  const containerWidth = bottom.offsetWidth;
+  const containerWidth = bottomPart.offsetWidth;
   const mouseX = e.pageX;
   const left = (mouseX / containerWidth) * 100;
   const right = 100 - left;
 
   output.style.flex = left;
-  variables.style.flex = right;
+  varContainer.style.flex = right;
 }
 
 function resizeHandlerSideEmbed(e) {
-  const output = document.querySelector('.output');
-  const vars = document.querySelector('#Variable-table-container');
-
   const containerHeight = document.querySelector('.side-view').clientHeight;
   const mouseY = e.pageY;
   const topHeight = (mouseY / containerHeight) * 100;
   const bottomHeight = 100 - topHeight;
 
   output.style.flex = topHeight;
-  vars.style.flex = bottomHeight;
+  varContainer.style.flex = bottomHeight;
 
 }
 
@@ -751,10 +745,8 @@ function synchronizeToConfiguration() {
 
   // use same font as text editor
   let style = window.getComputedStyle(textPane);
-  let output = document.querySelector('.output');
-  let vartab = document.querySelector('#Variable-table-container');
   output.style.fontFamily = style.fontFamily;
-  vartab.style.fontFamily = style.fontFamily;
+  varContainer.style.fontFamily = style.fontFamily;
 }
 
 function initialize() {

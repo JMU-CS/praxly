@@ -118,11 +118,12 @@ h1 {
   padding: 0;
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
 }
 
-.nav-bar ul li {
+/* .nav-bar ul li {
   margin-left: 5px;
-}
+} */
 
 .nav-bar ul li a {
   text-decoration: none;
@@ -327,15 +328,20 @@ h1 {
   /* Lighter blue color */
 }
 
-/* #info {
-  background-image: url('./images/info.png');
-  background-color: lightskyblue;
-} */
+#info {
+  display: none;
+  /* background-image: url('./images/info.png');
+  background-color: lightskyblue; */
+}
 
 #info:hover {
   background-image: none;
   background-color: rgb(11, 161, 230);
   /* Lighter blue color */
+}
+
+#clearButton:hover {
+  background-color: rgb(91, 88, 88);
 }
 
 
@@ -587,6 +593,7 @@ body:not(.embed) #bottom-part {
 }
 
 .clearOut {
+  display: none;
   position: absolute;
   font-size: x-large;
   top: 5px;
@@ -594,10 +601,6 @@ body:not(.embed) #bottom-part {
   cursor: pointer;
 }
 
-.material-symbols-rounded.trash {
-  color: darkgray;
-  font-size: 36px;
-}
 
 .stdout {
   margin-top: 0;
@@ -777,6 +780,12 @@ body:not(.embed) #bottom-part {
   font-size: 36px;
 }
 
+/* Clear */
+.material-symbols-rounded.clear {
+  color: darkgray;
+  font-size: 34px;
+}
+
 /* toolbox.css*/
 
 /* Makes our label white. */
@@ -827,6 +836,10 @@ body.embed .material-symbols-rounded.play {
 }
 
 body.embed .material-symbols-rounded.bug {
+  font-size: 25px;
+}
+
+body.embed .material-symbols-rounded.clear {
   font-size: 25px;
 }
 
@@ -881,6 +894,10 @@ body:not(.embed)>#embed-toolbar {
 
 #stepButton.embed-button {
   width: 70px;
+}
+
+#clearButton.embed-button {
+  width: 65px;
 }
 
 #embed-toolbar button:hover {
