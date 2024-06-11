@@ -93,5 +93,4 @@ export async function generateVariableTable(environment, level) {
         generateVariableTable(parent, level + 1);
     }
     setStepInto(stepIn);
-
 }

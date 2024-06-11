@@ -911,7 +911,11 @@ class Praxly_program {
     }
 
     async evaluate() {
-        return await (this.codeBlock.evaluate(SCOPES.global));
+        let result = await (this.codeBlock.evaluate(SCOPES.global));
+
+        // update variable list at the end of the program
+        generateVariableTable(SCOPES.global, 1);
+        return result;
     }
 }
 
@@ -936,8 +940,8 @@ class Praxly_codeBlock {
                 continue;
             }
             if (getDebugMode()) {
-                let markerId = highlightAstNode(element.json);
                 generateVariableTable(environment, 1);
+                let markerId = highlightAstNode(element.json);
                 if (element.json.type != NODETYPES.FUNCDECL) {
                     await waitForStep();
                 }
@@ -946,8 +950,6 @@ class Praxly_codeBlock {
             await element.evaluate(environment);
             setStepInto(false);
         }
-        // update variable list at the end of the program
-        generateVariableTable(environment, 1);
         return "Exit_Success";
     }
 }
@@ -1399,10 +1401,12 @@ class Praxly_function_call {
         }
 
         // extra debugger step to highlight the function call after returning
-        let markerId = highlightAstNode(this.json);
-        await waitForStep();
-        textEditor.session.removeMarker(markerId);
-
+        if (getDebugMode()) {
+            generateVariableTable(environment, 1);
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         return result;
     }
 }
