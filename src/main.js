@@ -25,6 +25,7 @@ let darkModeButton;
 let settingsButton;
 let infoButton;
 let manualButton;
+
 let resizeBarX;
 let resizeBarY;
 let blockPane;
@@ -32,26 +33,38 @@ let textPane;
 let stdOut;
 let stdErr;
 let clearOut;
+
 let modal;
 let manual;
 let featuresButton;
 let bugButton;
 let changelogButton;
+
 let exampleDiv;
+
 let githubButton;
 let peopleButton;
 let titleRefresh;
+
 let bothButton;
 let textButton;
 let blocksButton;
 let bottomPart;
+
 let span;
 let darkmodediv;
+
 let resizeBarBott;
+let resizeSideInEmbed;
 let toggleText, toggleBlocks, toggleOutput, toggleVars;
+let clearButton;
+let varContainer;
+let varTable;
+let output;
+let main;
 
-
-let configuration = {};  // see parseUrlConfiguration()
+// make sure this works fine in gui
+export let configuration = {};  // see parseUrlConfiguration()
 
 export let workspace;
 let praxlyGenerator;
@@ -63,10 +76,7 @@ export let embedMode;
 export let parameters;
 
 function initializeGlobals() {
-  // if (configuration.embed) {
-  //   runButton = document.getElementById('embed-run-button');
-  // } else {
-  if (!configuration.embed){
+  if (!configuration.embed) {
     embedMode = false;
     darkModeButton = document.getElementById('darkMode');
     settingsButton = document.getElementById("settings");
@@ -104,6 +114,13 @@ function initializeGlobals() {
   manual = document.getElementById("manual");
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
+  resizeSideInEmbed = document.querySelector('.resize-side-view');
+  clearButton = document.querySelector('#clearButton');
+  varContainer = document.querySelector('#Variable-table-container');
+  varTable = document.querySelector('#Variable-table');
+  output = document.querySelector('.output');
+  main = document.querySelector('main');
+
 }
 
 function registerListeners() {
@@ -195,15 +212,31 @@ function registerListeners() {
     toggleBlocks.addEventListener('click', toggleBlocksOn);
     toggleOutput.addEventListener('click', toggleOutputOn);
     toggleVars.addEventListener('click', toggleVarsOn);
+
+    resizeBarBott.addEventListener('mousedown', function (e) {
+      isResizing = true;
+      document.addEventListener('mousemove', resizeHandlerBott);
+    });
+
+    document.addEventListener('mouseup', function (e) {
+      isResizing = false;
+      document.removeEventListener('mousemove', resizeHandlerBott);
+    });
+  } else {
+    resizeSideInEmbed.addEventListener('mousedown', function (e) {
+      isResizing = true;
+      document.addEventListener('mousemove', resizeHandlerSideEmbed);
+    });
+
+    document.addEventListener('mouseup', function (e) {
+      isResizing = false;
+      document.removeEventListener('mousemove', resizeHandlerSideEmbed);
+    });
   }
 
   runButton.addEventListener('click', runTasks);
-  clearOut.addEventListener('click', () => {
-    clearOutput();
-    clearErrors();
-    stdOut.innerHTML = "";
-    stdErr.innerHTML = "";
-  });
+  clearButton.addEventListener('click', clear);
+  clearOut.addEventListener('click', clear);
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
 
@@ -218,10 +251,7 @@ function registerListeners() {
     document.addEventListener('mousemove', resizeHandlerY);
   })
 
-  resizeBarBott.addEventListener('mousedown', function (e) {
-    isResizing = true;
-    document.addEventListener('mousemove', resizeHandlerBott);
-  });
+
 
   document.addEventListener('mouseup', function (e) {
     isResizing = false;
@@ -237,10 +267,7 @@ function registerListeners() {
     textEditor.resize();
   });
 
-  document.addEventListener('mouseup', function (e) {
-    isResizing = false;
-    document.removeEventListener('mousemove', resizeHandlerBott);
-  });
+
 
   // these make it so that the blocks and text take turns.
   blockPane.addEventListener('click', () => {
@@ -293,13 +320,16 @@ function registerListeners() {
     setDebugMode(true);
   });
 
+
 }
+
+
 
 let isTextOn = true;
 function toggleTextOn() {
   isTextOn = !isTextOn;
 
-  if (isTextOn){
+  if (isTextOn) {
     textPane.style.display = 'block'
     resizeBarX.style.display = 'block';
     toggleText.style.backgroundColor = 'black';
@@ -311,11 +341,13 @@ function toggleTextOn() {
   }
 }
 
+
+
 let isBlocksOn = true;
 function toggleBlocksOn() {
   isBlocksOn = !isBlocksOn;
 
-  if (isBlocksOn){
+  if (isBlocksOn) {
     blockPane.style.display = 'block';
     resizeBarX.style.display = 'block';
     Blockly.svgResize(workspace);
@@ -333,7 +365,6 @@ let isOutputOn = true;
 function toggleOutputOn() {
   isOutputOn = !isOutputOn;
 
-  const output = document.querySelector('.output');
   output.style.display = isOutputOn ? 'block' : 'none';
   resizeBarBott.style.display = isOutputOn ? 'block' : 'none';
   toggleOutput.style.backgroundColor = isOutputOn ? 'black' : 'white';
@@ -344,18 +375,15 @@ let isVarsOn = true;
 function toggleVarsOn() {
   isVarsOn = !isVarsOn;
 
-  const variables = document.querySelector('#Variable-table-container');
-  variables.style.display = isVarsOn ? 'block' : 'none';
+  varContainer.style.display = isVarsOn ? 'block' : 'none';
   resizeBarBott.style.display = isVarsOn ? 'block' : 'none';
   toggleVars.style.backgroundColor = isVarsOn ? 'black' : 'white';
   isBottomOff();
 }
 
 function isBottomOff() {
-  let leftOff = document.querySelector('#Variable-table-container');
-  let rightOff = document.querySelector('.output');
 
-  if (leftOff.style.display === 'none' && rightOff.style.display === 'none'){
+  if (varContainer.style.display === 'none' && output.style.display === 'none') {
     resizeBarY.style.display = 'none';
     bottomPart.style.display = 'none';
     Blockly.svgResize(workspace);
@@ -400,10 +428,10 @@ function showBlocksOnly() {
 function showTextOnly() {
   textPane.style.display = 'block';
 
-  resizeBarX.style.display = 'none';
+  // resizeBarX.style.display = 'none';
   blockPane.style.display = 'none';
 
-  document.querySelector('#Variable-table-container').style.display = 'none';
+  varContainer.style.display = 'none';
   resizeBarBott.style.display = 'none';
 
   Blockly.svgResize(workspace);
@@ -419,23 +447,15 @@ function showTextAndBlocks() {
   textEditor.resize();
 }
 
-// function showDebugEmbedMode() {
-//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
-//   for (let button of buttons) {
-//     button.style.display = 'block';
-//   }
-//   document.querySelector('#embed-debug-button').style.display = 'none';
-//   document.querySelector('#embed-run-button').style.display = 'none';
-// }
+function clear() {
+  clearOutput();
+  clearErrors();
+  stdOut.innerHTML = "";
+  stdErr.innerHTML = "";
+  varTable.innerHTML = "";
+}
 
-// function hideDebugEmbedMode() {
-//   let buttons = document.querySelectorAll('.debugOptionsEmbed');
-//   for (let button of buttons) {
-//     button.style.display = 'none';
-//   }
-//   document.querySelector('#embed-debug-button').style.display = 'block';
 
-// }
 
 /**
  * this function gets called every time the run button is pressed.
@@ -443,11 +463,7 @@ function showTextAndBlocks() {
 async function runTasks() {
   // console.log("runTasks");
 
-  // TODO these four lines are in multiple places and should be a function
-  clearOutput();
-  clearErrors();
-  stdOut.innerHTML = "";
-  stdErr.innerHTML = "";
+  clear();
 
   if (!textEditor.getValue().trim()) {
     alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
@@ -527,22 +543,40 @@ function turnBlocksToCode() {
 function resizeHandlerX(e) {
   if (!isResizing) return;
 
-  const containerWidth = document.querySelector('main').offsetWidth;
-  const mouseX = e.pageX;
-  const leftPaneWidth = (mouseX / containerWidth) * 100;
-  const rightPaneWidth = 100 - leftPaneWidth;
+  if (configuration.embed) {
+    const containerWidth = document.body.offsetWidth;
+    const mouseX = e.pageX;
+    const leftPaneWidth = (mouseX / containerWidth) * 100;
+    const rightPaneWidth = 100 - leftPaneWidth;
 
-  textPane.style.flex = leftPaneWidth;
-  blockPane.style.flex = rightPaneWidth;
+    document.querySelector('.side-view').style.flex = rightPaneWidth;
 
-  Blockly.svgResize(workspace);
+    if (configuration.editor === 'blocks'){
+      blockPane.style.flex = leftPaneWidth;
+    } else if (configuration.editor === 'text') {
+      main.style.flex = leftPaneWidth;
+    }
+
+    Blockly.svgResize(workspace);
+
+  } else {
+    const containerWidth = main.offsetWidth;
+    const mouseX = e.pageX;
+    const leftPaneWidth = (mouseX / containerWidth) * 100;
+    const rightPaneWidth = 100 - leftPaneWidth;
+
+    textPane.style.flex = leftPaneWidth;
+    blockPane.style.flex = rightPaneWidth;
+
+    Blockly.svgResize(workspace);
+  }
+
+
+
 }
 
 function resizeHandlerY(e) {
   if (!isResizing) return;
-
-  const main = document.querySelector('main');
-  const bottom = document.querySelector('#bottom-part');
 
   const containerHeight = document.body.clientHeight;
   const mouseY = e.pageY;
@@ -550,7 +584,7 @@ function resizeHandlerY(e) {
   const bottomHeight = 100 - topHeight;
 
   main.style.flex = topHeight + '%';
-  bottom.style.flex = bottomHeight + '%';
+  bottomPart.style.flex = bottomHeight + '%';
 
   Blockly.svgResize(workspace);
 }
@@ -558,17 +592,24 @@ function resizeHandlerY(e) {
 function resizeHandlerBott(e) {
   if (!isResizing) return;
 
-  const output = document.querySelector('.output');
-  const variables = document.querySelector('#Variable-table-container');
-  const bottom = bottomPart;
-
-  const containerWidth = bottom.offsetWidth;
+  const containerWidth = bottomPart.offsetWidth;
   const mouseX = e.pageX;
   const left = (mouseX / containerWidth) * 100;
   const right = 100 - left;
 
   output.style.flex = left;
-  variables.style.flex = right;
+  varContainer.style.flex = right;
+}
+
+function resizeHandlerSideEmbed(e) {
+  const containerHeight = document.querySelector('.side-view').clientHeight;
+  const mouseY = e.pageY;
+  const topHeight = (mouseY / containerHeight) * 100;
+  const bottomHeight = 100 - topHeight;
+
+  output.style.flex = topHeight;
+  varContainer.style.flex = bottomHeight;
+
 }
 
 function setDark() {
@@ -585,6 +626,29 @@ function setLight() {
   textEditor.setTheme('ace/theme/katzenmilch');
 
   document.body.classList.toggle('light-mode');
+}
+
+function debugSettings(value) {
+  if (!value) {
+    debugButton.style.display = 'none';
+    stepButton.style.display = 'none';
+    stopButton.style.display = 'none';
+  } else {
+    debugButton.style.display = 'inline-flex';
+  }
+}
+
+function toggleEditor(value) {
+  if (!value) { // blocks on
+    blockPane.style.display = 'block';
+    textPane.style.display = 'none';
+  } else {
+   // text on (default)
+   blockPane.style.display = 'none';
+   textPane.style.display = 'block';
+  }
+
+  Blockly.svgResize(workspace);
 }
 
 
@@ -657,51 +721,32 @@ function synchronizeToConfiguration() {
     // document.querySelector('header').style.display = 'none';
     // Embeds in the CodeVA Canvas are in high contrast.
     // Let's go with dark mode for the time being.
-    setDark();
-    showTextOnly();
+    // setDark();
+
+    blockPane.style.display = 'none'
+    debugSettings(false); // turn off debug for default embed
+  }
+
+  // buttons
+  if (configuration.button === 'debug') {
+    runButton.style.display = 'none';
+    debugSettings(true);
+  } else if (configuration.button === 'both') {
+    runButton.style.display = 'inline-flex';
+    debugSettings(true);
   }
 
   // editor
-  if (configuration.editor === 'blocks') {
-    showBlocksOnly();
-  } else if (configuration.editor === 'both') {
-    textEditor.resize();
-    Blockly.svgResize(workspace);
-  } else { // text
-    showTextOnly();
-  }
-
-  // button
-  if (configuration.button === 'debug') {
-    debugButton.style.display = 'block';
-    runButton.style.display = 'none';
-  } else if (configuration.button === 'both') {
-    runButton.style.display = 'block';
-    debugButton.style.display = 'block';
-  } else { // run
-    runButton.style.display = 'block';
-    debugButton.style.display = 'none';
-  }
-
-  // result
-  if (configuration.result === 'vars') {
-    document.querySelector('#Variable-table-container').style.display = 'block';
-    document.querySelector('.output').style.display = 'none';
-  } else if (configuration.result === 'both') {
-    document.querySelector('.output').style.display = 'block';
-    resizeBarBott.style.display = 'block';
-    document.querySelector('#Variable-table-container').style.display = 'block';
-  } else { // output
-    document.querySelector('.output').style.display = 'block';
-    document.querySelector('#Variable-table-container').style.display = 'none';
+  if (configuration.editor === 'text'){
+    toggleEditor(true);
+  } else if (configuration.editor === 'blocks') {
+    toggleEditor(false);
   }
 
   // use same font as text editor
   let style = window.getComputedStyle(textPane);
-  let output = document.querySelector('.output');
-  let vartab = document.querySelector('#Variable-table-container');
   output.style.fontFamily = style.fontFamily;
-  vartab.style.fontFamily = style.fontFamily;
+  varContainer.style.fontFamily = style.fontFamily;
 }
 
 function initialize() {

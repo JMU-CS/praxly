@@ -118,11 +118,12 @@ h1 {
   padding: 0;
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
 }
 
-.nav-bar ul li {
+/* .nav-bar ul li {
   margin-left: 5px;
-}
+} */
 
 .nav-bar ul li a {
   text-decoration: none;
@@ -327,15 +328,20 @@ h1 {
   /* Lighter blue color */
 }
 
-/* #info {
-  background-image: url('./images/info.png');
-  background-color: lightskyblue;
-} */
+#info {
+  display: none;
+  /* background-image: url('./images/info.png');
+  background-color: lightskyblue; */
+}
 
 #info:hover {
   background-image: none;
   background-color: rgb(11, 161, 230);
   /* Lighter blue color */
+}
+
+#clearButton:hover {
+  background-color: rgb(91, 88, 88);
 }
 
 
@@ -530,7 +536,7 @@ h1 {
 
 main {
   display: flex;
-  flex-basis: 60%;
+  flex-basis: 15%;
   flex-grow: 1;
   background-color: var(--output-bg-color);
 }
@@ -541,12 +547,13 @@ main {
 }
 
 .resizeBarX {
+  display: block;
   width: 5px;
   cursor: col-resize;
   background-color: #2B5E7D;
 }
 
-.resizeBarY {
+body:not(.embed) .resizeBarY {
   height: 5px;
   cursor: row-resize;
   background-color: #2B5E7D;
@@ -568,7 +575,7 @@ main {
   width: 100%;
 }
 
-#bottom-part {
+body:not(.embed) #bottom-part {
   display: flex;
   /* Add this */
   flex-direction: row-reverse;
@@ -591,6 +598,7 @@ main {
 }
 
 .clearOut {
+  display: none;
   position: absolute;
   font-size: x-large;
   top: 5px;
@@ -598,10 +606,6 @@ main {
   cursor: pointer;
 }
 
-.material-symbols-rounded.trash {
-  color: darkgray;
-  font-size: 36px;
-}
 
 .stdout {
   margin-top: 0;
@@ -675,10 +679,6 @@ main {
   display: none;
 }
 
-.debugOptionsEmbed {
-  display: none;
-}
-
 .debugButton {
   display: block;
 }
@@ -717,33 +717,6 @@ main {
   border: 1px solid var(--text-color); /* 000000 */
   color: var(--text-color);
   padding: 1ex;
-}
-
-#embed-toolbar {
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 999;
-}
-
-body:not(.embed)>#embed-toolbar {
-  display: none;
-}
-
-.embed-button {
-  /* border-radius: 50%; */
-  width: 4em;
-  height: 4em;
-  line-height: 0;
-  /* background-color: transparent; */
-  /* border-color: transparent; */
-}
-
-#embed-toolbar button:hover {
-  background-color: lightgray;
 }
 
 
@@ -812,6 +785,12 @@ body:not(.embed)>#embed-toolbar {
   font-size: 36px;
 }
 
+/* Clear */
+.material-symbols-rounded.clear {
+  color: darkgray;
+  font-size: 34px;
+}
+
 /* toolbox.css*/
 
 /* Makes our label white. */
@@ -849,4 +828,83 @@ body:not(.embed)>#embed-toolbar {
 
 .blocklyTreeIcon {
   visibility: visible;
+}
+
+/* Embed Mode */
+
+body.embed {
+  flex-direction: row;
+}
+
+body.embed .material-symbols-rounded.play {
+  font-size: 30px;
+}
+
+body.embed .material-symbols-rounded.bug {
+  font-size: 25px;
+}
+
+body.embed .material-symbols-rounded.clear {
+  font-size: 25px;
+}
+
+
+.side-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  flex-grow: 1;
+}
+
+.resize-side-view {
+  height: 5px;
+  background-color: #2B5E7D;
+  cursor: row-resize;
+}
+
+#embed-toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  justify-content: flex-end;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+  background-color: #36759C;
+  padding: 5px;
+}
+
+
+body:not(.embed)>#embed-toolbar {
+  display: none;
+}
+
+.embed-button {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 60px; /* 6em */
+  height: 30px; /* 4em */
+  /* line-height: 0; */
+  position: relative;
+  border: none;
+  border-radius: 0.5rem;
+  margin-right: 5px;
+}
+
+#DebugButton.embed-button {
+  width: 70px;
+}
+
+#stepButton.embed-button {
+  width: 70px;
+}
+
+#clearButton.embed-button {
+  width: 65px;
+}
+
+#embed-toolbar button:hover {
+  background-color: lightgray;
 }

@@ -6,23 +6,25 @@ export function showDebug() {
     // let variableTableContainer = document.getElementById('Variable-table-container');
     // variableTableContainer.style.display = 'block';
     for (let button of debugOptions) {
-        button.style.display = 'block';
+        button.style.display = 'inline-flex';
     }
     debugButton.style.display = 'none';
     document.querySelector('#runButton').style.display = 'none';
 }
 
-export function hideDebug(showRunButton) {
+export function hideDebug(embedMode) {
     let debugOptions = document.querySelectorAll('.debugOptions');
     let debug = document.getElementById('debug') ?? document.getElementById('DebugButton');
     let variableTableContainer = document.getElementById('Variable-table-container');
     for (let button of debugOptions) {
         button.style.display = 'none';
     }
-    if (showRunButton) {
-        document.querySelector('#runButton').style.display = 'block';
+    if (!embedMode) {
+        document.querySelector('#runButton').style.display = 'inline-flex';
+    } else if (embedMode && (parameters.get('button') === 'both')){
+        document.querySelector('#runButton').style.display = 'inline-flex';
     }
-    debug.style.display = 'block';
+    debug.style.display = 'inline-flex';
     // variableTableContainer.style.display = 'none';
 
 
@@ -90,5 +92,4 @@ export async function generateVariableTable(environment, level) {
         generateVariableTable(parent, level + 1);
     }
     setStepInto(stepIn);
-
 }

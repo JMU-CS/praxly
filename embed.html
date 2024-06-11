@@ -12,34 +12,51 @@
 
 <body class="embed">
 
-  <div id="embed-toolbar">
-    <button id="runButton" class="embed-button">
-      <span class="material-symbols-rounded play">play_arrow</span>
-      <span class="button-text">Run Program</span>
-    </button>
-    <button id="DebugButton" class="embed-button">
-      <span class="material-symbols-rounded bug">pest_control</span>
-      <span class="button-text">Debug Mode</span>
-    </button>
-    <button id="stepButton" class="debugOptions embed-button">
-      <span class="material-symbols-rounded step">step</span>
-      <span class="button-text">Step Over</span>
-    </button>
-    <button id="stopButton" class="debugOptions embed-button">
-      <span class="material-symbols-rounded stop">stop</span>
-      <span class="button-text">Exit Debug</span>
-    </button>
-  </div>
 
   <main>
     <div id="aceCode" class="codeEditor"></div>
-    <div class="resizeBarX"></div>
     <div id="blocklyDiv"></div>
+    <div class="resizeBarX"></div>
   </main>
 
   <div class="resizeBarY"></div>
 
-  <div id="bottom-part">
+  <div class="side-view">
+
+    <!--Top bar view-->
+    <div id="embed-toolbar">
+      <button id="runButton" class="embed-button">
+        <span class="">Run</span>
+        <span class="material-symbols-rounded play">play_arrow</span>
+      </button>
+      <button id="DebugButton" class="embed-button">
+        <span class="">Debug</span>
+        <span class="material-symbols-rounded bug">pest_control</span>
+      </button>
+      <button id="stepButton" class="debugOptions embed-button">
+        <span class="">Step</span>
+        <span class="material-symbols-rounded step">step</span>
+      </button>
+      <button id="stopButton" class="debugOptions embed-button">
+        <span class="">Exit</span>
+        <span class="material-symbols-rounded stop">stop</span>
+      </button>
+      <button id="clearButton" class="embed-button">
+        <span>Clear</span>
+        <span class="material-symbols-rounded clear">delete</span>
+      </button>
+    </div>
+
+    <!--Output-->
+    <div class="output">
+      <div class="clearOut">🗑</div>
+      <p class="stdout"></p>
+      <p class="stderr"></p>
+    </div>
+
+    <div class="resize-side-view"></div>
+
+    <!--Variables-->
     <div id="Variable-table-container">
       <table id="Variable-table-outer">
         <thead>
@@ -53,12 +70,7 @@
         <tbody id="Variable-table"></tbody>
       </table>
     </div>
-    <div class="resizeBarBott"></div>
-    <div class="output">
-      <div class="clearOut">🗑</div>
-      <p class="stdout"></p>
-      <p class="stderr"></p>
-    </div>
+
   </div>
 
   <script src="./src/main.js" type="module"></script>
