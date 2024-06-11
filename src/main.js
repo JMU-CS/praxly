@@ -9,7 +9,7 @@ import { makeGenerator } from './blocks2tree';
 import { blocks2tree } from './blocks2tree';
 import { createExecutable } from './ast';
 
-import "ace-builds/src-min-noconflict/theme-twilight";
+import "ace-builds/src-min-noconflict/theme-dracula";
 import "ace-builds/src-min-noconflict/theme-katzenmilch";
 import { tree2blocks } from './tree2blocks';
 import { text2tree } from './text2tree';
@@ -574,7 +574,7 @@ function resizeHandlerBott(e) {
 function setDark() {
   darkMode = true;
   workspace.setTheme(PraxlyDark);
-  textEditor.setTheme("ace/theme/twilight");
+  textEditor.setTheme("ace/theme/dracula");
 
   document.body.classList.toggle('light-mode', false);
 }
@@ -615,7 +615,7 @@ function initializeBlockly() {
     renderer: 'zelos'
   });
   // darkMode ? setLight() : setDark();
-  darkMode ? textEditor.setTheme("ace/theme/twilight") : textEditor.setTheme('ace/theme/katzenmilch');
+  darkMode ? textEditor.setTheme("ace/theme/dracula") : textEditor.setTheme('ace/theme/katzenmilch');
   definePraxlyBlocks(workspace);
 }
 
