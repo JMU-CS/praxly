@@ -2,7 +2,7 @@ import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stop
 
 export function showDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
-    let debugButton = document.getElementById('debug') ?? document.getElementById('DebugButton');
+    let debugButton = document.getElementById('debug') ?? document.getElementById('debugButton');
     for (let button of debugOptions) {
         button.style.display = 'inline-flex';
     }
@@ -12,7 +12,7 @@ export function showDebug() {
 
 export function hideDebug(configuration) {
     let debugOptions = document.querySelectorAll('.debugOptions');
-    let debug = document.getElementById('debug') ?? document.getElementById('DebugButton');
+    let debug = document.getElementById('debug') ?? document.getElementById('debugButton');
     for (let button of debugOptions) {
         button.style.display = 'none';
     }

@@ -196,12 +196,12 @@ h1 {
   background-color: green;
 } */
 
-/* #DebugButton {
+/* #debugButton {
   background-color: rgb(79, 5, 163);
   background-image: url('./images/bug44.png');
 } */
 
-#DebugButton:hover {
+#debugButton:hover {
   background-image: none;
   background-color: #8f45f6;
 }
@@ -741,14 +741,14 @@ body:not(.embed) #bottom-part {
   direction: ltr;
 }
 
-/* Run Code */
-.material-symbols-rounded.play {
+/* runButton */
+.material-symbols-rounded.run {
   color: green;
   font-size: 36px;
 }
 
-/* Debug Mode */
-.material-symbols-rounded.bug {
+/* debugButton */
+.material-symbols-rounded.debug {
   color: var(--debug-color);
   font-size: 30px;
   transform: rotate(-45deg);
@@ -774,20 +774,20 @@ body:not(.embed) #bottom-part {
   font-size: 36px;
 }
 
-/* Step */
+/* stepButton */
 .material-symbols-rounded.step {
   color: rgb(10, 239, 147);
   font-size: 36px;
 }
 
-/* Stop */
+/* stopButton */
 .material-symbols-rounded.stop {
   color: var(--stop-color);
   font-size: 36px;
 }
 
-/* Clear */
-.material-symbols-rounded.clear {
+/* resetButton */
+.material-symbols-rounded.reset {
   color: darkgray;
   font-size: 34px;
 }
@@ -837,15 +837,23 @@ body.embed {
   flex-direction: row;
 }
 
-body.embed .material-symbols-rounded.play {
+body.embed .material-symbols-rounded.run {
   font-size: 30px;
 }
 
-body.embed .material-symbols-rounded.bug {
+body.embed .material-symbols-rounded.debug {
   font-size: 25px;
 }
 
-body.embed .material-symbols-rounded.clear {
+body.embed .material-symbols-rounded.step {
+  font-size: 30px;
+}
+
+body.embed .material-symbols-rounded.stop {
+  font-size: 30px;
+}
+
+body.embed .material-symbols-rounded.reset {
   font-size: 25px;
 }
 
@@ -894,7 +902,7 @@ body:not(.embed)>#embed-toolbar {
   margin-right: 5px;
 }
 
-#DebugButton.embed-button {
+#debugButton.embed-button {
   width: 70px;
 }
 

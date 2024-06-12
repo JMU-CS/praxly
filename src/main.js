@@ -240,7 +240,6 @@ function registerListeners() {
     });
 
     resetButton.addEventListener('click', reset);
-
   }
 
   runButton.addEventListener('click', runTasks);
@@ -329,9 +328,7 @@ function registerListeners() {
     setDebugMode(true);
   });
 
-
 }
-
 
 
 let isTextOn = true;
@@ -474,9 +471,9 @@ function reset() {
     // see if the current URL is different from the original URL
     if (window.location.href !== originalUrl) {
       window.location.href = originalUrl;
-  } else {
+    } else {
       window.location.reload(); // reload the page if the URL hasn't changed
-  }
+    }
   }
 }
 
@@ -589,7 +586,7 @@ function resizeHandlerX(e) {
 
     document.querySelector('.side-view').style.flex = rightPaneWidth;
 
-    if (configuration.editor === 'blocks'){
+    if (configuration.editor === 'blocks') {
       blockPane.style.flex = leftPaneWidth;
     } else if (configuration.editor === 'text') {
       main.style.flex = leftPaneWidth;
@@ -681,9 +678,9 @@ function toggleEditor(value) {
     blockPane.style.display = 'block';
     textPane.style.display = 'none';
   } else {
-   // text on (default)
-   blockPane.style.display = 'none';
-   textPane.style.display = 'block';
+    // text on (default)
+    blockPane.style.display = 'none';
+    textPane.style.display = 'block';
   }
 
   Blockly.svgResize(workspace);
@@ -775,7 +772,7 @@ function synchronizeToConfiguration() {
   }
 
   // editor
-  if (configuration.editor === 'text'){
+  if (configuration.editor === 'text') {
     toggleEditor(true);
   } else if (configuration.editor === 'blocks') {
     toggleEditor(false);

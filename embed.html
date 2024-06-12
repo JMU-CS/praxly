@@ -12,42 +12,41 @@
 
 <body class="embed">
 
-
   <main>
     <div id="aceCode" class="codeEditor"></div>
     <div id="blocklyDiv"></div>
-    <div class="resizeBarX"></div>
   </main>
 
+  <div class="resizeBarX"></div>
   <div class="resizeBarY"></div>
 
   <div class="side-view">
 
-    <!--Top bar view-->
+    <!-- Toolbar -->
     <div id="embed-toolbar">
       <button id="runButton" class="embed-button">
-        <span class="">Run</span>
-        <span class="material-symbols-rounded play">play_arrow</span>
+        Run
+        <span class="material-symbols-rounded run">play_arrow</span>
       </button>
-      <button id="DebugButton" class="embed-button">
-        <span class="">Debug</span>
-        <span class="material-symbols-rounded bug">pest_control</span>
+      <button id="debugButton" class="embed-button">
+        Debug
+        <span class="material-symbols-rounded debug">pest_control</span>
       </button>
-      <button id="stepButton" class="debugOptions embed-button">
-        <span class="">Step</span>
+      <button id="stepButton" class="embed-button debugOptions">
+        Step
         <span class="material-symbols-rounded step">step</span>
       </button>
-      <button id="stopButton" class="debugOptions embed-button">
-        <span class="">Exit</span>
+      <button id="stopButton" class="embed-button debugOptions">
+        Exit
         <span class="material-symbols-rounded stop">stop</span>
       </button>
       <button id="resetButton" class="embed-button">
-        <span>Reset</span>
-        <span class="material-symbols-rounded clear">delete</span>
+        Reset
+        <span class="material-symbols-rounded reset">restart_alt</span>
       </button>
     </div>
 
-    <!--Output-->
+    <!-- Output -->
     <div class="output">
       <div class="clearOut">🗑</div>
       <p class="stdout"></p>
@@ -56,7 +55,7 @@
 
     <div class="resize-side-view"></div>
 
-    <!--Variables-->
+    <!--Variables -->
     <div id="Variable-table-container">
       <table id="Variable-table-outer">
         <thead>
