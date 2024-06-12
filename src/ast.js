@@ -947,7 +947,7 @@ class Praxly_codeBlock {
                 }
                 textEditor.session.removeMarker(markerId);
                 if (getStopClicked()) {
-                    break;
+                    throw new Error("Stop_Debug");
                 }
             }
             await element.evaluate(environment);

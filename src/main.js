@@ -306,6 +306,7 @@ function registerListeners() {
 
   debugButton.addEventListener('mouseup', function () {
     // comingSoon();
+    setStopClicked(false);
     showDebug();
     setDebugMode(true);
     runTasks();
@@ -316,17 +317,17 @@ function registerListeners() {
     hideDebug(configuration);
     setDebugMode(false);
     setStepInto(false);
-    stepButton.click();
+    stepButton.click();  // in case awaiting
   });
 
 
-  stepButton.addEventListener('mouseup', function () {
-    // comingSoon();
-    if (!getDebugMode()) {
-      endDebugPrompt();
-    }
-    setDebugMode(true);
-  });
+//   stepButton.addEventListener('mouseup', function () {
+//     // comingSoon();
+//     if (!getDebugMode()) {
+//       endDebugPrompt();
+//     }
+//     setDebugMode(true);
+//   });
 
 }
 
@@ -507,15 +508,17 @@ async function runTasks() {
   const executable = createExecutable(mainTree);
   try {
     await executable.evaluate();
-    setDebugMode(false);
+    stopButton.click();
   } catch (error) {
-
-    // if not previously handled (by PraxlyError)
-    if (!errorOutput) {
+    if (error.message === "Stop_Debug") {
+      // special case: abort running (not an error)
+    } else if (!errorOutput) {
+      // if not previously handled (by PraxlyError)
       defaultError(error);
       console.error(error);
     }
   }
+
   // stdOut.innerHTML = printBuffer;
   if (errorOutput) {
     textEditor.session.setAnnotations(annotationsBuffer);
@@ -536,10 +539,7 @@ export function turnCodeToBLocks() {
   // I need to make the listeners only be one at a time to prevent an infinite loop.
   workspace.removeChangeListener(onBlocklyChange);
   if (getDebugMode()) {
-    setDebugMode(false);
-    setStepInto(false);
-    stepButton.click();
-
+    stopButton.click();
   }
   clearOutput();
   clearErrors();
