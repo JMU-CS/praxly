@@ -16,7 +16,7 @@ import { text2tree } from './text2tree';
 import { generateUrl, loadFromUrl } from './share';
 
 import { codeText } from './examples';
-import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
+import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor, setStopClicked } from './common';
 import { hideDebug, showDebug } from './debugger';
 
 let runButton;
@@ -313,6 +313,7 @@ function registerListeners() {
   });
 
   stopButton.addEventListener('click', function () {
+    setStopClicked(true);
     hideDebug(configuration);
     setDebugMode(false);
     setStepInto(false);
@@ -466,13 +467,22 @@ function clear() {
 const originalUrl = window.location.href;
 
 function reset() {
+  if (getDebugMode()) {
+    clear(); // clear output/vars
+    hideDebug(configuration); // exit mode
+  } else {
     // see if the current URL is different from the original URL
     if (window.location.href !== originalUrl) {
-        window.location.href = originalUrl;
-    } else {
-        window.location.reload(); // reload the page if the URL hasn't changed
-    }
+      window.location.href = originalUrl;
+  } else {
+      window.location.reload(); // reload the page if the URL hasn't changed
+  }
+  }
 }
+
+/**
+ * in debug mode and click reset, exit debug mode, clear the output/variables, and when you go to start debugging again it should start from the beginning  (there will be no pop up if debug mode is on
+ */
 
 function resetFunctionality() {
   // debug mode : stop debugging, then rest

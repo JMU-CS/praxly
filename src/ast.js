@@ -1,5 +1,5 @@
 
-import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs, highlightLine, getDebugMode, highlightAstNode, textEditor, setStepInto, getStepInto } from "./common";
+import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs, highlightLine, getDebugMode, highlightAstNode, textEditor, setStepInto, getStepInto, stopButton, getStopClicked } from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
 
 var SCOPES = {};
@@ -946,6 +946,9 @@ class Praxly_codeBlock {
                     await waitForStep();
                 }
                 textEditor.session.removeMarker(markerId);
+                if (getStopClicked()) {
+                    break;
+                }
             }
             await element.evaluate(environment);
             setStepInto(false);

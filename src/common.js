@@ -301,6 +301,15 @@ export function getStepInto() {
     return stepInto;
 }
 
+let stopClicked = false;
+export function setStopClicked(value) {
+    stopClicked = value;
+}
+
+export function getStopClicked() {
+    return stopClicked;
+}
+
 export const textEditor = ace.edit("aceCode", {
   fontSize: 19,
   mode: 'ace/mode/praxly',
