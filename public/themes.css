@@ -52,6 +52,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  user-select: none;
 }
 
 body {
@@ -901,7 +902,7 @@ body:not(.embed)>#embed-toolbar {
   width: 70px;
 }
 
-#clearButton.embed-button {
+#resetButton.embed-button {
   width: 65px;
 }
 

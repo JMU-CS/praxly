@@ -13,7 +13,7 @@ import "ace-builds/src-min-noconflict/theme-dracula";
 import "ace-builds/src-min-noconflict/theme-katzenmilch";
 import { tree2blocks } from './tree2blocks';
 import { text2tree } from './text2tree';
-import { generateUrl } from './share';
+import { generateUrl, loadFromUrl } from './share';
 
 import { codeText } from './examples';
 import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor } from './common';
@@ -62,6 +62,8 @@ let varContainer;
 let varTable;
 let output;
 let main;
+let resetButton;
+// let currentURI;
 
 // make sure this works fine in gui
 export let configuration = {};  // see parseUrlConfiguration()
@@ -97,6 +99,7 @@ function initializeGlobals() {
     toggleBlocks = document.querySelector('#toggle-blocks');
     toggleOutput = document.querySelector('#toggle-output');
     toggleVars = document.querySelector('#toggle-vars');
+    clearButton = document.querySelector('#clearButton');
   } else {
     embedMode = true;
   }
@@ -115,11 +118,12 @@ function initializeGlobals() {
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
   resizeSideInEmbed = document.querySelector('.resize-side-view');
-  clearButton = document.querySelector('#clearButton');
   varContainer = document.querySelector('#Variable-table-container');
   varTable = document.querySelector('#Variable-table');
   output = document.querySelector('.output');
   main = document.querySelector('main');
+  resetButton = document.querySelector('#resetButton');
+  // currentURI = generateUrl();
 
 }
 
@@ -130,6 +134,8 @@ function registerListeners() {
       var linkUrl = 'pseudocode.html';
       window.open(linkUrl, '_blank');
     });
+
+    clearButton.addEventListener('click', clear);
 
     bugButton.addEventListener('click', function () {
       window.open("BugsList.html", '_blank');
@@ -232,10 +238,12 @@ function registerListeners() {
       isResizing = false;
       document.removeEventListener('mousemove', resizeHandlerSideEmbed);
     });
+
+    resetButton.addEventListener('click', reset);
+
   }
 
   runButton.addEventListener('click', runTasks);
-  clearButton.addEventListener('click', clear);
   clearOut.addEventListener('click', clear);
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBLocks);
@@ -453,6 +461,26 @@ function clear() {
   stdOut.innerHTML = "";
   stdErr.innerHTML = "";
   varTable.innerHTML = "";
+}
+
+const originalUrl = window.location.href;
+
+function reset() {
+    // see if the current URL is different from the original URL
+    if (window.location.href !== originalUrl) {
+        window.location.href = originalUrl;
+    } else {
+        window.location.reload(); // reload the page if the URL hasn't changed
+    }
+}
+
+function resetFunctionality() {
+  // debug mode : stop debugging, then rest
+  // if (getDebugMode()) {
+  //   hideDebug(configuration);
+  // }
+  // have a pop up
+
 }
 
 
