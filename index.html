@@ -9,23 +9,43 @@
 </head>
 
 <body>
-    <!-- <h1>Praxly Landing Page</h1>
-    <p><a href="embed.html">Embed</a></p>
-    <p><a href="main.html">Main</a></p> -->
 
-    <div class="title"><h1>Welcome to Praxly</h1></div>
-    <div class="about">
-        <p>Praxly is an web-based IDE that empowers users to read, write, and run the pseudocode used in the
-        CS Praxis Test. Praxly supports bidirectional synchronization between both block-based and text-based editors,
-        allowing users to learn and visualize the code while also offering the efficiency of editing text. The text
-        editor uses Ace, and the block editor uses Blockly.</p>
-    </div>
-    <div class="button-container">
-        <button class="praxly-button "></button>
-        <button class="github-button"></button>
-        <button class="emebed-mode"></button>
-    </div>
-    <div class="picture"></div>
+    <div class="container">
+
+        <h1>Welcome to Praxly</h1>
+
+        <div class="about">
+            <p>Praxly is an web-based IDE that empowers users to read, write, and run the pseudocode used in the
+                CS Praxis Test. Praxly supports bidirectional synchronization between both block-based and text-based
+                editors,
+                allowing users to learn and visualize the code while also offering the efficiency of editing text. The
+                text
+                editor uses Ace, and the block editor uses Blockly.</p>
+        </div>
+        <div class="button-container">
+            <button class="praxly-button ">Start Coding</button>
+            <button class="github-button">GitHub Page</button>
+            <button class="embed-mode">Use Praxly Embeded</button>
+        </div>
+        <iframe src="main.html" frameborder="0"></iframe>
+
+    <script>
+        const praxlyButton = document.querySelector('.praxly-button');
+        const githubButton = document.querySelector('.github-button');
+        const embedButton = document.querySelector(".embed-mode");
+
+        praxlyButton.addEventListener('click', function () {
+            window.open("main.html", "_blank");
+        });
+
+        githubButton.addEventListener('click', function () {
+            window.open("https://github.com/sauppb/praxly", '_blank');
+        });
+
+        embedButton.addEventListener('click', function () {
+            window.open("embed.html", "_blank");
+        });
+    </script>
 </body>
 
 </html>
