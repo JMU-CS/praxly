@@ -748,7 +748,7 @@ body:not(.embed) #bottom-part {
 }
 
 /* debugButton */
-.material-symbols-rounded.debug {
+.material-symbols-rounded.bug {
   color: var(--debug-color);
   font-size: 30px;
   transform: rotate(-45deg);

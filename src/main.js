@@ -495,6 +495,7 @@ function reset() {
       window.location.href = originalUrl;
     } else {
       textEditor.setValue(configuration.code, 1); // reload the page if the URL hasn't changed
+      clear();
     }
   }
 }
