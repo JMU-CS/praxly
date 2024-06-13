@@ -16,7 +16,7 @@ export function hideDebug(configuration) {
     for (let button of debugOptions) {
         button.style.display = 'none';
     }
-    if (!configuration.embed || configuration.button === 'both') {
+    if (configuration.embed || configuration.button === 'both') {
         document.querySelector('#runButton').style.display = 'inline-flex';
     }
     debug.style.display = 'inline-flex';

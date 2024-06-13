@@ -488,7 +488,6 @@ function reset() {
   if (getDebugMode()) {
     stopButton.click();
     clear(); // clear output/vars
-    // hideDebug(configuration); // exit mode
   } else {
     // see if the current URL is different from the original URL
     if (window.location.href !== originalUrl) {
