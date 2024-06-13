@@ -63,7 +63,7 @@ let varTable;
 let output;
 let main;
 let resetButton;
-// let currentURI;
+let debugModal;
 
 // make sure this works fine in gui
 export let configuration = {};  // see parseUrlConfiguration()
@@ -123,6 +123,7 @@ function initializeGlobals() {
   output = document.querySelector('.output');
   main = document.querySelector('main');
   resetButton = document.querySelector('#resetButton');
+  debugModal = document.querySelector('.debugModal');
 
 }
 
@@ -461,10 +462,15 @@ function clear() {
   varTable.innerHTML = "";
 }
 
+function showDebugModal() {
+  debugModal.style.display = 'block';
+}
+
 const originalUrl = window.location.href;
 
 function reset() {
   if (getDebugMode()) {
+    showDebugModal();
     stopButton.click();
     clear(); // clear output/vars
     // hideDebug(configuration); // exit mode
@@ -477,20 +483,6 @@ function reset() {
     }
   }
 }
-
-/**
- * in debug mode and click reset, exit debug mode, clear the output/variables, and when you go to start debugging again it should start from the beginning  (there will be no pop up if debug mode is on
- */
-
-function resetFunctionality() {
-  // debug mode : stop debugging, then rest
-  // if (getDebugMode()) {
-  //   hideDebug(configuration);
-  // }
-  // have a pop up
-
-}
-
 
 
 /**
