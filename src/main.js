@@ -64,6 +64,8 @@ let output;
 let main;
 let resetButton;
 let debugModal;
+let yesButton;
+let noButton;
 
 // make sure this works fine in gui
 export let configuration = {};  // see parseUrlConfiguration()
@@ -124,6 +126,8 @@ function initializeGlobals() {
   main = document.querySelector('main');
   resetButton = document.querySelector('#resetButton');
   debugModal = document.querySelector('.debugModal');
+  yesButton = document.querySelector('#yes');
+  noButton = document.querySelector('#no');
 
 }
 
@@ -239,7 +243,10 @@ function registerListeners() {
       document.removeEventListener('mousemove', resizeHandlerSideEmbed);
     });
 
-    resetButton.addEventListener('click', reset);
+    resetButton.addEventListener('click', showDebugModal);
+
+    // yesButton.addEventListener('click', answerClicked(true));
+    // noButton.addEventListener('click', answerClicked(false));
   }
 
   runButton.addEventListener('click', runTasks);
@@ -321,13 +328,13 @@ function registerListeners() {
   });
 
 
-//   stepButton.addEventListener('mouseup', function () {
-//     // comingSoon();
-//     if (!getDebugMode()) {
-//       endDebugPrompt();
-//     }
-//     setDebugMode(true);
-//   });
+  //   stepButton.addEventListener('mouseup', function () {
+  //     // comingSoon();
+  //     if (!getDebugMode()) {
+  //       endDebugPrompt();
+  //     }
+  //     setDebugMode(true);
+  //   });
 
 }
 
@@ -463,14 +470,22 @@ function clear() {
 }
 
 function showDebugModal() {
-  debugModal.style.display = 'block';
+  debugModal.style.display = 'flex';
+
+  yesButton.addEventListener('click', function() {
+    debugModal.style.display = 'none';
+    reset();
+  });
+
+  noButton.addEventListener('click', function () {
+    debugModal.style.display = 'none';
+  })
 }
 
 const originalUrl = window.location.href;
 
 function reset() {
   if (getDebugMode()) {
-    showDebugModal();
     stopButton.click();
     clear(); // clear output/vars
     // hideDebug(configuration); // exit mode
@@ -479,10 +494,11 @@ function reset() {
     if (window.location.href !== originalUrl) {
       window.location.href = originalUrl;
     } else {
-      textEditor.setValue(configuration.code , 1); // reload the page if the URL hasn't changed
+      textEditor.setValue(configuration.code, 1); // reload the page if the URL hasn't changed
     }
   }
 }
+
 
 
 /**
