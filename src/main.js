@@ -501,22 +501,18 @@ function reset() {
 }
 
 
-
 /**
  * this function gets called every time the run button is pressed.
  */
 async function runTasks() {
   // console.log("runTasks");
-
   clear();
-
-  if (!textEditor.getValue().trim()) {
-    alert('there is nothing to run :( \n try typing some code or dragging some blocks first.');
-    return;
-  }
-  const executable = createExecutable(mainTree);
   try {
-    await executable.evaluate();
+    // compile/run only if not blank
+    if (textEditor.getValue().trim()) {
+      const executable = createExecutable(mainTree);
+      await executable.evaluate();
+    }
     stopButton.click();
   } catch (error) {
     if (error.message === "Stop_Debug") {
@@ -674,29 +670,18 @@ function setLight() {
   document.body.classList.toggle('light-mode');
 }
 
-function debugSettings(value) {
-  if (!value) {
-    debugButton.style.display = 'none';
-    stepButton.style.display = 'none';
-    stopButton.style.display = 'none';
-  } else {
-    debugButton.style.display = 'inline-flex';
-  }
-}
-
 function toggleEditor(value) {
-  if (!value) { // blocks on
-    blockPane.style.display = 'block';
-    textPane.style.display = 'none';
-  } else {
+  if (value) {
     // text on (default)
     blockPane.style.display = 'none';
     textPane.style.display = 'block';
+  } else {
+    // blocks on
+    blockPane.style.display = 'block';
+    textPane.style.display = 'none';
   }
-
   Blockly.svgResize(workspace);
 }
-
 
 
 function endDebugPrompt() {
@@ -747,7 +732,7 @@ function parseUrlConfiguration() {
 
   // Configure according to the ?key1=value1&key2 parameters.
   parameters = new URLSearchParams(window.location.search);
-  configuration.embed = window.location.pathname.includes("embed") || parameters.has('embed');
+  configuration.embed = window.location.pathname.includes("embed");
   const defaultEditor = configuration.embed ? 'text' : 'both';
   const defaultButton = configuration.embed ? 'run' : 'both';
   const defaultResult = configuration.embed ? 'output' : 'both';
@@ -762,31 +747,28 @@ function synchronizeToConfiguration() {
     textEditor.setValue(configuration.code, 1);
   }
 
-  if (configuration.embed) {
-    document.body.classList.add('embed');
-    // document.querySelector('header').style.display = 'none';
-    // Embeds in the CodeVA Canvas are in high contrast.
-    // Let's go with dark mode for the time being.
-    // setDark();
-
-    blockPane.style.display = 'none'
-    debugSettings(false); // turn off debug for default embed
-  }
+  stepButton.style.display = 'none';
+  stopButton.style.display = 'none';
 
   // buttons
-  if (configuration.button === 'debug') {
-    runButton.style.display = 'none';
-    debugSettings(true);
-  } else if (configuration.button === 'both') {
+  if (configuration.button === 'both') {
     runButton.style.display = 'inline-flex';
-    debugSettings(true);
+    debugButton.style.display = 'inline-flex';
+  } else if (configuration.button === 'debug') {
+    runButton.style.display = 'none';
+    debugButton.style.display = 'inline-flex';
+  } else {
+    runButton.style.display = 'inline-flex';
+    debugButton.style.display = 'none';
   }
 
-  // editor
-  if (configuration.editor === 'text') {
-    toggleEditor(true);
+  // editors
+  if (configuration.editor === 'both') {
+    showTextAndBlocks();
   } else if (configuration.editor === 'blocks') {
     toggleEditor(false);
+  } else {
+    toggleEditor(true);
   }
 
   // use same font as text editor
