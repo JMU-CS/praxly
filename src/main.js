@@ -123,7 +123,6 @@ function initializeGlobals() {
   output = document.querySelector('.output');
   main = document.querySelector('main');
   resetButton = document.querySelector('#resetButton');
-  // currentURI = generateUrl();
 
 }
 
@@ -466,14 +465,15 @@ const originalUrl = window.location.href;
 
 function reset() {
   if (getDebugMode()) {
+    stopButton.click();
     clear(); // clear output/vars
-    hideDebug(configuration); // exit mode
+    // hideDebug(configuration); // exit mode
   } else {
     // see if the current URL is different from the original URL
     if (window.location.href !== originalUrl) {
       window.location.href = originalUrl;
     } else {
-      window.location.reload(); // reload the page if the URL hasn't changed
+      textEditor.setValue(configuration.code , 1); // reload the page if the URL hasn't changed
     }
   }
 }
@@ -512,6 +512,8 @@ async function runTasks() {
   } catch (error) {
     if (error.message === "Stop_Debug") {
       // special case: abort running (not an error)
+      reset();
+      // exit debug, clear output/vars, restart debugger
     } else if (!errorOutput) {
       // if not previously handled (by PraxlyError)
       defaultError(error);
