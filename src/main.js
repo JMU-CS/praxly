@@ -472,7 +472,7 @@ function clear() {
 function showDebugModal() {
   debugModal.style.display = 'flex';
 
-  yesButton.addEventListener('click', function() {
+  yesButton.addEventListener('click', function () {
     debugModal.style.display = 'none';
     reset();
   });
@@ -674,10 +674,14 @@ function toggleEditor(value) {
     // text on (default)
     blockPane.style.display = 'none';
     textPane.style.display = 'block';
+    configuration.main ? resizeBarX.style.display = 'none' : null;
+    // add toggle change
   } else {
     // blocks on
     blockPane.style.display = 'block';
     textPane.style.display = 'none';
+    configuration.main ? resizeBarX.style.display = 'none' : null;
+    // add toggle change
   }
   Blockly.svgResize(workspace);
 }
@@ -732,6 +736,7 @@ function parseUrlConfiguration() {
   // Configure according to the ?key1=value1&key2 parameters.
   parameters = new URLSearchParams(window.location.search);
   configuration.embed = window.location.pathname.includes("embed");
+  configuration.main = window.location.pathname.includes("main");
   const defaultEditor = configuration.embed ? 'text' : 'both';
   const defaultButton = configuration.embed ? 'run' : 'both';
   const defaultResult = configuration.embed ? 'output' : 'both';
@@ -745,7 +750,6 @@ function synchronizeToConfiguration() {
   if (configuration.code) {
     textEditor.setValue(configuration.code, 1);
   }
-
   stepButton.style.display = 'none';
   stopButton.style.display = 'none';
 
@@ -770,6 +774,22 @@ function synchronizeToConfiguration() {
     toggleEditor(true);
   }
 
+  // result
+  if (configuration.result === 'both') {
+    output.style.display = 'block';
+    varContainer.style.display = 'block'
+    resizeSideInEmbed ? resizeSideInEmbed.style.display = 'flex' : null;
+  } else if (configuration.result === 'vars') {
+    output.style.display = 'none';
+    varContainer.style.display = 'block'
+    resizeSideInEmbed ? resizeSideInEmbed.style.display = 'none' : null;
+    configuration.main ? resizeBarBott.style.display = 'none' : null;
+  } else {
+    output.style.display = 'block';
+    varContainer.style.display = 'none'
+    resizeSideInEmbed ? resizeSideInEmbed.style.display = 'none' : null;
+    configuration.main ? resizeBarBott.style.display = 'none' : null;
+  }
   // use same font as text editor
   let style = window.getComputedStyle(textPane);
   output.style.fontFamily = style.fontFamily;
