@@ -244,9 +244,6 @@ function registerListeners() {
     });
 
     resetButton.addEventListener('click', showDebugModal);
-
-    // yesButton.addEventListener('click', answerClicked(true));
-    // noButton.addEventListener('click', answerClicked(false));
   }
 
   runButton.addEventListener('click', runTasks);
@@ -512,7 +509,6 @@ async function runTasks() {
       const executable = createExecutable(mainTree);
       await executable.evaluate();
     }
-    stopButton.click();
   } catch (error) {
     if (error.message === "Stop_Debug") {
       // special case: abort running (not an error)
@@ -676,23 +672,28 @@ function toggleEditor(value) {
     textPane.style.display = 'block';
 
     // add toggle change
-    isTextOn = false;
-    toggleTextOn();
-    configuration.main ? resizeBarX.style.display = 'none' : null;
-    isBlocksOn = true;
-    toggleBlocksOn();
+    if (configuration.main) {
+      isTextOn = false;
+      toggleTextOn();
+      resizeBarX.style.display = 'none';
+      isBlocksOn = true;
+      toggleBlocksOn();
+    }
   } else {
     // blocks on
     blockPane.style.display = 'block';
     textPane.style.display = 'none';
 
     // add toggle change
-    isBlocksOn = false;
-    toggleBlocksOn();
-    configuration.main ? resizeBarX.style.display = 'none' : null;
-    isTextOn = true;
-    toggleTextOn();
+    if (configuration.main) {
+      isBlocksOn = false;
+      toggleBlocksOn();
+      configuration.main ? resizeBarX.style.display = 'none' : null;
+      isTextOn = true;
+      toggleTextOn();
+    }
   }
+
   Blockly.svgResize(workspace);
 }
 

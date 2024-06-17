@@ -939,7 +939,9 @@ body:not(.embed)>#embed-toolbar {
   width: 80%;
   padding: 50px;
   color: black;
+  border-radius: 1em;
 }
+
 
 .answerOptions {
   display: flex;
