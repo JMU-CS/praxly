@@ -344,7 +344,7 @@ function toggleTextOn() {
   isTextOn = !isTextOn;
 
   if (isTextOn) {
-    textPane.style.display = 'block'
+    textPane.style.display = 'block';
     resizeBarX.style.display = 'block';
     toggleText.style.backgroundColor = 'black';
   } else {
@@ -674,14 +674,24 @@ function toggleEditor(value) {
     // text on (default)
     blockPane.style.display = 'none';
     textPane.style.display = 'block';
-    configuration.main ? resizeBarX.style.display = 'none' : null;
+
     // add toggle change
+    isTextOn = false;
+    toggleTextOn();
+    configuration.main ? resizeBarX.style.display = 'none' : null;
+    isBlocksOn = true;
+    toggleBlocksOn();
   } else {
     // blocks on
     blockPane.style.display = 'block';
     textPane.style.display = 'none';
-    configuration.main ? resizeBarX.style.display = 'none' : null;
+
     // add toggle change
+    isBlocksOn = false;
+    toggleBlocksOn();
+    configuration.main ? resizeBarX.style.display = 'none' : null;
+    isTextOn = true;
+    toggleTextOn();
   }
   Blockly.svgResize(workspace);
 }
