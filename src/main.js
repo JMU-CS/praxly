@@ -74,16 +74,12 @@ export let workspace;
 let praxlyGenerator;
 let mainTree;
 let darkMode = true;
-let isResizing = false;
 let isResizingHoriz = false;
 let isResizingVert = false;
-let varsOn, outputOn = false;
-export let embedMode;
 export let parameters;
 
 function initializeGlobals() {
   if (!configuration.embed) {
-    embedMode = false;
     darkModeButton = document.getElementById('darkMode');
     settingsButton = document.getElementById("settings");
     modal = document.getElementById("myModal");
@@ -104,8 +100,6 @@ function initializeGlobals() {
     toggleOutput = document.querySelector('#toggle-output');
     toggleVars = document.querySelector('#toggle-vars');
     clearButton = document.querySelector('#clearButton');
-  } else {
-    embedMode = true;
   }
   runButton = document.getElementById('runButton');
   shareButton = document.getElementById('share');
@@ -134,7 +128,7 @@ function initializeGlobals() {
 }
 
 function registerListeners() {
-  if (!embedMode) { // if embed mode is not on, add usual listeners
+  if (!configuration.embed) { // if embed mode is not on, add usual listeners
     darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
     manualButton.addEventListener('click', function () {
       var linkUrl = 'pseudocode.html';
@@ -164,10 +158,7 @@ function registerListeners() {
     });
 
     titleRefresh.addEventListener('click', function () {
-      clearOutput();
-      clearErrors();
-      stdOut.innerHTML = "";
-      stdErr.innerHTML = "";
+      clear();
       window.location.hash = '';
       textEditor.setValue('', -1);
       textPane.click();
@@ -797,9 +788,9 @@ function initialize() {
   initializeGlobals();
   praxlyGenerator = makeGenerator();
   initializeBlockly();
-  !embedMode && (darkmodediv.style.display = 'none');  // TODO remove or move div
+  !configuration.embed && (darkmodediv.style.display = 'none');  // TODO remove or move div
   registerListeners();
-  !embedMode && generateExamples(); // generate examples if its not in embed mode
+  !configuration.embed && generateExamples(); // generate examples if its not in embed mode
   synchronizeToConfiguration();
 }
 

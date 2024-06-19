@@ -122,10 +122,6 @@ h1 {
   justify-content: space-evenly;
 }
 
-/* .nav-bar ul li {
-  margin-left: 5px;
-} */
-
 .nav-bar ul li a {
   text-decoration: none;
 }
@@ -157,19 +153,6 @@ h1 {
   display: none;
 }
 
-/* #runButton::before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid white;
-    left: 40%; /* Adjusted value */
-/* top: 50%;
-    transform: translateY(-50%);
-    transition: none; /* Removed transition property */
-*/ */
 
 .MainMenu-button {
   display: flex;
@@ -192,24 +175,11 @@ h1 {
   display: none;
 }
 
-/* #runButton {
-  background-color: green;
-} */
-
-/* #debugButton {
-  background-color: rgb(79, 5, 163);
-  background-image: url('./images/bug44.png');
-} */
-
 #debugButton:hover {
   background-image: none;
   background-color: #8f45f6;
 }
 
-/* #stepButton {
-  background-color: rgb(10, 239, 147);
-  background-image: url('./images/ladder45.png');
-} */
 
 #stepButton:hover {
   background-image: none;
@@ -227,10 +197,7 @@ h1 {
   background-color: #a8ba25;
 }
 
-/* #stopButton {
-  background-color: rgb(136, 6, 43);
-  background-image: url('./images/stop.png');
-} */
+
 
 #stopButton:hover {
   background-image: none;
@@ -254,9 +221,6 @@ h1 {
   font-size: 30px;
 }
 
-/* #share {
-  background-image: url('./images/sharebuttonicon.png');
-} */
 
 .MainMenu-button {
   display: flex;
@@ -305,9 +269,6 @@ h1 {
 
 
 
-/* #reference {
-  background-image: url('./images/books-icon.png');
-} */
 
 #reference:hover {
   background-image: none;
@@ -331,8 +292,6 @@ h1 {
 
 #info {
   display: none;
-  /* background-image: url('./images/info.png');
-  background-color: lightskyblue; */
 }
 
 #info:hover {
