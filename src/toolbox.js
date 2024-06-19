@@ -86,6 +86,38 @@ export const toolbox = {
           'kind': 'block',
           'type': 'praxly_input_block'
         },
+        {
+          'kind': 'block',
+          'type': 'praxly_random_block'
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_random_int_block',
+          'inputs': {
+            'MAX': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '10',
+                }
+              },
+            },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_random_seed_block',
+          'inputs': {
+            'SEED': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '0',
+                }
+              },
+            },
+          }
+        },
       ]
     },
     {

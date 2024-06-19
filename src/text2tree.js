@@ -45,7 +45,7 @@ class Lexer {
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
     this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
     this.keywords = ["if", "else", "end", "print", "println", "input", "for", "while", 'and', 'or', 'do', 'repeat',
-      'until', 'not', 'return', 'null', 'random', 'randomInt'];
+      'until', 'not', 'return', 'null', 'random', 'randomInt', 'randomSeed'];
     this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];
     this.startToken = [0, 0];
     this.currentLine = 0;
@@ -341,6 +341,7 @@ class Parser {
 
   advance() {
     this.i++;
+    return this.tokens[this.i - 1];
   }
 
   parse() {
@@ -599,6 +600,48 @@ class Parser {
             this.tokens[this.i].token_type = NODETYPES.INPUT;
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
+          case 'random': {
+            const randomToken = this.advance();
+            if (this.has('(')) {
+              this.advance();
+              if (this.has(')')) {
+                const rightParenthesisToken = this.advance();
+                return {
+                  blockID: "code",
+                  line,
+                  type: NODETYPES.RANDOM,
+                  startIndex: randomToken.startIndex,
+                  endIndex: rightParenthesisToken.endIndex,
+                };
+              } else {
+                textError('parsing', 'did not detect right parenthesis', line);
+              }
+            } else {
+              textError('parsing', 'did not detect left parenthesis', line);
+            }
+          }
+          case 'randomInt': {
+            const randomToken = this.advance();
+            if (this.has('(')) {
+              this.advance();
+              const max = this.parse_expression(9);
+              if (this.has(')')) {
+                const rightParenthesisToken = this.advance();
+                return {
+                  blockID: "code",
+                  line,
+                  max,
+                  type: NODETYPES.RANDOM_INT,
+                  startIndex: randomToken.startIndex,
+                  endIndex: rightParenthesisToken.endIndex,
+                };
+              } else {
+                textError('parsing', 'did not detect right parenthesis', line);
+              }
+            } else {
+              textError('parsing', 'did not detect left parenthesis', line);
+            }
+          }
           case NODETYPES.BOOLEAN:
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
@@ -683,7 +726,11 @@ class Parser {
             l.endIndex = this.getCurrentToken().endIndex;
             return l;
           default:
+            // TODO: this case needs to raise an exception or return some error
+            // object. Right now if an expression can't be parsed, it
+            // implicitly returns null/undefined.
             textError("parsing", `invalid Token ${this.getCurrentToken().value}`, line);
+            throw new Error("couldn't parse expression");
         }
     }
   }
@@ -1005,6 +1052,34 @@ class Parser {
         result.type = NODETYPES.PRINTLN;
         result.value = expression;
         return result;
+      }
+    }
+
+    else if (this.has("randomSeed")) {
+      const randomToken = this.advance();
+      if (this.has('(')) {
+        this.advance();
+        const seed = this.parse_expression(9);
+        if (this.has(')')) {
+          const rightParenthesisToken = this.advance();
+
+          if (this.has(';')) {
+            this.advance();
+          }
+
+          return {
+            blockID: "code",
+            line,
+            seed,
+            type: NODETYPES.RANDOM_SEED,
+            startIndex: randomToken.startIndex,
+            endIndex: rightParenthesisToken.endIndex,
+          };
+        } else {
+          textError('parsing', 'did not detect right parenthesis', line);
+        }
+      } else {
+        textError('parsing', 'did not detect left parenthesis', line);
       }
     }
 

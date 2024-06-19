@@ -79,6 +79,31 @@ export const makeGenerator = () => {
         }
     }
 
+    praxlyGenerator['praxly_random_block'] = (block) => {
+        return {
+            blockID: block.id,
+            type: NODETYPES.RANDOM,
+        };
+    }
+
+    praxlyGenerator['praxly_random_int_block'] = (block) => {
+        const expression = block.getInputTargetBlock('MAX');
+        return {
+            blockID: block.id,
+            type: NODETYPES.RANDOM_INT,
+            max: praxlyGenerator[expression.type](expression),
+        };
+    }
+
+    praxlyGenerator['praxly_random_seed_block'] = (block) => {
+        const expression = block.getInputTargetBlock('SEED');
+        return {
+            blockID: block.id,
+            type: NODETYPES.RANDOM_SEED,
+            seed: praxlyGenerator[expression.type](expression),
+        };
+    }
+
     praxlyGenerator['praxly_input_block'] = (block) => {
         return {
             blockID: block.id,
@@ -334,7 +359,7 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_assignment_expression_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        console.log(`field input is ${varType}`);
+        // console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var value = praxlyGenerator[expression.type](expression);
