@@ -729,8 +729,8 @@ class Parser {
             // TODO: this case needs to raise an exception or return some error
             // object. Right now if an expression can't be parsed, it
             // implicitly returns null/undefined.
+            // throw new Error("couldn't parse expression");
             textError("parsing", `invalid Token ${this.getCurrentToken().value}`, line);
-            throw new Error("couldn't parse expression");
         }
     }
   }
