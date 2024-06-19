@@ -75,6 +75,8 @@ let praxlyGenerator;
 let mainTree;
 let darkMode = true;
 let isResizing = false;
+let isResizingHoriz = false;
+let isResizingVert = false;
 let varsOn, outputOn = false;
 export let embedMode;
 export let parameters;
@@ -224,23 +226,23 @@ function registerListeners() {
     toggleVars.addEventListener('click', toggleVarsOn);
 
     resizeBarBott.addEventListener('mousedown', function (e) {
-      isResizing = true;
-      document.addEventListener('mousemove', resizeHandlerBott);
+      isResizingHoriz = true;
+      document.addEventListener('mousemove', resizeHandler);
     });
 
     document.addEventListener('mouseup', function (e) {
-      isResizing = false;
-      document.removeEventListener('mousemove', resizeHandlerBott);
+      isResizingVert = false;
+      document.removeEventListener('mousemove', resizeHandler);
     });
   } else {
     resizeSideInEmbed.addEventListener('mousedown', function (e) {
-      isResizing = true;
-      document.addEventListener('mousemove', resizeHandlerSideEmbed);
+      isResizingVert = true;
+      document.addEventListener('mousemove', resizeHandler);
     });
 
     document.addEventListener('mouseup', function (e) {
-      isResizing = false;
-      document.removeEventListener('mousemove', resizeHandlerSideEmbed);
+      isResizingVert = false;
+      document.removeEventListener('mousemove', resizeHandler);
     });
 
     resetButton.addEventListener('click', showDebugModal);
@@ -253,27 +255,27 @@ function registerListeners() {
 
   //resizing things with the purple bar
   resizeBarX.addEventListener('mousedown', function (e) {
-    isResizing = true;
-    document.addEventListener('mousemove', resizeHandlerX);
+    isResizingHoriz = true;
+    document.addEventListener('mousemove', resizeHandler);
   });
 
   resizeBarY.addEventListener('mousedown', function (e) {
-    isResizing = true;
-    document.addEventListener('mousemove', resizeHandlerY);
+    isResizingVert = true;
+    document.addEventListener('mousemove', resizeHandler);
   })
 
 
 
   document.addEventListener('mouseup', function (e) {
-    isResizing = false;
-    document.removeEventListener('mousemove', resizeHandlerX);
+    isResizingHoriz = false;
+    document.removeEventListener('mousemove', resizeHandler);
     Blockly.svgResize(workspace);
     textEditor.resize();
   });
 
   document.addEventListener('mouseup', function (e) {
-    isResizing = false;
-    document.removeEventListener('mousemove', resizeHandlerY);
+    isResizingVert = false;
+    document.removeEventListener('mousemove', resizeHandler);
     Blockly.svgResize(workspace);
     textEditor.resize();
   });
@@ -577,76 +579,58 @@ function turnBlocksToCode() {
   textEditor.setValue(text, -1);
 };
 
-function resizeHandlerX(e) {
-  if (!isResizing) return;
 
-  if (configuration.embed) {
-    const containerWidth = document.body.offsetWidth;
-    const mouseX = e.pageX;
-    const leftPaneWidth = (mouseX / containerWidth) * 100;
-    const rightPaneWidth = 100 - leftPaneWidth;
+function resizeHandler(e) {
+  if (isResizingHoriz) {
+    if (configuration.embed) {
+      const containerWidth = document.body.offsetWidth;
+      const mouseX = e.pageX;
+      const leftPaneWidth = (mouseX / containerWidth) * 100;
+      const rightPaneWidth = 100 - leftPaneWidth;
 
-    document.querySelector('.side-view').style.flex = rightPaneWidth;
+      document.querySelector('.side-view').style.flex = rightPaneWidth;
 
-    if (configuration.editor === 'blocks') {
-      blockPane.style.flex = leftPaneWidth;
-    } else if (configuration.editor === 'text') {
-      main.style.flex = leftPaneWidth;
+      if (configuration.editor === 'blocks') {
+        blockPane.style.flex = leftPaneWidth;
+      } else if (configuration.editor === 'text') {
+        main.style.flex = leftPaneWidth;
+      }
+
+    } else {
+      const containerWidth = main.offsetWidth;
+      const mouseX = e.pageX;
+      const leftPaneWidth = (mouseX / containerWidth) * 100;
+      const rightPaneWidth = 100 - leftPaneWidth;
+
+      textPane.style.flex = leftPaneWidth;
+      blockPane.style.flex = rightPaneWidth;
+      output.style.flex = leftPaneWidth;
+      varContainer.style.flex = rightPaneWidth;
     }
 
-    Blockly.svgResize(workspace);
+  } else if (isResizingVert) {
 
-  } else {
-    const containerWidth = main.offsetWidth;
-    const mouseX = e.pageX;
-    const leftPaneWidth = (mouseX / containerWidth) * 100;
-    const rightPaneWidth = 100 - leftPaneWidth;
+    if (configuration.embed) {
+      const containerHeight = document.querySelector('.side-view').clientHeight;
+      const mouseY = e.pageY;
+      const topHeight = (mouseY / containerHeight) * 100;
+      const bottomHeight = 100 - topHeight;
 
-    textPane.style.flex = leftPaneWidth;
-    blockPane.style.flex = rightPaneWidth;
+      output.style.flex = topHeight;
+      varContainer.style.flex = bottomHeight;
+    } else {
+      const containerHeight = document.body.clientHeight;
+      const mouseY = e.pageY;
+      const topHeight = (mouseY / containerHeight) * 100;
+      const bottomHeight = 100 - topHeight;
 
-    Blockly.svgResize(workspace);
+      main.style.flex = topHeight + '%';
+      bottomPart.style.flex = bottomHeight + '%';
+    }
+
   }
 
-
-
-}
-
-function resizeHandlerY(e) {
-  if (!isResizing) return;
-
-  const containerHeight = document.body.clientHeight;
-  const mouseY = e.pageY;
-  const topHeight = (mouseY / containerHeight) * 100;
-  const bottomHeight = 100 - topHeight;
-
-  main.style.flex = topHeight + '%';
-  bottomPart.style.flex = bottomHeight + '%';
-
   Blockly.svgResize(workspace);
-}
-
-function resizeHandlerBott(e) {
-  if (!isResizing) return;
-
-  const containerWidth = bottomPart.offsetWidth;
-  const mouseX = e.pageX;
-  const left = (mouseX / containerWidth) * 100;
-  const right = 100 - left;
-
-  output.style.flex = left;
-  varContainer.style.flex = right;
-}
-
-function resizeHandlerSideEmbed(e) {
-  const containerHeight = document.querySelector('.side-view').clientHeight;
-  const mouseY = e.pageY;
-  const topHeight = (mouseY / containerHeight) * 100;
-  const bottomHeight = 100 - topHeight;
-
-  output.style.flex = topHeight;
-  varContainer.style.flex = bottomHeight;
-
 }
 
 function setDark() {
