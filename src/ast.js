@@ -1,5 +1,20 @@
-
-import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs, highlightLine, getDebugMode, highlightAstNode, textEditor, setStepInto, getStepInto } from "./common";
+import {
+  TYPES,
+  OP,
+  NODETYPES,
+  PraxlyError,
+  addToPrintBuffer,
+  consoleInput,
+  defaultError,
+  errorOutput,
+  StringFuncs,
+  highlightLine,
+  getDebugMode,
+  highlightAstNode,
+  textEditor,
+  setStepInto,
+  getStepInto,
+} from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
 
 var SCOPES = {};
@@ -513,11 +528,10 @@ class Praxly_input {
     }
 
     async evaluate(environment) {
-        var result = prompt("input");
-        if (result === null) {
-            throw new PraxlyError("input canceled", this.json.line);
-        }
-        // addToPrintBuffer(`<b>${result}</b><br>`);
+        const result = await consoleInput();
+        // if (result === null) {
+            // throw new PraxlyError("input canceled", this.json.line);
+        // }
         return new Praxly_String(result, this.json);
     }
 }

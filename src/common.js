@@ -100,18 +100,44 @@ export class PraxlyError extends Error {
 
 
 export const MAX_LOOP = 100;  // prevents accidental infinite loops
-export var printBuffer = "";
 export var errorOutput = "";
 export var blockErrorsBuffer = {};
 export var annotationsBuffer = [];
 export var markersBuffer = [];
 
 export function addToPrintBuffer(message) {
-    printBuffer += message;
-
-    //new: displays the live output
     const stdOut = document.querySelector('.stdout');
-    stdOut.innerHTML = printBuffer;
+    stdOut.insertAdjacentHTML('beforeend', message);
+}
+
+export function consoleInput() {
+    // This function is called when the input node of an AST is evaluated. It
+    // injects a text input in the console and awaits a string from the user.
+    // Unlike prompt, this is a non-blocking operation. It returns a promise
+    // that is resolved when the user hits enter. After the resolve, the input
+    // remains in the console in read-only mode.
+
+    // .stdout is a misleading term. The element is a console that shows both
+    // both input and output.
+    const stdOut = document.querySelector('.stdout');
+
+    const inputElement = document.createElement('input');
+    inputElement.setAttribute('type', 'text');
+    stdOut.appendChild(inputElement);
+    inputElement.focus();
+
+    stdOut.appendChild(document.createElement('br'));
+
+    return new Promise((resolve, reject) => {
+      const listener = event => {
+        if (event.key === 'Enter') {
+          resolve(inputElement.value);
+          inputElement.removeEventListener('keyup', listener);
+          inputElement.readOnly = true;
+        }
+      };
+      inputElement.addEventListener('keyup', listener);
+    });
 }
 
 /**
@@ -119,7 +145,8 @@ export function addToPrintBuffer(message) {
  * It also clears all of the ace error annotations.
  */
 export function clearOutput() {
-    printBuffer = "";
+    const stdOut = document.querySelector('.stdout');
+    stdOut.innerHTML = '';
 }
 
 export function clearErrors() {
