@@ -128,7 +128,9 @@ export function createExecutable(tree) {
             return new Praxly_codeBlock(result);
 
         case NODETYPES.PROGRAM:
-            const seed = 0;
+            // This suggestion for the seed comes from the pure-rand
+            // documentation at https://github.com/dubzzz/pure-rand.
+            const seed = Date.now() ^ (Math.random() * 0x100000000);
             SCOPES = {
                 global: {
                     name: 'global',
