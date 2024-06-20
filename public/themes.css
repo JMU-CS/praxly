@@ -903,3 +903,39 @@ body:not(.embed)>#embed-toolbar {
 #embed-toolbar button:hover {
   background-color: lightgray;
 }
+
+#blocker {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0.2;
+  background-color: black;
+  z-index: 5000;
+}
+
+.prompt {
+  position: relative;
+  z-index: 6000;
+}
+
+.prompt.attract {
+  animation: attract 200ms linear 3;
+}
+
+@keyframes attract {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

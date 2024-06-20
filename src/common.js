@@ -117,9 +117,13 @@ export function consoleInput() {
     // that is resolved when the user hits enter. After the resolve, the input
     // remains in the console in read-only mode.
 
+    // To keep the user from clicking other things before submitting an input,
+    // an overlay sits atop all other elements and blocks mouse events.
+
     // .stdout is a misleading term. The element is a console that shows both
     // both input and output.
     const stdOut = document.querySelector('.stdout');
+    const blocker = document.getElementById('blocker');
 
     const inputElement = document.createElement('input');
     inputElement.setAttribute('type', 'text');
@@ -128,12 +132,26 @@ export function consoleInput() {
 
     stdOut.appendChild(document.createElement('br'));
 
+    blocker.style.display = 'block';
+    inputElement.classList.add('prompt');
+    inputElement.addEventListener('animationend', () => {
+      inputElement.classList.remove('attract');
+    });
+
+    const clickListener = () => {
+      inputElement.classList.add('attract'); 
+      inputElement.focus();
+    };
+    blocker.addEventListener('click', clickListener);
+
     return new Promise((resolve, reject) => {
       const listener = event => {
         if (event.key === 'Enter') {
           resolve(inputElement.value);
           inputElement.removeEventListener('keyup', listener);
           inputElement.readOnly = true;
+          inputElement.classList.remove('prompt');
+          blocker.style.display = 'none';
         }
       };
       inputElement.addEventListener('keyup', listener);
