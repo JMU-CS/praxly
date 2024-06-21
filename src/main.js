@@ -34,22 +34,9 @@ let stdOut;
 let stdErr;
 let clearOut;
 
-let modal;
-let manual;
-let featuresButton;
-let bugButton;
-let changelogButton;
-
 let exampleDiv;
-
-let githubButton;
-let peopleButton;
 let titleRefresh;
-
-
 let bottomPart;
-
-let span;
 let darkmodediv;
 
 let resizeBarBott;
@@ -80,19 +67,12 @@ function initializeGlobals() {
   if (!configuration.embed) {
     darkModeButton = document.getElementById('darkMode');
     settingsButton = document.getElementById("settings");
-    modal = document.getElementById("myModal");
-    featuresButton = document.getElementById('FeaturesButton');
-    bugButton = document.getElementById("BugButton");
-    changelogButton = document.getElementById('ChangelogButton');
     exampleDiv = document.getElementById('exampleTable');
-    githubButton = document.getElementById('GitHubButton');
-    peopleButton = document.getElementById('AboutButton');
     titleRefresh = document.getElementById('titleRefresh');
     // bothButton = document.getElementById("tab1_button");
     // textButton = document.getElementById('tab2_button');
     // blocksButton = document.getElementById('tab3_button');
     darkmodediv = document.querySelector('.settingsOptions');
-    span = document.getElementsByClassName("close")[0];
     toggleText = document.querySelector('#toggle-text');
     toggleBlocks = document.querySelector('#toggle-blocks');
     toggleOutput = document.querySelector('#toggle-output');
@@ -110,7 +90,6 @@ function initializeGlobals() {
   stdOut = document.querySelector('.stdout');
   stdErr = document.querySelector('.stderr');
   clearOut = document.querySelector('.clearOut');
-  manual = document.getElementById("manual");
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
   resizeSideInEmbed = document.querySelector('.resize-side-view');
@@ -135,26 +114,6 @@ function registerListeners() {
 
     clearButton.addEventListener('click', clear);
 
-    bugButton.addEventListener('click', function () {
-      window.open("BugsList.html", '_blank');
-    });
-
-    changelogButton.addEventListener('click', function () {
-      window.open("changelog.html", '_blank');
-    });
-
-    featuresButton.addEventListener('click', function () {
-      window.open("features.html", '_blank');
-    });
-
-    githubButton.addEventListener('click', function () {
-      window.open("https://github.com/JMU-CS/praxly", '_blank');
-    });
-
-    peopleButton.addEventListener('click', function () {
-      window.open('people.html');
-    });
-
     titleRefresh.addEventListener('click', function () {
       clear();
       window.location.hash = '';
@@ -162,12 +121,6 @@ function registerListeners() {
       textPane.click();
       textEditor.focus();
     });
-
-    // When the user clicks the button, open the modal
-    infoButton.onclick = function () {
-      setLight();
-      modal.style.display = "block";
-    }
 
     settingsButton.onclick = function () {
       let darkmodediv = document.querySelector('.settingsOptions');
@@ -178,24 +131,8 @@ function registerListeners() {
       }
     }
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-      modal.style.display = "none";
-      manual.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-      if (event.target == modal || event.target == manual) {
-        modal.style.display = "none";
-        manual.style.display = "none";
-      }
-    }
-
     //share button
     shareButton.addEventListener('click', generateUrl);
-
-
 
     stepIntoButton.addEventListener('mouseup', function () {
       // comingSoon();
