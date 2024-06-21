@@ -301,12 +301,21 @@ export function getStepInto() {
     return stepInto;
 }
 
+let stopClicked = false;
+export function setStopClicked(value) {
+    stopClicked = value;
+}
+
+export function getStopClicked() {
+    return stopClicked;
+}
+
 export const textEditor = ace.edit("aceCode", {
   fontSize: 19,
   mode: 'ace/mode/praxly',
 });
 
-export const debugButton = document.getElementById('DebugButton');
+export const debugButton = document.getElementById('debugButton');
 export const stepButton = document.getElementById('stepButton');
 export const stopButton = document.getElementById('stopButton');
 export const stepIntoButton = document.getElementById('stepIntoButton');

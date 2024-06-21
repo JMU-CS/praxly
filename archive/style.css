@@ -91,12 +91,12 @@ body.embed > .nav-bar {
   background-color: green;
 }
 
-#DebugButton {
+#debugButton {
   background-color: rgb(79, 5, 163);
   background-image: url('./images/bug44.png');
 }
 
-#DebugButton:hover {
+debugButton:hover {
   background-image: none;
   background-color: #8f45f6;
 }

@@ -3,8 +3,7 @@ import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stop
 export function showDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
     let debugButton = document.getElementById('debug') ?? document.getElementById('DebugButton');
-    // let variableTableContainer = document.getElementById('Variable-table-container');
-    // variableTableContainer.style.display = 'block';
+
     for (let button of debugOptions) {
         button.style.display = 'inline-flex';
     }
@@ -15,7 +14,6 @@ export function showDebug() {
 export function hideDebug(configuration) {
     let debugOptions = document.querySelectorAll('.debugOptions');
     let debug = document.getElementById('debug') ?? document.getElementById('DebugButton');
-    // let variableTableContainer = document.getElementById('Variable-table-container');
     for (let button of debugOptions) {
         button.style.display = 'none';
     }
@@ -23,7 +21,6 @@ export function hideDebug(configuration) {
         document.querySelector('#runButton').style.display = 'inline-flex';
     }
     debug.style.display = 'inline-flex';
-    // variableTableContainer.style.display = 'none';
 }
 
 
