@@ -82,7 +82,22 @@ body {
 .toggle-container .item {
   height: 20px;
   width: 20px;
-  background-color: black;
+  background-color: white;
+  cursor: pointer;
+}
+
+.tooltip {
+  visibility: hidden;
+  display: inline-flex;
+  background-color: bisque;
+  color: black;
+  position: fixed;
+  font-size: medium;
+}
+
+.toggle-container .item:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* header and toolbar */
@@ -126,26 +141,6 @@ h1 {
   text-decoration: none;
 }
 
-/* toggle buttons */
-
-.toggle-container {
-  margin-top: 20px;
-  background-color: var(--nav-bar-bg);
-  border: 1px solid var(--text-color);
-  height: 40px;
-  width: 40px;
-}
-
-.toggle-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.toggle-container .item {
-  height: 20px;
-  width: 20px;
-  background-color: black;
-}
 
 /* nav-bar buttons */
 

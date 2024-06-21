@@ -5,12 +5,50 @@
     <title>Praxly</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" href="/fallen-leaf_1f342.ico" type="image/x-icon">
 </head>
 
 <body>
-    <h1>Praxly Landing Page</h1>
-    <p><a href="embed.html">Embed</a></p>
-    <p><a href="main.html">Main</a></p>
+
+    <div class="container">
+
+        <h1>Welcome to Praxly</h1>
+
+        <div class="about">
+            <p>Praxly is an web-based IDE that empowers users to read, write, and run the pseudocode used in the
+                <a
+                    href="https://praxis.ets.org/on/demandware.static/-/Library-Sites-ets-praxisLibrary/default/pdfs/5652.pdf#page=21">CS
+                    Praxis Test</a>. Praxly supports bidirectional synchronization between both block-based and
+                text-based
+                editors,
+                allowing users to learn and visualize the code while also offering the efficiency of editing text. The
+                text
+                editor uses <a href="https://ace.c9.io/">Ace</a>, and the block editor uses <a
+                    href="https://developers.google.com/blockly">Blockly</a>.
+            </p>
+        </div>
+        <div class="button-container">
+            <button class="praxly-button ">Start Coding</button>
+            <button class="github-button">GitHub Repo</button>
+        </div>
+        <iframe
+            src="embed.html?button=both&result=both#code=%2F%2F%20Function%20to%20calculate%20change%0Avoid%20calculateChange(int%20paidAmount%2C%20int%20itemCost)%0A%20%20%20%20int%20change%20%E2%86%90%20paidAmount%20-%20itemCost%0A%20%20%20%20int%20cents%20%E2%86%90%20change%0A%0A%20%20%20%20int%20quarters%20%E2%86%90%20cents%20%2F%2025%0A%20%20%20%20cents%20%E2%86%90%20cents%20%25%2025%0A%20%20%20%20int%20dimes%20%E2%86%90%20cents%20%2F%2010%0A%20%20%20%20cents%20%E2%86%90%20cents%20%25%2010%0A%20%20%20%20int%20nickels%20%E2%86%90%20cents%20%2F%205%0A%20%20%20%20int%20pennies%20%E2%86%90%20cents%20%25%205%0A%0A%20%20%20%20%2F%2F%20Print%20change%20breakdown%0A%20%20%20%20println%20%22Change%20to%20be%20given%3A%22%0A%20%20%20%20println%20%22Quarters%3A%20%22%20%2B%20quarters%0A%20%20%20%20println%20%22Dimes%3A%20%22%20%2B%20dimes%0A%20%20%20%20println%20%22Nickels%3A%20%22%20%2B%20nickels%0A%20%20%20%20println%20%22Pennies%3A%20%22%20%2B%20pennies%0Aend%20calculateChange%0A%0A%2F%2F%20Main%20function%0Avoid%20main()%0A%20%20%20%20int%20itemCost%20%E2%86%90%201789%0A%20%20%20%20int%20paidAmount%20%E2%86%90%202000%0A%0A%20%20%20%20%2F%2F%20Check%20if%20paid%20amount%20is%20sufficient%0A%20%20%20%20if%20(paidAmount%20%3C%20itemCost)%0A%20%20%20%20%20%20%20%20println%20%22Insufficient%20amount%20paid.%22%0A%20%20%20%20else%0A%20%20%20%20%20%20%20%20%2F%2F%20Calculate%20and%20print%20change%0A%20%20%20%20%20%20%20%20calculateChange(paidAmount%2C%20itemCost)%0A%20%20%20%20end%20if%0Aend%20main%0A%0A%2F%2F%20Run%20the%20main%20function%0Amain()%0A"
+            frameborder="0"></iframe>
+
+        <script>
+            const praxlyButton = document.querySelector('.praxly-button');
+            const githubButton = document.querySelector('.github-button');
+
+            praxlyButton.addEventListener('click', function () {
+                window.open("main.html", "_blank");
+            });
+
+            githubButton.addEventListener('click', function () {
+                window.open("https://github.com/JMU-CS/praxly", '_blank');
+            });
+
+        </script>
 </body>
 
 </html>

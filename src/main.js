@@ -46,9 +46,7 @@ let githubButton;
 let peopleButton;
 let titleRefresh;
 
-let bothButton;
-let textButton;
-let blocksButton;
+
 let bottomPart;
 
 let span;
@@ -90,9 +88,9 @@ function initializeGlobals() {
     githubButton = document.getElementById('GitHubButton');
     peopleButton = document.getElementById('AboutButton');
     titleRefresh = document.getElementById('titleRefresh');
-    bothButton = document.getElementById("tab1_button");
-    textButton = document.getElementById('tab2_button');
-    blocksButton = document.getElementById('tab3_button');
+    // bothButton = document.getElementById("tab1_button");
+    // textButton = document.getElementById('tab2_button');
+    // blocksButton = document.getElementById('tab3_button');
     darkmodediv = document.querySelector('.settingsOptions');
     span = document.getElementsByClassName("close")[0];
     toggleText = document.querySelector('#toggle-text');
@@ -150,7 +148,7 @@ function registerListeners() {
     });
 
     githubButton.addEventListener('click', function () {
-      window.open("https://github.com/sauppb/praxly", '_blank');
+      window.open("https://github.com/JMU-CS/praxly", '_blank');
     });
 
     peopleButton.addEventListener('click', function () {
@@ -197,9 +195,7 @@ function registerListeners() {
     //share button
     shareButton.addEventListener('click', generateUrl);
 
-    blocksButton.addEventListener('click', showBlocksOnly);
-    textButton.addEventListener('click', showTextOnly);
-    bothButton.addEventListener('click', showTextAndBlocks);
+
 
     stepIntoButton.addEventListener('mouseup', function () {
       // comingSoon();
@@ -336,12 +332,14 @@ function toggleTextOn() {
   if (isTextOn) {
     textPane.style.display = 'block';
     resizeBarX.style.display = 'block';
-    toggleText.style.backgroundColor = 'black';
+    toggleText.style.backgroundColor = 'white';
+    document.querySelector('#text-tip').innerHTML = "Text On";
   } else {
     textPane.style.display = 'none';
     resizeBarX.style.display = 'none';
     Blockly.svgResize(workspace);
-    toggleText.style.backgroundColor = 'white';
+    toggleText.style.backgroundColor = 'black';
+    document.querySelector('#text-tip').innerHTML = "Text Off";
   }
 }
 
@@ -355,13 +353,15 @@ function toggleBlocksOn() {
     blockPane.style.display = 'block';
     resizeBarX.style.display = 'block';
     Blockly.svgResize(workspace);
-    toggleBlocks.style.backgroundColor = 'black';
+    toggleBlocks.style.backgroundColor = 'white';
+    document.querySelector('#blocks-tip').innerHTML = "Blocks On";
   } else {
     blockPane.style.display = 'none';
     resizeBarX.style.display = 'none';
     Blockly.svgResize(workspace);
     textEditor.resize();
-    toggleBlocks.style.backgroundColor = 'white';
+    toggleBlocks.style.backgroundColor = 'black';
+    document.querySelector('#blocks-tip').innerHTML = "Blocks Off";
   }
 }
 
@@ -370,8 +370,9 @@ function toggleOutputOn() {
   isOutputOn = !isOutputOn;
 
   output.style.display = isOutputOn ? 'block' : 'none';
+  document.querySelector('#output-tip').innerHTML = isOutputOn ? "Output On" : "Output Off";
   resizeBarBott.style.display = isOutputOn ? 'block' : 'none';
-  toggleOutput.style.backgroundColor = isOutputOn ? 'black' : 'white';
+  toggleOutput.style.backgroundColor = isOutputOn ? 'white' : 'black';
   isBottomOff();
 }
 
@@ -380,8 +381,9 @@ function toggleVarsOn() {
   isVarsOn = !isVarsOn;
 
   varContainer.style.display = isVarsOn ? 'block' : 'none';
+  document.querySelector('#vars-tip').innerHTML = isVarsOn ? "Variables On" : "Variables Off";
   resizeBarBott.style.display = isVarsOn ? 'block' : 'none';
-  toggleVars.style.backgroundColor = isVarsOn ? 'black' : 'white';
+  toggleVars.style.backgroundColor = isVarsOn ? 'white' : 'black';
   isBottomOff();
 }
 
@@ -416,39 +418,6 @@ function generateExamples() {
     textEditor.setValue(selectDropdown.value, -1);
     textPane.click();
   });
-}
-
-function showBlocksOnly() {
-  resizeBarX.style.display = 'none';
-  textPane.style.display = 'none';
-  blockPane.style.display = 'block';
-  Blockly.svgResize(workspace);
-  textEditor.resize();
-}
-
-
-/* Default */
-
-function showTextOnly() {
-  textPane.style.display = 'block';
-
-  // resizeBarX.style.display = 'none';
-  blockPane.style.display = 'none';
-
-  varContainer.style.display = 'none';
-  resizeBarBott.style.display = 'none';
-
-  Blockly.svgResize(workspace);
-  textEditor.resize();
-}
-
-function showTextAndBlocks() {
-  resizeBarX.style.display = 'block';
-  blockPane.style.display = 'block';
-  textPane.style.display = 'block';
-
-  Blockly.svgResize(workspace);
-  textEditor.resize();
 }
 
 function clear() {
@@ -488,7 +457,6 @@ function reset() {
     }
   }
 }
-
 
 /**
  * this function gets called every time the run button is pressed.

@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.about {
+  padding: 2rem;
+  text-align: center;
+  justify-content: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.button-container button {
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  transition: background-color 0.5s;
+}
+
+.praxly-button {
+  background-color: #2B5E7D;
+  color: white
+}
+
+.praxly-button:hover {
+  background-color: #1a3f56;
+}
+
+.github-button button {
+  background-color: lightgray;
+  color: black;
+}
+
+.embed-mode button {
+  background-color: lightgray;
+  color: black;
+}
+
+.github-button:hover {
+  background-color: darkgray;
+}
+
+.embed-mode:hover {
+  background-color: darkgray;
+}
+
+iframe {
+  width: 900px;
+  height: 800px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: auto;
+  padding: 30px;
+}
