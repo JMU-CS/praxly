@@ -130,6 +130,24 @@ export const tree2blocks = (workspace, node) => {
             result = workspace.newBlock('praxly_input_block');
             break;
 
+        case NODETYPES.RANDOM:
+            result = workspace.newBlock('praxly_random_block');
+            break;
+
+        case NODETYPES.RANDOM_INT: {
+            result = workspace.newBlock('praxly_random_int_block');
+            const child = tree2blocks(workspace, node?.max);
+            result.getInput('MAX').connection.connect(child?.outputConnection);
+            break;
+        }
+
+        case NODETYPES.RANDOM_SEED: {
+            result = workspace.newBlock('praxly_random_seed_block');
+            const child = tree2blocks(workspace, node?.seed);
+            result.getInput('SEED').connection.connect(child?.outputConnection);
+            break;
+        }
+
         case NODETYPES.CODEBLOCK:
             var statements = node.statements.map(element => {
                 try {

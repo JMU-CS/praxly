@@ -227,6 +227,46 @@ export function definePraxlyBlocks(workspace) {
       "helpUrl": ""
     },
     {
+      "type": "praxly_random_block",
+      "message0": "random",
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    {
+      "type": "praxly_random_int_block",
+      "message0": "randomInt %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "MAX"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    {
+      "type": "praxly_random_seed_block",
+      "message0": "randomSeed %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "SEED"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'procedure_blocks',
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    {
       "type": "praxly_null_block",
       "message0": "null",
       "inputsInline": true,
