@@ -661,7 +661,7 @@ function synchronizeToConfiguration() {
 
   // editors
   if (configuration.editor === 'both') {
-    showTextAndBlocks();
+    // showTextAndBlocks();
   } else if (configuration.editor === 'blocks') {
     toggleEditor(false);
   } else {

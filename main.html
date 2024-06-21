@@ -38,11 +38,11 @@
           </button>
         </div>
       </div>
-    </div>
 
-    <div id="secondary_bar">
-      <!-- Example programs  -->
-      <select id="exampleTable"></select>
+      <div id="secondary_bar">
+        <!-- Example programs  -->
+        <select id="exampleTable"></select>
+      </div>
     </div>
 
     <!-- Toolbar buttons -->
@@ -53,7 +53,7 @@
           <span class="button-text">Run Code</span>
         </button>
       </li>
-      <li id="debug">
+      <li>
         <button id="debugButton" class="MainMenu-button" title="Debugger">
           <span class="material-symbols-rounded bug">pest_control</span>
           <span class="button-text">Debug Mode</span>
@@ -65,7 +65,7 @@
           <span class="button-text">Step Over</span>
         </button>
       </li>
-      <li class="">
+      <li>
         <button id="stepIntoButton" class="MainMenu-button" title="Step Into">
           <span class="button-text">Step Into</span>
         </button>
@@ -76,47 +76,52 @@
           <span class="button-text">Exit Debug</span>
         </button>
       </li>
-      <li><button id="share" class="MainMenu-button" title="Share">
+      <li>
+        <button id="share" class="MainMenu-button" title="Share">
           <span class="material-symbols-rounded spread">share</span>
           <span class="button-text">Share</span>
         </button>
       </li>
-      <li><button id="reference" class="MainMenu-button" title="reference">
+      <li>
+        <button id="reference" class="MainMenu-button" title="reference">
           <span class="material-symbols-rounded manual">book_2</span>
           <span class="button-text">Manual</span>
         </button></li>
-      <li class="settingsOptions"><button id="darkMode" class="MainMenu-button" title="Dark Mode">
+      <li class="settingsOptions">
+        <button id="darkMode" class="MainMenu-button" title="Dark Mode">
           <span class="button-text">Dark Mode</span>
         </button>
       </li>
-      <li><button id="settings" class="MainMenu-button" title="Settings">
+      <li>
+        <button id="settings" class="MainMenu-button" title="Settings">
           <span class="button-text">settings</span>
         </button>
       </li>
-      <li><button id="info" class="MainMenu-button" title="About Praxly">
+      <li>
+        <button id="info" class="MainMenu-button" title="About Praxly">
           <span class="material-symbols-rounded extra">info</span>
           <span class="button-text">About</span>
         </button>
       </li>
-      <li><button id="clearButton" class="MainMenu-button">
-        <span class="material-symbols-rounded reset">delete</span>
-        <span class="button-text">Clear</span>
-      </button>
+      <li>
+        <button id="clearButton" class="MainMenu-button">
+          <span class="material-symbols-rounded reset">delete</span>
+          <span class="button-text">Clear</span>
+        </button>
       </li>
     </ul>
   </header>
 
-    <main>
-      <div id="aceCode" class="codeEditor"></div>
-      <div class="resizeBarX"></div>
-      <div id="blocklyDiv"></div>
-    </main>
+  <main>
+    <div id="aceCode" class="codeEditor"></div>
+    <div class="resizeBarX"></div>
+    <div id="blocklyDiv"></div>
+  </main>
 
-    <div class="resizeBarY"></div>
+  <div class="resizeBarY"></div>
 
   <div id="bottom-part">
     <div id="Variable-table-container">
-      <!-- <p>Variables</p> -->
       <table id="Variable-table-outer">
         <thead>
           <tr>
@@ -135,6 +140,7 @@
       <p class="stdout"></p>
       <p class="stderr"></p>
     </div>
+  </div>
 
   <script src="./src/main.js" type="module"></script>
 </body>

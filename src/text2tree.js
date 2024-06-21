@@ -1030,7 +1030,7 @@ class Parser {
     else if (this.has("print")) {
       this.advance();
       const expression = this.parse_expression(9);
-      result.endIndex = expression.endIndex;
+      result.endIndex = expression?.endIndex ?? this.getCurrentToken().endIndex;
       if (this.has(';')) {
         this.advance();
       }

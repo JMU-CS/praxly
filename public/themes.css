@@ -440,6 +440,8 @@ h1 {
   display: flex;
   background-color: #e7e5e5;
   border: 1px solid #aaa;
+  margin-top: 20px;
+  height: 40px;
 }
 
 /* Style the tab */
