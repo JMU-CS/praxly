@@ -908,6 +908,7 @@ body:not(.embed)>#embed-toolbar {
   100% {
     transform: rotate(0deg);
   }
+}
 
 .debugModal {
   display: none;
@@ -933,21 +934,19 @@ body:not(.embed)>#embed-toolbar {
   border-radius: 1em;
 }
 
-
 .answerOptions {
   display: flex;
   justify-content: flex-start;
   gap: 30px;
 }
 
-
 #yes {
-background-color: lightgreen;
-border: 1px solid lightgreen;
-border-radius: 0.5em;
-padding: 5px;
-width: 10%;
-font-weight: bold;
+  background-color: lightgreen;
+  border: 1px solid lightgreen;
+  border-radius: 0.5em;
+  padding: 5px;
+  width: 10%;
+  font-weight: bold;
 }
 
 #no {
