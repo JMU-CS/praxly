@@ -81,12 +81,12 @@
     <ul>
       <li>
         <button id="runButton" class="MainMenu-button" title="Run Code">
-          <span class="material-symbols-rounded play">play_arrow</span>
+          <span class="material-symbols-rounded run">play_arrow</span>
           <span class="button-text">Run Code</span>
         </button>
       </li>
       <li id="debug">
-        <button id="DebugButton" class="MainMenu-button" title="Debugger">
+        <button id="debugButton" class="MainMenu-button" title="Debugger">
           <span class="material-symbols-rounded bug">pest_control</span>
           <span class="button-text">Debug Mode</span>
         </button>
@@ -131,20 +131,20 @@
         </button>
       </li>
       <li><button id="clearButton" class="MainMenu-button">
-        <span class="material-symbols-rounded clear">delete</span>
+        <span class="material-symbols-rounded reset">delete</span>
         <span class="button-text">Clear</span>
       </button>
       </li>
     </ul>
   </header>
 
-  <main>
-    <div id="aceCode" class="codeEditor"></div>
-    <div class="resizeBarX"></div>
-    <div id="blocklyDiv"></div>
-  </main>
+    <main>
+      <div id="aceCode" class="codeEditor"></div>
+      <div class="resizeBarX"></div>
+      <div id="blocklyDiv"></div>
+    </main>
 
-  <div class="resizeBarY"></div>
+    <div class="resizeBarY"></div>
 
   <div id="bottom-part">
     <div id="Variable-table-container">
@@ -167,7 +167,6 @@
       <p class="stdout"></p>
       <p class="stderr"></p>
     </div>
-  </div>
 
   <script src="./src/main.js" type="module"></script>
 </body>

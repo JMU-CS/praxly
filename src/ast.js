@@ -14,8 +14,11 @@ import {
   textEditor,
   setStepInto,
   getStepInto,
+  stopButton,
+  getStopClicked
 } from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
+import prand from 'pure-rand';
 
 var SCOPES = {};
 
@@ -118,6 +121,15 @@ export function createExecutable(tree) {
         case NODETYPES.INPUT:
             return new Praxly_input(tree);
 
+        case NODETYPES.RANDOM:
+            return new Praxly_random(tree);
+
+        case NODETYPES.RANDOM_INT:
+            return new Praxly_random_int(createExecutable(tree.max), tree);
+
+        case NODETYPES.RANDOM_SEED:
+            return new Praxly_random_seed(createExecutable(tree.seed), tree);
+
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
             var args = [];
             tree.right.args.forEach((arg) => {
@@ -133,14 +145,28 @@ export function createExecutable(tree) {
             return new Praxly_codeBlock(result);
 
         case NODETYPES.PROGRAM:
+            // This suggestion for the seed comes from the pure-rand
+            // documentation at https://github.com/dubzzz/pure-rand.
+            const seed = Date.now() ^ (Math.random() * 0x100000000);
             SCOPES = {
                 global: {
                     name: 'global',
                     parent: "root",
                     variableList: {},
                     functionList: {},
+                    random: {
+                      seed,
+                      generator: prand.xoroshiro128plus(seed),
+                    },
                 }
             };
+
+            // All scopes have a shortcut reference to the global scope. That
+            // way we can quickly find global data, like the random number
+            // generator, without having to iterate through the parent
+            // references.
+            SCOPES.global.global = SCOPES.global;
+
             return new Praxly_program(createExecutable(tree.value));
 
         case NODETYPES.STATEMENT:
@@ -533,6 +559,48 @@ class Praxly_input {
             // throw new PraxlyError("input canceled", this.json.line);
         // }
         return new Praxly_String(result, this.json);
+    }
+}
+
+class Praxly_random {
+
+    constructor(node) {
+        this.json = node;
+    }
+
+    async evaluate(environment) {
+        // Pure-rand only generates integers. That's strange. We'll generate an
+        // integer in a range and normalize it.
+        const max = 10000;
+        const x = prand.unsafeUniformIntDistribution(0, max - 1, environment.global.random.generator) / max;
+        return new Praxly_float(x, this.json);
+    }
+}
+
+class Praxly_random_int {
+    constructor(max, node) {
+        this.json = node;
+        this.max = max;
+    }
+
+    async evaluate(environment) {
+        const maxValue = (await this.max.evaluate(environment)).value;
+        const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
+        return new Praxly_int(x, this.json);
+    }
+}
+
+class Praxly_random_seed {
+    constructor(seed, node) {
+        this.json = node;
+        this.seed = seed;
+    }
+
+    async evaluate(environment) {
+        const seedValue = (await this.seed.evaluate(environment)).value;
+        environment.global.random.seed = seedValue;
+        environment.global.random.generator = prand.xoroshiro128plus(seedValue);
+        return null;
     }
 }
 
@@ -960,6 +1028,9 @@ class Praxly_codeBlock {
                     await waitForStep();
                 }
                 textEditor.session.removeMarker(markerId);
+                if (getStopClicked()) {
+                    throw new Error("Stop_Debug");
+                }
             }
             await element.evaluate(environment);
             setStepInto(false);
@@ -1194,6 +1265,7 @@ class Praxly_for {
                 name: 'for loop',
                 functionList: {},
                 variableList: {},
+                global: environment.global,
             };
             loopCount += 1;
             await this.statement.evaluate(newScope);
@@ -1244,6 +1316,7 @@ class Praxly_do_while {
                 name: 'do while loop',
                 functionList: {},
                 variableList: {},
+                global: environment.global,
             };
             loopCount += 1;
             await this.statement.evaluate(newScope);
@@ -1273,6 +1346,7 @@ class Praxly_repeat_until {
                 name: 'repeat until loop',
                 functionList: {},
                 variableList: {},
+                global: environment.global,
             };
             loopCount += 1;
             await this.statement.evaluate(newScope);
@@ -1374,6 +1448,7 @@ class Praxly_function_call {
             name: `function: ${this.name}`,
             functionList: {},
             variableList: {},
+            global: environment.global,
         };
         for (let i = 0; i < this.args.length; i++) {
             let parameterName = functionParams[i][1];
