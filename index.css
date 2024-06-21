@@ -12,29 +12,27 @@ body {
 }
 
 .about {
-  padding: 2rem;
-  text-align: center;
-  justify-content: center;
+  line-height: 1.5;
 }
 
 .button-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 20px;
+  justify-content: center;
+  margin: 2rem;
 }
 
 .button-container button {
-  cursor: pointer;
-  border-radius: 5px;
   border: none;
-  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
   font-weight: bold;
+  padding: 10px 20px;
   transition: background-color 0.5s;
 }
 
 .praxly-button {
-  background-color: #2B5E7D;
+  background-color: #2b5e7d;
   color: white
 }
 
@@ -47,25 +45,6 @@ body {
   color: black;
 }
 
-.embed-mode button {
-  background-color: lightgray;
-  color: black;
-}
-
 .github-button:hover {
   background-color: darkgray;
-}
-
-.embed-mode:hover {
-  background-color: darkgray;
-}
-
-iframe {
-  width: 900px;
-  height: 800px;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  margin: auto;
-  padding: 30px;
 }

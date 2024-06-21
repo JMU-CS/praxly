@@ -2,7 +2,6 @@
 
 Parameter | Options               | Description             |
 ----------|-----------------------|-------------------------|
-?embed    |                       | Turn on embedded mode   |
 &editor=  | text*, blocks, both   | Which editor(s) to show |
 &button=  | run*, debug, both     | Which button(s) to show |
 &result=  | output*, vars, both   | Which result(s) to show |

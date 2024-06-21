@@ -1,12 +1,13 @@
 # Praxly
 
-Praxly is an web-based IDE that empowers users to read, write, and run the pseudocode used in the [CS Praxis Test][1].
+Praxly is a web-based IDE that empowers users to read, write, and run the [pseudocode][1] used in the [CS Praxis Test][2].
 Praxly supports bidirectional synchronization between both block-based and text-based editors, allowing users to learn and visualize the code while also offering the efficiency of editing text.
-The text editor uses [Ace][2], and the block editor uses [Blockly][3].
+The text editor uses [Ace][3], and the block editor uses [Blockly][4].
 
 [1]: https://www.ets.org/pdfs/praxis/5652.pdf#page=21
-[2]: https://ace.c9.io/
-[3]: https://developers.google.com/blockly
+[2]: https://praxis.ets.org/test/5652.html
+[3]: https://ace.c9.io/
+[4]: https://developers.google.com/blockly
 
 <figure>
     <img src="public/images/praxly-screenshot-narrow.png">
