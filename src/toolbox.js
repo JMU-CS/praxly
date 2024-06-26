@@ -6,7 +6,7 @@ export const toolbox = {
 
     {
       "kind": "category",
-      "name": "common",
+      "name": "comments",
       "categorystyle": "array_blocks",
       "contents": [
         {
@@ -20,109 +20,12 @@ export const toolbox = {
         {
           'kind': 'block',
           'type': 'praxly_single_line_comment_block'
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_print_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '\"hello, world\"',
-                }
-              },
-            },
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_println_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '\"hello, world\"',
-                }
-              },
-            },
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_StringFunc_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '\"hello, world\"',
-                }
-              },
-            },
-            'PARAMS': {
-              'block': {
-                'type': 'praxly_parameter_block',
-              }
-            }
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_statement_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': 'expression',
-                }
-              },
-            },
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_input_block'
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_random_block'
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_random_int_block',
-          'inputs': {
-            'MAX': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '10',
-                }
-              },
-            },
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_random_seed_block',
-          'inputs': {
-            'SEED': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '0',
-                }
-              },
-            },
-          }
-        },
+        }
       ]
     },
     {
       "kind": "category",
-      "name": "expressions",
+      "name": "math",
       "categorystyle": "expression_blocks",
       "contents": [
         {
@@ -157,18 +60,6 @@ export const toolbox = {
         },
         {
           'kind': 'block',
-          'type': 'praxly_null_block'
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_true_block'
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_false_block'
-        },
-        {
-          'kind': 'block',
           'type': 'praxly_negate_block',
           'inputs': {
             'EXPRESSION': {
@@ -181,6 +72,38 @@ export const toolbox = {
             },
           }
         },
+        {
+          'kind': 'block',
+          'type': 'praxly_random_block'
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_random_int_block',
+          'inputs': {
+            'MAX': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '10',
+                }
+              },
+            },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_random_seed_block',
+          'inputs': {
+            'SEED': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '0',
+                }
+              },
+            },
+          }
+        }
       ]
     },
     {
@@ -263,6 +186,20 @@ export const toolbox = {
             },
           }
         },
+        {
+          'kind': 'block',
+          'type': 'praxly_statement_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 'expression',
+                }
+              },
+            },
+          }
+        }
       ]
     },
     {
@@ -325,6 +262,14 @@ export const toolbox = {
               },
             }
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_true_block'
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_false_block'
         }
       ]
     },
@@ -519,9 +464,32 @@ export const toolbox = {
         },
         {
           'kind': 'block',
+          'type': 'praxly_StringFunc_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '\"hello, world\"',
+                }
+              },
+            },
+            'PARAMS': {
+              'block': {
+                'type': 'praxly_parameter_block',
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
           'type': 'praxly_singular_param_block'
         },
+        {
+          'kind': 'block',
+          'type': 'praxly_input_block'
+        }
       ]
-    },
+    }
   ]
 };
