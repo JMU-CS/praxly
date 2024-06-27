@@ -400,7 +400,8 @@ function reset() {
 
 function openInPraxly() {
   const params = window.location.search;
-  window.open('main.html' + params, '_blank');
+  const hashcode = window.location.hash;
+  window.open('main.html' + params + hashcode, '_blank');
 }
 
 /**
