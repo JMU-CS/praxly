@@ -51,6 +51,7 @@ let resetButton;
 let debugModal;
 let yesButton;
 let noButton;
+let openWindowButton;
 
 // make sure this works fine in gui
 export let configuration = {};  // see parseUrlConfiguration()
@@ -101,6 +102,7 @@ function initializeGlobals() {
   debugModal = document.querySelector('.debugModal');
   yesButton = document.querySelector('#yes');
   noButton = document.querySelector('#no');
+  openWindowButton = document.querySelector('#newWindow');
 
 }
 
@@ -170,6 +172,7 @@ function registerListeners() {
     });
 
     resetButton.addEventListener('click', showDebugModal);
+    openWindowButton.addEventListener('click', openInPraxly);
   }
 
   runButton.addEventListener('click', runTasks);
@@ -393,6 +396,11 @@ function reset() {
       clear();
     }
   }
+}
+
+function openInPraxly() {
+  const params = window.location.search;
+  window.open('main.html' + params, '_blank');
 }
 
 /**

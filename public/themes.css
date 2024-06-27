@@ -813,6 +813,10 @@ body.embed .material-symbols-rounded.reset {
   font-size: 25px;
 }
 
+body.embed .material-symbols-rounded.open {
+  font-size: 19px;
+}
+
 
 .side-view {
   display: flex;
@@ -872,6 +876,10 @@ body:not(.embed)>#embed-toolbar {
 
 #embed-toolbar button:hover {
   background-color: lightgray;
+}
+
+#newWindow.embed-button {
+
 }
 
 #blocker {
