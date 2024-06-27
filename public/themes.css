@@ -878,10 +878,6 @@ body:not(.embed)>#embed-toolbar {
   background-color: lightgray;
 }
 
-#newWindow.embed-button {
-
-}
-
 #blocker {
   display: none;
   position: fixed;
