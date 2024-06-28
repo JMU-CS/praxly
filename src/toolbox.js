@@ -391,15 +391,99 @@ export const toolbox = {
         },
         {
           'kind': 'block',
-          'type': 'praxly_while_loop_block'
+          'type': 'praxly_while_loop_block',
+          'inputs' : {
+            'CONDITION': {
+              'block': {
+                'type': 'praxly_compare_block',
+                'inputs': {
+                  'A_OPERAND': {
+                    'block': {
+                      'type': 'praxly_literal_block',
+                      'fields': {
+                        'LITERAL': "i",
+                      }
+                    },
+                  },
+                  'B_OPERAND': {
+                    'block': {
+                      'type': 'praxly_literal_block',
+                      'fields': {
+                        'LITERAL': 1,
+                      }
+                    },
+                  },
+                },
+                'fields': {
+                  'OPERATOR': 'LESS THAN'
+                }
+              }
+            }
+          }
         },
         {
           'kind': 'block',
-          'type': 'praxly_do_while_loop_block'
+          'type': 'praxly_do_while_loop_block',
+          'inputs' : {
+            'CONDITION': {
+              'block': {
+                'type': 'praxly_compare_block',
+                'inputs': {
+                  'A_OPERAND': {
+                    'block': {
+                      'type': 'praxly_literal_block',
+                      'fields': {
+                        'LITERAL': "i",
+                      }
+                    },
+                  },
+                  'B_OPERAND': {
+                    'block': {
+                      'type': 'praxly_literal_block',
+                      'fields': {
+                        'LITERAL': 1,
+                      }
+                    },
+                  },
+                },
+                'fields': {
+                  'OPERATOR': 'LESS THAN'
+                }
+              }
+            }
+          }
         },
         {
           'kind': 'block',
-          'type': 'praxly_repeat_until_loop_block'
+          'type': 'praxly_repeat_until_loop_block',
+          'inputs' : {
+            'CONDITION': {
+              'block': {
+                'type': 'praxly_compare_block',
+                'inputs': {
+                  'A_OPERAND': {
+                    'block': {
+                      'type': 'praxly_literal_block',
+                      'fields': {
+                        'LITERAL': "i",
+                      }
+                    },
+                  },
+                  'B_OPERAND': {
+                    'block': {
+                      'type': 'praxly_literal_block',
+                      'fields': {
+                        'LITERAL': 1,
+                      }
+                    },
+                  },
+                },
+                'fields': {
+                  'OPERATOR': 'LESS THAN'
+                }
+              }
+            }
+          }
         }
       ]
     },
