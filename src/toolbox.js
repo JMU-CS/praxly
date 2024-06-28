@@ -7,7 +7,7 @@ export const toolbox = {
     {
       "kind": "category",
       "name": "common",
-      "categorystyle": "array_blocks",
+      "categorystyle": "comment_blocks",
       "contents": [
         {
           'kind': 'block',
@@ -56,6 +56,88 @@ export const toolbox = {
                 'type': 'praxly_parameter_block',
               }
             }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "category",
+      "name": "variables",
+      "categorystyle": "variable_blocks",
+      "contents": [
+        {
+          'kind': 'block',
+          'type': 'praxly_variable_block'
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_vardecl_block',
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_assignment_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 0,
+                }
+              },
+            },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_reassignment_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 0,
+                }
+              },
+            },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_array_assignment_block',
+          'inputs': {
+            'EXPRESSION': {
+              'block': {
+                'type': 'praxly_parameter_block',
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_array_reference_reassignment_block',
+          'inputs': {
+            'INDEX': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '0',
+                }
+              },
+            },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_array_reference_block',
+          'inputs': {
+            'INDEX': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '0',
+                }
+              },
+            },
           }
         }
       ]
@@ -132,88 +214,6 @@ export const toolbox = {
           'type': 'praxly_random_seed_block',
           'inputs': {
             'SEED': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '0',
-                }
-              },
-            },
-          }
-        }
-      ]
-    },
-    {
-      "kind": "category",
-      "name": "variables",
-      "categorystyle": "variable_blocks",
-      "contents": [
-        {
-          'kind': 'block',
-          'type': 'praxly_variable_block'
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_vardecl_block',
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_assignment_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': 0,
-                }
-              },
-            },
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_reassignment_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': 0,
-                }
-              },
-            },
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_array_assignment_block',
-          'inputs': {
-            'EXPRESSION': {
-              'block': {
-                'type': 'praxly_parameter_block',
-              }
-            }
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_array_reference_reassignment_block',
-          'inputs': {
-            'INDEX': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '0',
-                }
-              },
-            },
-          }
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_array_reference_block',
-          'inputs': {
-            'INDEX': {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {

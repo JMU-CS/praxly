@@ -222,7 +222,7 @@ export function definePraxlyBlocks(workspace) {
       "message0": "input",
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'other_blocks',
       "tooltip": "",
       "helpUrl": ""
     },
@@ -260,9 +260,8 @@ export function definePraxlyBlocks(workspace) {
         }
       ],
       "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'procedure_blocks',
+      "output": null,
+      "style": 'expression_blocks',
       "tooltip": "",
       "helpUrl": ""
     },
@@ -280,7 +279,7 @@ export function definePraxlyBlocks(workspace) {
       "message0": "true",
       "inputsInline": true,
       "output": "Boolean",
-      "style": 'expression_blocks',
+      "style": 'logic_blocks',
       "tooltip": "",
       "helpUrl": ""
     },
@@ -289,7 +288,7 @@ export function definePraxlyBlocks(workspace) {
       "message0": "false",
       "inputsInline": true,
       "output": "Boolean",
-      "style": 'expression_blocks',
+      "style": 'logic_blocks',
       "tooltip": "",
       "helpUrl": ""
     },
@@ -1109,7 +1108,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'procedure_blocks',
+      "style": 'other_blocks',
       "tooltip": "",
       "helpUrl": ""
     },
