@@ -219,7 +219,7 @@ export function definePraxlyBlocks(workspace) {
     },
     {
       "type": "praxly_input_block",
-      "message0": "input",
+      "message0": "input ( )",
       "inputsInline": true,
       "output": null,
       "style": 'other_blocks',
@@ -228,7 +228,7 @@ export function definePraxlyBlocks(workspace) {
     },
     {
       "type": "praxly_random_block",
-      "message0": "random",
+      "message0": "random ( )",
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
@@ -237,7 +237,7 @@ export function definePraxlyBlocks(workspace) {
     },
     {
       "type": "praxly_random_int_block",
-      "message0": "randomInt %1",
+      "message0": "randomInt ( %1 )",
       "args0": [
         {
           "type": "input_value",
@@ -252,7 +252,7 @@ export function definePraxlyBlocks(workspace) {
     },
     {
       "type": "praxly_random_seed_block",
-      "message0": "randomSeed %1",
+      "message0": "randomSeed ( %1 )",
       "args0": [
         {
           "type": "input_value",
