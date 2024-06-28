@@ -232,7 +232,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "",
+      "tooltip": "Generates and returns a random value",
       "helpUrl": ""
     },
     {
@@ -247,7 +247,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "",
+      "tooltip": "Generates and returns a random value between 0 and the entered number exclusively",
       "helpUrl": ""
     },
     {
@@ -262,7 +262,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "",
+      "tooltip": "Generates a random number generator with the specific seed value",
       "helpUrl": ""
     },
     {
@@ -565,7 +565,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": "procedure_blocks",
-      "tooltip": "test",
+      "tooltip": "Defines a custom, reusable procedure with optional inputs and a return value",
       "helpUrl": "",
       "onchange": "updateProcedureName"
     },
@@ -621,7 +621,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "Declares a variable",
       "helpUrl": ""
     },
     {
@@ -658,7 +658,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "Declares and assigns a variable to a value",
       "helpUrl": ""
     },
     {
@@ -686,7 +686,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "Assigns a new value to an element in an array",
       "helpUrl": ""
     },
     {
@@ -710,7 +710,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "Reassigns a value to a variable",
       "helpUrl": ""
     },
     {
@@ -725,7 +725,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "previousStatement": null,
       "style": 'procedure_blocks',
-      "tooltip": "",
+      "tooltip": "Ends the procedure and returns a value",
       "helpUrl": ""
     },
     {
@@ -743,7 +743,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'procedure_blocks',
-      "tooltip": "",
+      "tooltip": "Outputs text or values",
       "helpUrl": ""
     },
     {
