@@ -395,7 +395,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "",
+      "tooltip": "Arithmetic operator",
       "helpUrl": "",
     },
     {
@@ -446,14 +446,14 @@ export function definePraxlyBlocks(workspace) {
         {
           "type": "field_input",
           "name": "COMMENT",
-          "text": "comment"
+          "text": "missing code"
         }
       ],
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
       "style": 'comment_blocks',
-      "tooltip": "",
+      "tooltip": "Placeholder for missing code",
       "helpUrl": ""
     },
     {
@@ -473,7 +473,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'comment_blocks',
-      "tooltip": "",
+      "tooltip": "Comment that describes a line of code on the next line",
       "helpUrl": ""
     },
     {
@@ -488,7 +488,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'comment_blocks',
-      "tooltip": "",
+      "tooltip": "Represents a blank/empty line",
       "helpUrl": ""
     },
     {
@@ -760,7 +760,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "",
+      "tooltip": "Negation operator",
       "helpUrl": ""
     },
     {
