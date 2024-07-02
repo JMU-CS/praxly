@@ -41,7 +41,30 @@
 
       <div id="secondary_bar">
         <!-- Example programs  -->
-        <select id="exampleTable"></select>
+        <button id="examplesButton">Example Programs</button>
+        <div class="exampleModal">
+          <div class="exampleModalContent">
+            <span class="material-symbols-rounded close">close</span>
+
+            <div class="exampleModalText">
+              <h3>Here are some example programs to practice with!</h2>
+              <p>Click on the blue links to browse and try out some sample code.</p>
+            </div>
+
+            <!-- This div is just to separate things-->
+            <div class="examples-outer">
+              <table class="examplesTable">
+                <tr>
+                  <th>Example Name</th>
+                  <th>Difficulty</th>
+                  <th>Topics</th>
+                </tr>
+              </table>
+            </div>
+
+
+          </div>
+        </div>
       </div>
     </div>
 
@@ -86,7 +109,8 @@
         <button id="reference" class="MainMenu-button" title="reference">
           <span class="material-symbols-rounded manual">book_2</span>
           <span class="button-text">Manual</span>
-        </button></li>
+        </button>
+      </li>
       <li class="settingsOptions">
         <button id="darkMode" class="MainMenu-button" title="Dark Mode">
           <span class="button-text">Dark Mode</span>
