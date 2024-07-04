@@ -600,48 +600,10 @@ class Parser {
             this.tokens[this.i].token_type = NODETYPES.INPUT;
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
-          case 'random': {
-            const randomToken = this.advance();
-            if (this.has('(')) {
-              this.advance();
-              if (this.has(')')) {
-                const rightParenthesisToken = this.advance();
-                return {
-                  blockID: "code",
-                  line,
-                  type: NODETYPES.RANDOM,
-                  startIndex: randomToken.startIndex,
-                  endIndex: rightParenthesisToken.endIndex,
-                };
-              } else {
-                textError('parsing', 'did not detect right parenthesis', line);
-              }
-            } else {
-              textError('parsing', 'did not detect left parenthesis', line);
-            }
-          }
-          case 'randomInt': {
-            const randomToken = this.advance();
-            if (this.has('(')) {
-              this.advance();
-              const max = this.parse_expression(9);
-              if (this.has(')')) {
-                const rightParenthesisToken = this.advance();
-                return {
-                  blockID: "code",
-                  line,
-                  max,
-                  type: NODETYPES.RANDOM_INT,
-                  startIndex: randomToken.startIndex,
-                  endIndex: rightParenthesisToken.endIndex,
-                };
-              } else {
-                textError('parsing', 'did not detect right parenthesis', line);
-              }
-            } else {
-              textError('parsing', 'did not detect left parenthesis', line);
-            }
-          }
+          case 'random':
+          case 'randomInt':
+            return this.parse_builtin_function_call(line);
+
           case NODETYPES.BOOLEAN:
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
@@ -735,8 +697,42 @@ class Parser {
     }
   }
 
+  parse_builtin_function_call(line) {
+    // Assumes identifier token is up.
+    const nameToken = this.advance();
+    if (this.has('(')) {
+      this.advance();
 
+      // Expect 0 or more parameters.
+      const parameters = [];
+      if (this.hasNot(')')) {
+        const parameter = this.parse_expression(9);
+        parameters.push(parameter);
+        while (this.has(',')) {
+          this.advance();
+          const parameter = this.parse_expression(9);
+          parameters.push(parameter);
+        }
+      }
 
+      if (this.has(')')) {
+        const rightParenthesisToken = this.advance();
+        return {
+          blockID: "code",
+          name: nameToken.value,
+          line,
+          parameters,
+          type: NODETYPES.BUILTIN_FUNCTION_CALL,
+          startIndex: nameToken.startIndex,
+          endIndex: rightParenthesisToken.endIndex,
+        };
+      } else {
+        textError('parsing', 'did not detect right parenthesis', line);
+      }
+    } else {
+      textError('parsing', 'did not detect left parenthesis', line);
+    }
+  }
 
   parse_location() {
     var result = {
@@ -1056,31 +1052,11 @@ class Parser {
     }
 
     else if (this.has("randomSeed")) {
-      const randomToken = this.advance();
-      if (this.has('(')) {
+      const node = this.parse_builtin_function_call(line);
+      if (this.has(';')) {
         this.advance();
-        const seed = this.parse_expression(9);
-        if (this.has(')')) {
-          const rightParenthesisToken = this.advance();
-
-          if (this.has(';')) {
-            this.advance();
-          }
-
-          return {
-            blockID: "code",
-            line,
-            seed,
-            type: NODETYPES.RANDOM_SEED,
-            startIndex: randomToken.startIndex,
-            endIndex: rightParenthesisToken.endIndex,
-          };
-        } else {
-          textError('parsing', 'did not detect right parenthesis', line);
-        }
-      } else {
-        textError('parsing', 'did not detect left parenthesis', line);
       }
+      return node;
     }
 
     else if (this.has("return")) {

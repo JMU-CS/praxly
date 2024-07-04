@@ -121,14 +121,17 @@ export function createExecutable(tree) {
         case NODETYPES.INPUT:
             return new Praxly_input(tree);
 
-        case NODETYPES.RANDOM:
-            return new Praxly_random(tree);
-
-        case NODETYPES.RANDOM_INT:
-            return new Praxly_random_int(createExecutable(tree.max), tree);
-
-        case NODETYPES.RANDOM_SEED:
-            return new Praxly_random_seed(createExecutable(tree.seed), tree);
+        case NODETYPES.BUILTIN_FUNCTION_CALL: {
+            if (tree.name === 'random') {
+                return new Praxly_random(tree);
+            } else if (tree.name === 'randomInt') {
+                return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'randomSeed') {
+                return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
+            } else {
+                throw new Error('unknown builtin function');
+            }
+        }
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
             var args = [];

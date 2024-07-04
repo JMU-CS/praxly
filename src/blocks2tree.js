@@ -81,26 +81,34 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_random_block'] = (block) => {
         return {
+            name: 'random',
             blockID: block.id,
-            type: NODETYPES.RANDOM,
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [],
         };
     }
 
     praxlyGenerator['praxly_random_int_block'] = (block) => {
         const expression = block.getInputTargetBlock('MAX');
         return {
+            name: 'randomInt',
             blockID: block.id,
-            type: NODETYPES.RANDOM_INT,
-            max: praxlyGenerator[expression.type](expression),
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [
+              praxlyGenerator[expression.type](expression),
+            ],
         };
     }
 
     praxlyGenerator['praxly_random_seed_block'] = (block) => {
         const expression = block.getInputTargetBlock('SEED');
         return {
+            name: 'randomSeed',
             blockID: block.id,
-            type: NODETYPES.RANDOM_SEED,
-            seed: praxlyGenerator[expression.type](expression),
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [
+              praxlyGenerator[expression.type](expression),
+            ],
         };
     }
 
