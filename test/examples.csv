@@ -23,7 +23,7 @@ for ( int i ← 0; i < 6; i ← i + 1 )
     // returns the value of the second die
     dieTwo ← dieTwoArray[i]
     score ← newScore ( dieOne, dieTwo, score )
-    println score
+    print score
 end for","7
 13
 13
@@ -49,7 +49,7 @@ void sort ( int[] arr, int len )
                 pos ← pos - 1
             end if
         end if
-        println arr
+        print arr
     end while
 end sort
 
@@ -96,7 +96,7 @@ Q11,"// precondition: n is a positive integer
 void f ( int n )
     for ( int c ← 1; c ≤ n; c ← c + 1 )
         if ( ( c % 2 ) ≠ 0 )
-            println c
+            print c
         end if
     end for
 end f
@@ -122,8 +122,8 @@ mystery ( 6 )",3 10 5 16 8 4 2 1,
 Q13,"int age = 18
 int height = 72
 
-println ( age > 10 ) and ( height > 36 )
-println not ( ( age ≤ 10 ) or ( height ≤ 36 ) )","true
+print ( age > 10 ) and ( height > 36 )
+print not ( ( age ≤ 10 ) or ( height ≤ 36 ) )","true
 true",
 Q14,"String value ← ""Applesauce""
 value ← value.substring ( 0, 1 ).toLowerCase () +

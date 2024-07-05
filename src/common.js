@@ -61,7 +61,6 @@ export const NODETYPES = {
     ...OP,
     ...TYPES,
     PRINT:                          "PRINT",
-    PRINTLN:                        "PRINTLN",
     RANDOM:                         "RANDOM",
     RANDOM_INT:                     "RANDOM_INT",
     RANDOM_SEED:                    "RANDOM_SEED",
@@ -142,7 +141,7 @@ export function consoleInput() {
     });
 
     const clickListener = () => {
-      inputElement.classList.add('attract'); 
+      inputElement.classList.add('attract');
       inputElement.focus();
     };
     blocker.addEventListener('click', clickListener);
@@ -156,7 +155,7 @@ export function consoleInput() {
           inputElement.classList.remove('prompt');
           blocker.style.display = 'none';
         } else if (event.key === 'Escape') {
-          // TODO: what should we do on escape? 
+          // TODO: what should we do on escape?
         }
       };
       inputElement.addEventListener('keyup', listener);

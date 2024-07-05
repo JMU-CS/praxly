@@ -12,12 +12,12 @@ export const codeText = `
 
 ##Order of Operations
 ##// 1. what do you think this will print out?
-println "question 1 prints"
-println 3 + 4 * 5 > 32 and 1 + 1 == 2
+print "question 1 prints"
+print 3 + 4 * 5 > 32 and 1 + 1 == 2
 
 // 2. what do you think this will print out?
-println "question 2 prints"
-println "1" + 5 + 6
+print "question 2 prints"
+print "1" + 5 + 6
 
 
 ##Variables assignment
@@ -27,9 +27,9 @@ int c = 0
 c = a + b
 a = b
 b = a - c % b
-println a
-println b
-println c
+print a
+print b
+print c
 
 
 ##Scope
@@ -39,7 +39,7 @@ void change( int b)
 	b = 100
 end change
 change(b)
-println b
+print b
 
 
 ##gcd
@@ -51,7 +51,7 @@ println b
 	end while
 	return a
 end gcd
-println gcd(21, 35)
+print gcd(21, 35)
 
 
 ##Factorial
@@ -63,7 +63,7 @@ int fact(int n)
 	return n * fact(n - 1)
 end fact
 // try printing different numbers to test your code!
-println fact(5)
+print fact(5)
 
 
 ##Fibonacci
@@ -74,7 +74,7 @@ println fact(5)
 		return fibonacci(n - 1) + fibonacci(n - 2)
 	end if
 end fibonacci
-println fibonacci(10)
+print fibonacci(10)
 
 
 ##mystery
@@ -114,7 +114,7 @@ end bubbleSort
 void printArray()
     int n = 6
     for (int i = 0; i < n; i = i + 1)
-        println myArray[i]
+        print myArray[i]
     end for
 end printArray
 
@@ -150,7 +150,7 @@ end selectionSort
 void printArray()
     int n = 6
     for (int i = 0; i < n; i = i + 1)
-        println myArray[i]
+        print myArray[i]
     end for
 end printArray
 
@@ -171,11 +171,11 @@ void calculateChange(int paidAmount, int itemCost)
 	int pennies ← cents % 5
 
 	// Print change breakdown
-	println "Change to be given:"
-	println "Quarters: " + quarters
-	println "Dimes: " + dimes
-	println "Nickels: " + nickels
-	println "Pennies: " + pennies
+	print "Change to be given:"
+	print "Quarters: " + quarters
+	print "Dimes: " + dimes
+	print "Nickels: " + nickels
+	print "Pennies: " + pennies
 end calculateChange
 
 // Main function
@@ -185,7 +185,7 @@ void main()
 
 	// Check if paid amount is sufficient
 	if (paidAmount < itemCost)
-		println "Insufficient amount paid."
+		print "Insufficient amount paid."
 	else
 		// Calculate and print change
 		calculateChange(paidAmount, itemCost)
@@ -206,10 +206,10 @@ int countCharacter(String str, char targetChar)
 	return count
 end countCharacter
 
-println "Enter a string: "
+print "Enter a string: "
 String userString ← input
 int occurrences ← countCharacter(userString, 'a')
-println "Number of occurrences of '" + "a" + "' in " + userString + ":" + occurrences
+print "Number of occurrences of '" + "a" + "' in " + userString + ":" + occurrences
 
 
 
