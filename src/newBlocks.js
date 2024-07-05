@@ -63,7 +63,7 @@ export function definePraxlyBlocks(workspace) {
   }
 
   Blockly.common.defineBlocksWithJsonArray([
-    {
+    { // logic 3
       "type": "praxly_if_block",
       "style": "logic_blocks",
       "message0": "if ( %1 ) %2  %3 end if",
@@ -83,10 +83,10 @@ export function definePraxlyBlocks(workspace) {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "tooltip": "place a condition inside the parentheses. This condition must evaluate to either true or false. \n\n If the condition is true, then the code below will be ran. Otherwise, it is skipped.",
+      "tooltip": "If statement",
       "helpUrl": ""
     },
-    {
+    { // logic 4
       "type": "praxly_if_else_block",
       "message0": "if ( %1 ) %2 %3 else  %4  %5 end if",
       "args0": [
@@ -113,10 +113,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'logic_blocks',
-      "tooltip": "place a condition inside the parentheses. This condition must evaluate to either true or false. \n\n If the condition is true, then only the blocks underneath the first line will be ran. If the condition is false, then only the blocks in the else statement will be ran.",
+      "tooltip": "If-else statement",
       "helpUrl": ""
     },
-    {
+    { // loops 2
       "type": "praxly_while_loop_block",
       "message0": "while ( %1 ) %2 %3 end while",
       "args0": [
@@ -136,10 +136,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'loop_blocks',
-      "tooltip": "place a condition inside the parentheses. This condition must evaluate to either true or false. the blocks inside this block will be ran over and over again until the condition is no longer true",
+      "tooltip": "While loop (repeat until a condition is false)",
       "helpUrl": ""
     },
-    {
+    { // loops 3
       "type": "praxly_do_while_loop_block",
       "message0": "do  %1  while (%2 )%3 ",
       "args0": [
@@ -159,10 +159,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'loop_blocks',
-      "tooltip": "",
+      "tooltip": "Do-while loop (run once and repeat until a condition is false)",
       "helpUrl": ""
     },
-    {
+    { // loops 4
       "type": "praxly_repeat_until_loop_block",
       "message0": "repeat  %1  until (%2 )%3 ",
       "args0": [
@@ -185,7 +185,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "",
       "helpUrl": ""
     },
-    {
+    { // loops 1
       "type": "praxly_for_loop_block",
       "message0": "for (%1 ; %2 ; %3 )%4 %5 end for",
       "args0": [
@@ -213,29 +213,28 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'loop_blocks',
-      "tooltip": "This is a loop block. the first hole in this block is for initializing a vairable. The second is the condition in which the loop will hault. " +
-        "The final hole is for the expression that specifies how you incriment the variable. The code below is what will get called over and over again in the loop. ",
+      "tooltip": "For loop (repeat a specific number of times)",
       "helpUrl": ""
     },
-    {
+    { // common 2
       "type": "praxly_input_block",
       "message0": "input ( )",
       "inputsInline": true,
       "output": null,
       "style": 'other_blocks',
-      "tooltip": "",
+      "tooltip": "Reads input from the keyboard",
       "helpUrl": ""
     },
-    {
+    { // math 4
       "type": "praxly_random_block",
       "message0": "random ( )",
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Generates and returns a random value",
+      "tooltip": "Generates a random double greater than or equal to 0 and less than 1",
       "helpUrl": ""
     },
-    {
+    { // math 5
       "type": "praxly_random_int_block",
       "message0": "randomInt ( %1 )",
       "args0": [
@@ -247,10 +246,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Generates and returns a random value between 0 and the entered number exclusively",
+      "tooltip": "Generates a random integer greater than or equal to 0 and less than x",
       "helpUrl": ""
     },
-    {
+    { // math 6
       "type": "praxly_random_seed_block",
       "message0": "randomSeed ( %1 )",
       "args0": [
@@ -262,10 +261,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Generates a random number generator with the specific seed value",
+      "tooltip": "Sets the seed of the random number generator",
       "helpUrl": ""
     },
-    {
+    { // not used
       "type": "praxly_null_block",
       "message0": "null",
       "inputsInline": true,
@@ -274,25 +273,25 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "",
       "helpUrl": ""
     },
-    {
+    { // logic 1
       "type": "praxly_true_block",
       "message0": "true",
       "inputsInline": true,
       "output": "Boolean",
       "style": 'logic_blocks',
-      "tooltip": "",
+      "tooltip": "The literal value true",
       "helpUrl": ""
     },
-    {
+    { // logic 2
       "type": "praxly_false_block",
       "message0": "false",
       "inputsInline": true,
       "output": "Boolean",
       "style": 'logic_blocks',
-      "tooltip": "",
+      "tooltip": "The literal value false",
       "helpUrl": ""
     },
-    {
+    { // logic 7
       "type": "praxly_compare_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -341,10 +340,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": "Boolean",
       "style": 'logic_blocks',
-      "tooltip": "",
+      "tooltip": "Relational operators:\n< less than\n> greater than\n≤ less than or equal to\n≥ greater than or equal to\n== equal to\n≠ not equal to",
       "helpUrl": ""
     },
-    {
+    { // math 2
       "type": "praxly_arithmetic_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -395,10 +394,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Arithmetic operator",
+      "tooltip": "Arithmetic operators:\n+ addition (and string concatenation)\n- subtraction\n* multiplication\n/ division (integer and floating-point)\n% remainder\n^ exponent",
       "helpUrl": "",
     },
-    {
+    { // logic 5
       "type": "praxly_boolean_operators_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -433,10 +432,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": "Boolean",
       "style": 'logic_blocks',
-      "tooltip": "",
+      "tooltip": "Logical operators",
       "helpUrl": ""
     },
-    {
+    { // common 4
       "type": "praxly_comment_block",
       "message0": "/* %1 %2 */",
       "args0": [
@@ -456,7 +455,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Placeholder for missing code",
       "helpUrl": ""
     },
-    {
+    { // commom 3
       "type": "praxly_single_line_comment_block",
       "message0": "// %1 %2",
       "args0": [
@@ -473,10 +472,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'comment_blocks',
-      "tooltip": "Comment that describes a line of code on the next line",
+      "tooltip": "Single-line comment",
       "helpUrl": ""
     },
-    {
+    { // common 5
       "type": "praxly_emptyline_block",
       "message0": "%1",
       "args0": [
@@ -488,10 +487,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'comment_blocks',
-      "tooltip": "Represents a blank/empty line",
+      "tooltip": "Blank line in the code",
       "helpUrl": ""
     },
-    {
+    { // not used
       "type": "praxly_class_block",
       "message0": "class %1 %2 end class",
       "args0": [
@@ -510,7 +509,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "",
       "helpUrl": ""
     },
-    {
+    { // procedures 1
       "type": "praxly_procedure_block",
       "message0": "%1 %2 %3 ( %4 ) %5 %6 end %7",
       "args0": [
@@ -565,11 +564,11 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": "procedure_blocks",
-      "tooltip": "Defines a custom, reusable procedure with optional inputs and a return value",
+      "tooltip": "Defines a new procedure",
       "helpUrl": "",
       "onchange": "updateProcedureName"
     },
-    {
+    { // procedures 5
       "type": "praxly_function_call_block",
       "message0": "%1 (%2)",
       "args0": [
@@ -587,11 +586,11 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": "procedure_blocks",
-      "tooltip": "test",
+      "tooltip": "Calls a procedure (this block represents the return value)",
       "helpUrl": "",
       "onchange": "updateProcedureName"
     },
-    {
+    { // variables 1
       "type": "praxly_vardecl_block",
       "message0": "%1%2%3",
       "args0": [
@@ -624,7 +623,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Declares a variable",
       "helpUrl": ""
     },
-    {
+    { // variables 5
       "type": "praxly_assignment_block",
       "message0": "%1%2 ⬅ %3 %4",
       "args0": [
@@ -658,10 +657,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "Declares and assigns a variable to a value",
+      "tooltip": "Declares and initializes a variable",
       "helpUrl": ""
     },
-    {
+    { // variables 6
       "type": "praxly_array_reference_reassignment_block",
       "message0": "%1[%2]⬅%3 %4",
       "args0": [
@@ -686,10 +685,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "Assigns a new value to an element in an array",
+      "tooltip": "Assigns an array element",
       "helpUrl": ""
     },
-    {
+    { // variables 3
       "type": "praxly_reassignment_block",
       "message0": "%1⬅%2 %3",
       "args0": [
@@ -710,10 +709,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "Reassigns a value to a variable",
+      "tooltip": "Assigns a variable",
       "helpUrl": ""
     },
-    {
+    { // procedures 4
       "type": "praxly_return_block",
       "message0": "return %1",
       "args0": [
@@ -728,7 +727,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Ends the procedure and returns a value",
       "helpUrl": ""
     },
-    {
+    { // common 1
       "type": "praxly_print_block",
       "message0": "print %1 %2",
       "args0": [
@@ -743,10 +742,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'procedure_blocks',
-      "tooltip": "Outputs text or values",
+      "tooltip": "Displays output on the screen",
       "helpUrl": ""
     },
-    {
+    { // math 3
       "type": "praxly_negate_block",
       "message0": "- %1 %2",
       "args0": [
@@ -760,10 +759,10 @@ export function definePraxlyBlocks(workspace) {
       ],
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Negation operator",
+      "tooltip": "Negates a value",
       "helpUrl": ""
     },
-    {
+    { // delete
       "type": "praxly_println_block",
       "message0": "println %1 %2",
       "args0": [
@@ -781,7 +780,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "",
       "helpUrl": ""
     },
-    {
+    { // procedures 5
       "type": "praxly_statement_block",
       "message0": "%1",
       "args0": [
@@ -796,10 +795,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'procedure_blocks',
-      "tooltip": "",
+      "tooltip": "Expression statement for calling a void procedure",
       "helpUrl": ""
     },
-    {
+    { // math 1
       "type": "praxly_literal_block",
       "message0": "%1",
       "args0": [
@@ -811,10 +810,10 @@ export function definePraxlyBlocks(workspace) {
       ],
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "",
+      "tooltip": "A literal value in the code",
       "helpUrl": ""
     },
-    {
+    { // variables 4
       "type": "praxly_variable_block",
       "message0": "%1",
       "args0": [
@@ -826,10 +825,10 @@ export function definePraxlyBlocks(workspace) {
       ],
       "output": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "The value of a variable",
       "helpUrl": ""
     },
-    {
+    { // not used
       "type": "praxly_String_block",
       "message0": "\"%1\"",
       "args0": [
@@ -844,7 +843,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "",
       "helpUrl": ""
     },
-    {
+    { // not used
       "type": "custom_operation_block",
       "message0": "Custom Operation %1 %2",
       "args0": [
@@ -870,7 +869,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Perform custom operation",
       "helpUrl": ""
     },
-    {
+    { // loops 2
       "type": "praxly_assignment_expression_block",
       "message0": "%1%2 ⬅ %3 %4",
       "args0": [
@@ -903,10 +902,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "Declares and initializes the loop variable",
       "helpUrl": ""
     },
-    {
+    { // logic 6
       "type": "praxly_not_block",
       "message0": "not %1 %2",
       "args0": [
@@ -920,10 +919,10 @@ export function definePraxlyBlocks(workspace) {
       ],
       "output": "Boolean",
       "style": 'logic_blocks',
-      "tooltip": "",
+      "tooltip": "Negates a boolean",
       "helpUrl": ""
     },
-    {
+    { // loops 3
       "type": "praxly_reassignment_expression_block",
       "message0": "%1⬅%2 %3",
       "args0": [
@@ -943,10 +942,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "Updates the loop variable (usually adds 1)",
       "helpUrl": ""
     },
-    {
+    { // procedures 2
       "type": "praxly_parameter_block",
       "message0": "%1 %2",
       "args0": [
@@ -976,13 +975,13 @@ export function definePraxlyBlocks(workspace) {
       ],
       "output": null,
       "style": 'parameter_blocks',
-      "tooltip": "",
+      "tooltip": "List of parameters or arguments",
       "helpUrl": "",
       'mutator': 'praxly_arity',
       'extensions': ['addParams'],
       "inputsInline": true,
     },
-    {
+    { // procedures 3
       "type": "praxly_singular_param_block",
       "message0": "%1%2",
       "args0": [
@@ -1015,10 +1014,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'parameter_blocks',
-      "tooltip": "",
+      "tooltip": "Declares a parameter variable",
       "helpUrl": ""
     },
-    {
+    { // variables 5
       "type": "praxly_array_assignment_block",
       "message0": "%1[] %2 ⬅ {%3 %4}",
       "args0": [
@@ -1052,10 +1051,10 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "Declares and initializes an array",
       "helpUrl": ""
     },
-    {
+    { // variables 7
       "type": "praxly_array_reference_block",
       "message0": "%1[%2] %3",
       "args0": [
@@ -1075,11 +1074,11 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "style": 'variable_blocks',
-      "tooltip": "",
+      "tooltip": "The value of an array element",
       "helpUrl": "",
       "output": null
     },
-    {
+    { // common 6
       "type": "praxly_StringFunc_block",
       "message0": "%1.%2(%3)",
       "args0": [
@@ -1109,8 +1108,8 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'other_blocks',
-      "tooltip": "",
+      "tooltip": "String methods:\ncharAt(i) - Returns the character at index i\ncontains(s) - Returns true if s is a substring\nindexOf(s) - Returns the first index of substring s, or -1 if not found\nlength() - Returns the length of the string\nsubstring(i, j) - Extracts characters from index i up to but not including index j\ntoLowerCase() - Converts the string to all lowercase\ntoUpperCase() - Converts the string to all uppercase",
       "helpUrl": ""
-    },
+    }
   ]);
 }
