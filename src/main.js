@@ -15,7 +15,7 @@ import { tree2blocks } from './tree2blocks';
 import { text2tree } from './text2tree';
 import { generateUrl, loadFromUrl } from './share';
 
-import { codeText, codeExamples } from './examples';
+import { codeText } from './examples';
 import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor, setStopClicked } from './common';
 import { hideDebug, showDebug } from './debugger';
 
@@ -347,40 +347,14 @@ function isBottomOff() {
 
 
 function generateTable() {
-  // const exampleData = codeText.split('##');
 
-  // for (let i = 1; i < exampleData.length - 1; i +=2) {
-  //   const newRow = document.createElement("tr");
-  //   const link = document.createElement("a");
-  //   link.href = "#";
-  //   link.textContent = exampleData[i];
-  //   link.addEventListener('click', function () {
-  //     textEditor.setValue(exampleData[i + 1], -1);
-  //     textPane.click();
-  //     document.querySelector('.exampleModal').style.display = 'none';
-  //   });
-  //   link.classList.add('example_links');
-  //   const nameCell = document.createElement("td");
-  //   nameCell.appendChild(link);
-  //   const difficultyCell = document.createElement("td");
-  //   difficultyCell.textContent = "N/A";
-  //   const topicsCell = document.createElement("td");
-  //   topicsCell.textContent = "N/A";
-
-  //   newRow.appendChild(nameCell);
-  //   newRow.appendChild(difficultyCell);
-  //   newRow.appendChild(topicsCell);
-
-  //   document.querySelector('.examplesTable').appendChild(newRow);
-  // }
-
-  for (let i = 0; i < codeExamples.length; i++) {
+  for (let i = 0; i < codeText.length; i++) {
     const newRow = document.createElement("tr");
     const link = document.createElement("a");
     link.href = "#";
-    link.textContent = codeExamples[i].name;
+    link.textContent = codeText[i].name;
     link.addEventListener('click', function() {
-      textEditor.setValue(codeExamples[i].code, -1);
+      textEditor.setValue(codeText[i].code, -1);
       textPane.click();
       document.querySelector('.exampleModal').style.display = 'none';
     });
@@ -388,9 +362,9 @@ function generateTable() {
     const nameCell = document.createElement("td");
     nameCell.appendChild(link);
     const difficultyCell = document.createElement("td");
-    difficultyCell.textContent = codeExamples[i].difficulty;
+    difficultyCell.textContent = codeText[i].difficulty;
     const topicsCell = document.createElement("td");
-    topicsCell.textContent = codeExamples[i].topic;
+    topicsCell.textContent = codeText[i].topic;
 
     newRow.appendChild(nameCell);
     newRow.appendChild(difficultyCell);
