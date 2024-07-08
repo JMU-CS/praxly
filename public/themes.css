@@ -355,10 +355,71 @@ h1 {
   color: #ffffff;
 }
 
-#exampleTable {
+/* #exampleTable {
   color: #2196f3;
   background-color: var(--example-table-bg-color);
   display: flex;
+} */
+
+/* button */
+#examplesButton {
+  border-radius: 5px;
+  border: none;
+  /* border: 1px solid var(--text-color); */
+  background-color: rgb(25, 25, 25);
+  color: var(--text-color);
+  transition: 0.2s background-color;
+}
+
+#examplesButton:hover {
+  background-color: #000;
+}
+
+.exampleModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.exampleModalContent {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  padding: 50px;
+  color: black;
+  border-radius: 10px;
+}
+
+.exampleModalText h3 {
+  margin-bottom: 0;
+}
+
+.exampleModalText p {
+  margin-top: 5px;
+}
+
+.examplesTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.examplesTable th {
+  border: 1px solid black;
+  border-spacing: 5px;
+  padding: 5px;
+}
+
+.examplesTable td {
+  border: 1px solid black;
+  padding: 5px;
 }
 
 .example_links {
@@ -369,8 +430,6 @@ h1 {
   margin: 10px;
   cursor: pointer;
   /* Optional: add a pointer cursor to indicate interactivity */
-  color: inherit;
-  /* Inherit the text color from its parent element */
   text-decoration: underline;
 }
 
@@ -438,55 +497,10 @@ h1 {
 
 #secondary_bar {
   display: flex;
-  background-color: #e7e5e5;
-  border: 1px solid #aaa;
+  /* background-color: #e7e5e5; */
+  /* border: 1px solid #aaa; */
   margin-top: 20px;
   height: 40px;
-}
-
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid var(--tab-border-color);
-  /* change might be necessary */
-  background-color: var(--tab-bg-color);
-}
-
-#tab1_button,
-#tab2_button,
-#tab3_button {
-  color: var(--tab-text-color);
-}
-
-/* Style the buttons that are used to open the tab content */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-  animation: fadeEffect 1s;
-  /* Fading effect takes 1 second */
 }
 
 /* main blockly and ace editor */
@@ -650,7 +664,8 @@ body:not(.embed) #bottom-part {
   padding: 10px;
   /* border-radius: 10px; */
   overflow: auto;
-  background-color: var(--output-bg-color); /* #ffffff */
+  background-color: var(--output-bg-color);
+  /* #ffffff */
   height: 100%;
 }
 
@@ -663,7 +678,8 @@ body:not(.embed) #bottom-part {
 /* Style for table headers */
 #Variable-table-outer th {
   background-color: var(--table-row-color);
-  border: 1px solid var(--text-color); /* 000000 */
+  border: 1px solid var(--text-color);
+  /* 000000 */
   color: var(--text-color);
   padding: 1ex;
   text-align: left;
@@ -671,7 +687,8 @@ body:not(.embed) #bottom-part {
 
 /* Style for table cells */
 #Variable-table-outer td {
-  border: 1px solid var(--text-color); /* 000000 */
+  border: 1px solid var(--text-color);
+  /* 000000 */
   color: var(--text-color);
   padding: 1ex;
 }
@@ -853,8 +870,10 @@ body:not(.embed)>#embed-toolbar {
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-evenly;
-  width: 60px; /* 6em */
-  height: 30px; /* 4em */
+  width: 60px;
+  /* 6em */
+  height: 30px;
+  /* 4em */
   /* line-height: 0; */
   position: relative;
   border: none;
@@ -903,12 +922,15 @@ body:not(.embed)>#embed-toolbar {
   0% {
     transform: rotate(0deg);
   }
+
   25% {
     transform: rotate(-3deg);
   }
+
   75% {
     transform: rotate(3deg);
   }
+
   100% {
     transform: rotate(0deg);
   }

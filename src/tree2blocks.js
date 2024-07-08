@@ -120,12 +120,6 @@ export const tree2blocks = (workspace, node) => {
             result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
             break;
 
-        case NODETYPES.PRINTLN:
-            var result = workspace.newBlock('praxly_println_block');
-            var child = tree2blocks(workspace, node?.value);
-            result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
-            break;
-
         case NODETYPES.INPUT:
             result = workspace.newBlock('praxly_input_block');
             break;

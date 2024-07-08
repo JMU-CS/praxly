@@ -115,9 +115,6 @@ export function createExecutable(tree) {
         case NODETYPES.PRINT:
             return new Praxly_print(createExecutable(tree.value), tree);
 
-        case NODETYPES.PRINTLN:
-            return new Praxly_println(createExecutable(tree.value), tree);
-
         case NODETYPES.INPUT:
             return new Praxly_input(tree);
 
@@ -530,25 +527,11 @@ class Praxly_print {
     async evaluate(environment) {
         var child = await (this.expression.evaluate(environment));
         var result = valueToString(child, this.json);
-        addToPrintBuffer(result);
-        return null;
-    }
-}
-
-class Praxly_println {
-
-    constructor(value, node) {
-        this.json = node;
-        this.expression = value;
-    }
-
-    async evaluate(environment) {
-        var child = await this.expression.evaluate(environment);
-        var result = valueToString(child, this.json);
         addToPrintBuffer(result + '<br>');
         return null;
     }
 }
+
 
 class Praxly_input {
 

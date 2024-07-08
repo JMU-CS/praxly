@@ -156,11 +156,6 @@ export const tree2text = (node, indentation) => {
             var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
             return result + expression;
 
-        case NODETYPES.PRINTLN:
-            var result = '    '.repeat(indentation) + "println ";
-            var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
-            return result + expression;
-
         case NODETYPES.INPUT:
             return "input";
 
