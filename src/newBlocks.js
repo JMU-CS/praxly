@@ -326,7 +326,7 @@ export function definePraxlyBlocks(workspace) {
     },
     { // variables 6
       "type": "praxly_array_reference_reassignment_block",
-      "message0": "%1[%2]⬅%3 %4",
+      "message0": "%1[%2] ⬅%3 %4",
       "args0": [
         {
           "type": "field_input",
@@ -835,7 +835,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'loop_blocks',
-      "tooltip": "",
+      "tooltip": "Repeat loop (repeat until a condition is true)",
       "helpUrl": ""
     },
     { // procedures 1
