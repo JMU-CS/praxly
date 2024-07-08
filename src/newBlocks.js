@@ -63,289 +63,335 @@ export function definePraxlyBlocks(workspace) {
   }
 
   Blockly.common.defineBlocksWithJsonArray([
-    {
-      "type": "praxly_if_block",
-      "style": "logic_blocks",
-      "message0": "if ( %1 ) %2  %3 end if",
+    { // common 1
+      "type": "praxly_print_block",
+      "message0": "print %1 %2",
       "args0": [
         {
           "type": "input_value",
-          "name": "CONDITION",
-          "check": "Boolean"
-        },
-        {
-          "type": "input_dummy"
-        },
-        {
-          "type": "input_statement",
-          "name": "STATEMENT"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "tooltip": "place a condition inside the parentheses. This condition must evaluate to either true or false. \n\n If the condition is true, then the code below will be ran. Otherwise, it is skipped.",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_if_else_block",
-      "message0": "if ( %1 ) %2 %3 else  %4  %5 end if",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "CONDITION",
-          "check": "Boolean"
-        },
-        {
-          "type": "input_dummy"
-        },
-        {
-          "type": "input_statement",
-          "name": "STATEMENT"
-        },
-        {
-          "type": "input_dummy"
-        },
-        {
-          "type": "input_statement",
-          "name": "ALTERNATIVE"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'logic_blocks',
-      "tooltip": "place a condition inside the parentheses. This condition must evaluate to either true or false. \n\n If the condition is true, then only the blocks underneath the first line will be ran. If the condition is false, then only the blocks in the else statement will be ran.",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_while_loop_block",
-      "message0": "while ( %1 ) %2 %3 end while",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "CONDITION"
-        },
-        {
-          "type": "input_dummy"
-        },
-        {
-          "type": "input_statement",
-          "name": "STATEMENT"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'loop_blocks',
-      "tooltip": "place a condition inside the parentheses. This condition must evaluate to either true or false. the blocks inside this block will be ran over and over again until the condition is no longer true",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_do_while_loop_block",
-      "message0": "do  %1  while (%2 )%3 ",
-      "args0": [
-        {
-          "type": "input_statement",
-          "name": "STATEMENT"
-        },
-        {
-          "type": "input_value",
-          "name": "CONDITION"
+          "name": "EXPRESSION"
         },
         {
           "type": "input_dummy"
         }
       ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'loop_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_repeat_until_loop_block",
-      "message0": "repeat  %1  until (%2 )%3 ",
-      "args0": [
-        {
-          "type": "input_statement",
-          "name": "STATEMENT"
-        },
-        {
-          "type": "input_value",
-          "name": "CONDITION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'loop_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_for_loop_block",
-      "message0": "for (%1 ; %2 ; %3 )%4 %5 end for",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "INITIALIZATION"
-        },
-        {
-          "type": "input_value",
-          "name": "CONDITION"
-        },
-        {
-          "type": "input_value",
-          "name": "REASSIGNMENT"
-        },
-        {
-          "type": "input_dummy"
-        },
-        {
-          "type": "input_statement",
-          "name": "CODEBLOCK"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'loop_blocks',
-      "tooltip": "This is a loop block. the first hole in this block is for initializing a vairable. The second is the condition in which the loop will hault. " +
-        "The final hole is for the expression that specifies how you incriment the variable. The code below is what will get called over and over again in the loop. ",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_input_block",
-      "message0": "input",
-      "inputsInline": true,
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_random_block",
-      "message0": "random",
-      "inputsInline": true,
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_random_int_block",
-      "message0": "randomInt %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "MAX"
-        }
-      ],
-      "inputsInline": true,
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_random_seed_block",
-      "message0": "randomSeed %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "SEED"
-        }
-      ],
-      "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
       "style": 'procedure_blocks',
-      "tooltip": "",
+      "tooltip": "Displays output on the screen",
       "helpUrl": ""
     },
-    {
-      "type": "praxly_null_block",
-      "message0": "null",
+    { // common 2
+      "type": "praxly_input_block",
+      "message0": "input ( )",
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
+      "style": 'other_blocks',
+      "tooltip": "Reads input from the keyboard",
       "helpUrl": ""
     },
-    {
-      "type": "praxly_true_block",
-      "message0": "true",
-      "inputsInline": true,
-      "output": "Boolean",
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_false_block",
-      "message0": "false",
-      "inputsInline": true,
-      "output": "Boolean",
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_compare_block",
-      "message0": "%1 %2 %3 %4",
+    { // common 3
+      "type": "praxly_single_line_comment_block",
+      "message0": "// %1 %2",
       "args0": [
-        {
-          "type": "input_value",
-          "name": "A_OPERAND"
-        },
-        {
-          "type": "field_dropdown",
-          "name": "OPERATOR",
-          "options": [
-            [
-              "==",
-              NODETYPES.EQUALITY
-            ],
-            [
-              "≤",
-              NODETYPES.LESS_THAN_OR_EQUAL
-            ],
-            [
-              "≥",
-              NODETYPES.GREATER_THAN_OR_EQUAL
-            ],
-            [
-              "≠",
-              NODETYPES.INEQUALITY
-            ],
-            [
-              "<",
-              NODETYPES.LESS_THAN
-            ],
-            [
-              ">",
-              NODETYPES.GREATER_THAN
-            ]
-          ]
-        },
         {
           "type": "input_dummy"
         },
         {
-          "type": "input_value",
-          "name": "B_OPERAND"
+          "type": "field_input",
+          "name": "COMMENT",
+          "text": "comment"
         }
       ],
       "inputsInline": true,
-      "output": "Boolean",
-      "style": 'logic_blocks',
-      "tooltip": "",
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'comment_blocks',
+      "tooltip": "Single-line comment",
       "helpUrl": ""
     },
-    {
+    { // common 4
+      "type": "praxly_comment_block",
+      "message0": "/* %1 %2 */",
+      "args0": [
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "field_input",
+          "name": "COMMENT",
+          "text": "missing code"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'comment_blocks',
+      "tooltip": "Placeholder for missing code",
+      "helpUrl": ""
+    },
+    { // common 5
+      "type": "praxly_emptyline_block",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "input_dummy"
+        },
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'comment_blocks',
+      "tooltip": "Blank line in the code",
+      "helpUrl": ""
+    },
+    { // common 6
+      "type": "praxly_StringFunc_block",
+      "message0": "%1.%2(%3)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "FUNCTYPE",
+          "options": [
+            ["charAt", StringFuncs.CHARAT],
+            ["contains", StringFuncs.CONTAINS],
+            ['indexOf', StringFuncs.INDEXOF],
+            ["length", StringFuncs.LENGTH],
+            ["substring", StringFuncs.SUBSTRING],
+            ["toLowerCase", StringFuncs.TOLOWERCSE],
+            ["toUpperCase", StringFuncs.TOUPPERCASE],
+          ]
+        },
+        {
+          "type": "input_value",
+          "name": "PARAMS",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "String methods:\ncharAt(i) - Returns the character at index i\ncontains(s) - Returns true if s is a substring\nindexOf(s) - Returns the first index of substring s, or -1 if not found\nlength() - Returns the length of the string\nsubstring(i, j) - Extracts characters from index i up to but not including index j\ntoLowerCase() - Converts the string to all lowercase\ntoUpperCase() - Converts the string to all uppercase",
+      "helpUrl": ""
+    },
+    { // variables 1
+      "type": "praxly_vardecl_block",
+      "message0": "%1%2%3",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "VARTYPE",
+          "options": [
+            ["boolean", NODETYPES.BOOLEAN],
+            ["char", NODETYPES.CHAR],
+            ["double", NODETYPES.DOUBLE],
+            ["float", NODETYPES.FLOAT],
+            ["int", NODETYPES.INT],
+            ["short", NODETYPES.SHORT],
+            ["String", NODETYPES.STRING],
+          ]
+        },
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "VariableName"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'variable_blocks',
+      "tooltip": "Declares a variable",
+      "helpUrl": ""
+    },
+    { // variables 2
+      "type": "praxly_assignment_block",
+      "message0": "%1%2 ⬅ %3 %4",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "VARTYPE",
+          "options": [
+            ["boolean", NODETYPES.BOOLEAN],
+            ["char", NODETYPES.CHAR],
+            ["double", NODETYPES.DOUBLE],
+            ["float", NODETYPES.FLOAT],
+            ["int", NODETYPES.INT],
+            ["short", NODETYPES.SHORT],
+            ["String", NODETYPES.STRING],
+          ]
+        },
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "VariableName"
+        },
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'variable_blocks',
+      "tooltip": "Declares and initializes a variable",
+      "helpUrl": ""
+    },
+    { // variables 3
+      "type": "praxly_reassignment_block",
+      "message0": "%1⬅%2 %3",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "VariableName"
+        },
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'variable_blocks',
+      "tooltip": "Assigns a variable",
+      "helpUrl": ""
+    },
+    { // variables 4
+      "type": "praxly_variable_block",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "LITERAL",
+          "text": "name"
+        }
+      ],
+      "output": null,
+      "style": 'variable_blocks',
+      "tooltip": "The value of a variable",
+      "helpUrl": ""
+    },
+    { // variables 5
+      "type": "praxly_array_assignment_block",
+      "message0": "%1[] %2 ⬅ {%3 %4}",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "VARTYPE",
+          "options": [
+            ["boolean", NODETYPES.BOOLEAN],
+            ["char", NODETYPES.CHAR],
+            ["double", NODETYPES.DOUBLE],
+            ["float", NODETYPES.FLOAT],
+            ["int", NODETYPES.INT],
+            ["short", NODETYPES.SHORT],
+            ["String", NODETYPES.STRING],
+          ]
+        },
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "arrayName"
+        },
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'variable_blocks',
+      "tooltip": "Declares and initializes an array",
+      "helpUrl": ""
+    },
+    { // variables 6
+      "type": "praxly_array_reference_reassignment_block",
+      "message0": "%1[%2] ⬅%3 %4",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "arrayName"
+        },
+        {
+          "type": "input_value",
+          "name": "INDEX"
+        },
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'variable_blocks',
+      "tooltip": "Assigns an array element",
+      "helpUrl": ""
+    },
+    { // variables 7
+      "type": "praxly_array_reference_block",
+      "message0": "%1[%2] %3",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "arrayName"
+        },
+        {
+          "type": "input_value",
+          "name": "INDEX",
+          "text": "0"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "style": 'variable_blocks',
+      "tooltip": "The value of an array element",
+      "helpUrl": "",
+      "output": null
+    },
+    { // math 1
+      "type": "praxly_literal_block",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "LITERAL",
+          "text": "value"
+        }
+      ],
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "A literal value in the code",
+      "helpUrl": ""
+    },
+    { // math 2
       "type": "praxly_arithmetic_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -396,10 +442,137 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "",
+      "tooltip": "Arithmetic operators:\n+ addition (and string concatenation)\n- subtraction\n* multiplication\n/ division (integer and floating-point)\n% remainder\n^ exponent",
       "helpUrl": "",
     },
-    {
+    { // math 3
+      "type": "praxly_negate_block",
+      "message0": "- %1 %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Negates a value",
+      "helpUrl": ""
+    },
+    { // math 4
+      "type": "praxly_random_block",
+      "message0": "random ( )",
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Generates a random double greater than or equal to 0 and less than 1",
+      "helpUrl": ""
+    },
+    { // math 5
+      "type": "praxly_random_int_block",
+      "message0": "randomInt ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "MAX"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Generates a random integer greater than or equal to 0 and less than x",
+      "helpUrl": ""
+    },
+    { // math 6
+      "type": "praxly_random_seed_block",
+      "message0": "randomSeed ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "SEED"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Sets the seed of the random number generator",
+      "helpUrl": ""
+    },
+    { // logic 1
+      "type": "praxly_true_block",
+      "message0": "true",
+      "inputsInline": true,
+      "output": "Boolean",
+      "style": 'logic_blocks',
+      "tooltip": "The literal value true",
+      "helpUrl": ""
+    },
+    { // logic 2
+      "type": "praxly_false_block",
+      "message0": "false",
+      "inputsInline": true,
+      "output": "Boolean",
+      "style": 'logic_blocks',
+      "tooltip": "The literal value false",
+      "helpUrl": ""
+    },
+    { // logic 3
+      "type": "praxly_if_block",
+      "style": "logic_blocks",
+      "message0": "if ( %1 ) %2  %3 end if",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONDITION",
+          "check": "Boolean"
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "STATEMENT"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "tooltip": "If statement",
+      "helpUrl": ""
+    },
+    { // logic 4
+      "type": "praxly_if_else_block",
+      "message0": "if ( %1 ) %2 %3 else  %4  %5 end if",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONDITION",
+          "check": "Boolean"
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "STATEMENT"
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "ALTERNATIVE"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'logic_blocks',
+      "tooltip": "If-else statement",
+      "helpUrl": ""
+    },
+    { // logic 5
       "type": "praxly_boolean_operators_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -434,84 +607,238 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": "Boolean",
       "style": 'logic_blocks',
-      "tooltip": "",
+      "tooltip": "Logical operators",
       "helpUrl": ""
     },
-    {
-      "type": "praxly_comment_block",
-      "message0": "/* %1 %2 */",
+    { // logic 6
+      "type": "praxly_not_block",
+      "message0": "not %1 %2",
       "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "output": "Boolean",
+      "style": 'logic_blocks',
+      "tooltip": "Negates a boolean",
+      "helpUrl": ""
+    },
+    { // logic 7
+      "type": "praxly_compare_block",
+      "message0": "%1 %2 %3 %4",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "A_OPERAND"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "OPERATOR",
+          "options": [
+            [
+              "==",
+              NODETYPES.EQUALITY
+            ],
+            [
+              "≤",
+              NODETYPES.LESS_THAN_OR_EQUAL
+            ],
+            [
+              "≥",
+              NODETYPES.GREATER_THAN_OR_EQUAL
+            ],
+            [
+              "≠",
+              NODETYPES.INEQUALITY
+            ],
+            [
+              "<",
+              NODETYPES.LESS_THAN
+            ],
+            [
+              ">",
+              NODETYPES.GREATER_THAN
+            ]
+          ]
+        },
         {
           "type": "input_dummy"
         },
         {
-          "type": "field_input",
-          "name": "COMMENT",
-          "text": "comment"
+          "type": "input_value",
+          "name": "B_OPERAND"
         }
       ],
       "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'comment_blocks',
-      "tooltip": "",
+      "output": "Boolean",
+      "style": 'logic_blocks',
+      "tooltip": "Relational operators:\n< less than\n> greater than\n≤ less than or equal to\n≥ greater than or equal to\n== equal to\n≠ not equal to",
       "helpUrl": ""
     },
-    {
-      "type": "praxly_single_line_comment_block",
-      "message0": "// %1 %2",
+    { // loops 1
+      "type": "praxly_for_loop_block",
+      "message0": "for (%1 ; %2 ; %3 )%4 %5 end for",
       "args0": [
         {
-          "type": "input_dummy"
+          "type": "input_value",
+          "name": "INITIALIZATION"
         },
         {
-          "type": "field_input",
-          "name": "COMMENT",
-          "text": "comment"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'comment_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_emptyline_block",
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "input_dummy"
+          "type": "input_value",
+          "name": "CONDITION"
         },
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'comment_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_class_block",
-      "message0": "class %1 %2 end class",
-      "args0": [
+        {
+          "type": "input_value",
+          "name": "REASSIGNMENT"
+        },
         {
           "type": "input_dummy"
         },
         {
           "type": "input_statement",
-          "name": "class"
+          "name": "CODEBLOCK"
         }
       ],
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
-      "style": "class_blocks",
-      "tooltip": "",
+      "style": 'loop_blocks',
+      "tooltip": "For loop (repeat a specific number of times)",
       "helpUrl": ""
     },
-    {
+    { // loops 2
+      "type": "praxly_assignment_expression_block",
+      "message0": "%1%2 ⬅ %3 %4",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "VARTYPE",
+          "options": [
+            ["boolean", NODETYPES.BOOLEAN],
+            ["char", NODETYPES.CHAR],
+            ["double", NODETYPES.DOUBLE],
+            ["float", NODETYPES.FLOAT],
+            ["int", NODETYPES.INT],
+            ["short", NODETYPES.SHORT],
+            ["String", NODETYPES.STRING],
+          ]
+        },
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "i"
+        },
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'variable_blocks',
+      "tooltip": "Declares and initializes the loop variable",
+      "helpUrl": ""
+    },
+    { // loops 3
+      "type": "praxly_reassignment_expression_block",
+      "message0": "%1⬅%2 %3",
+      "args0": [
+
+        {
+          "type": "input_value",
+          "name": "LOCATION"
+        },
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'variable_blocks',
+      "tooltip": "Updates the loop variable (usually adds 1)",
+      "helpUrl": ""
+    },
+    { // loops 4
+      "type": "praxly_while_loop_block",
+      "message0": "while ( %1 ) %2 %3 end while",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONDITION"
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "STATEMENT"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'loop_blocks',
+      "tooltip": "While loop (repeat until a condition is false)",
+      "helpUrl": ""
+    },
+    { // loops 5
+      "type": "praxly_do_while_loop_block",
+      "message0": "do  %1  while (%2 )%3 ",
+      "args0": [
+        {
+          "type": "input_statement",
+          "name": "STATEMENT"
+        },
+        {
+          "type": "input_value",
+          "name": "CONDITION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'loop_blocks',
+      "tooltip": "Do-while loop (run once and repeat until a condition is false)",
+      "helpUrl": ""
+    },
+    { // loops 6
+      "type": "praxly_repeat_until_loop_block",
+      "message0": "repeat  %1  until (%2 )%3 ",
+      "args0": [
+        {
+          "type": "input_statement",
+          "name": "STATEMENT"
+        },
+        {
+          "type": "input_value",
+          "name": "CONDITION"
+        },
+        {
+          "type": "input_dummy"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'loop_blocks',
+      "tooltip": "Repeat loop (repeat until a condition is true)",
+      "helpUrl": ""
+    },
+    { // procedures 1
       "type": "praxly_procedure_block",
       "message0": "%1 %2 %3 ( %4 ) %5 %6 end %7",
       "args0": [
@@ -566,388 +893,11 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": "procedure_blocks",
-      "tooltip": "test",
+      "tooltip": "Defines a new procedure",
       "helpUrl": "",
       "onchange": "updateProcedureName"
     },
-    {
-      "type": "praxly_function_call_block",
-      "message0": "%1 (%2)",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "PROCEDURE_NAME",
-          "text": "procedureName"
-        },
-        {
-          "type": "input_value",
-          "name": "PARAMS",
-          "text": "params"
-        },
-      ],
-      "inputsInline": true,
-      "output": null,
-      "style": "procedure_blocks",
-      "tooltip": "test",
-      "helpUrl": "",
-      "onchange": "updateProcedureName"
-    },
-    {
-      "type": "praxly_vardecl_block",
-      "message0": "%1%2%3",
-      "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "VARTYPE",
-          "options": [
-            ["boolean", NODETYPES.BOOLEAN],
-            ["char", NODETYPES.CHAR],
-            ["double", NODETYPES.DOUBLE],
-            ["float", NODETYPES.FLOAT],
-            ["int", NODETYPES.INT],
-            ["short", NODETYPES.SHORT],
-            ["String", NODETYPES.STRING],
-          ]
-        },
-        {
-          "type": "field_input",
-          "name": "VARIABLENAME",
-          "text": "VariableName"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_assignment_block",
-      "message0": "%1%2 ⬅ %3 %4",
-      "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "VARTYPE",
-          "options": [
-            ["boolean", NODETYPES.BOOLEAN],
-            ["char", NODETYPES.CHAR],
-            ["double", NODETYPES.DOUBLE],
-            ["float", NODETYPES.FLOAT],
-            ["int", NODETYPES.INT],
-            ["short", NODETYPES.SHORT],
-            ["String", NODETYPES.STRING],
-          ]
-        },
-        {
-          "type": "field_input",
-          "name": "VARIABLENAME",
-          "text": "VariableName"
-        },
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_array_reference_reassignment_block",
-      "message0": "%1[%2]⬅%3 %4",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "VARIABLENAME",
-          "text": "arrayName"
-        },
-        {
-          "type": "input_value",
-          "name": "INDEX"
-        },
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_reassignment_block",
-      "message0": "%1⬅%2 %3",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "VARIABLENAME",
-          "text": "VariableName"
-        },
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_return_block",
-      "message0": "return %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "style": 'procedure_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_print_block",
-      "message0": "print %1 %2",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'procedure_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_negate_block",
-      "message0": "- %1 %2",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_println_block",
-      "message0": "println %1 %2",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'procedure_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_statement_block",
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        // {
-        //   "type": "input_dummy"
-        // }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": 'procedure_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_literal_block",
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "LITERAL",
-          "text": "value"
-        }
-      ],
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_variable_block",
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "LITERAL",
-          "text": "name"
-        }
-      ],
-      "output": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_String_block",
-      "message0": "\"%1\"",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "LITERAL",
-          "text": "String"
-        }
-      ],
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "custom_operation_block",
-      "message0": "Custom Operation %1 %2",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "input1",
-          "check": "Number",
-          "align": "RIGHT",
-          "defaultType": "math_number",
-          "defaultValue": 5
-        },
-        {
-          "type": "input_value",
-          "name": "input2",
-          "check": "Number",
-          "align": "RIGHT",
-          "defaultType": "math_number",
-          "defaultValue": 10
-        }
-      ],
-      "output": "Number",
-      "colour": 230,
-      "tooltip": "Perform custom operation",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_assignment_expression_block",
-      "message0": "%1%2 ⬅ %3 %4",
-      "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "VARTYPE",
-          "options": [
-            ["boolean", NODETYPES.BOOLEAN],
-            ["char", NODETYPES.CHAR],
-            ["double", NODETYPES.DOUBLE],
-            ["float", NODETYPES.FLOAT],
-            ["int", NODETYPES.INT],
-            ["short", NODETYPES.SHORT],
-            ["String", NODETYPES.STRING],
-          ]
-        },
-        {
-          "type": "field_input",
-          "name": "VARIABLENAME",
-          "text": "i"
-        },
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "output": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_not_block",
-      "message0": "not %1 %2",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "output": "Boolean",
-      "style": 'logic_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
-      "type": "praxly_reassignment_expression_block",
-      "message0": "%1⬅%2 %3",
-      "args0": [
-
-        {
-          "type": "input_value",
-          "name": "LOCATION"
-        },
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "output": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    {
+    { // procedures 2
       "type": "praxly_parameter_block",
       "message0": "%1 %2",
       "args0": [
@@ -977,13 +927,13 @@ export function definePraxlyBlocks(workspace) {
       ],
       "output": null,
       "style": 'parameter_blocks',
-      "tooltip": "",
+      "tooltip": "List of parameters or arguments",
       "helpUrl": "",
       'mutator': 'praxly_arity',
       'extensions': ['addParams'],
       "inputsInline": true,
     },
-    {
+    { // procedures 3
       "type": "praxly_singular_param_block",
       "message0": "%1%2",
       "args0": [
@@ -1016,90 +966,32 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'parameter_blocks',
-      "tooltip": "",
+      "tooltip": "Declares a parameter variable",
       "helpUrl": ""
     },
-    {
-      "type": "praxly_array_assignment_block",
-      "message0": "%1[] %2 ⬅ {%3 %4}",
+    { // procedures 4
+      "type": "praxly_return_block",
+      "message0": "return %1",
       "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "VARTYPE",
-          "options": [
-            ["boolean", NODETYPES.BOOLEAN],
-            ["char", NODETYPES.CHAR],
-            ["double", NODETYPES.DOUBLE],
-            ["float", NODETYPES.FLOAT],
-            ["int", NODETYPES.INT],
-            ["short", NODETYPES.SHORT],
-            ["String", NODETYPES.STRING],
-          ]
-        },
-        {
-          "type": "field_input",
-          "name": "VARIABLENAME",
-          "text": "arrayName"
-        },
         {
           "type": "input_value",
           "name": "EXPRESSION"
-        },
-        {
-          "type": "input_dummy"
         }
       ],
       "inputsInline": true,
       "previousStatement": null,
-      "nextStatement": null,
-      "style": 'variable_blocks',
-      "tooltip": "",
+      "style": 'procedure_blocks',
+      "tooltip": "Ends the procedure and returns a value",
       "helpUrl": ""
     },
-    {
-      "type": "praxly_array_reference_block",
-      "message0": "%1[%2] %3",
+    { // procedures 5
+      "type": "praxly_function_call_block",
+      "message0": "%1 (%2)",
       "args0": [
         {
           "type": "field_input",
-          "name": "VARIABLENAME",
-          "text": "arrayName"
-        },
-        {
-          "type": "input_value",
-          "name": "INDEX",
-          "text": "0"
-        },
-        {
-          "type": "input_dummy"
-        }
-      ],
-      "inputsInline": true,
-      "style": 'variable_blocks',
-      "tooltip": "",
-      "helpUrl": "",
-      "output": null
-    },
-    {
-      "type": "praxly_StringFunc_block",
-      "message0": "%1.%2(%3)",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "field_dropdown",
-          "name": "FUNCTYPE",
-          "options": [
-            ["charAt", StringFuncs.CHARAT],
-            ["contains", StringFuncs.CONTAINS],
-            ['indexOf', StringFuncs.INDEXOF],
-            ["length", StringFuncs.LENGTH],
-            ["substring", StringFuncs.SUBSTRING],
-            ["toLowerCase", StringFuncs.TOLOWERCSE],
-            ["toUpperCase", StringFuncs.TOUPPERCASE],
-          ]
+          "name": "PROCEDURE_NAME",
+          "text": "procedureName"
         },
         {
           "type": "input_value",
@@ -1109,9 +1001,97 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
+      "style": "procedure_blocks",
+      "tooltip": "Calls a procedure (this block represents the return value)",
+      "helpUrl": "",
+      "onchange": "updateProcedureName"
+    },
+    { // procedures 6
+      "type": "praxly_statement_block",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        // {
+        //   "type": "input_dummy"
+        // }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
       "style": 'procedure_blocks',
+      "tooltip": "Expression statement for calling a void procedure",
+      "helpUrl": ""
+    },
+    { // not used
+      "type": "praxly_null_block",
+      "message0": "null",
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
       "tooltip": "",
       "helpUrl": ""
     },
+    { // not used
+      "type": "praxly_class_block",
+      "message0": "class %1 %2 end class",
+      "args0": [
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "class"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": "class_blocks",
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    { // not used
+      "type": "praxly_String_block",
+      "message0": "\"%1\"",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "LITERAL",
+          "text": "String"
+        }
+      ],
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    { // not used
+      "type": "custom_operation_block",
+      "message0": "Custom Operation %1 %2",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "input1",
+          "check": "Number",
+          "align": "RIGHT",
+          "defaultType": "math_number",
+          "defaultValue": 5
+        },
+        {
+          "type": "input_value",
+          "name": "input2",
+          "check": "Number",
+          "align": "RIGHT",
+          "defaultType": "math_number",
+          "defaultValue": 10
+        }
+      ],
+      "output": "Number",
+      "colour": 230,
+      "tooltip": "Perform custom operation",
+      "helpUrl": ""
+    }
   ]);
 }

@@ -44,7 +44,7 @@ class Lexer {
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
     this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
-    this.keywords = ["if", "else", "end", "print", "println", "input", "for", "while", 'and', 'or', 'do', 'repeat',
+    this.keywords = ["if", "else", "end", "print", "input", "for", "while", 'and', 'or', 'do', 'repeat',
       'until', 'not', 'return', 'null', 'random', 'randomInt', 'randomSeed'];
     this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];
     this.startToken = [0, 0];
@@ -285,7 +285,7 @@ class Parser {
     this.length = tokens?.length;
     this.eof = false;
     this.keywords = ["if", "else", "then", "done"];
-    this.statementKeywords = ['if', 'print', 'for', 'while', 'println'];
+    this.statementKeywords = ['if', 'print', 'for', 'while'];
     this.specialStringFunctionKEywords = ["charAt", "contains", "indexOf", "length", "substring", "toLowerCase", "toUpperCase"];
   }
 
@@ -1037,19 +1037,6 @@ class Parser {
       if (this.has('\n')) {
         // this.advance();
         result.type = NODETYPES.PRINT;
-        result.value = expression;
-        return result;
-      }
-    }
-
-    else if (this.has("println")) {
-      this.advance();
-      const expression = this.parse_expression(9);
-      if (this.has(';')) {
-        this.advance();
-      }
-      if (this.has('\n')) {
-        result.type = NODETYPES.PRINTLN;
         result.value = expression;
         return result;
       }
