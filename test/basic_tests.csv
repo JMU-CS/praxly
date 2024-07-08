@@ -1,7 +1,7 @@
 Test Name,Program Code,Expected Output,Expected Error
 Print once,"print ""Hello, World!""","Hello, World!",
-Println twice,"println ""1st""
-println ""2nd""","1st
+Print twice,"print ""1st""
+print ""2nd""","1st
 2nd",
 Declare integer,"int x
 print x",0,
@@ -17,13 +17,13 @@ float f ← 4.56
 int i ← 7
 short s ← 8
 String t ← ""nine""
-println b
-println c
-println d
-println f
-println i
-println s
-println t","true
+print b
+print c
+print d
+print f
+print i
+print s
+print t","true
 a
 1.23
 4.56
@@ -40,38 +40,38 @@ Assign int to str,"int i = ""0""",,"error occurred on line 1:
 	incompatible types: String cannot be converted to int"
 Arithmetic ops,"int x ← 2
 int y ← 3
-println x + y
-println x - y
-println x / y
-println x * y
-println x ^ y
-println x % y","5
+print x + y
+print x - y
+print x / y
+print x * y
+print x ^ y
+print x % y","5
 -1
 0
 6
 8
 2",
-Relational ops,"println 1 == 1
-println 1 ≠ 1
-println 6 < 6
-println 6 ≤ 6
-println 7 > 7
-println 7 ≥ 7","true
+Relational ops,"print 1 == 1
+print 1 ≠ 1
+print 6 < 6
+print 6 ≤ 6
+print 7 > 7
+print 7 ≥ 7","true
 false
 false
 true
 false
 true",
-Logical ops,"println false and false
-println false and true
-println true and false
-println true and true
-println false or false
-println false or true
-println true or false
-println true or true
-println not true
-println not false","false
+Logical ops,"print false and false
+print false and true
+print true and false
+print true and true
+print false or false
+print false or true
+print true or false
+print true or true
+print not true
+print not false","false
 false
 false
 true
@@ -83,8 +83,8 @@ false
 true",
 String concat,"String s1 = ""Hi""
 String s2 = ""Bye""
-println s1 + s2
-println s1 + "" "" + s2","HiBye
+print s1 + s2
+print s1 + "" "" + s2","HiBye
 Hi Bye",
 Comments,"// this is a comment
 int pizzas = 3
