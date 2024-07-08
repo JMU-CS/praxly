@@ -159,16 +159,17 @@ export const tree2text = (node, indentation) => {
         case NODETYPES.INPUT:
             return "input";
 
-        case NODETYPES.RANDOM:
-            return "random()";
-
-        case NODETYPES.RANDOM_INT:
-            const max = tree2text(node.max, indentation);
-            return `randomInt(${max})`;
-
-        case NODETYPES.RANDOM_SEED:
-            const seed = tree2text(node.seed, indentation);
-            return `randomSeed(${seed})\n`;
+        case NODETYPES.BUILTIN_FUNCTION_CALL: {
+            if (node.name === 'random') {
+                return "random()";
+            } else if (node.name === 'randomInt') {
+                const max = tree2text(node.parameters[0], indentation);
+                return `randomInt(${max})`;
+            } else if (node.name === 'randomSeed') {
+                const seed = tree2text(node.parameters[0], indentation);
+                return `randomSeed(${seed})\n`;
+            }
+        }
 
         case NODETYPES.RETURN:
             var result = '    '.repeat(indentation) + "return ";
