@@ -524,7 +524,7 @@ class Praxly_print {
     async evaluate(environment) {
         var child = await (this.expression.evaluate(environment));
         var result = valueToString(child, this.json);
-        addToPrintBuffer(result);
+        addToPrintBuffer(result + '<br>');
         return null;
     }
 }

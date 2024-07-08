@@ -34,7 +34,7 @@ let stdOut;
 let stdErr;
 let clearOut;
 
-let exampleDiv;
+let examples;
 let titleRefresh;
 let bottomPart;
 let darkmodediv;
@@ -68,11 +68,8 @@ function initializeGlobals() {
   if (!configuration.embed) {
     darkModeButton = document.getElementById('darkMode');
     settingsButton = document.getElementById("settings");
-    exampleDiv = document.getElementById('exampleTable');
+    examples = document.getElementById('examplesButton');
     titleRefresh = document.getElementById('titleRefresh');
-    // bothButton = document.getElementById("tab1_button");
-    // textButton = document.getElementById('tab2_button');
-    // blocksButton = document.getElementById('tab3_button');
     darkmodediv = document.querySelector('.settingsOptions');
     toggleText = document.querySelector('#toggle-text');
     toggleBlocks = document.querySelector('#toggle-blocks');
@@ -159,6 +156,14 @@ function registerListeners() {
     document.addEventListener('mouseup', function (e) {
       isResizingVert = false;
       document.removeEventListener('mousemove', resizeHandler);
+    });
+
+    examples.addEventListener('click', function () {
+      document.querySelector('.exampleModal').style.display = 'flex';
+    });
+
+    document.querySelector('.close').addEventListener('click', function () {
+      document.querySelector('.exampleModal').style.display = 'none';
     });
   } else {
     resizeSideInEmbed.addEventListener('mousedown', function (e) {
@@ -341,23 +346,33 @@ function isBottomOff() {
 }
 
 
-function generateExamples() {
-  const dataArray = codeText.split('##');
-  var selectDropdown = document.getElementById("exampleTable");
-  for (let i = 1; i < dataArray.length - 1; i += 2) {
-    const label = dataArray[i].trim();
-    var option = document.createElement("option");
-    option.textContent = label;
-    const value = dataArray[i + 1].trim();
-    option.value = value;
+function generateTable() {
 
-    selectDropdown.appendChild(option);
+  for (let i = 0; i < codeText.length; i++) {
+    const newRow = document.createElement("tr");
+    const link = document.createElement("a");
+    link.href = "#";
+    link.textContent = codeText[i].name;
+    link.addEventListener('click', function() {
+      textEditor.setValue(codeText[i].code, -1);
+      textPane.click();
+      document.querySelector('.exampleModal').style.display = 'none';
+    });
+    link.classList.add("example_links");
+    const nameCell = document.createElement("td");
+    nameCell.appendChild(link);
+    const difficultyCell = document.createElement("td");
+    difficultyCell.textContent = codeText[i].difficulty;
+    const topicsCell = document.createElement("td");
+    topicsCell.textContent = codeText[i].topic;
+
+    newRow.appendChild(nameCell);
+    newRow.appendChild(difficultyCell);
+    newRow.appendChild(topicsCell);
+
+    document.querySelector('.examplesTable').appendChild(newRow);
   }
 
-  selectDropdown.addEventListener('change', function () {
-    textEditor.setValue(selectDropdown.value, -1);
-    textPane.click();
-  });
 }
 
 function clear() {
@@ -707,7 +722,7 @@ function initialize() {
   initializeBlockly();
   !configuration.embed && (darkmodediv.style.display = 'none');  // TODO remove or move div
   registerListeners();
-  !configuration.embed && generateExamples(); // generate examples if its not in embed mode
+  !configuration.embed && generateTable();
   synchronizeToConfiguration();
 }
 
