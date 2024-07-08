@@ -414,8 +414,15 @@ function reset() {
 }
 
 function openInPraxly() {
+  const code = textEditor.getValue();
+  const encoded = encodeURIComponent(code);
+
+  window.location.hash = '';
+  window.location.hash = `code=${encoded}`;
+
   const params = window.location.search;
   const hashcode = window.location.hash;
+
   window.open('main.html' + params + hashcode, '_blank');
 }
 
