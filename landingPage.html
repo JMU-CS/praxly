@@ -1,0 +1,83 @@
+<!-- This is what I got when I asked ChatGPT to make me the landing Page. it needs some work.  -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to our Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .tutorial-button {
+            margin-right: 20px;
+        }
+        #do-not-show-again {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to our Website</h1>
+        <p>Get started with our amazing features!</p>
+        <a href="#" id="get-started" class="button">Get Started</a>
+        <a href="#" class="button tutorial-button">Tutorials</a>
+        <div id="do-not-show-again">
+            <input type="checkbox" id="do-not-show-checkbox">
+            <label for="do-not-show-checkbox">Do not show this again</label>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('get-started').addEventListener('click', function(event) {
+            event.preventDefault();
+            // Check if "Do not show this again" checkbox is checked
+            if (document.getElementById('do-not-show-checkbox').checked) {
+                // If checked, store a flag in localStorage
+                localStorage.setItem('hideLandingPage', 'true');
+            }
+            // Redirect to the main page or do any other action here
+            window.location.href = 'index.html';
+        });
+
+        // Check if landing page should be hidden
+        window.onload = function() {
+            var hideLandingPage = localStorage.getItem('hideLandingPage');
+            if (hideLandingPage === 'true') {
+                // Hide the landing page
+                document.querySelector('.container').style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>

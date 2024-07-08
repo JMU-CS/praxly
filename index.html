@@ -1,141 +1,56 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Praxly</title>
-  <link rel="stylesheet" href="./style.css">
-  <link id="ToolboxCss" rel="stylesheet" href="./toolbox-light.css">
-  <link rel="icon" href="/jmu.ico" type="image/x-icon">
-  <div id="toast" class="toast">URL copied to clipboard</div>
-  <div id="comingSoon" class="toast">Coming Soon!</div>
-  <script type="module" crossorigin src="/assets/index-e73343b6.js"></script>
-</head>
-<body>
-  <header class="nav-bar">
-
-    <div id="title-version">
-      <h1 id="titleRefresh">Praxly 🍂</h1>
-      version <a href="changelog.html">04/25/2024</a>
-    </div>
-
-    <div id="myModal" class="modal">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
-
-        <h2>Welcome To Praxly!</h2>
-        <ul id="helpMenu">
-          <button class="helpMenuButtons" id="FeaturesButton">features (outdated)</button>
-          <button class="helpMenuButtons" id="ChangelogButton">Changelog</button>
-          <button class="helpMenuButtons" id="BugButton">Report a bug</button>
-          <button class="helpMenuButtons" id="GitHubButton">github</button>
-          <button class="helpMenuButtons" id="AboutButton">People </button>
-        </ul>
-
-        <p>This is a place to try the pseudocode that will be used in the praxis exam.
-           Feel free to switch between the blocks and the text whenever you please!</p>
-        <p>📕 The <b>Book</b> Icon is the manual, which is the reference to the pseudocode that this was made for.</p>
-        <p>🔗The Blue links are example programs.
-           Feel free to submit your own example to me through the bug report form.</p>
-
-        <h4>Notes</h4>
-        <ol>
-          <li>✅ This is in very early release, but as of now everything on the blocks list will work properly.</li>
-          <li>🚨 error messages are probably going to be inconsistent.
-              I'm sure there will be many scenarios I didn't think of that will cause errors.</li>
-          <li>😔 There is currently no support for object oriented programming </li>
-        </ol>
-      </div>
-    </div>
-
-    <ul>
-      <li>
-        <button id="runButton" class="MainMenu-button" title="Run Code">
-          <span class="button-text">Run Code</span>
-        </button>
-      </li>
-      <li id="debug">
-        <button id="DebugButton" class="MainMenu-button" title="Debugger">
-          <span class="button-text">Debug Mode</span>
-        </button>
-      </li>
-      <li class="debugOptions">
-        <button id="stepButton" class="MainMenu-button" title="Step Over">
-          <span class="button-text">Step Over</span>
-        </button>
-      </li>
-      <li class="debugOptions">
-        <button id="stepIntoButton" class="MainMenu-button" title="Step Into">
-          <span class="button-text">Step Into</span>
-        </button>
-      </li>
-      <li class="debugOptions">
-        <button id="stopButton" class="MainMenu-button" title="Stop Debugger">
-          <span class="button-text">Exit Debug</span>
-        </button>
-      </li>
-      <li><button id="share" class="MainMenu-button" title="Share">
-          <span class="button-text">Share</span>
-        </button>
-      </li>
-      <li><button id="reference" class="MainMenu-button" title="reference">
-          <span class="button-text">manual</span>
-        </button></li>
-      <li class="settingsOptions"><button id="darkMode" class="MainMenu-button" title="Dark Mode">
-          <span class="button-text">Dark Mode</span>
-        </button>
-      </li>
-      <li><button id="settings" class="MainMenu-button" title="Settings">
-          <span class="button-text">settings</span>
-        </button>
-      </li>
-      <li><button id="info" class="MainMenu-button" title="About Praxly">
-          <span class="button-text">About</span>
-        </button>
-      </li>
-    </ul>
-
-  </header>
-
-  <div id="secondary_bar">
-    <div class="tab">
-      <button id="tab1_button" class="tablinks">Default</button>
-      <button id="tab2_button" class="tablinks">Text only</button>
-      <button id="tab3_button" class="tablinks">Blocks only</button>
-      <!-- this will be full of examples  -->
-    </div>
-    <!-- <div>Example Programs</div> -->
-    <select id="exampleTable"></select>
-  </div>
-
-  <main>
-    <div id="aceCode" class="codeEditor"></div>
-    <div class="resizeBar"></div>
-    <div id="blocklyDiv"></div>
-  </main>
-
-  <div class="bottom-part">
-    <div id="Variable-table-container">
-      <!-- <p>Variables</p> -->
-      <table id="Variable-table-outer">
-        <thead>
-          <tr>
-            <td>Variable Name</td>
-            <td>Type</td>
-            <td>Value</td>
-            <td>Scope</td>
-          </tr>
-        </thead>
-        <tbody id="Variable-table"></tbody>
-      </table>
-    </div>
-    <div class="output">
-      <div class="clearOut">🗑</div>
-      <p class="stdout">output is here</p>
-      <p class="stderr"></p>
-    </div>
-  </div>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   
+  <link rel="icon" href="/fallen-leaf_1f342.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/assets/index-f2e102c0.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Welcome to Praxly 🍂</h1>
+
+    <div class="about">
+      <p>Praxly is a web-based IDE that empowers users to read, write, and run the
+        <a href="https://www.ets.org/pdfs/praxis/5652.pdf#page=21">pseudocode</a>
+        used in the <a href="https://praxis.ets.org/test/5652.html">CS Praxis Test</a>.
+        Praxly supports bidirectional synchronization between both block-based and text-based editors,
+        allowing users to learn and visualize the code while also offering the efficiency of editing text. The
+        text editor uses <a href="https://ace.c9.io/">Ace</a>,
+        and the block editor uses <a href="https://developers.google.com/blockly">Blockly</a>.
+      </p>
+    </div>
+
+    <div class="button-container">
+      <button class="praxly-button ">Start Coding</button>
+      <button class="github-button">GitHub Repo</button>
+    </div>
+
+    <iframe
+      src="embed.html?button=both&result=both#code=%2F%2F%20Function%20to%20calculate%20change%0Avoid%20calculateChange(int%20paidAmount%2C%20int%20itemCost)%0A%20%20%20%20int%20change%20%E2%86%90%20paidAmount%20-%20itemCost%0A%20%20%20%20int%20cents%20%E2%86%90%20change%0A%0A%20%20%20%20int%20quarters%20%E2%86%90%20cents%20%2F%2025%0A%20%20%20%20cents%20%E2%86%90%20cents%20%25%2025%0A%20%20%20%20int%20dimes%20%E2%86%90%20cents%20%2F%2010%0A%20%20%20%20cents%20%E2%86%90%20cents%20%25%2010%0A%20%20%20%20int%20nickels%20%E2%86%90%20cents%20%2F%205%0A%20%20%20%20int%20pennies%20%E2%86%90%20cents%20%25%205%0A%0A%20%20%20%20%2F%2F%20Print%20change%20breakdown%0A%20%20%20%20print%20%22Change%20to%20be%20given%3A%22%0A%20%20%20%20print%20%22Quarters%3A%20%22%20%2B%20quarters%0A%20%20%20%20print%20%22Dimes%3A%20%22%20%2B%20dimes%0A%20%20%20%20print%20%22Nickels%3A%20%22%20%2B%20nickels%0A%20%20%20%20print%20%22Pennies%3A%20%22%20%2B%20pennies%0Aend%20calculateChange%0A%0A%2F%2F%20Main%20function%0Avoid%20main()%0A%20%20%20%20int%20itemCost%20%E2%86%90%201789%0A%20%20%20%20int%20paidAmount%20%E2%86%90%202000%0A%0A%20%20%20%20%2F%2F%20Check%20if%20paid%20amount%20is%20sufficient%0A%20%20%20%20if%20(paidAmount%20%3C%20itemCost)%0A%20%20%20%20%20%20%20%20print%20%22Insufficient%20amount%20paid.%22%0A%20%20%20%20else%0A%20%20%20%20%20%20%20%20%2F%2F%20Calculate%20and%20print%20change%0A%20%20%20%20%20%20%20%20calculateChange(paidAmount%2C%20itemCost)%0A%20%20%20%20end%20if%0Aend%20main%0A%0A%2F%2F%20Run%20the%20main%20function%0Amain()%0A"
+      width="100%" height="600" allow="fullscreen" frameborder="0">
+    </iframe>
+
+  </div>
+
+  <script>
+    const praxlyButton = document.querySelector('.praxly-button');
+    const githubButton = document.querySelector('.github-button');
+
+    praxlyButton.addEventListener('click', function () {
+      window.open("main.html", "_blank");
+    });
+
+    githubButton.addEventListener('click', function () {
+      window.open("https://github.com/JMU-CS/praxly", '_blank');
+    });
+  </script>
+
 </body>
+
 </html>
