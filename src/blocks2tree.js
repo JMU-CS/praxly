@@ -70,13 +70,37 @@ export const makeGenerator = () => {
         }
     }
 
-    praxlyGenerator['praxly_println_block'] = (block) => {
-        const expression = block.getInputTargetBlock('EXPRESSION');
+    praxlyGenerator['praxly_random_block'] = (block) => {
         return {
+            name: 'random',
             blockID: block.id,
-            type: NODETYPES.PRINTLN,
-            value: praxlyGenerator[expression.type](expression),
-        }
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [],
+        };
+    }
+
+    praxlyGenerator['praxly_random_int_block'] = (block) => {
+        const expression = block.getInputTargetBlock('MAX');
+        return {
+            name: 'randomInt',
+            blockID: block.id,
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [
+              praxlyGenerator[expression.type](expression),
+            ],
+        };
+    }
+
+    praxlyGenerator['praxly_random_seed_block'] = (block) => {
+        const expression = block.getInputTargetBlock('SEED');
+        return {
+            name: 'randomSeed',
+            blockID: block.id,
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [
+              praxlyGenerator[expression.type](expression),
+            ],
+        };
     }
 
     praxlyGenerator['praxly_input_block'] = (block) => {
@@ -334,7 +358,7 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_assignment_expression_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        console.log(`field input is ${varType}`);
+        // console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var value = praxlyGenerator[expression.type](expression);

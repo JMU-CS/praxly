@@ -120,15 +120,24 @@ export const tree2blocks = (workspace, node) => {
             result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
             break;
 
-        case NODETYPES.PRINTLN:
-            var result = workspace.newBlock('praxly_println_block');
-            var child = tree2blocks(workspace, node?.value);
-            result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
-            break;
-
         case NODETYPES.INPUT:
             result = workspace.newBlock('praxly_input_block');
             break;
+
+        case NODETYPES.BUILTIN_FUNCTION_CALL: {
+            if (node.name === 'random') {
+              result = workspace.newBlock('praxly_random_block');
+            } else if (node.name === 'randomInt') {
+              result = workspace.newBlock('praxly_random_int_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('MAX').connection.connect(child?.outputConnection);
+            } else if (node.name === 'randomSeed') {
+              result = workspace.newBlock('praxly_random_seed_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('SEED').connection.connect(child?.outputConnection);
+            }
+            break;
+        }
 
         case NODETYPES.CODEBLOCK:
             var statements = node.statements.map(element => {

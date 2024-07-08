@@ -1,6 +1,7 @@
 body {
   color: black;
-  background-color: #a680ff;
+  background-color: #36759C; /*rgb(207, 207, 243) light purple, rgb(193, 118, 64) auburnish*/
+  overflow: hidden;
 }
 
 /* Makes our label white. */

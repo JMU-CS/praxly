@@ -1,7 +1,7 @@
 import ace from 'ace-builds';
-import 'ace-builds/src-min-noconflict/mode-java.js';
+import './mode-praxly.js';
 
-// this is going to be the place where all shared enums and constants.
+// this is going to be the place where all shared enums and constants. (this is the place for all shared enums and constants.)
 
 /**
  * this is the 'enum' that I use when I refer to types.
@@ -61,7 +61,7 @@ export const NODETYPES = {
     ...OP,
     ...TYPES,
     PRINT:                          "PRINT",
-    PRINTLN:                        "PRINTLN",
+    BUILTIN_FUNCTION_CALL:          "BUILTIN_FUNCTION_CALL",
     INPUT:                          "INPUT",
     CODEBLOCK:                      "CODEBLOCK",
     PROGRAM:                        "PROGRAM",
@@ -100,18 +100,64 @@ export class PraxlyError extends Error {
 
 
 export const MAX_LOOP = 100;  // prevents accidental infinite loops
-export var printBuffer = "";
 export var errorOutput = "";
 export var blockErrorsBuffer = {};
 export var annotationsBuffer = [];
 export var markersBuffer = [];
 
 export function addToPrintBuffer(message) {
-    printBuffer += message;
-
-    //new: displays the live output
     const stdOut = document.querySelector('.stdout');
-    stdOut.innerHTML = printBuffer;
+    stdOut.insertAdjacentHTML('beforeend', message);
+}
+
+export function consoleInput() {
+    // This function is called when the input node of an AST is evaluated. It
+    // injects a text input in the console and awaits a string from the user.
+    // Unlike prompt, this is a non-blocking operation. It returns a promise
+    // that is resolved when the user hits enter. After the resolve, the input
+    // remains in the console in read-only mode.
+
+    // To keep the user from clicking other things before submitting an input,
+    // an overlay sits atop all other elements and blocks mouse events.
+
+    // .stdout is a misleading term. The element is a console that shows both
+    // both input and output.
+    const stdOut = document.querySelector('.stdout');
+    const blocker = document.getElementById('blocker');
+
+    const inputElement = document.createElement('input');
+    inputElement.setAttribute('type', 'text');
+    stdOut.appendChild(inputElement);
+    inputElement.focus();
+
+    stdOut.appendChild(document.createElement('br'));
+
+    blocker.style.display = 'block';
+    inputElement.classList.add('prompt');
+    inputElement.addEventListener('animationend', () => {
+      inputElement.classList.remove('attract');
+    });
+
+    const clickListener = () => {
+      inputElement.classList.add('attract');
+      inputElement.focus();
+    };
+    blocker.addEventListener('click', clickListener);
+
+    return new Promise((resolve, reject) => {
+      const listener = event => {
+        if (event.key === 'Enter') {
+          resolve(inputElement.value);
+          inputElement.removeEventListener('keyup', listener);
+          inputElement.readOnly = true;
+          inputElement.classList.remove('prompt');
+          blocker.style.display = 'none';
+        } else if (event.key === 'Escape') {
+          // TODO: what should we do on escape?
+        }
+      };
+      inputElement.addEventListener('keyup', listener);
+    });
 }
 
 /**
@@ -119,7 +165,8 @@ export function addToPrintBuffer(message) {
  * It also clears all of the ace error annotations.
  */
 export function clearOutput() {
-    printBuffer = "";
+    const stdOut = document.querySelector('.stdout');
+    stdOut.innerHTML = '';
 }
 
 export function clearErrors() {
@@ -301,10 +348,21 @@ export function getStepInto() {
     return stepInto;
 }
 
+let stopClicked = false;
+export function setStopClicked(value) {
+    stopClicked = value;
+}
 
-export const textEditor = ace.edit("aceCode", { fontSize: 19, mode: 'ace/mode/java' });
+export function getStopClicked() {
+    return stopClicked;
+}
 
-export const DebugButton = document.getElementById('DebugButton');
+export const textEditor = ace.edit("aceCode", {
+  fontSize: 19,
+  mode: 'ace/mode/praxly',
+});
+
+export const debugButton = document.getElementById('debugButton');
 export const stepButton = document.getElementById('stepButton');
 export const stopButton = document.getElementById('stopButton');
 export const stepIntoButton = document.getElementById('stepIntoButton');
@@ -325,4 +383,4 @@ export function comingSoon() {
 
 
 //this will let information that I deemed important to be logged to the console.
-export const DEV_LOG = true;
+export const DEV_LOG = false;

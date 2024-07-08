@@ -10,8 +10,8 @@ export function text2tree() {
   let lexer = new Lexer(code);
   let ir;
   let tokens = lexer.lex();
-  console.info('here are the tokens:');
-  console.debug(tokens);
+  // console.info('here are the tokens:');
+  // console.debug(tokens);
   let parser = new Parser(tokens);
   ir = parser?.parse();
   return ir;
@@ -44,8 +44,8 @@ class Lexer {
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
     this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
-    this.keywords = ["if", "else", "end", "print", "println", "input", "for", "while", 'and', 'or', 'do', 'repeat',
-      'until', 'not', 'return', 'null'];
+    this.keywords = ["if", "else", "end", "print", "input", "for", "while", 'and', 'or', 'do', 'repeat',
+      'until', 'not', 'return', 'null', 'random', 'randomInt', 'randomSeed'];
     this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];
     this.startToken = [0, 0];
     this.currentLine = 0;
@@ -285,7 +285,7 @@ class Parser {
     this.length = tokens?.length;
     this.eof = false;
     this.keywords = ["if", "else", "then", "done"];
-    this.statementKeywords = ['if', 'print', 'for', 'while', 'println'];
+    this.statementKeywords = ['if', 'print', 'for', 'while'];
     this.specialStringFunctionKEywords = ["charAt", "contains", "indexOf", "length", "substring", "toLowerCase", "toUpperCase"];
   }
 
@@ -341,6 +341,7 @@ class Parser {
 
   advance() {
     this.i++;
+    return this.tokens[this.i - 1];
   }
 
   parse() {
@@ -599,6 +600,10 @@ class Parser {
             this.tokens[this.i].token_type = NODETYPES.INPUT;
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
+          case 'random':
+          case 'randomInt':
+            return this.parse_builtin_function_call(line);
+
           case NODETYPES.BOOLEAN:
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
@@ -683,13 +688,51 @@ class Parser {
             l.endIndex = this.getCurrentToken().endIndex;
             return l;
           default:
+            // TODO: this case needs to raise an exception or return some error
+            // object. Right now if an expression can't be parsed, it
+            // implicitly returns null/undefined.
+            // throw new Error("couldn't parse expression");
             textError("parsing", `invalid Token ${this.getCurrentToken().value}`, line);
         }
     }
   }
 
+  parse_builtin_function_call(line) {
+    // Assumes identifier token is up.
+    const nameToken = this.advance();
+    if (this.has('(')) {
+      this.advance();
 
+      // Expect 0 or more parameters.
+      const parameters = [];
+      if (this.hasNot(')')) {
+        const parameter = this.parse_expression(9);
+        parameters.push(parameter);
+        while (this.has(',')) {
+          this.advance();
+          const parameter = this.parse_expression(9);
+          parameters.push(parameter);
+        }
+      }
 
+      if (this.has(')')) {
+        const rightParenthesisToken = this.advance();
+        return {
+          blockID: "code",
+          name: nameToken.value,
+          line,
+          parameters,
+          type: NODETYPES.BUILTIN_FUNCTION_CALL,
+          startIndex: nameToken.startIndex,
+          endIndex: rightParenthesisToken.endIndex,
+        };
+      } else {
+        textError('parsing', 'did not detect right parenthesis', line);
+      }
+    } else {
+      textError('parsing', 'did not detect left parenthesis', line);
+    }
+  }
 
   parse_location() {
     var result = {
@@ -983,7 +1026,7 @@ class Parser {
     else if (this.has("print")) {
       this.advance();
       const expression = this.parse_expression(9);
-      result.endIndex = expression.endIndex;
+      result.endIndex = expression?.endIndex ?? this.getCurrentToken().endIndex;
       if (this.has(';')) {
         this.advance();
       }
@@ -995,17 +1038,12 @@ class Parser {
       }
     }
 
-    else if (this.has("println")) {
-      this.advance();
-      const expression = this.parse_expression(9);
+    else if (this.has("randomSeed")) {
+      const node = this.parse_builtin_function_call(line);
       if (this.has(';')) {
         this.advance();
       }
-      if (this.has('\n')) {
-        result.type = NODETYPES.PRINTLN;
-        result.value = expression;
-        return result;
-      }
+      return node;
     }
 
     else if (this.has("return")) {

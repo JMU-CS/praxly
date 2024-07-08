@@ -1,6 +1,24 @@
-
-import { TYPES, OP, NODETYPES, PraxlyError, addToPrintBuffer, defaultError, errorOutput, StringFuncs, highlightLine, getDebugMode, highlightAstNode, textEditor, setStepInto, getStepInto } from "./common";
+import {
+  TYPES,
+  OP,
+  NODETYPES,
+  PraxlyError,
+  addToPrintBuffer,
+  consoleInput,
+  defaultError,
+  errorOutput,
+  StringFuncs,
+  highlightLine,
+  getDebugMode,
+  highlightAstNode,
+  textEditor,
+  setStepInto,
+  getStepInto,
+  stopButton,
+  getStopClicked
+} from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
+import prand from 'pure-rand';
 
 var SCOPES = {};
 
@@ -97,11 +115,20 @@ export function createExecutable(tree) {
         case NODETYPES.PRINT:
             return new Praxly_print(createExecutable(tree.value), tree);
 
-        case NODETYPES.PRINTLN:
-            return new Praxly_println(createExecutable(tree.value), tree);
-
         case NODETYPES.INPUT:
             return new Praxly_input(tree);
+
+        case NODETYPES.BUILTIN_FUNCTION_CALL: {
+            if (tree.name === 'random') {
+                return new Praxly_random(tree);
+            } else if (tree.name === 'randomInt') {
+                return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'randomSeed') {
+                return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
+            } else {
+                throw new Error('unknown builtin function');
+            }
+        }
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
             var args = [];
@@ -118,14 +145,28 @@ export function createExecutable(tree) {
             return new Praxly_codeBlock(result);
 
         case NODETYPES.PROGRAM:
+            // This suggestion for the seed comes from the pure-rand
+            // documentation at https://github.com/dubzzz/pure-rand.
+            const seed = Date.now() ^ (Math.random() * 0x100000000);
             SCOPES = {
                 global: {
                     name: 'global',
                     parent: "root",
                     variableList: {},
                     functionList: {},
+                    random: {
+                      seed,
+                      generator: prand.xoroshiro128plus(seed),
+                    },
                 }
             };
+
+            // All scopes have a shortcut reference to the global scope. That
+            // way we can quickly find global data, like the random number
+            // generator, without having to iterate through the parent
+            // references.
+            SCOPES.global.global = SCOPES.global;
+
             return new Praxly_program(createExecutable(tree.value));
 
         case NODETYPES.STATEMENT:
@@ -486,25 +527,11 @@ class Praxly_print {
     async evaluate(environment) {
         var child = await (this.expression.evaluate(environment));
         var result = valueToString(child, this.json);
-        addToPrintBuffer(result);
-        return null;
-    }
-}
-
-class Praxly_println {
-
-    constructor(value, node) {
-        this.json = node;
-        this.expression = value;
-    }
-
-    async evaluate(environment) {
-        var child = await this.expression.evaluate(environment);
-        var result = valueToString(child, this.json);
         addToPrintBuffer(result + '<br>');
         return null;
     }
 }
+
 
 class Praxly_input {
 
@@ -513,12 +540,53 @@ class Praxly_input {
     }
 
     async evaluate(environment) {
-        var result = prompt("input");
-        if (result === null) {
-            throw new PraxlyError("input canceled", this.json.line);
-        }
-        // addToPrintBuffer(`<b>${result}</b><br>`);
+        const result = await consoleInput();
+        // if (result === null) {
+            // throw new PraxlyError("input canceled", this.json.line);
+        // }
         return new Praxly_String(result, this.json);
+    }
+}
+
+class Praxly_random {
+
+    constructor(node) {
+        this.json = node;
+    }
+
+    async evaluate(environment) {
+        // Pure-rand only generates integers. That's strange. We'll generate an
+        // integer in a range and normalize it.
+        const max = 10000;
+        const x = prand.unsafeUniformIntDistribution(0, max - 1, environment.global.random.generator) / max;
+        return new Praxly_float(x, this.json);
+    }
+}
+
+class Praxly_random_int {
+    constructor(max, node) {
+        this.json = node;
+        this.max = max;
+    }
+
+    async evaluate(environment) {
+        const maxValue = (await this.max.evaluate(environment)).value;
+        const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
+        return new Praxly_int(x, this.json);
+    }
+}
+
+class Praxly_random_seed {
+    constructor(seed, node) {
+        this.json = node;
+        this.seed = seed;
+    }
+
+    async evaluate(environment) {
+        const seedValue = (await this.seed.evaluate(environment)).value;
+        environment.global.random.seed = seedValue;
+        environment.global.random.generator = prand.xoroshiro128plus(seedValue);
+        return null;
     }
 }
 
@@ -911,7 +979,11 @@ class Praxly_program {
     }
 
     async evaluate() {
-        return await (this.codeBlock.evaluate(SCOPES.global));
+        let result = await (this.codeBlock.evaluate(SCOPES.global));
+
+        // update variable list at the end of the program
+        generateVariableTable(SCOPES.global, 1);
+        return result;
     }
 }
 
@@ -936,12 +1008,15 @@ class Praxly_codeBlock {
                 continue;
             }
             if (getDebugMode()) {
-                let markerId = highlightAstNode(element.json);
-                let table = document.getElementById('Variable-table');
-                table.innerHTML = "";
                 generateVariableTable(environment, 1);
-                await waitForStep();
+                let markerId = highlightAstNode(element.json);
+                if (element.json.type != NODETYPES.FUNCDECL) {
+                    await waitForStep();
+                }
                 textEditor.session.removeMarker(markerId);
+                if (getStopClicked()) {
+                    throw new Error("Stop_Debug");
+                }
             }
             await element.evaluate(environment);
             setStepInto(false);
@@ -1176,6 +1251,7 @@ class Praxly_for {
                 name: 'for loop',
                 functionList: {},
                 variableList: {},
+                global: environment.global,
             };
             loopCount += 1;
             await this.statement.evaluate(newScope);
@@ -1226,6 +1302,7 @@ class Praxly_do_while {
                 name: 'do while loop',
                 functionList: {},
                 variableList: {},
+                global: environment.global,
             };
             loopCount += 1;
             await this.statement.evaluate(newScope);
@@ -1255,6 +1332,7 @@ class Praxly_repeat_until {
                 name: 'repeat until loop',
                 functionList: {},
                 variableList: {},
+                global: environment.global,
             };
             loopCount += 1;
             await this.statement.evaluate(newScope);
@@ -1352,10 +1430,11 @@ class Praxly_function_call {
 
         //NEW: parameter list is now a linkedList. expect some errors till I fix it.
         var newScope = {
-            parent: SCOPES.global,
+            parent: environment,
             name: `function: ${this.name}`,
             functionList: {},
             variableList: {},
+            global: environment.global,
         };
         for (let i = 0; i < this.args.length; i++) {
             let parameterName = functionParams[i][1];
@@ -1394,6 +1473,14 @@ class Praxly_function_call {
             }
         } else if (!can_assign(returnType, result.realType, this.json.line)) {
             throw new PraxlyError(`function ${this.name} returned the wrong type.\n\tExpected: ${returnType}\n\tActual: ${result.realType}`, this.json.line);
+        }
+
+        // extra debugger step to highlight the function call after returning
+        if (getDebugMode()) {
+            generateVariableTable(environment, 1);
+            let markerId = highlightAstNode(this.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
         }
         return result;
     }

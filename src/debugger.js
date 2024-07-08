@@ -1,28 +1,26 @@
-import { DebugButton, getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stopButton } from "./common";
-
+import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stopButton } from "./common";
 
 export function showDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
-    let debugButton = document.getElementById('debug');
-    let variableTableContainer = document.getElementById('Variable-table-container');
-    variableTableContainer.style.display = 'block';
+    let debugButton = document.getElementById('debugButton');
+
     for (let button of debugOptions) {
-        button.style.display = 'block';
+        button.style.display = 'inline-flex';
     }
     debugButton.style.display = 'none';
-
+    document.querySelector('#runButton').style.display = 'none';
 }
 
-export function hideDebug() {
+export function hideDebug(configuration) {
     let debugOptions = document.querySelectorAll('.debugOptions');
-    let debug = document.getElementById('debug');
-    let variableTableContainer = document.getElementById('Variable-table-container');
+    let debug = document.getElementById('debugButton');
     for (let button of debugOptions) {
         button.style.display = 'none';
     }
-    debug.style.display = 'block';
-    variableTableContainer.style.display = 'none';
-
+    if (!configuration.embed || configuration.button === 'both') {
+        document.querySelector('#runButton').style.display = 'inline-flex';
+    }
+    debug.style.display = 'inline-flex';
 }
 
 
@@ -56,6 +54,9 @@ export async function generateVariableTable(environment, level) {
     let stepIn = getStepInto();
     setStepInto(false);
     let table = document.getElementById('Variable-table');
+    if (level == 1) {
+        table.innerHTML = "";
+    }
     let parent = environment.parent;
     const variableList = environment.variableList;
     // console.error(variableList);
@@ -84,5 +85,4 @@ export async function generateVariableTable(environment, level) {
         generateVariableTable(parent, level + 1);
     }
     setStepInto(stepIn);
-
 }

@@ -6,7 +6,6 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
-  padding: 2px;
 }
 
 /* header and toolbar */
@@ -24,7 +23,12 @@ h1 {
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  background-color: goldenrod
+  background-color: #ccc;
+}
+
+
+body.embed > .nav-bar {
+  display: none;
 }
 
 .nav-bar img {
@@ -87,12 +91,12 @@ h1 {
   background-color: green;
 }
 
-#DebugButton {
+#debugButton {
   background-color: rgb(79, 5, 163);
   background-image: url('./images/bug44.png');
 }
 
-#DebugButton:hover {
+debugButton:hover {
   background-image: none;
   background-color: #8f45f6;
 }
@@ -351,8 +355,7 @@ h1 {
 #secondary_bar {
   display: flex;
   background-color: #e7e5e5;
-  border-style: solid;
-  border-color: #aaaaaa;
+  border: 1px solid #aaa;
 }
 
 /* Style the tab */
@@ -396,18 +399,26 @@ h1 {
 
 main {
   display: flex;
-  height: 60vh;
-  background-color: #ddc8f5;
+  flex-basis: 60%;
+  flex-grow: 1;
+  background-color: #74ceff;
 }
 
 #blocklyDiv {
   flex: 1;
+  flex-grow: 1;
 }
 
-.resizeBar {
+.resizeBarX {
   width: 5px;
   cursor: col-resize;
-  background-color: #7e0eff;
+  background-color: #2B5E7D;
+}
+
+.resizeBarY {
+  height: 5px;
+  cursor: row-resize;
+  background-color: #2B5E7D;
 }
 
 .codeEditor {
@@ -415,23 +426,23 @@ main {
   width: 100%;
 }
 
-
-.bottom-part {
+#bottom-part {
   display: flex; /* Add this */
   flex-direction: row; /* Add this */
-  height: 25%;
+  flex-basis: 25%;
 }
 
 .output {
   flex: 1;
   box-sizing: border-box;
   position: relative;
-  margin: 10px;
+  /* margin: 10px; */
   padding: 10px;
   font-size: large;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   overflow: auto;
   height: 100%;
+  /* flex-basis: 0%; */
 }
 
 
@@ -552,6 +563,7 @@ main {
 #Variable-table-outer td {
   padding: 10px;
   border: 1px solid #000000; /* Pretty borders for entries */
+  color: black;
 }
 
 
@@ -559,4 +571,40 @@ main {
 /* Hover effect */
 #Variable-table-outer tbody tr:hover {
   background-color: #e2e2e2;
+}
+
+#embed-toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+}
+
+body:not(.embed) > #embed-toolbar {
+  display: none;
+}
+
+.embed-button {
+  border-radius: 50%;
+  width: 4em;
+  height: 4em;
+  line-height: 0;
+}
+
+.material-icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 2em;
+  line-height: 0;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 }

@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.about {
+  line-height: 1.5;
+}
+
+.button-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 2rem;
+}
+
+.button-container button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 20px;
+  transition: background-color 0.5s;
+}
+
+.praxly-button {
+  background-color: #2b5e7d;
+  color: white
+}
+
+.praxly-button:hover {
+  background-color: #1a3f56;
+}
+
+.github-button button {
+  background-color: lightgray;
+  color: black;
+}
+
+.github-button:hover {
+  background-color: darkgray;
+}
