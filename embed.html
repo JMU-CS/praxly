@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Praxly</title>
+  <link id="Theme" rel="stylesheet" href="./themes.css">
+  <link rel="icon" href="/fallen-leaf_1f342.ico" type="image/x-icon">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body class="embed">
+  <div id="blocker"></div>
+
+  <main>
+    <div id="aceCode" class="codeEditor"></div>
+    <div id="blocklyDiv"></div>
+  </main>
+
+  <div class="resizeBarX"></div>
+  <div class="resizeBarY"></div>
+
+  <div class="side-view">
+
+    <!-- Toolbar -->
+    <div id="embed-toolbar">
+      <button id="runButton" class="embed-button">
+        Run
+        <span class="material-symbols-rounded run">play_arrow</span>
+      </button>
+      <button id="debugButton" class="embed-button">
+        Debug
+        <span class="material-symbols-rounded bug">pest_control</span>
+      </button>
+      <button id="stepButton" class="embed-button debugOptions">
+        Step
+        <span class="material-symbols-rounded step">step</span>
+      </button>
+      <button id="stopButton" class="embed-button debugOptions">
+        Exit
+        <span class="material-symbols-rounded stop">stop</span>
+      </button>
+      <button id="resetButton" class="embed-button">
+        Reset
+        <span class="material-symbols-rounded reset">restart_alt</span>
+      </button>
+      <button id="newWindow" class="embed-button">
+        Open
+        <span class="material-symbols-rounded open">open_in_new</span>
+      </button>
+    </div>
+
+    <!-- Output -->
+    <div class="output">
+      <div class="clearOut">🗑</div>
+      <p class="stdout"></p>
+      <p class="stderr"></p>
+    </div>
+
+    <div class="resize-side-view"></div>
+
+    <!--Variables -->
+    <div id="Variable-table-container">
+      <table id="Variable-table-outer">
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Scope</th>
+          </tr>
+        </thead>
+        <tbody id="Variable-table"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="debugModal">
+    <div class="debugModal-content">
+      <h2>Are you sure you want to reset?</h2>
+      <p>Resetting will remove any changes you made AND clear both the output and variables table.</p>
+      <div class="answerOptions">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./src/main.js" type="module"></script>
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Praxly</title>
+  <link id="Theme" rel="stylesheet" href="./themes.css">
+  <link rel="icon" href="/fallen-leaf_1f342.ico" type="image/x-icon">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body>
+  <div id="toast" class="toast">URL copied to clipboard</div>
+  <div id="comingSoon" class="toast">Coming Soon!</div>
+  <div id="blocker"></div>
+
+  <header class="nav-bar">
+    <div id="title-version">
+      <h1 id="titleRefresh">Praxly 🍂</h1>
+      <!-- version <a href="changelog.html">04/25/2024</a> -->
+
+      <div class="toggle-container"> <!--button holder-->
+        <div class="toggle-row"> <!--Button row one (text & blocks)-->
+          <button id="toggle-text" class="item">
+            <span id="text-tip" class="tooltip">Text On</span>
+          </button>
+          <button id="toggle-blocks" class="item">
+            <span id="blocks-tip" class="tooltip">Blocks On</span>
+          </button>
+        </div>
+        <div class="toggle-row"> <!--Button row two (output & variables)-->
+          <button id="toggle-output" class="item">
+            <span id="output-tip" class="tooltip">Output On</span>
+          </button>
+          <button id="toggle-vars" class="item">
+            <span id="vars-tip" class="tooltip">Variables On</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="secondary_bar">
+        <!-- Example programs  -->
+        <button id="examplesButton">Example Programs</button>
+        <div class="exampleModal">
+          <div class="exampleModalContent">
+            <span class="material-symbols-rounded close">close</span>
+
+            <div class="exampleModalText">
+              <h3>Here are some example programs to practice with!</h2>
+              <p>Click on the blue links to browse and try out some sample code.</p>
+            </div>
+
+            <!-- This div is just to separate things-->
+            <div class="examples-outer">
+              <table class="examplesTable">
+                <tr>
+                  <th>Example Name</th>
+                  <th>Difficulty</th>
+                  <th>Topics</th>
+                </tr>
+              </table>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar buttons -->
+    <ul>
+      <li>
+        <button id="runButton" class="MainMenu-button" title="Run Code">
+          <span class="material-symbols-rounded run">play_arrow</span>
+          <span class="button-text">Run Code</span>
+        </button>
+      </li>
+      <li>
+        <button id="debugButton" class="MainMenu-button" title="Debugger">
+          <span class="material-symbols-rounded bug">pest_control</span>
+          <span class="button-text">Debug Mode</span>
+        </button>
+      </li>
+      <li class="debugOptions">
+        <button id="stepButton" class="MainMenu-button" title="Step Over">
+          <span class="material-symbols-rounded step">tools_ladder</span>
+          <span class="button-text">Step Over</span>
+        </button>
+      </li>
+      <li>
+        <button id="stepIntoButton" class="MainMenu-button" title="Step Into">
+          <span class="button-text">Step Into</span>
+        </button>
+      </li>
+      <li class="debugOptions">
+        <button id="stopButton" class="MainMenu-button" title="Stop Debugger">
+          <span class="material-symbols-rounded stop">stop</span>
+          <span class="button-text">Exit Debug</span>
+        </button>
+      </li>
+      <li>
+        <button id="share" class="MainMenu-button" title="Share">
+          <span class="material-symbols-rounded spread">share</span>
+          <span class="button-text">Share</span>
+        </button>
+      </li>
+      <li>
+        <button id="reference" class="MainMenu-button" title="reference">
+          <span class="material-symbols-rounded manual">book_2</span>
+          <span class="button-text">Manual</span>
+        </button>
+      </li>
+      <li class="settingsOptions">
+        <button id="darkMode" class="MainMenu-button" title="Dark Mode">
+          <span class="button-text">Dark Mode</span>
+        </button>
+      </li>
+      <li>
+        <button id="settings" class="MainMenu-button" title="Settings">
+          <span class="button-text">settings</span>
+        </button>
+      </li>
+      <li>
+        <button id="info" class="MainMenu-button" title="About Praxly">
+          <span class="material-symbols-rounded extra">info</span>
+          <span class="button-text">About</span>
+        </button>
+      </li>
+      <li>
+        <button id="clearButton" class="MainMenu-button">
+          <span class="material-symbols-rounded reset">delete</span>
+          <span class="button-text">Clear</span>
+        </button>
+      </li>
+    </ul>
+  </header>
+
+  <main>
+    <div id="aceCode" class="codeEditor"></div>
+    <div class="resizeBarX"></div>
+    <div id="blocklyDiv"></div>
+  </main>
+
+  <div class="resizeBarY"></div>
+
+  <div id="bottom-part">
+    <div id="Variable-table-container">
+      <table id="Variable-table-outer">
+        <thead>
+          <tr>
+            <td>Variable Name</td>
+            <td>Type</td>
+            <td>Value</td>
+            <td>Scope</td>
+          </tr>
+        </thead>
+        <tbody id="Variable-table"></tbody>
+      </table>
+    </div>
+    <div class="resizeBarBott"></div>
+    <div class="output">
+      <div class="clearOut"><span class="material-symbols-rounded trash">delete</span></div>
+      <p class="stdout"></p>
+      <p class="stderr"></p>
+    </div>
+  </div>
+
+  <script src="./src/main.js" type="module"></script>
+</body>
+
+</html>
