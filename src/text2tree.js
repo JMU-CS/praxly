@@ -287,6 +287,7 @@ class Parser {
     this.keywords = ["if", "else", "then", "done"];
     this.statementKeywords = ['if', 'print', 'for', 'while'];
     this.specialStringFunctionKEywords = ["charAt", "contains", "indexOf", "length", "substring", "toLowerCase", "toUpperCase"];
+    this.typeConversionKeywords = ["int", "float"];
   }
 
   hasNot(type) {
@@ -602,6 +603,10 @@ class Parser {
             return this.literalNode_new(this.tokens[this.i - 1]);
           case 'random':
           case 'randomInt':
+            return this.parse_builtin_function_call(line);
+          case 'int':
+            return this.parse_builtin_function_call(line);
+          case 'float':
             return this.parse_builtin_function_call(line);
 
           case NODETYPES.BOOLEAN:

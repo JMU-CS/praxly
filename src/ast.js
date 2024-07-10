@@ -125,6 +125,10 @@ export function createExecutable(tree) {
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'randomSeed') {
                 return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'intConversion') {
+                return new Praxly_type_conversion(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'floatConversion') {
+                return new Praxly_type_conversion(createExecutable(tree));
             } else {
                 throw new Error('unknown builtin function');
             }
@@ -587,6 +591,21 @@ class Praxly_random_seed {
         environment.global.random.seed = seedValue;
         environment.global.random.generator = prand.xoroshiro128plus(seedValue);
         return null;
+    }
+}
+
+class Praxly_type_conversion {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        if (this.json.name.includes('float')) {
+            return new Praxly_float(this.value, this.json);
+        } else if (this.json.name.includes('int')) {
+            return new Praxly_int(this.value, this.json);
+        }
     }
 }
 

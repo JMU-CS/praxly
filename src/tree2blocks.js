@@ -135,7 +135,15 @@ export const tree2blocks = (workspace, node) => {
               result = workspace.newBlock('praxly_random_seed_block');
               const child = tree2blocks(workspace, node?.parameters[0]);
               result.getInput('SEED').connection.connect(child?.outputConnection);
-            }
+            } else if (node.name === 'intConversion') {
+                result = workspace.newBlock('praxly_int_conversion_block');
+                const child = tree2blocks(workspace, node?.parameters[0]);
+                result.getInput('CONVERSION').connection.connect(child?.outputConnection);
+            } else if (node.name === 'floatConversion') {
+            result = workspace.newBlock('praxly_float_conversion_block');
+            const child = tree2blocks(workspace, node?.parameters[0]);
+            result.getInput('CONVERSION').connection.connect(child?.outputConnection);
+        }
             break;
         }
 
