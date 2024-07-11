@@ -74,8 +74,15 @@ export async function generateVariableTable(environment, level) {
             const typeCell = document.createElement("td");
             typeCell.textContent = value.realType;
 
-            let valueEvaluated = await value.evaluate(environment);
-            valueCell.textContent = valueEvaluated.value;
+            if (!value.realType.endsWith(']')) {
+                let valueEvaluated = await value.evaluate(environment);
+                valueCell.textContent = valueEvaluated.value;
+            } else {
+                let evaluated = await Promise.all(value.elements.map(async obj => await obj.evaluate()));
+                let results = evaluated.map(obj => obj.value);
+                valueCell.textContent = "{" + results.join(', ') + "}";
+            }
+
             const locationCell = document.createElement("td");
             locationCell.textContent = environment.name;
             newRow.appendChild(attributeCell);
