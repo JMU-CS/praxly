@@ -168,6 +168,12 @@ export const tree2text = (node, indentation) => {
             } else if (node.name === 'randomSeed') {
                 const seed = tree2text(node.parameters[0], indentation);
                 return `randomSeed(${seed})\n`;
+            } else if (node.name === 'int') {
+                const conversion = tree2text(node.parameters[0], indentation);
+                return `int(${conversion})`;
+            } else if (node.name === 'float') {
+                const conversion = tree2text(node.parameters[0], indentation);
+                return `float(${conversion})`;
             }
         }
 

@@ -501,6 +501,36 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Sets the seed of the random number generator",
       "helpUrl": ""
     },
+    {
+      "type": "praxly_int_conversion_block",
+      "message0": "int ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONVERSION"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Converts a String into an Integer",
+      "helpURL": ""
+    },
+    {
+      "type": "praxly_float_conversion_block",
+      "message0": "float ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "CONVERSION"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Converts a String into an Float",
+      "helpURL": ""
+    },
     { // logic 1
       "type": "praxly_true_block",
       "message0": "true",

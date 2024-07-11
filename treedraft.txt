@@ -1,5 +1,8 @@
 steps to adding a block
 
+
+From Ben Saupp:
+
 0. add to TYPES/OP/NODETYPES in common.js
 1. define the object for the executable in ast.js
 2. finish the walk through the json in ast module
@@ -12,3 +15,20 @@ steps to adding a block
 7. update tree2blocks for block generation from text
 8. update tree2text for text generation from blocks
 ** TEST FOR EVERY POSSIBILITY YOU CAN THINK OF **
+
+
+From Chris Johnson:
+
+1. In ast.js, add a new class to model and evaluate the operation. See Praxly_random_* for examples. In the BUILTIN_FUNCTION_CALL case of createExecutable, add a branch to construct an instance of your new class.
+
+2. In text2tree.js, add a new case label with the name of your function. Look for the two calls to parse_builtin_function_call. One is to parse statement function calls, like randomSeed. The other is to parse expression function calls, like randomInt. Pick the one appropriate for your function. You shouldn't need to change the parse_builtin_function_call at all, but do look at it to see the structure of the JavaScript object. The most important keys are name and parameters.
+
+3. In tree2text.js, add a new branch in the BUILTIN_FUNCTION_CALL case to serialize your function.
+
+4. In tree2blocks.js, add a new branch in the BUILTIN_FUNCTION_CALL case to create a block for your function.
+
+5. In newBlocks.js, add a new block description.
+
+6. In toolbox.js, add an entry for your block to the appropriate category.
+
+7. In blocks2tree.js, add an entry to translate your block into an AST node. Copy one of the praxly_random_* examples. The only fields that should need modification are name and parameters.

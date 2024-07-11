@@ -103,6 +103,30 @@ export const makeGenerator = () => {
         };
     }
 
+    praxlyGenerator['praxly_int_conversion_block'] = (block) => {
+        const expression = block.getInputTargetBlock('CONVERSION');
+        return {
+            name: 'int',
+            blockID: block.id,
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [
+              praxlyGenerator[expression.type](expression),
+            ],
+        };
+    }
+
+    praxlyGenerator['praxly_float_conversion_block'] = (block) => {
+        const expression = block.getInputTargetBlock('CONVERSION');
+        return {
+            name: 'float',
+            blockID: block.id,
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [
+              praxlyGenerator[expression.type](expression),
+            ],
+        };
+    }
+
     praxlyGenerator['praxly_input_block'] = (block) => {
         return {
             blockID: block.id,
