@@ -8,7 +8,7 @@
   <link rel="icon" href="/fallen-leaf_1f342.ico" type="image/x-icon">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <script type="module" crossorigin src="/assets/main-02952456.js"></script>
+  <script type="module" crossorigin src="/assets/main-4ef14c9d.js"></script>
 </head>
 
 <body class="embed">
@@ -26,30 +26,28 @@
 
     <!-- Toolbar -->
     <div id="embed-toolbar">
-      <button id="runButton" class="embed-button">
-        Run
-        <span class="material-symbols-rounded run">play_arrow</span>
-      </button>
-      <button id="debugButton" class="embed-button">
-        Debug
-        <span class="material-symbols-rounded bug">pest_control</span>
-      </button>
-      <button id="stepButton" class="embed-button debugOptions">
-        Step
-        <span class="material-symbols-rounded step">step</span>
-      </button>
-      <button id="stopButton" class="embed-button debugOptions">
-        Exit
-        <span class="material-symbols-rounded stop">stop</span>
-      </button>
-      <button id="resetButton" class="embed-button">
-        Reset
-        <span class="material-symbols-rounded reset">restart_alt</span>
-      </button>
-      <button id="newWindow" class="embed-button">
-        Open
-        <span class="material-symbols-rounded open">open_in_new</span>
-      </button>
+      <div class="left-group">
+        <button id="runButton" class="embed-button" title="Run the entire program">
+          Run <span class="material-symbols-rounded run">play_arrow</span>
+        </button>
+        <button id="debugButton" class="embed-button" title="Run one step at a time">
+          Debug <span class="material-symbols-rounded bug">pest_control</span>
+        </button>
+        <button id="stepButton" class="embed-button debugOptions" title="Run the next step">
+          Step <span class="material-symbols-rounded step">step</span>
+        </button>
+        <button id="stopButton" class="embed-button debugOptions" title="Exit the debugger">
+          Exit <span class="material-symbols-rounded stop">stop</span>
+        </button>
+      </div>
+      <div class="right-group">
+        <button id="resetButton" class="embed-button" title="Reset the example code">
+          Reset <span class="material-symbols-rounded reset">restart_alt</span>
+        </button>
+        <button id="newWindow" class="embed-button" title="Open in new Praxly window">
+          Open <span class="material-symbols-rounded open">open_in_new</span>
+        </button>
+      </div>
     </div>
 
     <!-- Output -->
