@@ -508,7 +508,7 @@ h1 {
 
 main {
   display: flex;
-  flex-basis: 15%;
+  flex-basis: 20%;
   flex-grow: 1;
   background-color: var(--output-bg-color);
 }
