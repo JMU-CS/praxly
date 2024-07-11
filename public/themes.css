@@ -852,7 +852,7 @@ body.embed .material-symbols-rounded.open {
   display: flex;
   flex-direction: row;
   gap: 2px;
-  justify-content: flex-end;
+  justify-content: space-between;
   top: 10px;
   right: 10px;
   z-index: 999;
