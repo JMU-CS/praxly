@@ -287,7 +287,6 @@ class Parser {
     this.keywords = ["if", "else", "then", "done"];
     this.statementKeywords = ['if', 'print', 'for', 'while'];
     this.specialStringFunctionKEywords = ["charAt", "contains", "indexOf", "length", "substring", "toLowerCase", "toUpperCase"];
-    // this.typeConversionKeywords = ["int", "float"];
   }
 
   hasNot(type) {
@@ -590,25 +589,26 @@ class Parser {
           case 'EOF':
             this.eof = true;
             return 'EOF';
-          case NODETYPES.INT:
-          case NODETYPES.STRING:
+
+          case NODETYPES.BOOLEAN:
           case NODETYPES.CHAR:
-          case NODETYPES.FLOAT:
           case NODETYPES.DOUBLE:
+          case NODETYPES.FLOAT:
+          case NODETYPES.INT:
+          case NODETYPES.SHORT:
+          case NODETYPES.STRING:
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
+
           case 'input':
             this.tokens[this.i].token_type = NODETYPES.INPUT;
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
+
           case 'random':
           case 'randomInt':
+          case 'randomSeed':
             return this.parse_builtin_function_call(line);
-
-
-          case NODETYPES.BOOLEAN:
-            this.advance();
-            return this.literalNode_new(this.tokens[this.i - 1]);
 
           case '(':
             this.advance();
@@ -647,6 +647,7 @@ class Parser {
             result.endIndex = this.getCurrentToken().endIndex;
             this.advance();
             return result;
+
           case 'Location':
             var l = this.parse_location();
             if (this.hasAny('=', '<-', "←", "⟵")) {
@@ -689,6 +690,7 @@ class Parser {
             }
             l.endIndex = this.getCurrentToken().endIndex;
             return l;
+
           default:
             // TODO: this case needs to raise an exception or return some error
             // object. Right now if an expression can't be parsed, it
@@ -1040,30 +1042,6 @@ class Parser {
       }
     }
 
-    else if (this.has("randomSeed")) {
-      const node = this.parse_builtin_function_call(line);
-      if (this.has(';')) {
-        this.advance();
-      }
-      return node;
-    }
-
-    else if (this.has("int")) {
-      const node = this.parse_builtin_function_call(line);
-      if (this.has(';')) {
-        this.advance();
-      }
-      return node;
-    }
-
-    else if (this.has("float")) {
-      const node = this.parse_builtin_function_call(line);
-      if (this.has(';')) {
-        this.advance();
-      }
-      return node;
-    }
-
     else if (this.has("return")) {
       this.advance();
       const expression = this.parse_expression(9);
@@ -1087,8 +1065,13 @@ class Parser {
       return result;
     }
 
-    else if (this.has_type() && this.hasNot_ahead('(')) {
-      return this.parse_funcdecl_or_vardecl();
+    else if (this.has_type()) {
+      if (this.hasNot_ahead('(')) {
+        return this.parse_funcdecl_or_vardecl();
+      } else {
+        // type conversion function
+        return this.parse_builtin_function_call(line);
+      }
     }
 
     else if (this.has('\n')) {
@@ -1114,8 +1097,8 @@ class Parser {
         type: NODETYPES.STATEMENT,
         value: contents,
         blockID: "code",
-        startIndex: contents.startIndex,
-        endIndex: contents.endIndex,
+        startIndex: contents?.startIndex,
+        endIndex: contents?.endIndex,
       };
     }
     return result;

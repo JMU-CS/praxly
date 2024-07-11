@@ -106,7 +106,7 @@ export const makeGenerator = () => {
     praxlyGenerator['praxly_int_conversion_block'] = (block) => {
         const expression = block.getInputTargetBlock('CONVERSION');
         return {
-            name: 'intConversion',
+            name: 'int',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             parameters: [
@@ -118,7 +118,7 @@ export const makeGenerator = () => {
     praxlyGenerator['praxly_float_conversion_block'] = (block) => {
         const expression = block.getInputTargetBlock('CONVERSION');
         return {
-            name: 'floatConversion',
+            name: 'float',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             parameters: [

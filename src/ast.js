@@ -125,9 +125,9 @@ export function createExecutable(tree) {
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'randomSeed') {
                 return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
-            } else if (tree.name === 'intConversion') {
+            } else if (tree.name === 'int') {
                 return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
-            } else if (tree.name === 'floatConversion') {
+            } else if (tree.name === 'float') {
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error('unknown builtin function');
@@ -601,7 +601,8 @@ class Praxly_int_conversion {
     }
 
     async evaluate(environment) {
-        const convert = litNode_new(TYPES.INT, this.value.value, this.json);
+        // this.value is likely a Praxly_String; get the actual string value
+        const convert = new Praxly_int(this.value.value);
         return convert;
     }
 }
@@ -613,7 +614,9 @@ class Praxly_float_conversion {
     }
 
     async evaluate(environment) {
-        return litNode_new(TYPES.FLOAT, this.value, this.json);
+        // this.value is likely a Praxly_String; get the actual string value
+        const convert = new Praxly_float(this.value.value);
+        return convert;
     }
 }
 
