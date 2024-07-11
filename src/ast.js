@@ -1,21 +1,21 @@
 import {
-  TYPES,
-  OP,
-  NODETYPES,
-  PraxlyError,
-  addToPrintBuffer,
-  consoleInput,
-  defaultError,
-  errorOutput,
-  StringFuncs,
-  highlightLine,
-  getDebugMode,
-  highlightAstNode,
-  textEditor,
-  setStepInto,
-  getStepInto,
-  stopButton,
-  getStopClicked
+    TYPES,
+    OP,
+    NODETYPES,
+    PraxlyError,
+    addToPrintBuffer,
+    consoleInput,
+    defaultError,
+    errorOutput,
+    StringFuncs,
+    highlightLine,
+    getDebugMode,
+    highlightAstNode,
+    textEditor,
+    setStepInto,
+    getStepInto,
+    stopButton,
+    getStopClicked
 } from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
 import prand from 'pure-rand';
@@ -125,6 +125,10 @@ export function createExecutable(tree) {
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'randomSeed') {
                 return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'int') {
+                return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'float') {
+                return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error('unknown builtin function');
             }
@@ -155,8 +159,8 @@ export function createExecutable(tree) {
                     variableList: {},
                     functionList: {},
                     random: {
-                      seed,
-                      generator: prand.xoroshiro128plus(seed),
+                        seed,
+                        generator: prand.xoroshiro128plus(seed),
                     },
                 }
             };
@@ -542,7 +546,7 @@ class Praxly_input {
     async evaluate(environment) {
         const result = await consoleInput();
         // if (result === null) {
-            // throw new PraxlyError("input canceled", this.json.line);
+        // throw new PraxlyError("input canceled", this.json.line);
         // }
         return new Praxly_String(result, this.json);
     }
@@ -587,6 +591,32 @@ class Praxly_random_seed {
         environment.global.random.seed = seedValue;
         environment.global.random.generator = prand.xoroshiro128plus(seedValue);
         return null;
+    }
+}
+
+class Praxly_int_conversion {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        // this.value is likely a Praxly_String; get the actual string value
+        const convert = new Praxly_int(this.value.value);
+        return convert;
+    }
+}
+
+class Praxly_float_conversion {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        // this.value is likely a Praxly_String; get the actual string value
+        const convert = new Praxly_float(this.value.value);
+        return convert;
     }
 }
 

@@ -222,6 +222,34 @@ export const toolbox = {
               },
             },
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_int_conversion_block',
+          'inputs': {
+            'CONVERSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"10"'
+                }
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_float_conversion_block',
+          'inputs': {
+            'CONVERSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"10.0"'
+                }
+              }
+            }
+          }
         }
       ]
     },
