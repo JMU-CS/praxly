@@ -287,7 +287,7 @@ class Parser {
     this.keywords = ["if", "else", "then", "done"];
     this.statementKeywords = ['if', 'print', 'for', 'while'];
     this.specialStringFunctionKEywords = ["charAt", "contains", "indexOf", "length", "substring", "toLowerCase", "toUpperCase"];
-    this.typeConversionKeywords = ["int", "float"];
+    // this.typeConversionKeywords = ["int", "float"];
   }
 
   hasNot(type) {
@@ -604,10 +604,7 @@ class Parser {
           case 'random':
           case 'randomInt':
             return this.parse_builtin_function_call(line);
-          case 'int':
-            return this.parse_builtin_function_call(line);
-          case 'float':
-            return this.parse_builtin_function_call(line);
+
 
           case NODETYPES.BOOLEAN:
             this.advance();
@@ -1044,6 +1041,22 @@ class Parser {
     }
 
     else if (this.has("randomSeed")) {
+      const node = this.parse_builtin_function_call(line);
+      if (this.has(';')) {
+        this.advance();
+      }
+      return node;
+    }
+
+    else if (this.has("int")) {
+      const node = this.parse_builtin_function_call(line);
+      if (this.has(';')) {
+        this.advance();
+      }
+      return node;
+    }
+
+    else if (this.has("float")) {
       const node = this.parse_builtin_function_call(line);
       if (this.has(';')) {
         this.advance();

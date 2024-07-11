@@ -143,7 +143,7 @@ export const tree2blocks = (workspace, node) => {
             result = workspace.newBlock('praxly_float_conversion_block');
             const child = tree2blocks(workspace, node?.parameters[0]);
             result.getInput('CONVERSION').connection.connect(child?.outputConnection);
-        }
+            }
             break;
         }
 
