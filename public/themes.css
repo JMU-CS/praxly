@@ -106,9 +106,9 @@ h1 {
   font-family: sans-serif;
 }
 
-#titleRefresh {
+/*#titleRefresh {
   cursor: pointer;
-}
+}*/
 
 #title-version {
   display: flex;
@@ -368,6 +368,7 @@ h1 {
   /* border: 1px solid var(--text-color); */
   background-color: rgb(25, 25, 25);
   color: var(--text-color);
+  cursor: pointer;
   transition: 0.2s background-color;
 }
 

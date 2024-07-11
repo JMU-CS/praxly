@@ -1,24 +1,28 @@
 import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stopButton } from "./common";
 
+
 export function showDebug() {
     let debugOptions = document.querySelectorAll('.debugOptions');
+    let runButton = document.getElementById('runButton');
     let debugButton = document.getElementById('debugButton');
 
     for (let button of debugOptions) {
         button.style.display = 'inline-flex';
     }
+    runButton.style.display = 'none';
     debugButton.style.display = 'none';
-    document.querySelector('#runButton').style.display = 'none';
 }
 
 export function hideDebug(configuration) {
     let debugOptions = document.querySelectorAll('.debugOptions');
+    let runButton = document.getElementById('runButton');
     let debug = document.getElementById('debugButton');
+
     for (let button of debugOptions) {
         button.style.display = 'none';
     }
-    if (!configuration.embed || configuration.button === 'both') {
-        document.querySelector('#runButton').style.display = 'inline-flex';
+    if (!configuration.embed || configuration.button !== 'debug') {
+        runButton.style.display = 'inline-flex';
     }
     debug.style.display = 'inline-flex';
 }

@@ -100,7 +100,6 @@ function initializeGlobals() {
   yesButton = document.querySelector('#yes');
   noButton = document.querySelector('#no');
   openWindowButton = document.querySelector('#newWindow');
-
 }
 
 function registerListeners() {
@@ -111,15 +110,15 @@ function registerListeners() {
       window.open(linkUrl, '_blank');
     });
 
-    clearButton.addEventListener('click', clear);
+    clearButton.addEventListener('click', reset);
 
-    titleRefresh.addEventListener('click', function () {
-      clear();
-      window.location.hash = '';
-      textEditor.setValue('', -1);
-      textPane.click();
-      textEditor.focus();
-    });
+    //titleRefresh.addEventListener('click', function () {
+    //  clear();
+    //  window.location.hash = '';
+    //  textEditor.setValue('', -1);
+    //  textPane.click();
+    //  textEditor.focus();
+    //});
 
     settingsButton.onclick = function () {
       let darkmodediv = document.querySelector('.settingsOptions');
@@ -354,7 +353,7 @@ function generateTable() {
     link.href = "#";
     link.textContent = codeText[i].name;
     link.addEventListener('click', function() {
-      textEditor.setValue(codeText[i].code, -1);
+      textEditor.setValue(codeText[i].code.trimStart(), -1);
       textPane.click();
       document.querySelector('.exampleModal').style.display = 'none';
     });
@@ -364,7 +363,7 @@ function generateTable() {
     const difficultyCell = document.createElement("td");
     difficultyCell.textContent = codeText[i].difficulty;
     const topicsCell = document.createElement("td");
-    topicsCell.textContent = codeText[i].topic;
+    topicsCell.textContent = codeText[i].topics;
 
     newRow.appendChild(nameCell);
     newRow.appendChild(difficultyCell);
@@ -666,6 +665,8 @@ function synchronizeToConfiguration() {
   // The initial code is necessarily text, not blocks.
   if (configuration.code) {
     textEditor.setValue(configuration.code, 1);
+  } else if (examples) {
+    document.querySelector('.exampleModal').style.display = 'flex';
   }
   stepButton.style.display = 'none';
   stopButton.style.display = 'none';

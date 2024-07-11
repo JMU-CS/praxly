@@ -13,6 +13,7 @@ Parameter | Options               | Description             |
 ## Default (text editor and output)
 
 http://localhost:5173/embed.html?#code=print(5652)
+http://localhost:5173/embed.html?editor=text&button=run&result=output#code=print(5652)
 
 
 ## Blocks editor (and output)
