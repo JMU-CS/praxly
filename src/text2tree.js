@@ -44,8 +44,9 @@ class Lexer {
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
     this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
+    this.builtins = ['random', 'randomInt', 'randomSeed', 'int', 'float'];
     this.keywords = ["if", "else", "end", "print", "input", "for", "while", 'and', 'or', 'do', 'repeat',
-      'until', 'not', 'return', 'null', 'random', 'randomInt', 'randomSeed'];
+      'until', 'not', 'return', 'null'];
     this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];
     this.startToken = [0, 0];
     this.currentLine = 0;
@@ -64,6 +65,10 @@ class Lexer {
     return this.i < this.length && this.multi_Char_symbols.includes(this.source[this.i]);
   }
 
+  has_builtin() {
+    return this.i < this.length && this.builtins.includes(this.token_so_far);
+  }
+
   has_keyword() {
     return this.i < this.length && this.keywords.includes(this.token_so_far);
   }
@@ -78,7 +83,6 @@ class Lexer {
 
   has_short_comment() {
     return this.has('/') && this.has_ahead('/');
-
   }
 
   has_long_comment() {
@@ -92,7 +96,6 @@ class Lexer {
   hasNot(c) {
     return this.i < this.length && this.source[this.i] !== c;
   }
-
 
   has_ahead(c) {
     return this.i < this.length && this.source[this.i + 1] === c;
@@ -249,6 +252,10 @@ class Lexer {
       }
       while (this.i < this.length && (this.has_letter() || this.has_digit())) {
         this.capture();
+      }
+      if (this.has_builtin() && this.has("(")) {
+        this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
+        continue;
       }
       if (this.has_type()) {
         this.emit_token('Type');
@@ -605,9 +612,7 @@ class Parser {
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
 
-          case 'random':
-          case 'randomInt':
-          case 'randomSeed':
+          case NODETYPES.BUILTIN_FUNCTION_CALL:
             return this.parse_builtin_function_call(line);
 
           case '(':
@@ -1070,7 +1075,14 @@ class Parser {
         return this.parse_funcdecl_or_vardecl();
       } else {
         // type conversion function
-        return this.parse_builtin_function_call(line);
+        let contents = this.parse_builtin_function_call(line);
+        return {
+          type: NODETYPES.STATEMENT,
+          value: contents,
+          blockID: "code",
+          startIndex: contents?.startIndex,
+          endIndex: contents?.endIndex,
+        };
       }
     }
 
