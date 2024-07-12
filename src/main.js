@@ -243,7 +243,6 @@ function registerListeners() {
 
   debugButton.addEventListener('mouseup', function () {
     // comingSoon();
-    setStopClicked(false);
     showDebug();
     setDebugMode(true);
     runTasks();
@@ -423,6 +422,7 @@ function openInPraxly() {
 async function runTasks() {
   // console.log("runTasks");
   clear();
+  setStopClicked(false);
   try {
     // compile/run only if not blank
     if (textEditor.getValue().trim()) {

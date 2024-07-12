@@ -88,7 +88,7 @@ export async function generateVariableTable(environment, level) {
         }
     }
     if (parent !== 'root') {
-        generateVariableTable(parent, level + 1);
+        await generateVariableTable(parent, level + 1);
     }
     setStepInto(stepIn);
 }

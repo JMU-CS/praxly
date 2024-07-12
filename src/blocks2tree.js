@@ -323,7 +323,7 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_array_assignment_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        console.log(`field input is ${varType}`);
+        // console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var args = block.getInputTargetBlock('EXPRESSION');
         var argschildren = args.getChildren(true);
@@ -352,7 +352,7 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_reassignment_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        console.log(`field input is ${varType}`);
+        // console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var value = praxlyGenerator[expression.type](expression);

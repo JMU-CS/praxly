@@ -23,6 +23,23 @@ var SCOPES = {};
 const FOR_LOOP_LIMIT = 1000000;
 const WHILE_LOOP_LIMIT = 1000;
 
+async function stepInto(json) {
+    if (getStepInto()) {
+        let markerId = highlightAstNode(json);
+        await waitForStep();
+        textEditor.session.removeMarker(markerId);
+    }
+}
+
+async function stepOver(environment, json) {
+    if (getDebugMode()) {
+        await generateVariableTable(environment, 1);
+        let markerId = highlightAstNode(json);
+        await waitForStep();
+        textEditor.session.removeMarker(markerId);
+    }
+}
+
 /**
  * this is meant to halt the execution wherever it is at for return statements.
  */
@@ -644,11 +661,7 @@ class Praxly_addition {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.ADDITION, a.realType,
             b.realType, this.json), a.value + b.value);
     }
@@ -667,11 +680,7 @@ class Praxly_subtraction {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.SUBTRACTION, a.realType, b.realType, this.json), a.value - b.value);
     }
 }
@@ -689,11 +698,7 @@ class Praxly_multiplication {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.MULTIPLICATION, a.realType, b.realType, this.json), a.value * b.value);
     }
 }
@@ -714,11 +719,7 @@ class Praxly_division {
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
         }
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.DIVISION, a.realType, b.realType, this.json), a.value / b.value);
     }
 }
@@ -739,11 +740,7 @@ class Praxly_modulo {
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
         }
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.MODULUS, a.realType, b.realType, this.json), a.value % b.value);
     }
 }
@@ -761,11 +758,7 @@ class Praxly_exponent {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.EXPONENTIATION, a.realType, b.realType, this.json), a.value ** b.value);
     }
 }
@@ -783,11 +776,7 @@ class Praxly_and {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.AND, a.realType, b.realType, this.json), a.value && b.value);
     }
 }
@@ -805,11 +794,7 @@ class Praxly_or {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return litNode_new(binop_typecheck(OP.OR, a.realType, b.realType, this.json), a.value || b.value);
     }
 }
@@ -827,11 +812,7 @@ class Praxly_equals {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return new Praxly_boolean(left.value === right.value);
     }
 }
@@ -849,11 +830,7 @@ class Praxly_not_equals {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return new Praxly_boolean(left.value != await right.value);
     }
 }
@@ -871,11 +848,7 @@ class Praxly_greater_than {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return new Praxly_boolean(left.value > right.value);
     }
 }
@@ -893,11 +866,7 @@ class Praxly_less_than {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return new Praxly_boolean(left.value < right.value);
     }
 }
@@ -915,11 +884,7 @@ class Praxly_greater_than_equal {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return new Praxly_boolean(left.value >= right.value);
     }
 }
@@ -937,11 +902,7 @@ class Praxly_less_than_equal {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return new Praxly_boolean(left.value <= right.value);
     }
 }
@@ -1002,50 +963,41 @@ class Praxly_statement {
 // this is a wrapper for the whole program
 class Praxly_program {
 
-    constructor(codeblockk) {
-        this.codeBlock = codeblockk;
+    constructor(codeblock) {
+        this.codeblock = codeblock;
     }
 
     async evaluate() {
-        let result = await (this.codeBlock.evaluate(SCOPES.global));
+        let result = await this.codeblock.evaluate(SCOPES.global);
 
         // update variable list at the end of the program
-        generateVariableTable(SCOPES.global, 1);
+        await generateVariableTable(SCOPES.global, 1);
         return result;
     }
 }
 
 class Praxly_codeBlock {
+
     constructor(praxly_blocks) {
         this.praxly_blocks = praxly_blocks;
-        // console.log(this.praxly_blocks);
     }
 
     async evaluate(environment) {
-
-        // I originally had what I would call 'extreme shadowing'. We changed this for the debugger.
-        // var newScope = {
-        //     parent: environment,
-        //     name: 'for loop',
-        //     functionList: {},
-        //     variableList: {},
-        // };
+        // for each statement in the block
         for (let i = 0; i < this.praxly_blocks.length; i++) {
             const element = this.praxly_blocks[i];
+            // skip elements that have no effect
             if (element.json.type == NODETYPES.NEWLINE || element.json.type === NODETYPES.COMMENT || element.json.type === NODETYPES.SINGLE_LINE_COMMENT) {
                 continue;
             }
-            if (getDebugMode()) {
-                if (element.json.type != NODETYPES.FUNCDECL && element.json.type != NODETYPES.WHILE) {
-                    generateVariableTable(environment, 1);
-                    let markerId = highlightAstNode(element.json);
-                    await waitForStep();
-                    textEditor.session.removeMarker(markerId);
-                }
+            // debug step if not function or loop
+            if (!('codeblock' in element)) {
+                await stepOver(environment, element.json);
                 if (getStopClicked()) {
                     throw new Error("Stop_Debug");
                 }
             }
+            // evaluate the current statement
             await element.evaluate(environment);
             setStepInto(false);
         }
@@ -1128,11 +1080,7 @@ class Praxly_assignment {
         } else {
             storage[this.location.name] = valueEvaluated;
         }
-        if (getStepInto()) {
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepInto(this.json);
         return valueEvaluated;
     }
 }
@@ -1271,12 +1219,7 @@ class Praxly_for {
 
     async evaluate(environment) {
         // highlight loop init
-        if (getDebugMode()) {
-            generateVariableTable(environment, 1);
-            let markerId = highlightAstNode(this.initialization.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepOver(environment, this.initialization.json);
         await this.initialization.evaluate(environment);
 
         var loopCount = 0;
@@ -1287,15 +1230,8 @@ class Praxly_for {
                 throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
             }
 
-            // highlight loop condition
-            if (getDebugMode()) {
-                generateVariableTable(environment, 1);
-                let markerId = highlightAstNode(this.condition.json);
-                await waitForStep();
-                textEditor.session.removeMarker(markerId);
-            }
-
             // evaluate loop condition
+            await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
             if (!cond.value) {
                 break;
@@ -1312,12 +1248,7 @@ class Praxly_for {
             await this.codeblock.evaluate(newScope);
 
             // highlight loop update
-            if (getDebugMode()) {
-                generateVariableTable(environment, 1);
-                let markerId = highlightAstNode(this.incrementation.json);
-                await waitForStep();
-                textEditor.session.removeMarker(markerId);
-            }
+            await stepOver(environment, this.incrementation.json);
             await this.incrementation.evaluate(newScope);
         }
     }
@@ -1340,15 +1271,8 @@ class Praxly_while {
                 throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
             }
 
-            // highlight loop condition
-            if (getDebugMode()) {
-                generateVariableTable(environment, 1);
-                let markerId = highlightAstNode(this.json);
-                await waitForStep();
-                textEditor.session.removeMarker(markerId);
-            }
-
             // evaluate loop condition
+            await stepOver(environment, this.json);
             var cond = await this.condition.evaluate(environment);
             if (!cond.value) {
                 break;
@@ -1394,15 +1318,8 @@ class Praxly_do_while {
             };
             await this.codeblock.evaluate(newScope);
 
-            // highlight loop condition
-            if (getDebugMode()) {
-                generateVariableTable(environment, 1);
-                let markerId = highlightAstNode(this.json);
-                await waitForStep();
-                textEditor.session.removeMarker(markerId);
-            }
-
             // evaluate loop condition
+            await stepOver(environment, this.json);
             var cond = await this.condition.evaluate(environment);
             if (!cond.value) {
                 break;
@@ -1438,15 +1355,8 @@ class Praxly_repeat_until {
             };
             await this.codeblock.evaluate(newScope);
 
-            // highlight loop condition
-            if (getDebugMode()) {
-                generateVariableTable(environment, 1);
-                let markerId = highlightAstNode(this.json);
-                await waitForStep();
-                textEditor.session.removeMarker(markerId);
-            }
-
             // evaluate loop condition
+            await stepOver(environment, this.json);
             var cond = await this.condition.evaluate(environment);
             if (cond.value) {
                 break;
@@ -1498,7 +1408,7 @@ class Praxly_function_declaration {
         this.returnType = returnType;
         this.name = name;
         this.params = params;
-        this.contents = contents;
+        this.codeblock = contents;
         this.json = node;
     }
 
@@ -1506,7 +1416,7 @@ class Praxly_function_declaration {
         environment.functionList[this.name] = {
             returnType: this.returnType,
             params: this.params,
-            contents: this.contents,
+            contents: this.codeblock,
         }
     }
 }
@@ -1587,12 +1497,7 @@ class Praxly_function_call {
         }
 
         // extra debugger step to highlight the function call after returning
-        if (getDebugMode()) {
-            generateVariableTable(environment, 1);
-            let markerId = highlightAstNode(this.json);
-            await waitForStep();
-            textEditor.session.removeMarker(markerId);
-        }
+        await stepOver(environment, this.json);
         return result;
     }
 }
