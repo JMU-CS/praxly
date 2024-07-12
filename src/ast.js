@@ -1272,7 +1272,7 @@ class Praxly_while {
             }
 
             // evaluate loop condition
-            await stepOver(environment, this.json);
+            await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
             if (!cond.value) {
                 break;
@@ -1319,7 +1319,7 @@ class Praxly_do_while {
             await this.codeblock.evaluate(newScope);
 
             // evaluate loop condition
-            await stepOver(environment, this.json);
+            await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
             if (!cond.value) {
                 break;
@@ -1356,7 +1356,7 @@ class Praxly_repeat_until {
             await this.codeblock.evaluate(newScope);
 
             // evaluate loop condition
-            await stepOver(environment, this.json);
+            await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
             if (cond.value) {
                 break;

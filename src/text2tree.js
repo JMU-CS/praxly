@@ -932,6 +932,7 @@ class Parser {
       }
       this.advance();
       result.initialization = this.parse_statement();
+      result.initialization.endIndex[1] -= 3;  // HACK
       result.condition = this.parse_expression(9);
 
       if (this.has(';')) {
