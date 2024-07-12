@@ -186,12 +186,18 @@ export function clearErrors() {
  * @param {number} line the error line number
  */
 export function textError(type, error, line) {
-    errorOutput += `<pre>${type} error occurred on line ${line}:  ${error} \n\t </pre>`;
-    appendAnnotation(error, line);
+    if (errorOutput) {
+        errorOutput += "<br><br>";
+    }
+    errorOutput += `${type} error occurred on line ${line}: ${error}`;
+    // appendAnnotation(error, line);
 }
 
 export function defaultError(message) {
-    errorOutput += `<pre>default error:  ${message} \n\t Ben has not written an error message for this issue yet. Contact him through the bug report form on the help page. </pre>`;
+    if (errorOutput) {
+        errorOutput += "<br><br>";
+    }
+    errorOutput += `${message}<br><br>We have not written an error message for this issue yet.`;
 }
 
 export function addBlockErrors(workspace) {

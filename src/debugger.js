@@ -1,4 +1,5 @@
-import { getStepInto, isPrimative, setStepInto, stepButton, stepIntoButton, stopButton } from "./common";
+import { valueToString } from "./ast";
+import { getStepInto, setStepInto, stepButton } from "./common";
 
 
 export function showDebug() {
@@ -74,14 +75,8 @@ export async function generateVariableTable(environment, level) {
             const typeCell = document.createElement("td");
             typeCell.textContent = value.realType;
 
-            if (!value.realType.endsWith(']')) {
-                let valueEvaluated = await value.evaluate(environment);
-                valueCell.textContent = valueEvaluated.value;
-            } else {
-                let evaluated = await Promise.all(value.elements.map(async obj => await obj.evaluate()));
-                let results = evaluated.map(obj => obj.value);
-                valueCell.textContent = "{" + results.join(', ') + "}";
-            }
+            let valueEvaluated = await value.evaluate(environment);
+            valueCell.textContent = valueToString(valueEvaluated);
 
             const locationCell = document.createElement("td");
             locationCell.textContent = environment.name;

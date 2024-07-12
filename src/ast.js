@@ -8,13 +8,11 @@ import {
     defaultError,
     errorOutput,
     StringFuncs,
-    highlightLine,
     getDebugMode,
     highlightAstNode,
     textEditor,
     setStepInto,
     getStepInto,
-    stopButton,
     getStopClicked
 } from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
@@ -22,8 +20,8 @@ import prand from 'pure-rand';
 
 var SCOPES = {};
 
-const FOR_LOOP_LIMIT = 1000001;
-const WHILE_LOOP_LIMIT = 1001;
+const FOR_LOOP_LIMIT = 1000000;
+const WHILE_LOOP_LIMIT = 1000;
 
 /**
  * this is meant to halt the execution wherever it is at for return statements.
@@ -502,7 +500,7 @@ class Praxly_array_literal {
     }
 }
 
-function valueToString(child, json) {
+export function valueToString(child, json) {
     if (child === "Exit_Success") {
         throw new PraxlyError("no value returned from void procedure", json.line);
     }
@@ -1038,12 +1036,12 @@ class Praxly_codeBlock {
                 continue;
             }
             if (getDebugMode()) {
-                generateVariableTable(environment, 1);
-                let markerId = highlightAstNode(element.json);
-                if (element.json.type != NODETYPES.FUNCDECL) {
+                if (element.json.type != NODETYPES.FUNCDECL && element.json.type != NODETYPES.WHILE) {
+                    generateVariableTable(environment, 1);
+                    let markerId = highlightAstNode(element.json);
                     await waitForStep();
+                    textEditor.session.removeMarker(markerId);
                 }
-                textEditor.session.removeMarker(markerId);
                 if (getStopClicked()) {
                     throw new Error("Stop_Debug");
                 }
@@ -1263,19 +1261,47 @@ class Praxly_Location {
 
 class Praxly_for {
 
-    constructor(initialization, condition, incrementation, statement, node) {
+    constructor(initialization, condition, incrementation, codeblock, node) {
         this.json = node;
         this.initialization = initialization;
         this.condition = condition;
         this.incrementation = incrementation;
-        this.statement = statement;
+        this.codeblock = codeblock;
     }
 
     async evaluate(environment) {
+        // highlight loop init
+        if (getDebugMode()) {
+            generateVariableTable(environment, 1);
+            let markerId = highlightAstNode(this.initialization.json);
+            await waitForStep();
+            textEditor.session.removeMarker(markerId);
+        }
         await this.initialization.evaluate(environment);
+
         var loopCount = 0;
-        var cond = await this.condition.evaluate(environment);
-        while (loopCount < FOR_LOOP_LIMIT && cond.value) {
+        while (true) {
+            // check for infinite loop
+            loopCount += 1;
+            if (loopCount > FOR_LOOP_LIMIT) {
+                throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
+            }
+
+            // highlight loop condition
+            if (getDebugMode()) {
+                generateVariableTable(environment, 1);
+                let markerId = highlightAstNode(this.condition.json);
+                await waitForStep();
+                textEditor.session.removeMarker(markerId);
+            }
+
+            // evaluate loop condition
+            var cond = await this.condition.evaluate(environment);
+            if (!cond.value) {
+                break;
+            }
+
+            // evaluate loop body
             var newScope = {
                 parent: environment,
                 name: 'for loop',
@@ -1283,50 +1309,82 @@ class Praxly_for {
                 variableList: {},
                 global: environment.global,
             };
-            loopCount += 1;
-            await this.statement.evaluate(newScope);
+            await this.codeblock.evaluate(newScope);
+
+            // highlight loop update
+            if (getDebugMode()) {
+                generateVariableTable(environment, 1);
+                let markerId = highlightAstNode(this.incrementation.json);
+                await waitForStep();
+                textEditor.session.removeMarker(markerId);
+            }
             await this.incrementation.evaluate(newScope);
-            cond = await this.condition.evaluate(newScope);
-        }
-        if (loopCount === FOR_LOOP_LIMIT) {
-            throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
         }
     }
 }
 
 class Praxly_while {
-    constructor(condition, statement, node) {
+
+    constructor(condition, codeblock, node) {
         this.json = node;
         this.condition = condition;
-        this.statement = statement;
+        this.codeblock = codeblock;
     }
+
     async evaluate(environment) {
         var loopCount = 0;
-        var cond = await (this.condition.evaluate(environment));
-        while (loopCount < WHILE_LOOP_LIMIT && cond.value) {
+        while (true) {
+            // check for infinite loop
             loopCount += 1;
-            await this.statement.evaluate(environment);
-            if (loopCount === WHILE_LOOP_LIMIT) {
+            if (loopCount > WHILE_LOOP_LIMIT) {
                 throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
             }
-            cond = await this.condition.evaluate(environment);
+
+            // highlight loop condition
+            if (getDebugMode()) {
+                generateVariableTable(environment, 1);
+                let markerId = highlightAstNode(this.json);
+                await waitForStep();
+                textEditor.session.removeMarker(markerId);
+            }
+
+            // evaluate loop condition
+            var cond = await this.condition.evaluate(environment);
+            if (!cond.value) {
+                break;
+            }
+
+            // evaluate loop body
+            var newScope = {
+                parent: environment,
+                name: 'while loop',
+                functionList: {},
+                variableList: {},
+                global: environment.global,
+            };
+            await this.codeblock.evaluate(newScope);
         }
     }
 }
 
 class Praxly_do_while {
 
-    constructor(condition, statement, node) {
+    constructor(condition, codeblock, node) {
         this.json = node;
         this.condition = condition;
-        this.statement = statement;
+        this.codeblock = codeblock;
     }
 
     async evaluate(environment) {
-        var loopCount = 1;
-        await this.statement.evaluate(environment);
-        var cond = await this.condition.evaluate(environment);
-        while (loopCount < WHILE_LOOP_LIMIT && cond.value) {
+        var loopCount = 0;
+        while (true) {
+            // check for infinite loop
+            loopCount += 1;
+            if (loopCount > WHILE_LOOP_LIMIT) {
+                throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
+            }
+
+            // evaluate loop body
             var newScope = {
                 parent: environment,
                 name: 'do while loop',
@@ -1334,29 +1392,43 @@ class Praxly_do_while {
                 variableList: {},
                 global: environment.global,
             };
-            loopCount += 1;
-            await this.statement.evaluate(newScope);
+            await this.codeblock.evaluate(newScope);
+
+            // highlight loop condition
+            if (getDebugMode()) {
+                generateVariableTable(environment, 1);
+                let markerId = highlightAstNode(this.json);
+                await waitForStep();
+                textEditor.session.removeMarker(markerId);
+            }
+
+            // evaluate loop condition
+            var cond = await this.condition.evaluate(environment);
+            if (!cond.value) {
+                break;
+            }
         }
-        if (loopCount == WHILE_LOOP_LIMIT) {
-            throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
-        }
-        cond = await this.condition.evaluate(environment);
     }
 }
 
 class Praxly_repeat_until {
 
-    constructor(condition, statement, node) {
+    constructor(condition, codeblock, node) {
         this.json = node;
         this.condition = condition;
-        this.statement = statement;
+        this.codeblock = codeblock;
     }
 
     async evaluate(environment) {
-        var loopCount = 1;
-        await this.statement.evaluate(environment);
-        var cond = await this.condition.evaluate(environment);
-        while (loopCount < WHILE_LOOP_LIMIT && !cond.value) {
+        var loopCount = 0;
+        while (true) {
+            // check for infinite loop
+            loopCount += 1;
+            if (loopCount > WHILE_LOOP_LIMIT) {
+                throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
+            }
+
+            // evaluate loop body
             var newScope = {
                 parent: environment,
                 name: 'repeat until loop',
@@ -1364,13 +1436,22 @@ class Praxly_repeat_until {
                 variableList: {},
                 global: environment.global,
             };
-            loopCount += 1;
-            await this.statement.evaluate(newScope);
+            await this.codeblock.evaluate(newScope);
+
+            // highlight loop condition
+            if (getDebugMode()) {
+                generateVariableTable(environment, 1);
+                let markerId = highlightAstNode(this.json);
+                await waitForStep();
+                textEditor.session.removeMarker(markerId);
+            }
+
+            // evaluate loop condition
+            var cond = await this.condition.evaluate(environment);
+            if (cond.value) {
+                break;
+            }
         }
-        if (loopCount == WHILE_LOOP_LIMIT) {
-            throw new PraxlyError(`This is probably an infinite loop.`, this.json.line);
-        }
-        cond = await this.condition.evaluate(environment);
     }
 }
 
