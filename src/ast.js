@@ -130,11 +130,10 @@ export function createExecutable(tree) {
         case NODETYPES.PRINT:
             return new Praxly_print(createExecutable(tree.value), tree);
 
-        case NODETYPES.INPUT:
-            return new Praxly_input(tree);
-
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
-            if (tree.name === 'random') {
+            if (tree.name === 'input') {
+                return new Praxly_input(tree);
+            } else if (tree.name === 'random') {
                 return new Praxly_random(tree);
             } else if (tree.name === 'randomInt') {
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
@@ -616,8 +615,9 @@ class Praxly_int_conversion {
     }
 
     async evaluate(environment) {
-        // this.value is likely a Praxly_String; get the actual string value
-        const convert = new Praxly_int(this.value.value);
+        let valueEvaluated = await this.value.evaluate(environment);
+        // value is likely a Praxly_String; get the actual string
+        const convert = new Praxly_int(valueEvaluated.value);
         return convert;
     }
 }
@@ -629,8 +629,9 @@ class Praxly_float_conversion {
     }
 
     async evaluate(environment) {
-        // this.value is likely a Praxly_String; get the actual string value
-        const convert = new Praxly_float(this.value.value);
+        let valueEvaluated = await this.value.evaluate(environment);
+        // value is likely a Praxly_String; get the actual string
+        const convert = new Praxly_float(valueEvaluated.value);
         return convert;
     }
 }

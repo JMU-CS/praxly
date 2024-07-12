@@ -156,11 +156,10 @@ export const tree2text = (node, indentation) => {
             var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
             return result + expression;
 
-        case NODETYPES.INPUT:
-            return "input";
-
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
-            if (node.name === 'random') {
+            if (node.name === 'input') {
+                return "input()";
+            } else if (node.name === 'random') {
                 return "random()";
             } else if (node.name === 'randomInt') {
                 const max = tree2text(node.parameters[0], indentation);

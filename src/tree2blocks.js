@@ -120,12 +120,10 @@ export const tree2blocks = (workspace, node) => {
             result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
             break;
 
-        case NODETYPES.INPUT:
-            result = workspace.newBlock('praxly_input_block');
-            break;
-
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
-            if (node.name === 'random') {
+            if (node.name === 'input') {
+              result = workspace.newBlock('praxly_input_block');
+            } else if (node.name === 'random') {
               result = workspace.newBlock('praxly_random_block');
             } else if (node.name === 'randomInt') {
               result = workspace.newBlock('praxly_random_int_block');

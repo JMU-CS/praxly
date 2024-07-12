@@ -129,8 +129,10 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_input_block'] = (block) => {
         return {
+            name: 'input',
             blockID: block.id,
-            type: NODETYPES.INPUT,
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [],
         };
     }
 

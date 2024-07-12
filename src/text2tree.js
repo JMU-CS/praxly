@@ -18,7 +18,7 @@ export function text2tree() {
 }
 
 /**
- * This is the object that I use to tokenize the input to prepare it for parsing.
+ * This is the object that I use to tokenize the source code to prepare it for parsing.
  */
 class Token {
   constructor(type, text, line, startIndex, endIndex) {
@@ -44,8 +44,8 @@ class Lexer {
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
     this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
-    this.builtins = ['random', 'randomInt', 'randomSeed', 'int', 'float'];
-    this.keywords = ["if", "else", "end", "print", "input", "for", "while", 'and', 'or', 'do', 'repeat',
+    this.builtins = ['input', 'random', 'randomInt', 'randomSeed', 'int', 'float'];
+    this.keywords = ["if", "else", "end", "print", "for", "while", 'and', 'or', 'do', 'repeat',
       'until', 'not', 'return', 'null'];
     this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];
     this.startToken = [0, 0];
@@ -604,11 +604,6 @@ class Parser {
           case NODETYPES.INT:
           case NODETYPES.SHORT:
           case NODETYPES.STRING:
-            this.advance();
-            return this.literalNode_new(this.tokens[this.i - 1]);
-
-          case 'input':
-            this.tokens[this.i].token_type = NODETYPES.INPUT;
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
 
