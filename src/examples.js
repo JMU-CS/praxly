@@ -52,9 +52,8 @@ print b
     name: "GCD",
     code: `
 int gcd(int a, int b)
-    int temp
     while (b ≠ 0)
-        temp ← b
+        int temp ← b
         b ← a % b
         a ← temp
     end while
@@ -101,7 +100,7 @@ int countCharacter(String str, char targetChar)
 end countCharacter
 
 print "Enter a string: "
-String userString ← input
+String userString ← input()
 int occurrences ← countCharacter(userString, 'a')
 print "Number of occurrences of 'a' in " + userString + ": " + occurrences
 `,
