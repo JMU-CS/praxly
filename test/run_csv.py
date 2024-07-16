@@ -22,7 +22,7 @@ URL = "http://localhost:5173/"  # https://praxly.cs.jmu.edu/
 WAIT = 3
 
 # How long to sleep before performing actions.
-PAUSE = 0.05
+PAUSE = 0.2
 
 
 def main(csv_name, html_name):

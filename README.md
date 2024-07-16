@@ -36,8 +36,11 @@ $ pip install colorama selenium
 
 To run locally:
 ```
-$ python runall.py [CSV_FILE]
+$ cd test
+$ ./run_all.sh
 ```
+
+*Note: This script connects to the local dev server.*
 
 ## Deployment
 
