@@ -41,9 +41,30 @@ $ python runall.py [CSV_FILE]
 
 ## Deployment
 
-Note: This process is automated via GitHub actions.
+*Note: This process is automated via GitHub actions.*
 
-To build for production:
+To build (manually) for production:
 ```
 PRAXLY_PATH=/relative/path/on/server npm run build
 ```
+
+## Embedding
+
+You can embed Praxly on any website using an iframe:
+
+```html
+<iframe width="100%" height="600"
+    src="https://praxly.cs.jmu.edu/embed.html?button=both#code=print%201%0Aprint%202%0Aprint%203">
+</iframe>
+```
+
+The `embed.html` page takes the following parameters:
+
+Parameter | Options               | Description             |
+----------|-----------------------|-------------------------|
+&editor=  | text*, blocks, both   | Which editor(s) to show |
+&button=  | run*, debug, both     | Which button(s) to show |
+&result=  | output*, vars, both   | Which result(s) to show |
+\#code=   | url-encoded format    | The initial source code |
+
+\* = default values for embedded mode

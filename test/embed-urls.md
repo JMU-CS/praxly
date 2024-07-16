@@ -5,7 +5,7 @@ Parameter | Options               | Description             |
 &editor=  | text*, blocks, both   | Which editor(s) to show |
 &button=  | run*, debug, both     | Which button(s) to show |
 &result=  | output*, vars, both   | Which result(s) to show |
-#code     | url-encoded format    | Initial source code     |
+\#code=   | url-encoded format    | The initial source code |
 
 \* = default values for embedded mode
 
