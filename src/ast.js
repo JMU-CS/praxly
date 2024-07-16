@@ -545,7 +545,21 @@ class Praxly_print {
     async evaluate(environment) {
         var child = await (this.expression.evaluate(environment));
         var result = valueToString(child, this.json);
-        addToPrintBuffer(result + '<br>');
+
+        let suffix;
+        if (this.json.comment) {
+            if (this.json.comment.includes('space')) {
+                suffix = ' ';
+            } else if (this.json.comment.includes('no')) {
+                suffix = '';
+            } else {
+                suffix = '<br>';
+            }
+        } else {
+            suffix = '<br>';
+        }
+
+        addToPrintBuffer(result + suffix);
         return null;
     }
 }

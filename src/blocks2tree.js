@@ -67,6 +67,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: 'PRINT',
             value: praxlyGenerator[expression.type](expression),
+            comment: block.getCommentText(),
         }
     }
 

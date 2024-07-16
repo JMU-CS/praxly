@@ -148,15 +148,24 @@ class Lexer {
 
       if (this.has_short_comment()) {
         this.skip(2);
+
+        // Ignore whitespace between // and comment.
+        while (this.has(' ')) {
+          this.skip();
+        }
+
         while (this.hasNot('\n')) {
           this.capture();
         }
-        this.insert_newline();
         this.emit_token(NODETYPES.SINGLE_LINE_COMMENT);
-        this.skip(); // newline after comment
-        this.currentLine += 1;
-        this.index_before_this_line = this.i;
-        this.startToken = [this.currentLine, this.i - this.index_before_this_line];
+
+        // TODO: this fake newline is not helping.
+        // this.insert_newline();
+        // this.skip(); // newline after comment
+        // this.currentLine += 1;
+        // this.index_before_this_line = this.i;
+        // this.startToken = [this.currentLine, this.i - this.index_before_this_line];
+
         continue;
       }
 
@@ -1032,15 +1041,21 @@ class Parser {
       this.advance();
       const expression = this.parse_expression(9);
       result.endIndex = expression?.endIndex ?? this.getCurrentToken().endIndex;
+
       if (this.has(';')) {
         this.advance();
       }
-      if (this.has('\n')) {
-        // this.advance();
-        result.type = NODETYPES.PRINT;
-        result.value = expression;
-        return result;
+
+      if (this.has(NODETYPES.SINGLE_LINE_COMMENT)) {
+        const token = this.advance();
+        result.comment = token.value;
+      } else {
+        result.comment = null;
       }
+
+      result.type = NODETYPES.PRINT;
+      result.value = expression;
+      return result;
     }
 
     else if (this.has("return")) {
