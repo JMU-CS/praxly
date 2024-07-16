@@ -96,6 +96,7 @@ function initializeGlobals() {
   output = document.querySelector('.output');
   main = document.querySelector('main');
   resetButton = document.querySelector('#resetButton');
+  resetModal = document.querySelector('.resetModal');
   yesButton = document.querySelector('#yes');
   noButton = document.querySelector('#no');
   openWindowButton = document.querySelector('#newWindow');
@@ -175,6 +176,7 @@ function registerListeners() {
     });
 
     resetButton.addEventListener('click', showResetModal);
+
     openWindowButton.addEventListener('click', openInPraxly);
   }
 
@@ -239,7 +241,8 @@ function registerListeners() {
     if (event.key === 'Escape') {
       if (examples) {
         document.querySelector('.exampleModal').style.display = 'none';
-      } else if (resetModal.style.display = 'flex') {
+      }
+      if (resetModal.style.display = 'flex') {
         resetModal.style.display  = 'none';
       }
     }
