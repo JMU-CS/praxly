@@ -375,8 +375,8 @@ function generateTable() {
 
 function clear() {
   clearOutput();
-  clearErrors();
   // stdOut.innerHTML = "";
+  clearErrors();
   stdErr.innerHTML = "";
   varTable.innerHTML = "";
 }

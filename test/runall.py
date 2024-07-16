@@ -13,8 +13,8 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-# URL to test (localhost or production)
-URL = "http://localhost:5173/"  # https://praxly.github.io/
+# URL to test (localhost or production).
+URL = "http://localhost:5173/"  # https://praxly.cs.jmu.edu/
 
 # Timeout, in seconds, to find DOM elements.
 WAIT = 3
@@ -23,8 +23,9 @@ WAIT = 3
 PAUSE = 0.25
 
 
-def main(filename):
+def main(html_name, csv_name):
     """Run each test in a loop until one fails."""
+    print(f'main("{html_name}", "{csv_name}")')
 
     # set up terminal color support
     colorama.init(autoreset=True)
@@ -34,18 +35,19 @@ def main(filename):
     print("Opening browser window")
     driver = webdriver.Firefox()
     driver.implicitly_wait(WAIT)
-    driver.get(URL)
+    driver.get(URL + html_name)
 
     print("Finding DOM elements")
-    refresh = driver.find_element(By.ID, "titleRefresh")
     editor = driver.find_element(By.ID, "aceCode")
     play = driver.find_element(By.ID, "runButton")
     stdout = driver.find_element(By.CLASS_NAME, "stdout")
     stderr = driver.find_element(By.CLASS_NAME, "stderr")
+    reset = driver.find_element(By.ID, "resetButton")
+    yes = driver.find_element(By.ID, "yes")
 
     # for each test in the CSV file
-    print("Reading", filename)
-    file = open(filename, encoding="utf-8", newline="")
+    print("Reading CSV test file")
+    file = open(csv_name, encoding="utf-8", newline="")
     file.readline()  # skip header
     test_id = 0
     for row in csv.reader(file):
@@ -57,7 +59,8 @@ def main(filename):
 
         print(f"Test {test_id}: {name}...", end="", flush=True)
         time.sleep(PAUSE)
-        refresh.click()
+        reset.click()
+        yes.click()
         driver.execute_script(f'ace.edit("aceCode").setValue(`{code}`);')
         editor.click()
         play.click()
@@ -84,10 +87,10 @@ def main(filename):
 if __name__ == "__main__":
 
     # optional command-line argument
-    if len(sys.argv) > 1:
-        main(sys.argv[1])
+    if len(sys.argv) == 3:
+        main(sys.argv[1], sys.argv[2])
     else:
-        main("basic_tests.csv")
+        main("embed.html", "embed_tests.csv")
 
     # remove the log file if blank
     if os.path.exists("geckodriver.log"):
