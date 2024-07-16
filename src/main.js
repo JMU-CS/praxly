@@ -611,6 +611,14 @@ function endDebugPrompt() {
 }
 
 function initializeBlockly() {
+  // Blockly includes some items in the context menu that we don't want. Users
+  // should not be able to disable blocks, because there's no corresponding
+  // behavior in the text editor. Nor should they be able to change the
+  // connector style. The theme we're using doesn't really allow for external
+  // connectors.
+  Blockly.ContextMenuRegistry.registry.unregister('blockDisable');
+  Blockly.ContextMenuRegistry.registry.unregister('blockInline');
+
   workspace = Blockly.inject('blocklyDiv', {
     toolbox: toolbox,
     // scrollbars: false,
