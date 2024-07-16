@@ -31,6 +31,7 @@ def main(html_name, csv_name):
     colorama.init(autoreset=True)
     pass_msg = colorama.Fore.GREEN + "PASS"
     fail_msg = colorama.Fore.RED + "FAIL"
+    todo_msg = colorama.Fore.YELLOW + "TODO"
 
     print("Opening browser window")
     driver = webdriver.Firefox()
@@ -64,6 +65,10 @@ def main(html_name, csv_name):
         driver.execute_script(f'ace.edit("aceCode").setValue(`{code}`);')
         editor.click()
         play.click()
+
+        if expect_out.startswith("TODO"):
+            print(todo_msg)
+            continue
 
         # compare expected with actual output
         actual_out = stdout.get_attribute("innerText").rstrip()
