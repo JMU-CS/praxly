@@ -536,7 +536,7 @@ search-sort/4-search-algorithms.md binary search,"int binarySearch( String [] ar
     int upper ← arrLength - 1
     while ( lower < upper )
         int middle ← (lower+upper) / 2  // middle index in range
-        String val ← arr[middle]
+        String current ← arr[middle]
         if ( target > current )  // adjust range for next iteration
             lower ← middle + 1
         else

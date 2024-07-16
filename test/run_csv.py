@@ -40,13 +40,22 @@ def main(csv_name, html_name):
     driver.implicitly_wait(WAIT)
     driver.get(URL + html_name)
 
+    # close Example Programs modal
+    if html_name == "main.html":
+        driver.find_element(By.CLASS_NAME, "close").click()
+
     print("Finding DOM elements")
     editor = driver.find_element(By.ID, "aceCode")
     play = driver.find_element(By.ID, "runButton")
     stdout = driver.find_element(By.CLASS_NAME, "stdout")
     stderr = driver.find_element(By.CLASS_NAME, "stderr")
-    reset = driver.find_element(By.ID, "resetButton")
-    yes = driver.find_element(By.ID, "yes")
+    try:
+        reset = driver.find_element(By.ID, "resetButton")
+        yes = driver.find_element(By.ID, "yes")
+    except NoSuchElementException:
+        # TODO remove try-except when main has reset modal
+        reset = driver.find_element(By.ID, "clearButton")
+        yes = editor
 
     # for each test in the CSV file
     print("Reading CSV test file")
@@ -112,8 +121,8 @@ if __name__ == "__main__":
     elif len(sys.argv) == 3:
         main(sys.argv[1], sys.argv[2])
     else:
-        print("Usage: python runall.py <csv_name> <html_name")
-        print("   Ex: python runall.py canvas.csv embed.html")
+        print("Usage: python run_csv.py <csv_name> <html_name>")
+        print("   Ex: python run_csv.py canvas.csv embed.html")
 
     # remove the log file if blank
     if os.path.exists("geckodriver.log"):
