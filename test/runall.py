@@ -12,6 +12,8 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 
 # URL to test (localhost or production).
 URL = "http://localhost:5173/"  # https://praxly.cs.jmu.edu/
@@ -20,7 +22,7 @@ URL = "http://localhost:5173/"  # https://praxly.cs.jmu.edu/
 WAIT = 3
 
 # How long to sleep before performing actions.
-PAUSE = 0.25
+PAUSE = 0.05
 
 
 def main(html_name, csv_name):
@@ -55,10 +57,16 @@ def main(html_name, csv_name):
         test_id += 1
         name = row[0]
         code = row[1]
-        expect_out = row[2].rstrip().replace("\r", "")
-        expect_err = row[3].rstrip().replace("\r", "")
+        user_input = row[2]
+        expect_out = row[3].rstrip().replace("\r", "")
+        expect_err = row[4].rstrip().replace("\r", "")
 
         print(f"Test {test_id}: {name}...", end="", flush=True)
+        if expect_out.startswith("TODO"):
+            print(todo_msg)
+            continue
+
+        # reset Praxly, paste code, and run
         time.sleep(PAUSE)
         reset.click()
         yes.click()
@@ -66,9 +74,14 @@ def main(html_name, csv_name):
         editor.click()
         play.click()
 
-        if expect_out.startswith("TODO"):
-            print(todo_msg)
-            continue
+        # simulate each line of user input
+        for line in user_input.splitlines():
+            try:
+                prompt = driver.find_element(By.CLASS_NAME, "prompt")
+                prompt.send_keys(line)
+                prompt.send_keys(Keys.ENTER)
+            except NoSuchElementException:
+                break  # program crashed
 
         # compare expected with actual output
         actual_out = stdout.get_attribute("innerText").rstrip()
