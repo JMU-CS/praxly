@@ -48,7 +48,7 @@ let varTable;
 let output;
 let main;
 let resetButton;
-let debugModal;
+let resetModal;
 let yesButton;
 let noButton;
 let openWindowButton;
@@ -96,7 +96,6 @@ function initializeGlobals() {
   output = document.querySelector('.output');
   main = document.querySelector('main');
   resetButton = document.querySelector('#resetButton');
-  debugModal = document.querySelector('.debugModal');
   yesButton = document.querySelector('#yes');
   noButton = document.querySelector('#no');
   openWindowButton = document.querySelector('#newWindow');
@@ -110,7 +109,7 @@ function registerListeners() {
       window.open(linkUrl, '_blank');
     });
 
-    clearButton.addEventListener('click', reset);
+    clearButton.addEventListener('click', showResetModal);
 
     //titleRefresh.addEventListener('click', function () {
     //  clear();
@@ -175,7 +174,7 @@ function registerListeners() {
       document.removeEventListener('mousemove', resizeHandler);
     });
 
-    resetButton.addEventListener('click', showDebugModal);
+    resetButton.addEventListener('click', showResetModal);
     openWindowButton.addEventListener('click', openInPraxly);
   }
 
@@ -233,6 +232,16 @@ function registerListeners() {
       event.preventDefault();
       runTasks();
       // console.log(trees);
+    }
+  });
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      if (examples) {
+        document.querySelector('.exampleModal').style.display = 'none';
+      } else if (resetModal.style.display = 'flex') {
+        resetModal.style.display  = 'none';
+      }
     }
   });
 
@@ -371,7 +380,23 @@ function generateTable() {
     document.querySelector('.examplesTable').appendChild(newRow);
   }
 
+  // configureURL();
+
 }
+
+// function configureURL() {
+//   const code = textEditor.getValue();
+//   const encoded = encodeURIComponent(code);
+
+//   window.location.hash = '';
+//   window.location.hash = `code=${encoded}`;
+
+//   const params = window.location.search;
+//   const hashcode = window.location.hash;
+
+//   window.location.href = 'main.html' + params + '#code=' + hashcode;
+
+// }
 
 function clear() {
   clearOutput();
@@ -381,16 +406,16 @@ function clear() {
   varTable.innerHTML = "";
 }
 
-function showDebugModal() {
-  debugModal.style.display = 'flex';
+function showResetModal() {
+  resetModal.style.display = 'flex';
 
   yesButton.addEventListener('click', function () {
-    debugModal.style.display = 'none';
+    resetModal.style.display = 'none';
     reset();
   });
 
   noButton.addEventListener('click', function () {
-    debugModal.style.display = 'none';
+    resetModal.style.display = 'none';
   })
 }
 
@@ -398,7 +423,7 @@ const originalUrl = window.location.href;
 
 function reset() {
   if (getDebugMode()) {
-    stopButton.click();
+    // stopButton.click();
     clear(); // clear output/vars
   } else {
     // see if the current URL is different from the original URL
