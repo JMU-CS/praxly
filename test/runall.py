@@ -25,9 +25,9 @@ WAIT = 3
 PAUSE = 0.05
 
 
-def main(html_name, csv_name):
+def main(csv_name, html_name):
     """Run each test in a loop until one fails."""
-    print(f'main("{html_name}", "{csv_name}")')
+    print(f'main("{csv_name}", "{html_name}")')
 
     # set up terminal color support
     colorama.init(autoreset=True)
@@ -104,11 +104,16 @@ def main(html_name, csv_name):
 
 if __name__ == "__main__":
 
-    # optional command-line argument
-    if len(sys.argv) == 3:
+    # optional command-line arguments
+    if len(sys.argv) == 1:
+        main("canvas.csv", "embed.html")
+    elif len(sys.argv) == 2:
+        main(sys.argv[1], "embed.html")
+    elif len(sys.argv) == 3:
         main(sys.argv[1], sys.argv[2])
     else:
-        main("embed.html", "embed_tests.csv")
+        print("Usage: python runall.py <csv_name> <html_name")
+        print("   Ex: python runall.py canvas.csv embed.html")
 
     # remove the log file if blank
     if os.path.exists("geckodriver.log"):

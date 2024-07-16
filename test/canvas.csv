@@ -531,7 +531,7 @@ end linearSearch
 String[] arr = {""C"", ""O"", ""D"", ""E""}
 int index = linearSearch(arr, 4, ""D"")
 print index",,2,
-search-sort/4-search-algorithms.md binary search,"int binarySearch( String [] arr, int arrLength; String target )
+search-sort/4-search-algorithms.md binary search,"int binarySearch( String [] arr, int arrLength, String target )
     int lower ← 0  // lower and upper indices define range
     int upper ← arrLength - 1
     while ( lower < upper )
@@ -550,9 +550,9 @@ search-sort/4-search-algorithms.md binary search,"int binarySearch( String [] ar
     return -1  // item not found
 end binarySearch
 
-String[] arr = {""C"", ""O"", ""D"", ""E""}
-int index = binarySearch(arr, 4, ""D"")
-print index",,2,
+String[] arr = {""A"", ""E"", ""I"", ""O"", ""U""}
+int index = binarySearch(arr, 5, ""U"")
+print index",,4,
 search-sort/5-sorting-algorithms.md insertion sort,"void insertionSort( String [] arr, int length )
      for ( int j ← 1; j < length; j ← j + 1 )
           String val ← arr[j]  // new item to be inserted

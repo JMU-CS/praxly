@@ -113,7 +113,7 @@ Q12,"void mystery ( int n )
         else
             n ← n / 2
         end if
-        print ( n ) // print a space after the number
+        print ( n )  // print a space after the number
     end while
 end mystery
 
