@@ -153,8 +153,15 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.PRINT:
             var result = '    '.repeat(indentation) + "print ";
-            var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
+            var expression = tree2text(node.value, node.endIndex, indentation);
+            if (node.comment) {
+              expression += ' // ' + node.comment;
+            }
+            expression += '\n';
             return result + expression;
+
+        case NODETYPES.ASSOCIATION:
+            return `(${tree2text(node.expression, node.endIndex, indentation)})`;
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (node.name === 'input') {
