@@ -981,9 +981,6 @@ class Praxly_statement {
     }
 
     async evaluate(environment) {
-        // if (debugMode){
-        //     highlightLine(this.json.line, true);
-        // }
         var result = this.contents.evaluate(environment);
         return result;
     }
