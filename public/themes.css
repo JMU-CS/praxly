@@ -150,12 +150,16 @@ h1 {
 
 
 .MainMenu-button {
+  font-size: 15px;
+  text-wrap: nowrap;
+  margin-right: 5px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  justify-content: space-evenly;
+  width: 85px;
+  height: 30px;
+  padding: 0;
+  border-radius: 0.5em;
   color: white;
   border: none;
   outline: none;
@@ -190,15 +194,27 @@ h1 {
   display: none;
 }
 
-.MainMenu-button-icon {
-  font-size: 30px;
-}
-
 .MainMenu-button:hover {
   background-color: rgb(91, 88, 88);
 }
 
-.MainMenu-button {
+#runButton.MainMenu-button {
+  width: 95px;
+  padding: 5px;
+}
+
+#stopButton.MainMenu-button  {
+  width: 100px;
+}
+
+#stepButton.MainMenu-button {
+  width: 95px;
+}
+
+
+
+/* .MainMenu-button {
+  font-size: medium;
   flex-wrap: nowrap;
   margin-right: 5px;
   display: flex;
@@ -214,7 +230,7 @@ h1 {
   transition: background-color 0.3s;
   position: relative;
   background-color: transparent;
-}
+} */
 
 
 #darkMode {
@@ -715,13 +731,13 @@ body.embed #Variable-table-container {
 /* stepButton */
 .material-symbols-rounded.step {
   color: rgb(10, 239, 147);
-  font-size: 36px;
+  font-size: 30px;
 }
 
 /* stopButton */
 .material-symbols-rounded.stop {
   color: var(--stop-color);
-  font-size: 36px;
+  font-size: 30px;
 }
 
 /* resetButton */
