@@ -92,7 +92,6 @@ export class PraxlyError extends Error {
     constructor(message, line) {
         super(`<pre>error occurred on line ${line}:\n\t${message}</pre>`);
         this.errorMessage = this.message;
-        appendAnnotation(message, line);
         errorOutput = this.message;       // not appending run-time error
     }
 }
@@ -204,26 +203,6 @@ export function addBlockErrors(workspace) {
         var block = workspace.getBlockById(key);
         block.setWarningText(blockErrorsBuffer[key]);
     }
-}
-
-/**
- * This function will create the little 'x' on a message in Praxly's code editor
- * @param {string} errorMessage the string that you want to pass as the error
- * @param {number} line the line number that the error occurred on
- */
-export function appendAnnotation(errorMessage, line) {
-    var annotation = {
-        row: line,
-        column: 0,
-        text: errorMessage,
-        type: "error"
-    };
-    annotationsBuffer.push(annotation);
-
-    //gohere
-    // might cause a bug depending on how line is calculated.
-    highlightLine(line + 1);
-
 }
 
 /**
