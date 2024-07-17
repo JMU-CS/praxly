@@ -1124,4 +1124,20 @@ export function definePraxlyBlocks(workspace) {
       "helpUrl": ""
     }
   ]);
+
+  // The default context menu from Blockly has an item for annotating a block
+  // with a comment. We use a dedicated comment block, so we should disable the
+  // menu item. However, we do want builtin comments for print blocks to say
+  // what text should appear after the output. We therefore disable the menu
+  // item for all blocks but print.
+  for (let [id, block] of Object.entries(Blockly.Blocks)) {
+    if (id !== 'praxly_print_block') {
+      block.customContextMenu = items => {
+        let commentIndex = items.findIndex(item => item.text === 'Add Comment'); 
+        if (commentIndex >= 0) {
+          items.splice(commentIndex, 1);
+        }
+      };
+    }
+  }
 }
