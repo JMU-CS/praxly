@@ -61,6 +61,7 @@ export const NODETYPES = {
     ...OP,
     ...TYPES,
     PRINT:                          "PRINT",
+    ASSOCIATION:                    "ASSOCIATION",
     BUILTIN_FUNCTION_CALL:          "BUILTIN_FUNCTION_CALL",
     CODEBLOCK:                      "CODEBLOCK",
     PROGRAM:                        "PROGRAM",

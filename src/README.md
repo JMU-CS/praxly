@@ -7,7 +7,7 @@ referred to as `mainTree` or `node` in the source code.
 On change, the IR is rebuilt and the other editor is updated.
 
 * When the text editor changes:
-  `turnCodeToBLocks()` -> `text2tree()` -> `tree2blocks()`.
+  `turnCodeToBlocks()` -> `text2tree()` -> `tree2blocks()`.
 * When the block editor changes:
   `turnBlocksToCode()` -> `blocks2tree()` -> `tree2text()`.
 

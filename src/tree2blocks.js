@@ -123,6 +123,13 @@ export const tree2blocks = (workspace, node) => {
             }
             break;
 
+        case NODETYPES.ASSOCIATION:
+            var result = tree2blocks(workspace, node?.expression);
+            result.data = JSON.stringify({
+              isParenthesized: true,
+            });
+            break;
+
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (node.name === 'input') {
               result = workspace.newBlock('praxly_input_block');

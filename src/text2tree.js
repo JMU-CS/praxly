@@ -620,14 +620,21 @@ class Parser {
             return this.parse_builtin_function_call(line);
 
           case '(':
-            this.advance();
+            const leftToken = this.advance();
             const expression = this.parse_expression(9);
             if (this.has(")")) {
-              this.advance();
+              const rightToken = this.advance();
+              return {
+                blockID: "code",
+                expression,
+                line,
+                type: NODETYPES.ASSOCIATION,
+                startIndex: leftToken.startIndex,
+                endIndex: rightToken.endIndex,
+              };
             } else {
               textError('parsing', 'did not detect closing parentheses', line,);
             }
-            return expression;
 
           //ah yes, array literals....very fun
           case '{':

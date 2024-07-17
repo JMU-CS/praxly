@@ -85,6 +85,9 @@ export function createExecutable(tree) {
         case TYPES.NULL:
             return new Praxly_null(tree.value, tree);
 
+        case NODETYPES.ASSOCIATION:
+            return new Praxly_association(createExecutable(tree.expression), tree);
+
         case NODETYPES.ADDITION:
             return new Praxly_addition(createExecutable(tree.left), createExecutable(tree.right), tree);
 
@@ -660,6 +663,17 @@ class Praxly_return {
 
     async evaluate(environment) {
         throw new ReturnException(await this.expression.evaluate(environment));
+    }
+}
+
+class Praxly_association {
+    constructor(expression, node) {
+        this.json = node;
+        this.expression = expression;
+    }
+
+    async evaluate(environment) {
+        return await this.expression.evaluate(environment);
     }
 }
 

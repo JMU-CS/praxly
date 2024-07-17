@@ -160,6 +160,9 @@ export const tree2text = (node, indentation) => {
             expression += '\n';
             return result + expression;
 
+        case NODETYPES.ASSOCIATION:
+            return `(${tree2text(node.expression, node.endIndex, indentation)})`;
+
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (node.name === 'input') {
                 return "input()";
