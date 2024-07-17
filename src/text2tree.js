@@ -151,7 +151,7 @@ class Lexer {
         while (this.hasNot('\n')) {
           this.capture();
         }
-        this.insert_newline();
+        // this.insert_newline();
         this.emit_token(NODETYPES.SINGLE_LINE_COMMENT);
         this.skip(); // newline after comment
         this.currentLine += 1;

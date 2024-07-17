@@ -170,11 +170,6 @@ h1 {
   display: none;
 } */
 
-#debugButton:hover {
-  background-image: none;
-  background-color: #8f45f6;
-}
-
 
 #stepButton:hover {
   background-image: none;
@@ -185,23 +180,6 @@ h1 {
   display: none;
   background-color: rgb(196, 217, 8);
   background-image: url('./images/magnify_36.png');
-}
-
-#stepIntoButton:hover {
-  background-image: none;
-  background-color: #a8ba25;
-}
-
-
-
-#stopButton:hover {
-  background-image: none;
-  background-color: #f30e0e;
-}
-
-#runButton:hover {
-  background-image: none;
-  background-color: #00c800;
 }
 
 .MainMenu-button:hover .button-text {
@@ -216,6 +194,9 @@ h1 {
   font-size: 30px;
 }
 
+.MainMenu-button:hover {
+  background-color: rgb(91, 88, 88);
+}
 
 .MainMenu-button {
   flex-wrap: nowrap;
@@ -223,7 +204,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  width: 70px;
+  width: 75px;
   height: 30px;
   border-radius: 0.5em;
   color: white;
@@ -234,27 +215,6 @@ h1 {
   position: relative;
   background-color: transparent;
 }
-
-/* .MainMenu-buttons {
-  display: inline-flex;
-  align-items: ;
-} */
-
-#runButton.MainMenu-button {
-  width: 70px;
-  /* 103px */
-}
-
-#debugButton.MainMenu-button {
-  width: 70px;
-}
-
-#share:hover {
-  background-image: none;
-  background-color: #0077ff;
-  /* Lighter blue color */
-}
-
 
 
 #darkMode {
@@ -278,18 +238,6 @@ h1 {
   background-color: #333333;
 }
 
-
-
-
-#reference:hover {
-  background-image: none;
-  background-color: rgb(91, 88, 88);
-  /* background-color: #ec2323; */
-  /* Lighter blue color */
-}
-
-
-
 #settings {
   display: none;
   background-image: url('./images/settings.png');
@@ -310,10 +258,6 @@ h1 {
   background-image: none;
   background-color: rgb(11, 161, 230);
   /* Lighter blue color */
-}
-
-#clearButton:hover {
-  background-color: rgb(91, 88, 88);
 }
 
 
