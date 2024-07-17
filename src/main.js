@@ -736,10 +736,13 @@ function synchronizeToConfiguration() {
     resizeSideInEmbed ? resizeSideInEmbed.style.display = 'none' : null;
     configuration.main ? resizeBarBott.style.display = 'none' : null;
   }
-  // use same font as text editor
+
+  // use same font size as text editor
   let style = window.getComputedStyle(textPane);
   output.style.fontFamily = style.fontFamily;
+  output.style.fontSize = style.fontSize;
   varContainer.style.fontFamily = style.fontFamily;
+  varContainer.style.fontSize = style.fontSize;
 }
 
 function initialize() {

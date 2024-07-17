@@ -525,7 +525,7 @@ h1 {
 
 main {
   display: flex;
-  flex-basis: 20%;
+  flex-basis: 15%;
   flex-grow: 1;
   background-color: var(--output-bg-color);
 }
@@ -578,7 +578,6 @@ body:not(.embed) #bottom-part {
   position: relative;
   /* margin: 10px; */
   padding: 10px;
-  font-size: large;
   /* border-radius: 10px; */
   overflow: auto;
   height: 100%;
@@ -685,6 +684,10 @@ body:not(.embed) #bottom-part {
   background-color: var(--output-bg-color);
   /* #ffffff */
   height: 100%;
+}
+
+body.embed #Variable-table-container {
+  flex-basis: 25%;
 }
 
 /* Style for the table */
