@@ -417,13 +417,22 @@ function openInPraxly() {
   window.open('main.html#code=' + encodeURIComponent(code), '_blank');
 }
 
+function refresh() {
+  return new Promise(resolve => {
+    // requestAnimationFrame would be a better choice for awaiting the redraw,
+    // but the page is sometimes redrawn too quickly for a human to notice a
+    // change.
+    setTimeout(resolve, 100);
+  });
+}
+
 /**
  * this function gets called every time the run button is pressed.
  */
 async function runTasks() {
-  // console.log("runTasks");
   clear();
   setStopClicked(false);
+  await refresh();
   try {
     // compile/run only if not blank
     if (textEditor.getValue().trim()) {

@@ -292,7 +292,6 @@ export const stepButton = document.getElementById('stepButton');
 export const stopButton = document.getElementById('stopButton');
 export const stepIntoButton = document.getElementById('stepIntoButton');
 
-
 /**
  * This function will present a coming soon toast.
  * This works as a great eventListener for buttons that are not yet implemented.
