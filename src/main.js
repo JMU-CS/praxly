@@ -2,6 +2,7 @@ import Blockly, { Block } from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
+import prand from 'pure-rand';
 
 import { tree2text } from './tree2text';
 import { definePraxlyBlocks } from './newBlocks';
@@ -427,7 +428,29 @@ async function runTasks() {
     // compile/run only if not blank
     if (textEditor.getValue().trim()) {
       const executable = createExecutable(mainTree);
-      await executable.evaluate();
+
+      // This suggestion for the seed comes from the pure-rand
+      // documentation at https://github.com/dubzzz/pure-rand.
+      const seed = Date.now() ^ (Math.random() * 0x100000000);
+      const environment = {
+          name: 'global',
+          parent: "root",
+          variableList: {},
+          functionList: {},
+          random: {
+              seed,
+              generator: prand.xoroshiro128plus(seed),
+          },
+          blocklyWorkspace: workspace,
+      };
+
+      // All scopes have a shortcut reference to the global scope. That
+      // way we can quickly find global data, like the random number
+      // generator, without having to iterate through the parent
+      // references.
+      environment.global = environment;
+
+      await executable.evaluate(environment);
     }
   } catch (error) {
     if (error.message === "Stop_Debug") {

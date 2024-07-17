@@ -1,5 +1,6 @@
 import ace from 'ace-builds';
 import './mode-praxly.js';
+import Blockly from 'blockly';
 
 // this is going to be the place where all shared enums and constants. (this is the place for all shared enums and constants.)
 
@@ -212,7 +213,7 @@ export function addBlockErrors(workspace) {
  * @param {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
  * @returns the marker id associated with the marker. This should not be needed.
  */
-export function highlightAstNode(node) {
+export function highlightAstNode(environment, node) {
     // console.log(`attempting to highlight index [${node.startIndex[0]},${ node.startIndex[1]}] to [${ node.endIndex[0]}, ${ node.endIndex[1] - 1}]`)
     var session = textEditor.session;
 
@@ -224,6 +225,10 @@ export function highlightAstNode(node) {
 
     var errorRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
     var markerId = session.addMarker(errorRange, 'step-marker', 'text');
+
+    if (node.blockID) {
+        environment.global.blocklyWorkspace.highlightBlock(node.blockID);
+    }
 
     markersBuffer.push(markerId);
     return markerId;
