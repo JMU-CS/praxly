@@ -231,7 +231,7 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.VARDECL:
             try {
-                var vartype = node.varType.toString()
+                var vartype = node.varType.toString();
                 var varname = vartype + ' ' + node.name.toString();
                 if (node.value !== undefined) {
                     var operator = ' ← ';
@@ -347,7 +347,7 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.ARRAY_ASSIGNMENT:
             try {
-                var varname = node.varType.toString().toLowerCase() + '[] ' + node.name.toString();
+                var varname = node.varType.toString() + '[] ' + node.name.toString();
                 var operator = ' ← ';
                 var result = '{';
                 var argsList = node.value.params;

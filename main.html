@@ -72,20 +72,20 @@
     <ul>
       <li>
         <button id="runButton" class="MainMenu-button" title="Run Code">
-          <span class="material-symbols-rounded run">play_arrow</span>
-          <span class="button-text">Run Code</span>
+          Run Code <span class="material-symbols-rounded run">play_arrow</span>
+          <!-- <span class="button-text">Run Code</span> -->
         </button>
       </li>
       <li>
         <button id="debugButton" class="MainMenu-button" title="Debugger">
-          <span class="material-symbols-rounded bug">pest_control</span>
-          <span class="button-text">Debug Mode</span>
+          Debug <span class="material-symbols-rounded bug">pest_control</span>
+          <!-- <span class="button-text">Debug Mode</span> -->
         </button>
       </li>
       <li>
         <button id="stepButton" class="MainMenu-button debugOptions" title="Step Over">
-          <span class="material-symbols-rounded step">tools_ladder</span>
-          <span class="button-text">Step Over</span>
+         Step Over <span class="material-symbols-rounded step">tools_ladder</span>
+          <!-- <span class="button-text">Step Over</span> -->
         </button>
       </li>
       <li>
@@ -95,20 +95,20 @@
       </li>
       <li>
         <button id="stopButton" class="MainMenu-button debugOptions" title="Stop Debugger">
-          <span class="material-symbols-rounded stop">stop</span>
-          <span class="button-text">Exit Debug</span>
+          Exit Debug <span class="material-symbols-rounded stop">stop</span>
+          <!-- <span class="button-text">Exit Debug</span> -->
         </button>
       </li>
       <li>
         <button id="share" class="MainMenu-button" title="Share">
-          <span class="material-symbols-rounded spread">share</span>
-          <span class="button-text">Share</span>
+          Share <span class="material-symbols-rounded share">share</span>
+          <!-- <span class="button-text">Share</span> -->
         </button>
       </li>
       <li>
         <button id="reference" class="MainMenu-button" title="reference">
-          <span class="material-symbols-rounded manual">book_2</span>
-          <span class="button-text">Manual</span>
+          Manual <span class="material-symbols-rounded manual">book_2</span>
+          <!-- <span class="button-text">Manual</span> -->
         </button>
       </li>
       <li class="settingsOptions">
@@ -129,8 +129,8 @@
       </li>
       <li>
         <button id="clearButton" class="MainMenu-button">
-          <span class="material-symbols-rounded reset">delete</span>
-          <span class="button-text">Clear</span>
+          Reset <span class="material-symbols-rounded reset">restart_alt</span>
+          <!-- <span class="button-text">Clear</span> -->
         </button>
       </li>
     </ul>
@@ -163,6 +163,17 @@
       <div class="clearOut"><span class="material-symbols-rounded trash">delete</span></div>
       <p class="stdout"></p>
       <p class="stderr"></p>
+    </div>
+  </div>
+
+  <div class="resetModal">
+    <div class="resetModal-content">
+      <h2>Are you sure you want to reset?</h2>
+      <p>Resetting will remove any changes you made AND clear both the output and variables table.</p>
+      <div class="answerOptions">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+      </div>
     </div>
   </div>
 

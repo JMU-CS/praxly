@@ -150,12 +150,16 @@ h1 {
 
 
 .MainMenu-button {
+  font-size: 15px;
+  text-wrap: nowrap;
+  margin-right: 5px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  justify-content: space-evenly;
+  width: 85px;
+  height: 30px;
+  padding: 0;
+  border-radius: 0.5em;
   color: white;
   border: none;
   outline: none;
@@ -166,14 +170,9 @@ h1 {
 }
 
 /* icon goes away when hover */
-.MainMenu-button:hover .material-symbols-rounded {
+/* .MainMenu-button:hover .material-symbols-rounded {
   display: none;
-}
-
-#debugButton:hover {
-  background-image: none;
-  background-color: #8f45f6;
-}
+} */
 
 
 #stepButton:hover {
@@ -187,23 +186,6 @@ h1 {
   background-image: url('./images/magnify_36.png');
 }
 
-#stepIntoButton:hover {
-  background-image: none;
-  background-color: #a8ba25;
-}
-
-
-
-#stopButton:hover {
-  background-image: none;
-  background-color: #f30e0e;
-}
-
-#runButton:hover {
-  background-image: none;
-  background-color: #00c800;
-}
-
 .MainMenu-button:hover .button-text {
   display: inline;
 }
@@ -212,18 +194,35 @@ h1 {
   display: none;
 }
 
-.MainMenu-button-icon {
-  font-size: 30px;
+.MainMenu-button:hover {
+  background-color: rgb(91, 88, 88);
+}
+
+#runButton.MainMenu-button {
+  width: 95px;
+  padding: 5px;
+}
+
+#stopButton.MainMenu-button  {
+  width: 100px;
+}
+
+#stepButton.MainMenu-button {
+  width: 95px;
 }
 
 
-.MainMenu-button {
+
+/* .MainMenu-button {
+  font-size: medium;
+  flex-wrap: nowrap;
+  margin-right: 5px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  justify-content: space-evenly;
+  width: 75px;
+  height: 30px;
+  border-radius: 0.5em;
   color: white;
   border: none;
   outline: none;
@@ -231,14 +230,7 @@ h1 {
   transition: background-color 0.3s;
   position: relative;
   background-color: transparent;
-}
-
-#share:hover {
-  background-image: none;
-  background-color: #0077ff;
-  /* Lighter blue color */
-}
-
+} */
 
 
 #darkMode {
@@ -262,17 +254,6 @@ h1 {
   background-color: #333333;
 }
 
-
-
-
-#reference:hover {
-  background-image: none;
-  background-color: #ec2323;
-  /* Lighter blue color */
-}
-
-
-
 #settings {
   display: none;
   background-image: url('./images/settings.png');
@@ -293,10 +274,6 @@ h1 {
   background-image: none;
   background-color: rgb(11, 161, 230);
   /* Lighter blue color */
-}
-
-#clearButton:hover {
-  background-color: rgb(91, 88, 88);
 }
 
 
@@ -508,7 +485,7 @@ h1 {
 
 main {
   display: flex;
-  flex-basis: 20%;
+  flex-basis: 15%;
   flex-grow: 1;
   background-color: var(--output-bg-color);
 }
@@ -561,7 +538,6 @@ body:not(.embed) #bottom-part {
   position: relative;
   /* margin: 10px; */
   padding: 10px;
-  font-size: large;
   /* border-radius: 10px; */
   overflow: auto;
   height: 100%;
@@ -670,6 +646,10 @@ body:not(.embed) #bottom-part {
   height: 100%;
 }
 
+body.embed #Variable-table-container {
+  flex-basis: 25%;
+}
+
 /* Style for the table */
 #Variable-table-outer {
   width: 100%;
@@ -718,26 +698,26 @@ body:not(.embed) #bottom-part {
 /* runButton */
 .material-symbols-rounded.run {
   color: green;
-  font-size: 36px;
+  font-size: 30px;
 }
 
 /* debugButton */
 .material-symbols-rounded.bug {
   color: var(--debug-color);
-  font-size: 30px;
+  font-size: 25px;
   transform: rotate(-45deg);
 }
 
 /* Share */
-.material-symbols-rounded.spread {
+.material-symbols-rounded.share {
   color: #4985c5;
-  font-size: 30px;
+  font-size: 25px;
 }
 
 /* Manual */
 .material-symbols-rounded.manual {
   color: #c91827;
-  font-size: 30px;
+  font-size: 25px;
 }
 
 /* Reference */
@@ -751,19 +731,19 @@ body:not(.embed) #bottom-part {
 /* stepButton */
 .material-symbols-rounded.step {
   color: rgb(10, 239, 147);
-  font-size: 36px;
+  font-size: 30px;
 }
 
 /* stopButton */
 .material-symbols-rounded.stop {
   color: var(--stop-color);
-  font-size: 36px;
+  font-size: 30px;
 }
 
 /* resetButton */
 .material-symbols-rounded.reset {
   color: darkgray;
-  font-size: 34px;
+  font-size: 30px;
 }
 
 /* toolbox.css*/
@@ -937,7 +917,7 @@ body:not(.embed)>#embed-toolbar {
   }
 }
 
-.debugModal {
+.resetModal {
   display: none;
   position: fixed;
   top: 0;
@@ -951,7 +931,7 @@ body:not(.embed)>#embed-toolbar {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.debugModal-content {
+.resetModal-content {
   background-color: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   max-width: 500px;

@@ -157,6 +157,7 @@ class Lexer {
         while (this.hasNot('\n')) {
           this.capture();
         }
+
         this.emit_token(NODETYPES.SINGLE_LINE_COMMENT);
 
         // TODO: this fake newline is not helping.
