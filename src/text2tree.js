@@ -120,14 +120,6 @@ class Lexer {
     this.startToken = [this.currentLine, this.i - this.index_before_this_line];
   }
 
-  insert_newline() {
-    if (this.tokens.length > 0 && this.tokens[this.tokens.length - 1].token_type !== "\n") {
-      this.tokens.push(new Token("\n", "", this.currentLine));
-      // Note: the code won't be reformatted if an error occurs
-      // this.currentLine += 1;
-    }
-  }
-
   emit_token(type = null) {
     var endIndex = this.i - this.index_before_this_line;
     // console.error(endIndex);
@@ -148,25 +140,12 @@ class Lexer {
 
       if (this.has_short_comment()) {
         this.skip(2);
-
-        // Ignore whitespace between // and comment.
-        while (this.has(' ')) {
-          this.skip();
-        }
-
         while (this.hasNot('\n')) {
           this.capture();
         }
-
+        // Trim whitespace before/after comment text.
+        this.token_so_far = this.token_so_far.trim()
         this.emit_token(NODETYPES.SINGLE_LINE_COMMENT);
-
-        // TODO: this fake newline is not helping.
-        // this.insert_newline();
-        // this.skip(); // newline after comment
-        // this.currentLine += 1;
-        // this.index_before_this_line = this.i;
-        // this.startToken = [this.currentLine, this.i - this.index_before_this_line];
-
         continue;
       }
 
@@ -1079,13 +1058,15 @@ class Parser {
       }
 
     } else if (this.has(NODETYPES.COMMENT)) {
-      result.type = NODETYPES.COMMENT,
-        result.value = this.tokens[this.i].value;
+      const token = this.advance();
+      result.type = NODETYPES.COMMENT;
+      result.value = token.value;
       return result;
 
     } else if (this.has(NODETYPES.SINGLE_LINE_COMMENT)) {
-      result.type = NODETYPES.SINGLE_LINE_COMMENT,
-        result.value = this.tokens[this.i].value;
+      const token = this.advance();
+      result.type = NODETYPES.SINGLE_LINE_COMMENT;
+      result.value = token.value;
       return result;
     }
 
