@@ -190,7 +190,6 @@ class Lexer {
         this.token_so_far = "";
         this.emit_token(NODETYPES.STRING);
         continue;
-
       }
 
       if (this.has_valid_symbol()) {
@@ -980,7 +979,6 @@ class Parser {
         return result;
       } else {
         textError('compile time', "missing the \'end while\' token", result.line);
-
       }
     }
 
@@ -1002,10 +1000,6 @@ class Parser {
           return result;
         }
         this.advance();
-        if (this.hasNot('\n')) {
-          return result;
-        }
-        this.advance()
         return result;
       }
     }
@@ -1028,10 +1022,6 @@ class Parser {
           return result;
         }
         this.advance();
-        if (this.hasNot('\n')) {
-          return result;
-        }
-        this.advance()
         return result;
       }
     }
