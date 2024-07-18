@@ -1,5 +1,6 @@
 import ace from 'ace-builds';
 import './mode-praxly.js';
+import Blockly from 'blockly';
 
 // this is going to be the place where all shared enums and constants. (this is the place for all shared enums and constants.)
 
@@ -61,6 +62,7 @@ export const NODETYPES = {
     ...OP,
     ...TYPES,
     PRINT:                          "PRINT",
+    ASSOCIATION:                    "ASSOCIATION",
     BUILTIN_FUNCTION_CALL:          "BUILTIN_FUNCTION_CALL",
     CODEBLOCK:                      "CODEBLOCK",
     PROGRAM:                        "PROGRAM",
@@ -92,7 +94,6 @@ export class PraxlyError extends Error {
     constructor(message, line) {
         super(`<pre>error occurred on line ${line}:\n\t${message}</pre>`);
         this.errorMessage = this.message;
-        appendAnnotation(message, line);
         errorOutput = this.message;       // not appending run-time error
     }
 }
@@ -207,75 +208,12 @@ export function addBlockErrors(workspace) {
 }
 
 /**
- * This function will create the little 'x' on a message in Praxly's code editor
- * @param {string} errorMessage the string that you want to pass as the error
- * @param {number} line the line number that the error occurred on
- */
-export function appendAnnotation(errorMessage, line) {
-    var annotation = {
-        row: line,
-        column: 0,
-        text: errorMessage,
-        type: "error"
-    };
-    annotationsBuffer.push(annotation);
-
-    //gohere
-    // might cause a bug depending on how line is calculated.
-    highlightLine(line + 1);
-
-}
-
-/**
  * This will highlight a line of code
  * @param {number} line the desired line that you want to highlight
  * @param {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
  * @returns the marker id associated with the marker. This should not be needed.
  */
-export function highlightLine(line) {
-    var session = textEditor.session;
-
-    // var errorRange = indextoAceRange(line - 1);
-    var Range = ace.require('ace/range').Range;
-    var errorRange = new Range(line, 0, line - 1, 1);
-    var markerId = session.addMarker(errorRange, 'error-marker', 'fullLine');
-    var color = `rgba(255, 0, 0, 0.2)`;
-
-    var markerCss = `
-      .error-marker {
-        position: absolute;
-        z-index: 1;
-        background-color: ${color};
-        border-bottom: 2px solid red;
-      }
-    `;
-
-    // Check if the style tag already exists
-    var existingStyleTag = document.getElementById('custom-style');
-    if (!existingStyleTag) {
-        // If it doesn't exist, create a new style tag and set its ID
-        // console.log(`couldn\'t find custom-style`);
-        existingStyleTag = document.createElement('style');
-        existingStyleTag.setAttribute('id', 'custom-style');
-        document.head.appendChild(existingStyleTag);
-    }
-
-    // Append the error-marker rules to the existing style tag
-    existingStyleTag.appendChild(document.createTextNode(markerCss));
-
-    // console.log(`attempted to highlight ${line}`);
-    markersBuffer.push(markerId);
-    return markerId;
-}
-
-
-/**
- * This will highlight a line of code
- * @param {number} line the desired line that you want to highlight
- * @param {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
- * @returns the marker id associated with the marker. This should not be needed.
- */
-export function highlightAstNode(node) {
+export function highlightAstNode(environment, node) {
     // console.log(`attempting to highlight index [${node.startIndex[0]},${ node.startIndex[1]}] to [${ node.endIndex[0]}, ${ node.endIndex[1] - 1}]`)
     var session = textEditor.session;
 
@@ -286,30 +224,12 @@ export function highlightAstNode(node) {
     }
 
     var errorRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
-    var markerId = session.addMarker(errorRange, 'error-marker', 'text');
-    var color = getStepInto() ? `rgba(255, 255, 0, 0.4)` : `rgba(0, 255, 0, 0.2)`;
+    var markerId = session.addMarker(errorRange, 'step-marker', 'text');
 
-    var markerCss = `
-      .error-marker {
-        position: absolute;
-        z-index: 1;
-        background-color: ${color};
-      }
-    `;
-
-    // Check if the style tag already exists
-    var existingStyleTag = document.getElementById('custom-style');
-    if (!existingStyleTag) {
-        // If it doesn't exist, create a new style tag and set its ID
-        existingStyleTag = document.createElement('style');
-        existingStyleTag.setAttribute('id', 'custom-style');
-        document.head.appendChild(existingStyleTag);
+    if (node.blockID) {
+        environment.global.blocklyWorkspace.highlightBlock(node.blockID);
     }
 
-    // Append the error-marker rules to the existing style tag
-    existingStyleTag.appendChild(document.createTextNode(markerCss));
-
-    // console.log(`attempted to highlight ${line}`);
     markersBuffer.push(markerId);
     return markerId;
 }
@@ -363,7 +283,7 @@ export function getStopClicked() {
 }
 
 export const textEditor = ace.edit("aceCode", {
-  fontSize: 19,
+  fontSize: 18,
   mode: 'ace/mode/praxly',
 });
 
@@ -371,7 +291,6 @@ export const debugButton = document.getElementById('debugButton');
 export const stepButton = document.getElementById('stepButton');
 export const stopButton = document.getElementById('stopButton');
 export const stepIntoButton = document.getElementById('stepIntoButton');
-
 
 /**
  * This function will present a coming soon toast.

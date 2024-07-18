@@ -77,6 +77,9 @@ export async function generateVariableTable(environment, level) {
 
             let valueEvaluated = await value.evaluate(environment);
             valueCell.textContent = valueToString(valueEvaluated);
+            if (value.realType === "String") {
+                valueCell.textContent = '"' + valueCell.textContent + '"';
+            }
 
             const locationCell = document.createElement("td");
             locationCell.textContent = environment.name;

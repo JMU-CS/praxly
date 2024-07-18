@@ -2,6 +2,7 @@ import Blockly, { Block } from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
+import prand from 'pure-rand';
 
 import { tree2text } from './tree2text';
 import { definePraxlyBlocks } from './newBlocks';
@@ -42,13 +43,12 @@ let darkmodediv;
 let resizeBarBott;
 let resizeSideInEmbed;
 let toggleText, toggleBlocks, toggleOutput, toggleVars;
-let clearButton;
 let varContainer;
 let varTable;
 let output;
 let main;
 let resetButton;
-let debugModal;
+let resetModal;
 let yesButton;
 let noButton;
 let openWindowButton;
@@ -75,7 +75,6 @@ function initializeGlobals() {
     toggleBlocks = document.querySelector('#toggle-blocks');
     toggleOutput = document.querySelector('#toggle-output');
     toggleVars = document.querySelector('#toggle-vars');
-    clearButton = document.querySelector('#clearButton');
   }
   runButton = document.getElementById('runButton');
   shareButton = document.getElementById('share');
@@ -96,7 +95,7 @@ function initializeGlobals() {
   output = document.querySelector('.output');
   main = document.querySelector('main');
   resetButton = document.querySelector('#resetButton');
-  debugModal = document.querySelector('.debugModal');
+  resetModal = document.querySelector('.resetModal');
   yesButton = document.querySelector('#yes');
   noButton = document.querySelector('#no');
   openWindowButton = document.querySelector('#newWindow');
@@ -109,8 +108,6 @@ function registerListeners() {
       var linkUrl = 'pseudocode.html';
       window.open(linkUrl, '_blank');
     });
-
-    clearButton.addEventListener('click', reset);
 
     //titleRefresh.addEventListener('click', function () {
     //  clear();
@@ -164,7 +161,8 @@ function registerListeners() {
     document.querySelector('.close').addEventListener('click', function () {
       document.querySelector('.exampleModal').style.display = 'none';
     });
-  } else {
+  } else { // embed only
+
     resizeSideInEmbed.addEventListener('mousedown', function (e) {
       isResizingVert = true;
       document.addEventListener('mousemove', resizeHandler);
@@ -175,14 +173,15 @@ function registerListeners() {
       document.removeEventListener('mousemove', resizeHandler);
     });
 
-    resetButton.addEventListener('click', showDebugModal);
     openWindowButton.addEventListener('click', openInPraxly);
   }
 
   runButton.addEventListener('click', runTasks);
   clearOut.addEventListener('click', clear);
+  resetButton.addEventListener('click', showResetModal);
+
   workspace.addChangeListener(onBlocklyChange);
-  textEditor.addEventListener("input", turnCodeToBLocks);
+  textEditor.addEventListener("input", turnCodeToBlocks);
 
   //resizing things with the purple bar
   resizeBarX.addEventListener('mousedown', function (e) {
@@ -220,8 +219,8 @@ function registerListeners() {
   });
 
   textPane.addEventListener('click', () => {
-    textEditor.removeEventListener("input", turnCodeToBLocks);
-    textEditor.addEventListener("input", turnCodeToBLocks);
+    textEditor.removeEventListener("input", turnCodeToBlocks);
+    textEditor.addEventListener("input", turnCodeToBlocks);
   });
 
 
@@ -233,6 +232,17 @@ function registerListeners() {
       event.preventDefault();
       runTasks();
       // console.log(trees);
+    }
+  });
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      if (examples) {
+        document.querySelector('.exampleModal').style.display = 'none';
+      }
+      if (resetModal.style.display = 'flex') {
+        resetModal.style.display  = 'none';
+      }
     }
   });
 
@@ -371,43 +381,55 @@ function generateTable() {
     document.querySelector('.examplesTable').appendChild(newRow);
   }
 
+  // configureURL();
+
 }
+
+// function configureURL() {
+//   const code = textEditor.getValue();
+//   const encoded = encodeURIComponent(code);
+
+//   window.location.hash = '';
+//   window.location.hash = `code=${encoded}`;
+
+//   const params = window.location.search;
+//   const hashcode = window.location.hash;
+
+//   window.location.href = 'main.html' + params + '#code=' + hashcode;
+
+// }
 
 function clear() {
   clearOutput();
-  clearErrors();
   // stdOut.innerHTML = "";
+  clearErrors();
   stdErr.innerHTML = "";
   varTable.innerHTML = "";
 }
 
-function showDebugModal() {
-  debugModal.style.display = 'flex';
+function showResetModal() {
+  resetModal.style.display = 'flex';
 
   yesButton.addEventListener('click', function () {
-    debugModal.style.display = 'none';
+    resetModal.style.display = 'none';
     reset();
   });
 
   noButton.addEventListener('click', function () {
-    debugModal.style.display = 'none';
+    resetModal.style.display = 'none';
   })
 }
 
 const originalUrl = window.location.href;
 
 function reset() {
-  if (getDebugMode()) {
-    stopButton.click();
-    clear(); // clear output/vars
+  // see if the current URL is different from the original URL
+  if (window.location.href !== originalUrl) {
+    window.location.href = originalUrl;
   } else {
-    // see if the current URL is different from the original URL
-    if (window.location.href !== originalUrl) {
-      window.location.href = originalUrl;
-    } else {
-      textEditor.setValue(configuration.code, 1); // reload the page if the URL hasn't changed
-      clear();
-    }
+    // reload the code if the URL hasn't changed
+    textEditor.setValue(configuration.code ?? "", 1);
+    turnCodeToBlocks();
   }
 }
 
@@ -416,23 +438,54 @@ function openInPraxly() {
   window.open('main.html#code=' + encodeURIComponent(code), '_blank');
 }
 
+function refresh() {
+  return new Promise(resolve => {
+    // requestAnimationFrame would be a better choice for awaiting the redraw,
+    // but the page is sometimes redrawn too quickly for a human to notice a
+    // change.
+    setTimeout(resolve, 100);
+  });
+}
+
 /**
  * this function gets called every time the run button is pressed.
  */
 async function runTasks() {
-  // console.log("runTasks");
   clear();
   setStopClicked(false);
+  await refresh();
   try {
     // compile/run only if not blank
     if (textEditor.getValue().trim()) {
       const executable = createExecutable(mainTree);
-      await executable.evaluate();
+
+      // This suggestion for the seed comes from the pure-rand
+      // documentation at https://github.com/dubzzz/pure-rand.
+      const seed = Date.now() ^ (Math.random() * 0x100000000);
+      const environment = {
+          name: 'global',
+          parent: "root",
+          variableList: {},
+          functionList: {},
+          random: {
+              seed,
+              generator: prand.xoroshiro128plus(seed),
+          },
+          blocklyWorkspace: workspace,
+      };
+
+      // All scopes have a shortcut reference to the global scope. That
+      // way we can quickly find global data, like the random number
+      // generator, without having to iterate through the parent
+      // references.
+      environment.global = environment;
+
+      await executable.evaluate(environment);
     }
   } catch (error) {
     if (error.message === "Stop_Debug") {
       // special case: abort running (not an error)
-      reset();
+      clear();
       // exit debug, clear output/vars, restart debugger
     } else if (!errorOutput) {
       // if not previously handled (by PraxlyError)
@@ -450,20 +503,17 @@ async function runTasks() {
     var pos = textEditor.getCursorPosition();
     turnBlocksToCode();
     textEditor.moveCursorToPosition(pos);
-    textEditor.addEventListener("input", turnCodeToBLocks);
+    textEditor.addEventListener("input", turnCodeToBlocks);
   }
   textEditor.focus();
 }
 
-export function turnCodeToBLocks() {
+export function turnCodeToBlocks() {
   // I need to make the listeners only be one at a time to prevent an infinite loop.
   workspace.removeChangeListener(onBlocklyChange);
   if (getDebugMode()) {
     stopButton.click();
   }
-  // TODO: See note in turnBlocksToCode.
-  // clearOutput();
-  // clearErrors();
   mainTree = text2tree();
 
   if (DEV_LOG) {
@@ -486,13 +536,7 @@ function onBlocklyChange(event) {
 }
 
 function turnBlocksToCode() {
-  textEditor.removeEventListener("input", turnCodeToBLocks);
-  // TODO: the console has been getting cleared too often. When the program is
-  // run, it'd clear in runTasks. Then again in turnCodeToBLocks. Then again
-  // here, wiping away the output. Surely something is overeager here, but I'm
-  // not sure what.
-  // clearOutput();
-  // clearErrors();
+  textEditor.removeEventListener("input", turnCodeToBlocks);
   mainTree = blocks2tree(workspace, praxlyGenerator);
   // console.info("here is the tree generated by the blocks:");
   // console.debug(mainTree);
@@ -611,6 +655,14 @@ function endDebugPrompt() {
 }
 
 function initializeBlockly() {
+  // Blockly includes some items in the context menu that we don't want. Users
+  // should not be able to disable blocks, because there's no corresponding
+  // behavior in the text editor. Nor should they be able to change the
+  // connector style. The theme we're using doesn't really allow for external
+  // connectors.
+  Blockly.ContextMenuRegistry.registry.unregister('blockDisable');
+  Blockly.ContextMenuRegistry.registry.unregister('blockInline');
+
   workspace = Blockly.inject('blocklyDiv', {
     toolbox: toolbox,
     // scrollbars: false,
@@ -708,10 +760,13 @@ function synchronizeToConfiguration() {
     resizeSideInEmbed ? resizeSideInEmbed.style.display = 'none' : null;
     configuration.main ? resizeBarBott.style.display = 'none' : null;
   }
-  // use same font as text editor
+
+  // use same font size as text editor
   let style = window.getComputedStyle(textPane);
   output.style.fontFamily = style.fontFamily;
+  output.style.fontSize = style.fontSize;
   varContainer.style.fontFamily = style.fontFamily;
+  varContainer.style.fontSize = style.fontSize;
 }
 
 function initialize() {

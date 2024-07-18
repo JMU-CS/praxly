@@ -61,7 +61,7 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.SINGLE_LINE_COMMENT:
             try {
-                var result = '    '.repeat(indentation) + '//' + node.value + '\n';
+                var result = '    '.repeat(indentation) + '// ' + node.value + '\n';
                 return result;
             } catch (error) {
                 return " ";
@@ -153,8 +153,15 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.PRINT:
             var result = '    '.repeat(indentation) + "print ";
-            var expression = tree2text(node.value, node.endIndex, indentation) + '\n';
+            var expression = tree2text(node.value, node.endIndex, indentation);
+            if (node.comment) {
+              expression += '  // ' + node.comment;
+            }
+            expression += '\n';
             return result + expression;
+
+        case NODETYPES.ASSOCIATION:
+            return `(${tree2text(node.expression, node.endIndex, indentation)})`;
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (node.name === 'input') {
@@ -224,7 +231,7 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.VARDECL:
             try {
-                var vartype = node.varType.toString()
+                var vartype = node.varType.toString();
                 var varname = vartype + ' ' + node.name.toString();
                 if (node.value !== undefined) {
                     var operator = ' ← ';
@@ -340,7 +347,7 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.ARRAY_ASSIGNMENT:
             try {
-                var varname = node.varType.toString().toLowerCase() + '[] ' + node.name.toString();
+                var varname = node.varType.toString() + '[] ' + node.name.toString();
                 var operator = ' ← ';
                 var result = '{';
                 var argsList = node.value.params;

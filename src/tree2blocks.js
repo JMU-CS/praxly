@@ -118,6 +118,16 @@ export const tree2blocks = (workspace, node) => {
             var result = workspace.newBlock('praxly_print_block');
             var child = tree2blocks(workspace, node?.value);
             result.getInput('EXPRESSION').connection.connect(child?.outputConnection);
+            if (node && node.comment) {
+                result.setCommentText(node.comment);
+            }
+            break;
+
+        case NODETYPES.ASSOCIATION:
+            var result = tree2blocks(workspace, node?.expression);
+            result.data = JSON.stringify({
+              isParenthesized: true,
+            });
             break;
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {

@@ -16,16 +16,13 @@ import {
     getStopClicked
 } from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
-import prand from 'pure-rand';
-
-var SCOPES = {};
 
 const FOR_LOOP_LIMIT = 1000000;
 const WHILE_LOOP_LIMIT = 1000;
 
-async function stepInto(json) {
+async function stepInto(environment, json) {
     if (getStepInto()) {
-        let markerId = highlightAstNode(json);
+        let markerId = highlightAstNode(environment, json);
         await waitForStep();
         textEditor.session.removeMarker(markerId);
     }
@@ -34,7 +31,7 @@ async function stepInto(json) {
 async function stepOver(environment, json) {
     if (getDebugMode()) {
         await generateVariableTable(environment, 1);
-        let markerId = highlightAstNode(json);
+        let markerId = highlightAstNode(environment, json);
         await waitForStep();
         textEditor.session.removeMarker(markerId);
     }
@@ -84,6 +81,9 @@ export function createExecutable(tree) {
 
         case TYPES.NULL:
             return new Praxly_null(tree.value, tree);
+
+        case NODETYPES.ASSOCIATION:
+            return new Praxly_association(createExecutable(tree.expression), tree);
 
         case NODETYPES.ADDITION:
             return new Praxly_addition(createExecutable(tree.left), createExecutable(tree.right), tree);
@@ -163,28 +163,6 @@ export function createExecutable(tree) {
             return new Praxly_codeBlock(result);
 
         case NODETYPES.PROGRAM:
-            // This suggestion for the seed comes from the pure-rand
-            // documentation at https://github.com/dubzzz/pure-rand.
-            const seed = Date.now() ^ (Math.random() * 0x100000000);
-            SCOPES = {
-                global: {
-                    name: 'global',
-                    parent: "root",
-                    variableList: {},
-                    functionList: {},
-                    random: {
-                        seed,
-                        generator: prand.xoroshiro128plus(seed),
-                    },
-                }
-            };
-
-            // All scopes have a shortcut reference to the global scope. That
-            // way we can quickly find global data, like the random number
-            // generator, without having to iterate through the parent
-            // references.
-            SCOPES.global.global = SCOPES.global;
-
             return new Praxly_program(createExecutable(tree.value));
 
         case NODETYPES.STATEMENT:
@@ -545,7 +523,21 @@ class Praxly_print {
     async evaluate(environment) {
         var child = await (this.expression.evaluate(environment));
         var result = valueToString(child, this.json);
-        addToPrintBuffer(result + '<br>');
+
+        let suffix;
+        if (this.json.comment) {
+            if (this.json.comment.includes('space')) {
+                suffix = ' ';
+            } else if (this.json.comment.includes('no')) {
+                suffix = '';
+            } else {
+                suffix = '<br>';
+            }
+        } else {
+            suffix = '<br>';
+        }
+
+        addToPrintBuffer(result + suffix);
         return null;
     }
 }
@@ -649,6 +641,17 @@ class Praxly_return {
     }
 }
 
+class Praxly_association {
+    constructor(expression, node) {
+        this.json = node;
+        this.expression = expression;
+    }
+
+    async evaluate(environment) {
+        return await this.expression.evaluate(environment);
+    }
+}
+
 class Praxly_addition {
     a_operand;
     b_operand;
@@ -662,7 +665,7 @@ class Praxly_addition {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.ADDITION, a.realType,
             b.realType, this.json), a.value + b.value);
     }
@@ -681,7 +684,7 @@ class Praxly_subtraction {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.SUBTRACTION, a.realType, b.realType, this.json), a.value - b.value);
     }
 }
@@ -699,7 +702,7 @@ class Praxly_multiplication {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.MULTIPLICATION, a.realType, b.realType, this.json), a.value * b.value);
     }
 }
@@ -720,7 +723,7 @@ class Praxly_division {
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
         }
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.DIVISION, a.realType, b.realType, this.json), a.value / b.value);
     }
 }
@@ -741,7 +744,7 @@ class Praxly_modulo {
         if (b.value === 0) {
             throw new PraxlyError("division by zero", this.json.line);
         }
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.MODULUS, a.realType, b.realType, this.json), a.value % b.value);
     }
 }
@@ -759,7 +762,7 @@ class Praxly_exponent {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.EXPONENTIATION, a.realType, b.realType, this.json), a.value ** b.value);
     }
 }
@@ -777,7 +780,7 @@ class Praxly_and {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.AND, a.realType, b.realType, this.json), a.value && b.value);
     }
 }
@@ -795,7 +798,7 @@ class Praxly_or {
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return litNode_new(binop_typecheck(OP.OR, a.realType, b.realType, this.json), a.value || b.value);
     }
 }
@@ -813,7 +816,7 @@ class Praxly_equals {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return new Praxly_boolean(left.value === right.value);
     }
 }
@@ -831,7 +834,7 @@ class Praxly_not_equals {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return new Praxly_boolean(left.value != await right.value);
     }
 }
@@ -849,7 +852,7 @@ class Praxly_greater_than {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return new Praxly_boolean(left.value > right.value);
     }
 }
@@ -867,7 +870,7 @@ class Praxly_less_than {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return new Praxly_boolean(left.value < right.value);
     }
 }
@@ -885,7 +888,7 @@ class Praxly_greater_than_equal {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return new Praxly_boolean(left.value >= right.value);
     }
 }
@@ -903,7 +906,7 @@ class Praxly_less_than_equal {
     async evaluate(environment) {
         var left = await this.a_operand.evaluate(environment);
         var right = await this.b_operand.evaluate(environment);
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return new Praxly_boolean(left.value <= right.value);
     }
 }
@@ -953,9 +956,6 @@ class Praxly_statement {
     }
 
     async evaluate(environment) {
-        // if (debugMode){
-        //     highlightLine(this.json.line, true);
-        // }
         var result = this.contents.evaluate(environment);
         return result;
     }
@@ -968,11 +968,11 @@ class Praxly_program {
         this.codeblock = codeblock;
     }
 
-    async evaluate() {
-        let result = await this.codeblock.evaluate(SCOPES.global);
+    async evaluate(environment) {
+        let result = await this.codeblock.evaluate(environment);
 
         // update variable list at the end of the program
-        await generateVariableTable(SCOPES.global, 1);
+        await generateVariableTable(environment, 1);
         return result;
     }
 }
@@ -1081,7 +1081,7 @@ class Praxly_assignment {
         } else {
             storage[this.location.name] = valueEvaluated;
         }
-        await stepInto(this.json);
+        await stepInto(environment, this.json);
         return valueEvaluated;
     }
 }

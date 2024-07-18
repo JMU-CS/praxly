@@ -1,0 +1,636 @@
+Test Name,Program Code,User Input,Expected Output,Expected Error
+arrays/2-arrays.md initialize,"// first, initialize the array
+int[] a ⟵ {5, 9, 2, 10, 15};
+
+// Then, print a value from it
+print a[0];",,5,
+arrays/2-arrays.md index var,"int pos ⟵ 2
+int[] a ⟵ {5, 9, 8, 10, 15};
+
+print a[pos]",,8,
+arrays/2-arrays.md index sum,"int[] a ⟵ {5, 9, 8, 10};
+int sum ⟵ a[0] + a[3] + a[2];
+print sum;",,23,
+arrays/2-arrays.md modify one,"int[] a ⟵ {5, 9, 2, 10, 15};
+
+print a[0];
+a[0] ⟵ 20;
+print a[0];",,"5
+20",
+arrays/2-arrays.md modify few,"int[] a ⟵ {5, 9, 2, 10};
+
+a[0] ⟵ a[0] * 3;
+a[1] ⟵ (a[0] + 5) / 2;
+a[3] ⟵ a[0]
+
+print a",,"{15, 10, 2, 15}",
+arrays/3-iteration.md while *12,"float[] heights ⟵ {5.8, 4.9, 6.3, 5.2, 5.7};
+
+int count ⟵ 0;
+while (count < 5)
+    heights[count] ⟵ heights[count] * 12;
+    count ⟵ count + 1;
+end while
+
+print heights",,"{69.6, 58.800000000000004, 75.6, 62.400000000000006, 68.4}",
+arrays/3-iteration.md while print,"int counter ⟵ 0;
+while ( counter < 10 )
+    print counter;
+    counter ⟵ counter + 1;
+end while",,"0
+1
+2
+3
+4
+5
+6
+7
+8
+9",
+arrays/3-iteration.md for print,"for ( int i ⟵ 0; i < 10; i ⟵ i + 1 )
+    print i;
+end for",,"0
+1
+2
+3
+4
+5
+6
+7
+8
+9",
+arrays/3-iteration.md for *12,"float[] heights ⟵ {5.8, 4.9, 6.3, 5.2, 5.7};
+
+for (int count ⟵ 0; count < 5; count ⟵ count + 1)
+    heights[count] ⟵ heights[count] * 12;
+end for
+
+print heights",,"{69.6, 58.800000000000004, 75.6, 62.400000000000006, 68.4}",
+arrays/3-iteration.md for avg,"float[] scores ⟵ {75.0, 80.0, 40.0, 98.5, 100.0};
+
+float avg ⟵ 0;
+
+for (int i ⟵ 0; i < 5; i ⟵ i + 1)
+    avg ⟵ avg + scores[i];
+end for
+
+avg ⟵ avg / 5;
+print avg;",,78.7,
+arrays/5-nested.md nested while,"int counter1 ⟵ 0;
+while ( counter1 < 2 )
+    int counter2 ⟵ 0;
+    while ( counter2 < 3 )
+        print ""Hello!"";
+        counter2 ⟵ counter2 + 1;
+    end while
+    counter1 ⟵ counter1 + 1;
+end while",,"Hello!
+Hello!
+Hello!
+Hello!
+Hello!
+Hello!",
+arrays/5-nested.md while 10 hello,"int counter2 ⟵ 0;
+while ( counter2 < 10 )
+    print ""Hello!"";
+    counter2 ⟵ counter2 + 1;
+end while",,"Hello!
+Hello!
+Hello!
+Hello!
+Hello!
+Hello!
+Hello!
+Hello!
+Hello!
+Hello!",
+conditionals/5.4 if-statements.md if b print y,"boolean b ⟵ true;
+
+if (b)
+    print 'y';
+end if",,y,
+conditionals/5.4 if-statements.md if tracing,"int c ⟵ 5;
+boolean e ⟵ false;
+
+if (e)
+    print c + 10;
+    print c;
+end if
+
+e ⟵ true;
+
+if (e)
+    print c + 15;
+end if",,20,
+conditionals/5.4 if-statements.md if bool exp,"int c ⟵ 5;
+boolean e ⟵ c < 10;
+
+if (e)
+    print c + 10;
+    print c
+end if
+
+if (c == 3)
+    print c + 15;
+end if",,"15
+5",
+conditionals/5.4 if-statements.md secret eq guess,"int secret_number ⟵ 13;
+
+int guess ⟵ int(input())
+
+print secret_number == guess",13,"
+true",
+conditionals/5.4 if-statements.md if secret guess,"print ""Guess a number!""; // output a message
+
+int secret_number ⟵ 13;
+int guess ⟵ int(input())
+
+if( secret_number == guess )
+    print ""You got it!""
+end if
+
+if( secret_number != guess )
+    print ""You did not get it...""
+end if",14,"Guess a number!
+
+You did not get it...",
+conditionals/5.4 if-statements.md random guess,"// get the random number
+int r ⟵ random
+
+// scale the number so it is between 1 and 100
+int nf ⟵ float (r) / 6.0 * 100.0;
+int n  ⟵ int (nf);
+
+// get the guess from the user;
+int guess ⟵ int(input())
+
+// compare n to guess
+if(n == guess)
+    print 'y';
+end if
+
+if(n != guess)
+    print 'n';
+end if
+",,TODO random,
+conditionals/5.5 more-ifs.md if guess 5,"print ""Guess a number between 1 and 10"";
+int n ⟵ int(input())
+
+if(n == 5)
+    print ""You got it!"";
+else
+    print ""You didn't get it."";
+end if",5,"Guess a number between 1 and 10
+
+You got it!",
+conditionals/5.5 more-ifs.md if else-if else,"print ""Guess a number between 1 and 10"";
+int n ⟵ int(input())
+
+if(n == 5)
+    print ""Correct!"";
+else if (n == 4 or n == 6)
+    print ""You're close!"";
+else
+    print ""Incorrect!"";
+end if",4,"Guess a number between 1 and 10
+
+You're close!",
+conditionals/5.5 more-ifs.md nested if-else,"print ""Guess a number between 1 and 10"";
+int n ⟵ int(input())
+
+if (n < 5)
+    print ""Too low!"";
+    if (n == 4)
+        print ""Pretty close, though."";
+    end if
+else if (n > 5)
+    print ""Too high!"";
+    if(n == 6)
+        print ""Pretty close, though."";
+    end if
+else
+    print ""You got it!"";
+end if",6,"Guess a number between 1 and 10
+
+Too high!
+Pretty close, though.",
+conditionals/5.6 loops.md infinite loop,"int count ⟵ 0;
+
+while ( count < 5)
+    // print ""Looping!"";
+end while",,,"error occurred on line 3:
+	This is probably an infinite loop."
+conditionals/5.6 loops.md while loop 5,"int count ⟵ 0;
+
+while (count < 5 )
+    print ""Looping"";
+    count ⟵ count + 1;  // increment count
+end while
+
+print ""All done!"";",,"Looping
+Looping
+Looping
+Looping
+Looping
+All done!",
+conditionals/5.6 loops.md do-while once,"int count ⟵ 0;
+
+do
+    count ⟵ count + 2;
+    print ""Looping!"";
+while (count < 2)",,Looping!,
+conditionals/5.6 loops.md while false,"int count ⟵ 2;
+
+while ( count < 2)
+    print ""Loop!"";
+end while",,,
+conditionals/5.6 loops.md do-while false,"int count ⟵ 2;
+
+do
+    print ""Loop!"";
+while ( count < 2 )",,Loop!,
+conditionals/5.7 compound-boolean.md game,"print ""Welcome to the game!"";
+int answer ⟵ random;
+int guesses ⟵ 0;
+
+while (guesses <= 3)
+    print ""Guess a number between 1 and 6"";
+    int n ⟵ int(input())
+
+    if(n == answer)
+        print ""You got it!"";
+        guesses ⟵ guesses + 10;
+    else
+        print ""That's not it!"";
+        guesses ⟵ guesses + 1;
+    end if
+end while
+
+if (n == answer)
+    print ""You won!"";
+    if (guesses == 10)
+        print ""You got it on the first try!"";
+    end if
+else
+    print ""You lost!"";
+end if",,TODO random,
+conditionals/5.7 compound-boolean.md license,"print ""How old are you?"";
+int age = int(input())
+
+print ""Have you completed driver's ed? Type 1 for Yes, 2 for No."";
+int ed = int(input())
+
+print ""How is your vision (rate from 1 to 5, with 5 being the best)"";
+int vision = int(input())
+
+if(age >= 16 and ed == 1 and vision > 2)
+    print ""You are eligible!"";
+else
+    print ""You are not eligible."";
+end if","17
+2
+5","How old are you?
+
+Have you completed driver's ed? Type 1 for Yes, 2 for No.
+
+How is your vision (rate from 1 to 5, with 5 being the best)
+
+You are not eligible.",
+conditionals/5.7 compound-boolean.md DeMorgan,"boolean A ← false
+boolean B ← false
+
+// These two operations always produce the same result!
+print not A or B
+print not A and not B
+
+// Likewise, these two operations always produce the same result:
+print not A and B
+print not A or not B",,"true
+true
+false
+true",
+procedures/2-procedure-basics.md greet and main,"// procedure definition
+void greet()
+    print ""Hello!"";
+    print ""How are you?"";
+end greet
+
+// main program
+greet();
+greet();
+print ""Are you there?"";
+greet();",,"Hello!
+How are you?
+Hello!
+How are you?
+Are you there?
+Hello!
+How are you?",
+procedures/2-procedure-basics.md global vs local,"// procedure definition
+void getRandom()
+    int r ⟵ random // local variable
+end getRandom
+
+// main program
+int r ⟵ 10;   // global variable
+getRandom(); // call the procedure
+print r;",,TODO random,
+procedures/2-procedure-basics.md no global vars,"// procedure definition
+void printSum()
+    int a ⟵ 10;
+    int b ⟵ 15;
+    print a + b;
+end printSum
+
+// main program
+printSum();
+print a * b; // ERROR!",,25,"error occurred on line 10:
+	Variable a does not exist."
+procedures/3-params-and-return.md capital of VA,"print ""What is the capital of Virginia?"";
+print ""1: Washington 2: Richmond 3: Norfolk"";
+int ans ⟵ int(input())
+
+if ( ans == 2 )
+    print ""Correct!"";
+else
+    print ""Incorrect"";
+end if",2,"What is the capital of Virginia?
+1: Washington 2: Richmond 3: Norfolk
+
+Correct!",
+procedures/3-params-and-return.md ques choices,"// These things change for each question
+String ques ⟵ ""What is the capital of Virginia?"";
+String choices ⟵ ""1: Washington 2: Richmond 3: Norfolk"";
+int correct_ans ⟵ 2;
+
+// This code stays the same for each question
+print ques;
+print choices;
+int ans ⟵ int(input())
+
+if ( ans == correct_ans )
+    print ""Correct!""
+else
+    print ""Incorrect""
+end if",3,"What is the capital of Virginia?
+1: Washington 2: Richmond 3: Norfolk
+
+Incorrect",
+procedures/3-params-and-return.md use globals,"// procedure definition
+void askQ()
+    print ques;
+    print choices;
+    int ans ⟵ int(input())
+
+    if ( ans == correct_ans )
+        print ""Correct!""
+    else
+        print ""Incorrect""
+    end if
+end askQ
+
+// main program
+String ques ⟵ ""What is the capital of Virginia?"";
+String choices ⟵ ""1: Washington 2: Richmond 3: Norfolk"";
+int correct_ans ⟵ 2;
+
+askQ();
+
+ques ⟵ ""What is the capital of Maryland?"";
+choices ⟵ ""1: Baltimore 2: D.C. 3: Annapolis"";
+correct_ans ⟵ 3;
+
+askQ();","2
+2","What is the capital of Virginia?
+1: Washington 2: Richmond 3: Norfolk
+
+Correct!
+What is the capital of Maryland?
+1: Baltimore 2: D.C. 3: Annapolis
+
+Incorrect",
+procedures/3-params-and-return.md use params,"void askQ(String ques, String choices, int correct_ans)
+    print ques;
+    print choices;
+    int ans ⟵ int(input())
+
+    if ( ans == correct_ans )
+        print ""Correct!""
+    else
+        print ""Incorrect""
+    end if
+end askQ
+
+askQ(""What is the capital of Virginia?"", ""1: Washington 2: Richmond 3: Norfolk"", 2);
+askQ(""What is the capital of Maryland?"", ""1: Baltimore 2: D.C. 3: Annapolis"", 3);","3
+3","What is the capital of Virginia?
+1: Washington 2: Richmond 3: Norfolk
+
+Incorrect
+What is the capital of Maryland?
+1: Baltimore 2: D.C. 3: Annapolis
+
+Correct!",
+procedures/3-params-and-return.md return score,"int askQ(String ques, String choices, int correct_ans)
+    print ques;
+    print choices;
+    int ans ⟵ int(input())
+
+    if ( ans == correct_ans )
+        print ""Correct!""
+        return 1;
+    else
+        print ""Incorrect""
+        return 0;
+    end if
+end askQ
+
+int score ⟵ 0;
+score ⟵ score + askQ(""What is the capital of Virginia?"", ""1: Washington 2: Richmond 3: Norfolk"", 2);
+score ⟵ score + askQ(""What is the capital of Maryland?"", ""1: Baltimore 2: D.C. 3: Annapolis"", 3);
+print score;","2
+3","What is the capital of Virginia?
+1: Washington 2: Richmond 3: Norfolk
+
+Correct!
+What is the capital of Maryland?
+1: Baltimore 2: D.C. 3: Annapolis
+
+Correct!
+2",
+procedures/5-recursion.md iterative 5+5,"void askQ()
+    int correct ← 0
+    while (correct == 0)
+        print ""What is 5 + 5?""
+        int ans ← int(input())
+        if (ans == 10)
+            print ""Correct!""
+            correct ← 1
+        else
+            print ""Incorrect""
+        end if
+    end while
+end askQ
+
+askQ()","9
+10","What is 5 + 5?
+
+Incorrect
+What is 5 + 5?
+
+Correct!",
+procedures/5-recursion.md recursive 5+5,"void askQ()
+    print ""What is 5 + 5?""
+    int ans ← int(input())
+    if (ans == 10)
+        print ""Correct!""
+    else
+        print ""Incorrect""
+        askQ()  // recursive call
+    end if
+end askQ
+
+askQ()","9
+10","What is 5 + 5?
+
+Incorrect
+What is 5 + 5?
+
+Correct!",
+procedures/5-recursion.md factorial,"int factorial(int n)
+    if (n == 1)
+        return 1
+    else
+        return n * factorial(n - 1)
+    end if
+end factorial
+
+print factorial(5)",,120,
+search-sort/2-algorithm-design.md algorithm max,"int[] array ← {3, 5, 1, 2}
+int arrayLength ← 4
+
+int max ← array[0]
+for (int i ← 0; i < arrayLength; i ← i + 1)
+    int current ← array[i]
+    if (current > max)
+        max ← current
+    end if
+end for
+
+print max",,5,
+search-sort/4-search-algorithms.md linear search,"int linearSearch( String [] arr, int arrLength, String target )
+    for ( int j ← 0; j < arrLength; j ← j + 1 )
+        String val ← arr[j]
+        if ( val == target ) // found!
+            return j
+        end if
+    end for
+    return -1 // not found
+end linearSearch
+
+String[] arr = {""C"", ""O"", ""D"", ""E""}
+int index = linearSearch(arr, 4, ""D"")
+print index",,2,
+search-sort/4-search-algorithms.md binary search,"int binarySearch( String [] arr, int arrLength, String target )
+    int lower ← 0  // lower and upper indices define range
+    int upper ← arrLength - 1
+    while ( lower < upper )
+        int middle ← (lower+upper) / 2  // middle index in range
+        String current ← arr[middle]
+        if ( target > current )  // adjust range for next iteration
+            lower ← middle + 1
+        else
+            if ( target < current )
+                    upper ← middle - 1
+            else // target == current // item found!
+                    return middle
+            end if
+        end if
+    end while
+    return -1  // item not found
+end binarySearch
+
+String[] arr = {""A"", ""E"", ""I"", ""O"", ""U""}
+int index = binarySearch(arr, 5, ""U"")
+print index",,4,
+search-sort/5-sorting-algorithms.md insertion sort,"void insertionSort( String [] arr, int length )
+     for ( int j ← 1; j < length; j ← j + 1 )
+          String val ← arr[j]  // new item to be inserted
+          int k ← j - 1
+          while ( k ≥ 0 and arr[k] > val )  // shift previously sorted items
+               arr[k + 1] ← arr[k]
+               k ← k - 1
+          end while
+          arr[k + 1] ← val  // insert new item
+     end for
+end insertionSort
+
+String[] arr = {""C"", ""O"", ""D"", ""E""}
+insertionSort(arr, 4)
+print arr",,"{""C"", ""D"", ""E"", ""O""}",
+search-sort/5-sorting-algorithms.md selection sort,"void selectionSort( String [] arr, int length )
+     for ( int j ← 0; j < length; j ← j + 1 )
+          int min ← j
+          for ( int k ← j + 1; k < length; k ← k + 1 )  // find minimum
+               if (arr[k] < arr[min])
+                    min ← k
+          end for
+          String temp ← arr[j]  // swap
+          arr[j] ← arr[min]
+          arr[min] ← temp
+     end for
+end selectionSort
+
+String[] arr = {""C"", ""O"", ""D"", ""E""}
+selectionSort(arr, 4)
+print arr",,"{""C"", ""D"", ""E"", ""O""}",
+variables-and-operators/2.4 assigning-variables.md assign 10,"int data ⟵ 10;
+print data",,10,
+variables-and-operators/2.4 assigning-variables.md print 1010,"print 10; // no line feed after
+print 10; // line feed after",,1010,
+variables-and-operators/2.4 assigning-variables.md no line feed,"print 100; // no line feed
+print 200; // no line feed
+print 300; // no line feed",,100200300,
+variables-and-operators/2.4 assigning-variables.md how old,"print ""How old are you?""; // line feed after
+
+int answer ⟵ int(input())
+
+print ""You said you were ""; // no line feed
+print answer; // no line feed
+print "" years old. Thanks!""; // line feed after",20,"How old are you?
+
+You said you were 20 years old. Thanks!",
+variables-and-operators/2.5 expressions.md print counter,"int counter ⟵ 0;
+print counter;
+
+counter ⟵ counter + 1;
+print counter;",,"0
+1",
+variables-and-operators/2.5 expressions.md int division,"int result ⟵ 7 / 2;
+print result;",,3,
+variables-and-operators/2.5 expressions.md float division,"float result ⟵ 7.0 / 2.0;
+print result;",,3.5,
+variables-and-operators/2.5 expressions.md one third whole,"float one_third ← 1.0 / 3.0;
+print one_third;
+
+float whole ← one_third * 3;
+print whole;",,"0.3333333333333333
+1.0",
+variables-and-operators/2.5 expressions.md float remainder,"float result ⟵ 6.0 % 4.2;
+print result;",,1.7999999999999998,
+variables-and-operators/2.5 expressions.md age in days int,"int age ⟵ int(input()); // get the int from the user
+float f_age = float(age); // cast age as a float
+
+// finally, cast the result as an int
+int age_in_days = int(f_age * 365.25);
+print age_in_days",18,"
+6574",
+variables-and-operators/2.5 expressions.md age in days float,"print ""How old are you?"";
+
+int age ⟵ int(input())
+
+print ""You are approximately "";  // no line feed
+print float(age) * 365.25;       // no line feed
+print "" days old!""",18,"How old are you?
+
+You are approximately 6574.5 days old!",

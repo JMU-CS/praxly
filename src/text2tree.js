@@ -120,14 +120,6 @@ class Lexer {
     this.startToken = [this.currentLine, this.i - this.index_before_this_line];
   }
 
-  insert_newline() {
-    if (this.tokens.length > 0 && this.tokens[this.tokens.length - 1].token_type !== "\n") {
-      this.tokens.push(new Token("\n", "", this.currentLine));
-      // Note: the code won't be reformatted if an error occurs
-      // this.currentLine += 1;
-    }
-  }
-
   emit_token(type = null) {
     var endIndex = this.i - this.index_before_this_line;
     // console.error(endIndex);
@@ -151,12 +143,9 @@ class Lexer {
         while (this.hasNot('\n')) {
           this.capture();
         }
-        this.insert_newline();
+        // Trim whitespace before/after comment text.
+        this.token_so_far = this.token_so_far.trim()
         this.emit_token(NODETYPES.SINGLE_LINE_COMMENT);
-        this.skip(); // newline after comment
-        this.currentLine += 1;
-        this.index_before_this_line = this.i;
-        this.startToken = [this.currentLine, this.i - this.index_before_this_line];
         continue;
       }
 
@@ -201,7 +190,6 @@ class Lexer {
         this.token_so_far = "";
         this.emit_token(NODETYPES.STRING);
         continue;
-
       }
 
       if (this.has_valid_symbol()) {
@@ -611,14 +599,21 @@ class Parser {
             return this.parse_builtin_function_call(line);
 
           case '(':
-            this.advance();
+            const leftToken = this.advance();
             const expression = this.parse_expression(9);
             if (this.has(")")) {
-              this.advance();
+              const rightToken = this.advance();
+              return {
+                blockID: "code",
+                expression,
+                line,
+                type: NODETYPES.ASSOCIATION,
+                startIndex: leftToken.startIndex,
+                endIndex: rightToken.endIndex,
+              };
             } else {
               textError('parsing', 'did not detect closing parentheses', line,);
             }
-            return expression;
 
           //ah yes, array literals....very fun
           case '{':
@@ -897,8 +892,16 @@ class Parser {
     if (this.has("if")) {
       result.type = NODETYPES.IF;
       this.advance();
+      if (this.hasNot('(')) {
+        return result;
+      }
+      this.advance();
       result.condition = this.parse_expression(9);
       result.endIndex = this.getCurrentToken().endIndex;
+      if (this.hasNot(')')) {
+        return result;
+      }
+      this.advance();
       if (this.has('\n')) {
         this.advance();
         result.statement = this.parse_block('else', 'end if');
@@ -957,8 +960,16 @@ class Parser {
     else if (this.has('while')) {
       result.type = NODETYPES.WHILE;
       this.advance();
+      if (this.hasNot('(')) {
+        return result;
+      }
+      this.advance();
       result.condition = this.parse_expression(9);
       result.endIndex = this.getCurrentToken().endIndex;
+      if (this.hasNot(')')) {
+        return result;
+      }
+      this.advance();
       if (this.has('\n')) {
         this.advance();
         result.statement = this.parse_block('end while');
@@ -968,7 +979,6 @@ class Parser {
         return result;
       } else {
         textError('compile time', "missing the \'end while\' token", result.line);
-
       }
     }
 
@@ -982,7 +992,6 @@ class Parser {
       if (this.has('while')) {
         this.advance();
         if (this.hasNot('(')) {
-          //error
           return result;
         }
         this.advance();
@@ -991,11 +1000,6 @@ class Parser {
           return result;
         }
         this.advance();
-        if (this.hasNot('\n')) {
-          return result;
-          //error
-        }
-        this.advance()
         return result;
       }
     }
@@ -1010,7 +1014,6 @@ class Parser {
       if (this.has('until')) {
         this.advance();
         if (this.hasNot('(')) {
-          //error
           return result;
         }
         this.advance();
@@ -1019,11 +1022,6 @@ class Parser {
           return result;
         }
         this.advance();
-        if (this.hasNot('\n')) {
-          return result;
-          //error
-        }
-        this.advance()
         return result;
       }
     }
@@ -1032,15 +1030,21 @@ class Parser {
       this.advance();
       const expression = this.parse_expression(9);
       result.endIndex = expression?.endIndex ?? this.getCurrentToken().endIndex;
+
       if (this.has(';')) {
         this.advance();
       }
-      if (this.has('\n')) {
-        // this.advance();
-        result.type = NODETYPES.PRINT;
-        result.value = expression;
-        return result;
+
+      if (this.has(NODETYPES.SINGLE_LINE_COMMENT)) {
+        const token = this.advance();
+        result.comment = token.value;
+      } else {
+        result.comment = null;
       }
+
+      result.type = NODETYPES.PRINT;
+      result.value = expression;
+      return result;
     }
 
     else if (this.has("return")) {
@@ -1056,13 +1060,15 @@ class Parser {
       }
 
     } else if (this.has(NODETYPES.COMMENT)) {
-      result.type = NODETYPES.COMMENT,
-        result.value = this.tokens[this.i].value;
+      const token = this.advance();
+      result.type = NODETYPES.COMMENT;
+      result.value = token.value;
       return result;
 
     } else if (this.has(NODETYPES.SINGLE_LINE_COMMENT)) {
-      result.type = NODETYPES.SINGLE_LINE_COMMENT,
-        result.value = this.tokens[this.i].value;
+      const token = this.advance();
+      result.type = NODETYPES.SINGLE_LINE_COMMENT;
+      result.value = token.value;
       return result;
     }
 
