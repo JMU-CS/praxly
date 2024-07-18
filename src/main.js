@@ -423,17 +423,13 @@ function showResetModal() {
 const originalUrl = window.location.href;
 
 function reset() {
-  if (getDebugMode()) {
-    // stopButton.click();
-    clear(); // clear output/vars
+  // see if the current URL is different from the original URL
+  if (window.location.href !== originalUrl) {
+    window.location.href = originalUrl;
   } else {
-    // see if the current URL is different from the original URL
-    if (window.location.href !== originalUrl) {
-      window.location.href = originalUrl;
-    } else {
-      textEditor.setValue(configuration.code, 1); // reload the page if the URL hasn't changed
-      clear();
-    }
+    // reload the code if the URL hasn't changed
+    textEditor.setValue(configuration.code ?? "", 1);
+    turnCodeToBlocks();
   }
 }
 
@@ -489,7 +485,7 @@ async function runTasks() {
   } catch (error) {
     if (error.message === "Stop_Debug") {
       // special case: abort running (not an error)
-      reset();
+      clear();
       // exit debug, clear output/vars, restart debugger
     } else if (!errorOutput) {
       // if not previously handled (by PraxlyError)
