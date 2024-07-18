@@ -84,6 +84,11 @@ body {
   font-size: 29px;
   position: absolute;
   transform: rotate(-45deg);
+  transition: transform 1s ease-in-out;
+}
+
+.material-symbols-rounded.bug:hover {
+  transform: rotate(315deg);
 }
 
 .people-container {
@@ -104,5 +109,4 @@ body {
 
 .team-member h3 {
   margin: 0 0 15px;
-
 }
