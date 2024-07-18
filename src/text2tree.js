@@ -893,8 +893,16 @@ class Parser {
     if (this.has("if")) {
       result.type = NODETYPES.IF;
       this.advance();
+      if (this.hasNot('(')) {
+        return result;
+      }
+      this.advance();
       result.condition = this.parse_expression(9);
       result.endIndex = this.getCurrentToken().endIndex;
+      if (this.hasNot(')')) {
+        return result;
+      }
+      this.advance();
       if (this.has('\n')) {
         this.advance();
         result.statement = this.parse_block('else', 'end if');
@@ -953,8 +961,16 @@ class Parser {
     else if (this.has('while')) {
       result.type = NODETYPES.WHILE;
       this.advance();
+      if (this.hasNot('(')) {
+        return result;
+      }
+      this.advance();
       result.condition = this.parse_expression(9);
       result.endIndex = this.getCurrentToken().endIndex;
+      if (this.hasNot(')')) {
+        return result;
+      }
+      this.advance();
       if (this.has('\n')) {
         this.advance();
         result.statement = this.parse_block('end while');
@@ -978,7 +994,6 @@ class Parser {
       if (this.has('while')) {
         this.advance();
         if (this.hasNot('(')) {
-          //error
           return result;
         }
         this.advance();
@@ -989,7 +1004,6 @@ class Parser {
         this.advance();
         if (this.hasNot('\n')) {
           return result;
-          //error
         }
         this.advance()
         return result;
@@ -1006,7 +1020,6 @@ class Parser {
       if (this.has('until')) {
         this.advance();
         if (this.hasNot('(')) {
-          //error
           return result;
         }
         this.advance();
@@ -1017,7 +1030,6 @@ class Parser {
         this.advance();
         if (this.hasNot('\n')) {
           return result;
-          //error
         }
         this.advance()
         return result;
