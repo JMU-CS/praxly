@@ -43,7 +43,6 @@ let darkmodediv;
 let resizeBarBott;
 let resizeSideInEmbed;
 let toggleText, toggleBlocks, toggleOutput, toggleVars;
-let clearButton;
 let varContainer;
 let varTable;
 let output;
@@ -76,7 +75,6 @@ function initializeGlobals() {
     toggleBlocks = document.querySelector('#toggle-blocks');
     toggleOutput = document.querySelector('#toggle-output');
     toggleVars = document.querySelector('#toggle-vars');
-    clearButton = document.querySelector('#clearButton');
   }
   runButton = document.getElementById('runButton');
   shareButton = document.getElementById('share');
@@ -110,8 +108,6 @@ function registerListeners() {
       var linkUrl = 'pseudocode.html';
       window.open(linkUrl, '_blank');
     });
-
-    clearButton.addEventListener('click', showResetModal);
 
     //titleRefresh.addEventListener('click', function () {
     //  clear();
@@ -165,7 +161,8 @@ function registerListeners() {
     document.querySelector('.close').addEventListener('click', function () {
       document.querySelector('.exampleModal').style.display = 'none';
     });
-  } else {
+  } else { // embed only
+
     resizeSideInEmbed.addEventListener('mousedown', function (e) {
       isResizingVert = true;
       document.addEventListener('mousemove', resizeHandler);
@@ -176,13 +173,13 @@ function registerListeners() {
       document.removeEventListener('mousemove', resizeHandler);
     });
 
-    resetButton.addEventListener('click', showResetModal);
-
     openWindowButton.addEventListener('click', openInPraxly);
   }
 
   runButton.addEventListener('click', runTasks);
   clearOut.addEventListener('click', clear);
+  resetButton.addEventListener('click', showResetModal);
+
   workspace.addChangeListener(onBlocklyChange);
   textEditor.addEventListener("input", turnCodeToBlocks);
 

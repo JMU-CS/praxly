@@ -49,13 +49,8 @@ def main(csv_name, html_name):
     play = driver.find_element(By.ID, "runButton")
     stdout = driver.find_element(By.CLASS_NAME, "stdout")
     stderr = driver.find_element(By.CLASS_NAME, "stderr")
-    try:
-        reset = driver.find_element(By.ID, "resetButton")
-        yes = driver.find_element(By.ID, "yes")
-    except NoSuchElementException:
-        # TODO remove try-except when main has reset modal
-        reset = driver.find_element(By.ID, "clearButton")
-        yes = editor
+    reset = driver.find_element(By.ID, "resetButton")
+    yes = driver.find_element(By.ID, "yes")
 
     # for each test in the CSV file
     print("Reading CSV test file")

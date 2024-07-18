@@ -283,7 +283,7 @@ export function getStopClicked() {
 }
 
 export const textEditor = ace.edit("aceCode", {
-  fontSize: 17,
+  fontSize: 18,
   mode: 'ace/mode/praxly',
 });
 

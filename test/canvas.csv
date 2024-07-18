@@ -596,7 +596,7 @@ variables-and-operators/2.4 assigning-variables.md how old,"print ""How old are 
 int answer ⟵ int(input())
 
 print ""You said you were ""; // no line feed
-print answer;
+print answer; // no line feed
 print "" years old. Thanks!""; // line feed after",20,"How old are you?
 
 You said you were 20 years old. Thanks!",
