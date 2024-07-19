@@ -88,7 +88,8 @@ body {
   transition: transform 1s ease-in-out;
 }
 
-.material-symbols-rounded.bug:hover {
+.report:hover .bug,
+.report .bug:hover {
   transform: rotate(315deg);
 }
 
@@ -99,7 +100,7 @@ body {
   max-width: 900px;
 }
 
-.team-member img {
+.team-member .member {
   flex: 0 1 30%;
   max-width: 100%;
   border-radius: 50%;
