@@ -75,6 +75,8 @@ body {
   margin: 45px;
   margin-right: 60px;
   text-decoration: none;
+  background: transparent;
+  border: none;
 }
 
 .report:hover {

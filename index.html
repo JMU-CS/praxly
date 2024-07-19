@@ -14,9 +14,7 @@
 <body>
 
   <header>
-    <a class="report"
-      href="https://docs.google.com/forms/d/e/1FAIpQLSeo2mUrrhNZejPch9UcQQDHWk5e6ql_xFfFSdS6oiaNA-Tk8Q/viewform?embedded=true">Report
-      a bug <span class="material-symbols-rounded bug">pest_control</span></a>
+    <button class="report">Report a bug <span class="material-symbols-rounded bug">pest_control</span></button>
   </header>
 
   <div class="container">
@@ -108,6 +106,11 @@
     const githubButton = document.querySelector('.github-button');
     const peopleContainer = document.querySelector('.people-container');
     const learnMoreButton = document.querySelector('.learn-more');
+    const reportButton = document.querySelector('.report');
+
+    reportButton.addEventListener('click', function () {
+      window.open("https://docs.google.com/forms/d/e/1FAIpQLSeo2mUrrhNZejPch9UcQQDHWk5e6ql_xFfFSdS6oiaNA-Tk8Q/viewform?embedded=true", '_blank');
+    })
 
     praxlyButton.addEventListener('click', function () {
       window.open("/main.html", "_blank");
