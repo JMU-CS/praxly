@@ -73,6 +73,7 @@ body {
   top: 0;
   right: 0;
   margin: 45px;
+  margin-right: 60px;
   text-decoration: none;
 }
 
@@ -95,6 +96,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  max-width: 900px;
 }
 
 .team-member img {
@@ -109,4 +111,26 @@ body {
 
 .team-member h3 {
   margin: 0 0 15px;
+}
+
+.member-description {
+  display: none;
+  text-align: center;
+}
+
+.people-container.active .member-description {
+  display: block;
+}
+
+.learn-more {
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  border-radius: 0.2em;
+  font-size: 15px;
+  padding-top: 15px;
+}
+
+.learn-more:hover {
+  background-color: rgb(203, 203, 203);
 }
