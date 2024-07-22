@@ -173,7 +173,7 @@ export const tree2text = (node, indentation) => {
                 return `randomInt(${max})`;
             } else if (node.name === 'randomSeed') {
                 const seed = tree2text(node.parameters[0], indentation);
-                return `randomSeed(${seed})\n`;
+                return `randomSeed(${seed})`;
             } else if (node.name === 'int') {
                 const conversion = tree2text(node.parameters[0], indentation);
                 return `int(${conversion})`;

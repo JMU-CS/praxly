@@ -16,6 +16,7 @@ import {
     getStopClicked
 } from "./common";
 import { generateVariableTable, waitForStep } from "./debugger";
+import prand from 'pure-rand';
 
 const FOR_LOOP_LIMIT = 1000000;
 const WHILE_LOOP_LIMIT = 1000;

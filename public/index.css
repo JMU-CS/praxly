@@ -65,3 +65,23 @@ body {
   flex: 1;
   line-height: 1.5;
 }
+
+.report {
+  color: #2b5e7d;
+  font-size: 25px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 45px;
+  text-decoration: none;
+}
+
+.report:hover {
+  color: #1a3f56;
+}
+
+.material-symbols-rounded.bug {
+  font-size: 29px;
+  position: absolute;
+  transform: rotate(-45deg);
+}
