@@ -59,5 +59,3 @@ Removed from `runTasks()` and `turnCodeToBlocks()`:
 textEditor.session.setAnnotations(annotationsBuffer);
 addBlockErrors(workspace);
 ```
-
-Replaced `clearErrors()` with `errorOutput = "";`.
