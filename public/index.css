@@ -95,6 +95,10 @@ body {
   transform: rotate(315deg);
 }
 
+h2 {
+    margin-top: 2rem;
+}
+
 .people-container {
   display: flex;
   flex-wrap: wrap;
