@@ -101,9 +101,6 @@ export class PraxlyError extends Error {
 
 export const MAX_LOOP = 100;  // prevents accidental infinite loops
 export var errorOutput = "";
-export var blockErrorsBuffer = {};
-export var annotationsBuffer = [];
-export var markersBuffer = [];
 
 export function addToPrintBuffer(message) {
     const stdOut = document.querySelector('.stdout');
@@ -161,24 +158,6 @@ export function consoleInput() {
 }
 
 /**
- * this clears the output buffer. It does not clear what the user sees on their screen.
- * It also clears all of the ace error annotations.
- */
-export function clearOutput() {
-    const stdOut = document.querySelector('.stdout');
-    stdOut.innerHTML = '';
-}
-
-export function clearErrors() {
-    annotationsBuffer = [];
-    errorOutput = "";
-    blockErrorsBuffer = {};
-    markersBuffer.forEach((markerId) => {
-        textEditor.session.removeMarker(markerId);
-    });
-}
-
-/**
  * This is a unique function that will throw a compiling error. This is commonly used for
  *  lexing and parsing errors so that the correct tree is inferred but there is an error thrown for bad syntax.
  * @param {string} type the type of error
@@ -200,12 +179,6 @@ export function defaultError(message) {
     errorOutput += `${message}<br><br>We have not written an error message for this issue yet.`;
 }
 
-export function addBlockErrors(workspace) {
-    for (var key in blockErrorsBuffer) {
-        var block = workspace.getBlockById(key);
-        block.setWarningText(blockErrorsBuffer[key]);
-    }
-}
 
 /**
  * This will highlight a line of code
@@ -230,7 +203,6 @@ export function highlightAstNode(environment, node) {
         environment.global.blocklyWorkspace.highlightBlock(node.blockID);
     }
 
-    markersBuffer.push(markerId);
     return markerId;
 }
 

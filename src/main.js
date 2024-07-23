@@ -17,7 +17,7 @@ import { text2tree } from './text2tree';
 import { generateUrl, loadFromUrl } from './share';
 
 import { codeText } from './examples';
-import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor, setStopClicked } from './common';
+import { DEV_LOG, debugButton, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor, setStopClicked } from './common';
 import { hideDebug, showDebug } from './debugger';
 
 let runButton;
@@ -33,7 +33,6 @@ let blockPane;
 let textPane;
 let stdOut;
 let stdErr;
-let clearOut;
 
 let examples;
 let titleRefresh;
@@ -86,7 +85,6 @@ function initializeGlobals() {
   textPane = document.querySelector('#aceCode');
   stdOut = document.querySelector('.stdout');
   stdErr = document.querySelector('.stderr');
-  clearOut = document.querySelector('.clearOut');
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
   resizeSideInEmbed = document.querySelector('.resize-side-view');
@@ -177,7 +175,6 @@ function registerListeners() {
   }
 
   runButton.addEventListener('click', runTasks);
-  clearOut.addEventListener('click', clear);
   resetButton.addEventListener('click', showResetModal);
 
   workspace.addChangeListener(onBlocklyChange);
@@ -400,9 +397,8 @@ function generateTable() {
 // }
 
 function clear() {
-  clearOutput();
-  // stdOut.innerHTML = "";
-  clearErrors();
+  errorOutput = "";
+  stdOut.innerHTML = "";
   stdErr.innerHTML = "";
   varTable.innerHTML = "";
 }
@@ -494,10 +490,9 @@ async function runTasks() {
     }
   }
   if (errorOutput) {
-    textEditor.session.setAnnotations(annotationsBuffer);
+    // show the error, clear the buffer
     stdErr.innerHTML = errorOutput;
-    addBlockErrors(workspace);
-    clearErrors();
+    errorOutput = "";
   } else {
     // replace special chars if ran without error
     var pos = textEditor.getCursorPosition();
@@ -522,9 +517,6 @@ export function turnCodeToBlocks() {
   workspace.clear();
   tree2blocks(workspace, mainTree);
   workspace.render();
-  //comment this out to stop the live error feedback.
-  textEditor.session.setAnnotations(annotationsBuffer);
-  addBlockErrors(workspace);
 }
 
 function onBlocklyChange(event) {
