@@ -49,9 +49,9 @@ class ReturnException extends Error {
     }
 }
 
-function checkArity(functionName, expectedArity, node) {
+function checkArity(node, expectedArity) {
     if (node.parameters.length !== expectedArity) {
-        throw new PraxlyError(`Function ${functionName} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${node.parameters.length}.`, node.line);
+        throw new PraxlyError(`Function ${node.name} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${node.parameters.length}.`, node.line);
     }
 }
 
@@ -139,22 +139,22 @@ export function createExecutable(tree) {
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (tree.name === 'input') {
-                checkArity('input', 0, tree);
+                checkArity(tree, 0);
                 return new Praxly_input(tree);
             } else if (tree.name === 'random') {
-                checkArity('random', 0, tree);
+                checkArity(tree, 0);
                 return new Praxly_random(tree);
             } else if (tree.name === 'randomInt') {
-                checkArity('randomInt', 1, tree);
+                checkArity(tree, 1);
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'randomSeed') {
-                checkArity('randomSeed', 1, tree);
+                checkArity(tree, 1);
                 return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'int') {
-                checkArity('int', 1, tree);
+                checkArity(tree, 1);
                 return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'float') {
-                checkArity('float', 1, tree);
+                checkArity(tree, 1);
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error('unknown builtin function');
