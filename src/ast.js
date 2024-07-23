@@ -49,6 +49,12 @@ class ReturnException extends Error {
     }
 }
 
+function checkArity(functionName, expectedArity, node) {
+    if (node.parameters.length !== expectedArity) {
+        throw new PraxlyError(`Function ${functionName} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${node.parameters.length}.`, node.line);
+    }
+}
+
 /**
  * This function will take the Intermediate Representation of the AST and creates an executable version of the tree.
  * This also gives it a chance to run static analysis.
@@ -133,16 +139,22 @@ export function createExecutable(tree) {
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (tree.name === 'input') {
+                checkArity('input', 0, tree);
                 return new Praxly_input(tree);
             } else if (tree.name === 'random') {
+                checkArity('random', 0, tree);
                 return new Praxly_random(tree);
             } else if (tree.name === 'randomInt') {
+                checkArity('randomInt', 1, tree);
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'randomSeed') {
+                checkArity('randomSeed', 1, tree);
                 return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'int') {
+                checkArity('int', 1, tree);
                 return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'float') {
+                checkArity('float', 1, tree);
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error('unknown builtin function');
@@ -581,9 +593,14 @@ class Praxly_random_int {
     }
 
     async evaluate(environment) {
-        const maxValue = (await this.max.evaluate(environment)).value;
-        const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
-        return new Praxly_int(x, this.json);
+        const maxNode = (await this.max.evaluate(environment));
+        if (maxNode.realType === 'int') {
+            const maxValue = maxNode.value;
+            const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
+            return new Praxly_int(x, this.json);
+        } else {
+            throw new PraxlyError(`randomInt's maximum parameter must be of type int, not ${maxNode.realType}.`, this.json.line);
+        }
     }
 }
 
@@ -594,10 +611,15 @@ class Praxly_random_seed {
     }
 
     async evaluate(environment) {
-        const seedValue = (await this.seed.evaluate(environment)).value;
-        environment.global.random.seed = seedValue;
-        environment.global.random.generator = prand.xoroshiro128plus(seedValue);
-        return null;
+        const seedNode = (await this.seed.evaluate(environment));
+        if (seedNode.realType === 'int') {
+            const seedValue = seedNode.value;
+            environment.global.random.seed = seedValue;
+            environment.global.random.generator = prand.xoroshiro128plus(seedValue);
+            return null;
+        } else {
+            throw new PraxlyError(`randomSeed's seed parameter must be of type int, not ${seedNode.realType}.`, this.json.line);
+        }
     }
 }
 
