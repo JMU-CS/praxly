@@ -177,7 +177,7 @@ class Lexer {
       if (this.has("\"")) {
         var stringStart = this.currentLine;
         this.skip();
-        while (this.i < this.length && !this.has("\"")) {
+        while (this.i < this.length && !this.has("\"") && !this.has("\n")) {
           this.capture();
         }
         if (this.has("\"")) {
