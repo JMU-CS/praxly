@@ -145,7 +145,7 @@ export function createExecutable(tree) {
             } else if (tree.name === 'float') {
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else {
-                throw new Error('unknown builtin function');
+                throw new Error("unknown builtin function: " + tree.name);
             }
         }
 
@@ -474,7 +474,6 @@ class Praxly_array_literal {
 
     constructor(elements, node) {
         this.elements = elements;
-        this.node = node;
         this.json = node;
         this.jsonType = 'Praxly_array';
 
@@ -1467,7 +1466,7 @@ class Praxly_function_call {
             if (can_assign(parameterType, argument.realType, this.json.line)) {
                 newScope.variableList[parameterName] = argument;
             } else {
-                throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${parameterType}\n\tActual: ${argument.realType}`);
+                throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${parameterType}\n\tActual: ${argument.realType}`, this.json.line);
             }
         }
 
@@ -1505,20 +1504,20 @@ class Praxly_function_call {
 }
 
 class Praxly_String_funccall {
-    constructor(node, reciever, name, args) {
+    constructor(node, receiver, name, args) {
         this.args = args;
-        this.node = node;
+        this.json = node;
         this.name = name;
-        this.reciever = reciever
+        this.receiver = receiver;
     }
 
     typecheckhelper(argument, expected_types) {
         if (!expected_types.includes(argument.realType)) {
-            throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`);
+            throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`, this.json.line);
         }
     }
     async evaluate(environment) {
-        var str = await this.reciever.evaluate(environment);
+        var str = await this.receiver.evaluate(environment);
         var result;
         switch (this.name) {
             case StringFuncs.CHARAT:
@@ -1550,7 +1549,7 @@ class Praxly_String_funccall {
                 result = str.value.substring(startIndex.value, endIndex.value);
                 return new Praxly_String(result);
             default:
-                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.node.line);
+                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.json.line);
         }
     }
 
