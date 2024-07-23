@@ -341,11 +341,8 @@ export const tree2blocks = (workspace, node) => {
 
         case NODETYPES.FOR:
             var result = workspace.newBlock('praxly_for_loop_block');
-
-            //gohere
             try {
                 var initialization = tree2blocks(workspace, node?.initialization);
-                // console.error(initialization?.type);
                 if (!initialization || initialization.type !== 'praxly_statement_block') {
                     initialization.dispose();
                     var initialization = workspace.newBlock('praxly_assignment_expression_block');
@@ -399,7 +396,6 @@ export const tree2blocks = (workspace, node) => {
 
         case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
             var result = workspace.newBlock('praxly_array_reference_reassignment_block');
-            console.error(`reached here`);
             result.setFieldValue(node.name, "VARIABLENAME");
             var child = tree2blocks(workspace, node?.index);
             result.getInput('INDEX').connection.connect(child?.outputConnection);

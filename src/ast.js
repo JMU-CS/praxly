@@ -190,7 +190,7 @@ export function createExecutable(tree) {
                 return new Praxly_assignment(tree, createExecutable(tree.location), createExecutable(tree.value), tree);
             }
             catch (error) {
-                console.error('assignment error: ', error);
+                // console.error('assignment error: ', error);
                 return null;
             }
 
@@ -207,7 +207,7 @@ export function createExecutable(tree) {
                 return new Praxly_array_assignment(tree, createExecutable(tree.location), createExecutable(tree.value));
             }
             catch (error) {
-                console.error('assignment error: ', error);
+                // console.error('array assignment error: ', error);
                 return null;
             }
 
@@ -232,7 +232,7 @@ export function createExecutable(tree) {
                 return new Praxly_for(initialization, condition, incrementation, statement, tree);
             }
             catch (error) {
-                console.error(error);
+                // console.error('for statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -243,7 +243,7 @@ export function createExecutable(tree) {
                 return new Praxly_while(condition, statement, tree);
             }
             catch (error) {
-                console.error(error);
+                // console.error('while statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -254,7 +254,7 @@ export function createExecutable(tree) {
                 return new Praxly_do_while(condition, statement, tree);
             }
             catch (error) {
-                console.error('An error occurred: empty statement', error);
+                // console.error('do while statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -265,7 +265,7 @@ export function createExecutable(tree) {
                 return new Praxly_repeat_until(condition, statement, tree);
             }
             catch (error) {
-                console.error('An error occurred: empty statement', error);
+                // console.error('repeat until statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -315,7 +315,8 @@ export function createExecutable(tree) {
             return new Praxly_emptyLine(tree);
 
         default:
-            console.error(`I don't recognize this type: ${tree.type}}`);
+            console.error("Unhandled node type: " + tree.type);
+            return new Praxly_invalid(tree);
     }
 }
 
@@ -1046,7 +1047,7 @@ function typeCoercion(varType, praxlyObj) {
             newValue = String(praxlyObj.value);
             return new Praxly_String(newValue, praxlyObj.json);
         default:
-            console.error("Unhandled varType:" + varType);
+            console.error("Unhandled var type: " + varType);
             return praxlyObj;
     }
 }
@@ -1124,7 +1125,7 @@ class Praxly_vardecl {
                     valueEvaluated = new Praxly_String("");
                     break;
                 default:
-                    console.error("Unhandled varType:" + this.json.varType);
+                    console.error("Unhandled var type: " + this.json.varType);
                     break;
             }
         }
@@ -1772,8 +1773,7 @@ function litNode_new(type, value, json) {
         case TYPES.SHORT:
             return new Praxly_short(value);
         case TYPES.INVALID:
-            console.error(`invalid literal:`);
-            console.error(json);
+            console.error("Invalid literal: ", json);
             return new Praxly_invalid();
     }
 }
