@@ -241,7 +241,7 @@ class Lexer {
       while (this.i < this.length && (this.has_letter() || this.has_digit())) {
         this.capture();
       }
-      if (this.has_builtin() && this.has("(")) {
+      if (this.has_builtin()) {
         this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
         continue;
       }
