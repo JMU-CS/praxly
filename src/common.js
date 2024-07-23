@@ -102,7 +102,7 @@ export class PraxlyError extends Error {
 export const MAX_LOOP = 100;  // prevents accidental infinite loops
 export var errorOutput = "";
 
-export function addToPrintBuffer(message) {
+export function consoleOutput(message) {
     const stdOut = document.querySelector('.stdout');
     stdOut.insertAdjacentHTML('beforeend', message);
 }

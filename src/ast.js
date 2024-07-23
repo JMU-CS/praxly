@@ -3,7 +3,7 @@ import {
     OP,
     NODETYPES,
     PraxlyError,
-    addToPrintBuffer,
+    consoleOutput,
     consoleInput,
     defaultError,
     errorOutput,
@@ -538,7 +538,7 @@ class Praxly_print {
             suffix = '<br>';
         }
 
-        addToPrintBuffer(result + suffix);
+        consoleOutput(result + suffix);
         return null;
     }
 }
