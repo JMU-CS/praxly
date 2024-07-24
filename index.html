@@ -13,9 +13,9 @@
 
 <body>
 
-  <header>
+  <!-- <header>
     <button class="report">Report a bug <span class="material-symbols-rounded bug">pest_control</span></button>
-  </header>
+  </header> -->
 
   <div class="container">
     <h1>Welcome to Praxly 🍂</h1>
@@ -34,6 +34,7 @@
     <div class="button-container">
       <button class="praxly-button ">Start Coding</button>
       <button class="github-button">GitHub Repo</button>
+      <button class="report-button">Report a bug <span class="material-symbols-rounded bug">pest_control</span></button>
     </div>
 
     <iframe width="100%" height="580" frameborder="0"
@@ -49,7 +50,7 @@
         <div class="member-description"></div>
       </div>
       <div class="team-member">
-        <img class="member" src="people/user.png">
+        <img class="member" src="people/macmillan.png">
         <h3>Ellona Macmillan</h3>
         <div class="member-description"></div>
       </div>
@@ -89,7 +90,7 @@
     const githubButton = document.querySelector('.github-button');
     const peopleContainer = document.querySelector('.people-container');
     const learnMoreButton = document.querySelector('.learn-more');
-    const reportButton = document.querySelector('.report');
+    const reportButton = document.querySelector('.report-button');
 
     reportButton.addEventListener('click', function () {
       window.open("https://docs.google.com/forms/d/e/1FAIpQLSeo2mUrrhNZejPch9UcQQDHWk5e6ql_xFfFSdS6oiaNA-Tk8Q/viewform?embedded=true", '_blank');

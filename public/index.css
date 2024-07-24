@@ -19,6 +19,7 @@ body {
   display: flex;
   gap: 20px;
   justify-content: center;
+  align-items: center;
   margin: 2rem;
 }
 
@@ -27,17 +28,21 @@ body {
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  padding: 10px 20px;
   transition: background-color 0.5s;
 }
 
 .praxly-button {
   background-color: #2b5e7d;
-  color: white
+  color: white;
+  padding: 10px 20px;
 }
 
 .praxly-button:hover {
   background-color: #1a3f56;
+}
+
+.github-button {
+  padding: 10px 20px;
 }
 
 .github-button button {
@@ -46,6 +51,16 @@ body {
 }
 
 .github-button:hover {
+  background-color: darkgray;
+}
+
+.report-button {
+  padding: 10px;
+  padding-right: 30px;
+  padding-left: 15px;
+}
+
+.report-button:hover {
   background-color: darkgray;
 }
 
@@ -66,32 +81,17 @@ body {
   line-height: 1.5;
 }
 
-.report {
-  color: #2b5e7d;
-  font-size: 25px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 45px;
-  margin-right: 60px;
-  text-decoration: none;
-  background: transparent;
-  border: none;
-}
-
-.report:hover {
-  color: #1a3f56;
-}
-
-.material-symbols-rounded.bug {
-  font-size: 29px;
+.report-button .material-symbols-rounded.bug {
+  font-size: 20px;
   position: absolute;
   transform: rotate(-45deg);
   transition: transform 1s ease-in-out;
+  margin-left: 2px;
+  margin-top: -2px;
 }
 
-.report:hover .bug,
-.report .bug:hover {
+.report-button:hover .bug,
+.report-button .bug:hover {
   transform: rotate(315deg);
 }
 
