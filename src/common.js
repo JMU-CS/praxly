@@ -282,8 +282,11 @@ export function getStopClicked() {
     return stopClicked;
 }
 
+const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+const fontSize = isFirefox ? 18 : 16;
+
 export const textEditor = ace.edit("aceCode", {
-  fontSize: 18,
+  fontSize: fontSize,
   mode: 'ace/mode/praxly',
 });
 
