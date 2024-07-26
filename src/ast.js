@@ -144,6 +144,10 @@ export function createExecutable(tree) {
                 return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'float') {
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'min') {
+                return new Praxly_min(createExecutable(tree.parameters[0]), tree); // might not need parameters
+            } else if (tree.name === 'max') {
+                return new Praxly_max(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error('unknown builtin function');
             }
@@ -626,6 +630,41 @@ class Praxly_float_conversion {
         // value is likely a Praxly_String; get the actual string
         const convert = new Praxly_float(valueEvaluated.value);
         return convert;
+    }
+}
+
+class Praxly_min {
+    constructor(values, node) {
+        this.json = node;
+        // should be passed in as an array
+        this.values = values;
+    }
+
+    async evaluate(environment) {
+        let minimum = values[0];
+        for (let i = 1; i < this.values.length; i++) {
+            if (minimum > this.values[i]){
+                minimum = this.values[i]
+            }
+        }
+        return litNode_new(minimum.type, minimum, this.json); // don't know if minimum.type will work
+    }
+}
+
+class Praxly_max {
+    constructor(values, node) {
+        this.json = node;
+        this.values = values;
+    }
+
+    async evaluate(environment) {
+        let maximum = values[0];
+        for (let i = 1; i < this.values.length; i++){
+            if (maximum < this.values[i]){
+                maximum = this.values[i]
+            }
+        }
+        return litNode_new(maximum.type, maximum, this.json);
     }
 }
 

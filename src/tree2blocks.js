@@ -151,6 +151,14 @@ export const tree2blocks = (workspace, node) => {
               result = workspace.newBlock('praxly_float_conversion_block');
               const child = tree2blocks(workspace, node?.parameters[0]);
               result.getInput('CONVERSION').connection.connect(child?.outputConnection);
+            } else if (node.name === 'min') {
+              result = workspace.newBlock('praxly_min_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('MIN').connection.connect(child?.outputConnection);
+            } else if (node.name === 'max') {
+              result = workspace.newBlock('praxly_max_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('MAX').connection.connect(child?.outputConnection);
             }
             break;
         }

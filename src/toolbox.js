@@ -250,6 +250,34 @@ export const toolbox = {
               }
             }
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_min_block',
+          'inputs': {
+            'MIN': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"arrayName"'
+                }
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_max_block',
+          'inputs': {
+            'MAX': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"arrayName"'
+                }
+              }
+            }
+          }
         }
       ]
     },

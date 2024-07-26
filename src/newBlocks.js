@@ -501,7 +501,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Sets the seed of the random number generator",
       "helpUrl": ""
     },
-    {
+    { // math 7
       "type": "praxly_int_conversion_block",
       "message0": "int ( %1 )",
       "args0": [
@@ -516,7 +516,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Converts a String into an Integer",
       "helpURL": ""
     },
-    {
+    { // math 8
       "type": "praxly_float_conversion_block",
       "message0": "float ( %1 )",
       "args0": [
@@ -529,6 +529,36 @@ export function definePraxlyBlocks(workspace) {
       "output": null,
       "style": 'expression_blocks',
       "tooltip": "Converts a String into an Float",
+      "helpURL": ""
+    },
+    { // math 9
+      "type": "praxly_min_block",
+      "message0": "min ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "MIN"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Finds the lowest value in an array",
+      "helpURL": ""
+    },
+    { // math 10
+      "type": "praxly_max_block",
+      "message0": "max ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "MAX"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Finds the highest value in an array",
       "helpURL": ""
     },
     { // logic 1
@@ -1133,7 +1163,7 @@ export function definePraxlyBlocks(workspace) {
   for (let [id, block] of Object.entries(Blockly.Blocks)) {
     if (id !== 'praxly_print_block') {
       block.customContextMenu = items => {
-        let commentIndex = items.findIndex(item => item.text === 'Add Comment'); 
+        let commentIndex = items.findIndex(item => item.text === 'Add Comment');
         if (commentIndex >= 0) {
           items.splice(commentIndex, 1);
         }

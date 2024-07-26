@@ -180,6 +180,12 @@ export const tree2text = (node, indentation) => {
             } else if (node.name === 'float') {
                 const conversion = tree2text(node.parameters[0], indentation);
                 return `float(${conversion})`;
+            } else if (node.name === 'min') {
+                const minimum = tree2text(node.parameters[0], indentation);
+                return `min(${minimum})`;
+            } else if (node.name === 'max') {
+                const maximum = tree2text(node.parameters[0], indentation);
+                return `max(${maximum})`;
             }
         }
 
