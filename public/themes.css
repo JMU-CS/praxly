@@ -526,7 +526,7 @@ body:not(.embed) .resizeBarY {
 
 body:not(.embed) #bottom-part {
   display: flex;
-  overflow: scroll;
+  overflow: auto;
   /* Add this */
   flex-direction: row-reverse;
   /* Add this */
