@@ -546,16 +546,6 @@ body:not(.embed) #bottom-part {
   color: var(--output-text-color);
 }
 
-.clearOut {
-  display: none;
-  position: absolute;
-  font-size: x-large;
-  top: 5px;
-  right: 10px;
-  cursor: pointer;
-}
-
-
 .stdout {
   margin-top: 0;
 }

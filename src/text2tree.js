@@ -177,7 +177,7 @@ class Lexer {
       if (this.has("\"")) {
         var stringStart = this.currentLine;
         this.skip();
-        while (this.i < this.length && !this.has("\"")) {
+        while (this.i < this.length && !this.has("\"") && !this.has("\n")) {
           this.capture();
         }
         if (this.has("\"")) {
@@ -566,7 +566,7 @@ class Parser {
           this.advance();
           const r = this.parse_expression(precedence);
           if (r.type != NODETYPES.FUNCCALL) {
-            textError("compile-time", "classes are not fully supported yet. the right side of the . operator must be a supported string function", line);
+            textError('parsing', "classes are not fully supported yet. the right side of the . operator must be a supported string function", line);
           }
           l = {
             left: l,
@@ -637,7 +637,7 @@ class Parser {
             }
             result.params = args;
             if (this.hasNot('}')) {
-              textError("parsing", "didn't detect closing curly brace in the array declaration", this.tokens[this.i].line);
+              textError('parsing', "didn't detect closing curly brace in the array declaration", this.tokens[this.i].line);
             }
             result.endIndex = this.getCurrentToken().endIndex;
             this.advance();
@@ -690,8 +690,7 @@ class Parser {
             // TODO: this case needs to raise an exception or return some error
             // object. Right now if an expression can't be parsed, it
             // implicitly returns null/undefined.
-            // throw new Error("couldn't parse expression");
-            textError("parsing", `invalid Token ${this.getCurrentToken().value}`, line);
+            textError('parsing', `invalid Token ${this.getCurrentToken().value}`, line);
         }
     }
   }
@@ -832,7 +831,7 @@ class Parser {
       var contents = this.parse_block('end ' + result.name);
       result.contents = contents;
       if (this.hasNot('end ' + result.name)) {
-        textError('compile time', `missing the \'end ${result.name}\' token`, result.line);
+        textError('parsing', `missing the \'end ${result.name}\' token`, result.line);
         result.endIndex = this.getCurrentToken().endIndex;
         return result;
       }
@@ -918,7 +917,7 @@ class Parser {
           return result;
         }
         else {
-          textError('compile time', "missing the \'end if\' token", result.line);
+          textError('parsing', "missing the \'end if\' token", result.line);
         }
       }
 
@@ -949,7 +948,7 @@ class Parser {
             return result;
           }
           else {
-            textError('compile time', "missing the \'end for\' token", result.line);
+            textError('parsing', "missing the \'end for\' token", result.line);
           }
         }
       }
@@ -978,7 +977,7 @@ class Parser {
         this.advance();
         return result;
       } else {
-        textError('compile time', "missing the \'end while\' token", result.line);
+        textError('parsing', "missing the \'end while\' token", result.line);
       }
     }
 
