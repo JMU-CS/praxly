@@ -676,7 +676,8 @@ export function definePraxlyBlocks(workspace) {
       "args0": [
         {
           "type": "input_value",
-          "name": "EXPRESSION"
+          "name": "EXPRESSION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"
@@ -749,7 +750,8 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_value",
@@ -770,7 +772,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "For loop (repeat a specific number of times)",
       "helpUrl": ""
     },
-    { // loops 2
+    { // variables
       "type": "praxly_assignment_expression_block",
       "message0": "%1%2 ⬅ %3 %4",
       "args0": [
@@ -806,7 +808,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Declares and initializes the loop variable",
       "helpUrl": ""
     },
-    { // loops 3
+    { // variables
       "type": "praxly_reassignment_expression_block",
       "message0": "%1⬅%2 %3",
       "args0": [
@@ -829,13 +831,14 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Updates the loop variable (usually adds 1)",
       "helpUrl": ""
     },
-    { // loops 4
+    { // loops 2
       "type": "praxly_while_loop_block",
       "message0": "while ( %1 ) %2 %3 end while",
       "args0": [
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"
@@ -852,7 +855,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "While loop (repeat until a condition is false)",
       "helpUrl": ""
     },
-    { // loops 5
+    { // loops 3
       "type": "praxly_do_while_loop_block",
       "message0": "do  %1  while (%2 )%3 ",
       "args0": [
@@ -862,7 +865,8 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"
@@ -875,7 +879,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Do-while loop (run once and repeat until a condition is false)",
       "helpUrl": ""
     },
-    { // loops 6
+    { // loops 4
       "type": "praxly_repeat_until_loop_block",
       "message0": "repeat  %1  until (%2 )%3 ",
       "args0": [
@@ -885,7 +889,8 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"

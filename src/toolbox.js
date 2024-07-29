@@ -259,7 +259,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '"arrayName"'
+                  'LITERAL': 'arrayName'
                 }
               }
             }
@@ -273,7 +273,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '"arrayName"'
+                  'LITERAL': 'arrayName'
                 }
               }
             }
