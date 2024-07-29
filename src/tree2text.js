@@ -43,6 +43,14 @@ export const tree2text = (node, indentation) => {
                 return " ";
             }
 
+        case TYPES.INVALID:
+            try {
+                var result = "// Invalid " + node.value;
+                return result;
+            } catch (error) {
+                return " ";
+            }
+
         case NODETYPES.COMMENT:
             try {
                 var result = '    '.repeat(indentation) + '/*' + node.value + '*/\n';

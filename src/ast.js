@@ -1811,9 +1811,7 @@ function litNode_new(type, value, json) {
             return new Praxly_char(value);
         case TYPES.SHORT:
             return new Praxly_short(value);
-        case TYPES.INVALID:
-            console.error(`invalid literal:`);
-            console.error(json);
-            return new Praxly_invalid();
+        default:
+            throw new PraxlyError("Unknown literal type", json.line);
     }
 }

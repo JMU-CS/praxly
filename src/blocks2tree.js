@@ -5,6 +5,11 @@ function containsOnlyNumbers(str) {
     return /^-?\d+$/.test(str);
 }
 
+function isValidIdentifier(str) {
+    const regex = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+    return regex.test(str);
+}
+
 export const blocks2tree = (workspace, generator) => {
     var topBlocks = workspace.getTopBlocks();
 
@@ -203,7 +208,7 @@ export const makeGenerator = () => {
             value: input,
         }
         if (input[0] === '\"' && input[input.length - 1] === '\"') {
-            node.type = NODETYPES.STRING;
+            node.type = TYPES.STRING;
             node.value = input.slice(1, -1);
         } else if (input[0] === '\'' && input[input.length - 1] === '\'') {
             node.type = NODETYPES.CHAR;
@@ -212,9 +217,12 @@ export const makeGenerator = () => {
             node.type = TYPES.DOUBLE;
         } else if (containsOnlyNumbers(input)) {
             node.type = TYPES.INT;
-        } else {
+        } else if (isValidIdentifier(input)) {
             node.type = NODETYPES.LOCATION;
             node.name = input;
+        } else {
+            node.type = TYPES.INVALID;
+            node.value = "literal: " + input;
         }
         return customizeMaybe(block, node);
     }
@@ -223,19 +231,25 @@ export const makeGenerator = () => {
         const input = block.getFieldValue('LITERAL');
         const node = {
             blockID: block.id,
+            isArray: false,
             value: input,
         }
         if (input[0] === '\"' && input[input.length - 1] === '\"') {
             node.type = TYPES.STRING;
             node.value = input.slice(1, -1);
+        } else if (input[0] === '\'' && input[input.length - 1] === '\'') {
+            node.type = NODETYPES.CHAR;
+            node.value = input.slice(1, -1);
         } else if (input.includes('.')) {
             node.type = TYPES.DOUBLE;
-
         } else if (containsOnlyNumbers(input)) {
             node.type = TYPES.INT;
-        } else {
+        } else if (isValidIdentifier(input)) {
             node.type = NODETYPES.LOCATION;
             node.name = input;
+        } else {
+            node.type = TYPES.INVALID;
+            node.value = "variable: " + input;
         }
         return customizeMaybe(block, node);
     }
