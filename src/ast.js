@@ -49,6 +49,12 @@ class ReturnException extends Error {
     }
 }
 
+function checkArity(node, expectedArity) {
+    if (node.parameters.length !== expectedArity) {
+        throw new PraxlyError(`Function ${node.name} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${node.parameters.length}.`, node.line);
+    }
+}
+
 /**
  * This function will take the Intermediate Representation of the AST and creates an executable version of the tree.
  * This also gives it a chance to run static analysis.
@@ -133,16 +139,22 @@ export function createExecutable(tree) {
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (tree.name === 'input') {
+                checkArity(tree, 0);
                 return new Praxly_input(tree);
             } else if (tree.name === 'random') {
+                checkArity(tree, 0);
                 return new Praxly_random(tree);
             } else if (tree.name === 'randomInt') {
+                checkArity(tree, 1);
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'randomSeed') {
+                checkArity(tree, 1);
                 return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'int') {
+                checkArity(tree, 1);
                 return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'float') {
+                checkArity(tree, 1);
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error("unknown builtin function: " + tree.name);
@@ -581,9 +593,14 @@ class Praxly_random_int {
     }
 
     async evaluate(environment) {
-        const maxValue = (await this.max.evaluate(environment)).value;
-        const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
-        return new Praxly_int(x, this.json);
+        const maxNode = (await this.max.evaluate(environment));
+        if (maxNode.realType === TYPES.INT) {
+            const maxValue = maxNode.value;
+            const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
+            return new Praxly_int(x, this.json);
+        } else {
+            throw new PraxlyError(`randomInt's maximum parameter must be of type int, not ${maxNode.realType}.`, this.json.line);
+        }
     }
 }
 
@@ -594,10 +611,15 @@ class Praxly_random_seed {
     }
 
     async evaluate(environment) {
-        const seedValue = (await this.seed.evaluate(environment)).value;
-        environment.global.random.seed = seedValue;
-        environment.global.random.generator = prand.xoroshiro128plus(seedValue);
-        return null;
+        const seedNode = (await this.seed.evaluate(environment));
+        if (seedNode.realType === TYPES.INT) {
+            const seedValue = seedNode.value;
+            environment.global.random.seed = seedValue;
+            environment.global.random.generator = prand.xoroshiro128plus(seedValue);
+            return null;
+        } else {
+            throw new PraxlyError(`randomSeed's seed parameter must be of type int, not ${seedNode.realType}.`, this.json.line);
+        }
     }
 }
 
@@ -608,10 +630,24 @@ class Praxly_int_conversion {
     }
 
     async evaluate(environment) {
-        let valueEvaluated = await this.value.evaluate(environment);
-        // value is likely a Praxly_String; get the actual string
-        const convert = new Praxly_int(valueEvaluated.value);
-        return convert;
+        let node = await this.value.evaluate(environment);
+        if (node.realType === TYPES.INT) {
+          const convert = new Praxly_int(node.value);
+          return convert;
+        } else if (node.realType === TYPES.DOUBLE || node.realType === TYPES.FLOAT) {
+          const convert = new Praxly_int(Math.trunc(node.value));
+          return convert;
+        } else if (node.realType === TYPES.STRING) {
+          const number = Number(node.value);
+          if (isNaN(number)) {
+            throw new PraxlyError(`"${node.value}" cannot be converted to an int.`, this.json.line);
+          } else {
+            const convert = new Praxly_int(number);
+            return convert;
+          }
+        } else {
+          throw new PraxlyError(`Function int doesn't accept a parameter of type ${node.realType}.`, this.json.line);
+        }
     }
 }
 
@@ -622,10 +658,24 @@ class Praxly_float_conversion {
     }
 
     async evaluate(environment) {
-        let valueEvaluated = await this.value.evaluate(environment);
-        // value is likely a Praxly_String; get the actual string
-        const convert = new Praxly_float(valueEvaluated.value);
-        return convert;
+        let node = await this.value.evaluate(environment);
+        if (node.realType === TYPES.DOUBLE || node.realType === TYPES.FLOAT) {
+          const convert = new Praxly_float(node.value);
+          return convert;
+        } else if (node.realType === TYPES.INT) {
+          const convert = new Praxly_float(node.value);
+          return convert;
+        } else if (node.realType === TYPES.STRING) {
+          const number = Number(node.value);
+          if (isNaN(number)) {
+            throw new PraxlyError(`"${node.value}" cannot be converted to a float.`, this.json.line);
+          } else {
+            const convert = new Praxly_float(number);
+            return convert;
+          }
+        } else {
+          throw new PraxlyError(`Function float doesn't accept a parameter of type ${node.realType}.`, this.json.line);
+        }
     }
 }
 
