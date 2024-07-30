@@ -191,12 +191,12 @@ export const tree2text = (node, indentation) => {
                 return `float(${conversion})`;
             } else if (node.name === 'min') {
                 const a_value = tree2text(node.parameters[0], indentation);
-                const b_value = text2tree(node.parameters[1], indentation);
-                return "min(" + a_value + ',' + b_value + ")";
+                const b_value = tree2text(node.parameters[1], indentation);
+                return "min(" + a_value + ", " + b_value + ")";
             } else if (node.name === 'max') {
                 const a_value = tree2text(node.parameters[0], indentation);
-                const b_value = text2tree(node.parameters[1], indentation);
-                return "max(" + a_value + ',' + b_value + ")";
+                const b_value = tree2text(node.parameters[1], indentation);
+                return "max(" + a_value + ", " + b_value + ")";
             }
         }
 

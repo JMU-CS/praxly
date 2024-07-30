@@ -145,7 +145,7 @@ export function createExecutable(tree) {
             } else if (tree.name === 'float') {
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'min') {
-                return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree); // might not need parameters
+                return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
             } else if (tree.name === 'max') {
                 return new Praxly_max(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
             } else {
@@ -647,8 +647,8 @@ class Praxly_min {
         this.a_value = await this.a_value.evaluate(environment);
         this.b_value = await this.b_value.evaluate(environment);
 
-        let minimum = Math.min(this.a_value, this.b_value);
-        return new litNode_new(minimum.type, minimum, this.json);
+        let minimum = Math.min(this.a_value.value, this.b_value.value);
+        return new litNode_new("TODO", minimum, this.json);
     }
 }
 
@@ -666,8 +666,8 @@ class Praxly_max {
         this.a_value = await this.a_value.evaluate(environment);
         this.b_value = await this.b_value.evaluate(environment);
 
-        let minimum = Math.max(this.a_value, this.b_value);
-        return new litNode_new(minimum.type, minimum, this.json);
+        let maximum = Math.max(this.a_value.value, this.b_value.value);
+        return new litNode_new("TODO", maximum, this.json);
     }
 }
 

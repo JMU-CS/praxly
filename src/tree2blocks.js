@@ -157,7 +157,7 @@ export const tree2blocks = (workspace, node) => {
               const child1 = tree2blocks(workspace, node?.parameters[0]);
               result.getInput('A_MIN').connection.connect(child1?.outputConnection);
 
-              const child2 = tree2blocks(workspace, node?.parameters[0]);
+              const child2 = tree2blocks(workspace, node?.parameters[1]);
               result.getInput('B_MIN').connection.connect(child2?.outputConnection);
             } else if (node.name === 'max') {
               result = workspace.newBlock('praxly_max_block');
@@ -165,7 +165,7 @@ export const tree2blocks = (workspace, node) => {
               const child1 = tree2blocks(workspace, node?.parameters[0]);
               result.getInput('A_MAX').connection.connect(child1?.outputConnection);
 
-              const child2 = tree2blocks(workspace, node?.parameters[0]);
+              const child2 = tree2blocks(workspace, node?.parameters[1]);
               result.getInput('B_MAX').connection.connect(child2?.outputConnection);
             }
             break;
