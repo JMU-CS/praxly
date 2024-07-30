@@ -145,9 +145,9 @@ export function createExecutable(tree) {
             } else if (tree.name === 'float') {
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'min') {
-                return new Praxly_min(createExecutable(tree.parameters[0]), tree); // might not need parameters
+                return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree); // might not need parameters
             } else if (tree.name === 'max') {
-                return new Praxly_max(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_max(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
             } else {
                 throw new Error('unknown builtin function');
             }
@@ -634,37 +634,40 @@ class Praxly_float_conversion {
 }
 
 class Praxly_min {
-    constructor(values, node) {
+    a_value;
+    b_value;
+
+    constructor(a, b, node) {
         this.json = node;
-        // should be passed in as an array
-        this.values = values;
+        this.a_value = a;
+        this.b_value = b;
     }
 
     async evaluate(environment) {
-        let minimum = values[0];
-        for (let i = 1; i < this.values.length; i++) {
-            if (minimum > this.values[i]){
-                minimum = this.values[i]
-            }
-        }
-        return litNode_new(minimum.type, minimum, this.json); // don't know if minimum.type will work
+        this.a_value = await this.a_value.evaluate(environment);
+        this.b_value = await this.b_value.evaluate(environment);
+
+        let minimum = Math.min(this.a_value, this.b_value);
+        return new litNode_new(minimum.type, minimum, this.json);
     }
 }
 
 class Praxly_max {
-    constructor(values, node) {
+    a_value;
+    b_value;
+
+    constructor(a, b, node) {
         this.json = node;
-        this.values = values;
+        this.a_value = a;
+        this.b_value = b;
     }
 
     async evaluate(environment) {
-        let maximum = values[0];
-        for (let i = 1; i < this.values.length; i++){
-            if (maximum < this.values[i]){
-                maximum = this.values[i]
-            }
-        }
-        return litNode_new(maximum.type, maximum, this.json);
+        this.a_value = await this.a_value.evaluate(environment);
+        this.b_value = await this.b_value.evaluate(environment);
+
+        let minimum = Math.max(this.a_value, this.b_value);
+        return new litNode_new(minimum.type, minimum, this.json);
     }
 }
 

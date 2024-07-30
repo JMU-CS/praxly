@@ -148,25 +148,29 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_min_block'] = (block) => {
-        const expression = block.getInputTargetBlock('MIN');
+        const expression = block.getInputTargetBlock('A_MIN');
+        const expression2 = block.getInputTargetBlock('B_MIN');
         return customizeMaybe(block, {
             name: 'min',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             parameters: [
                 praxlyGenerator[expression.type](expression),
+                praxlyGenerator[expression2.type](expression2),
             ],
         });
     }
 
     praxlyGenerator['praxly_max_block'] = (block) => {
-        const expression = block.getInputTargetBlock('MAX');
+        const expression = block.getInputTargetBlock('A_MAX');
+        const expression2 = block.getInputTargetBlock('B_MAX');
         return customizeMaybe(block, {
             name: 'max',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             parameters: [
                 praxlyGenerator[expression.type](expression),
+                praxlyGenerator[expression2.type](expression2),
             ],
         });
     }

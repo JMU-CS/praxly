@@ -533,11 +533,15 @@ export function definePraxlyBlocks(workspace) {
     },
     { // math 9
       "type": "praxly_min_block",
-      "message0": "min ( %1 )",
+      "message0": "min ( %1 , %2 )",
       "args0": [
         {
           "type": "input_value",
-          "name": "MIN"
+          "name": "A_MIN"
+        },
+        {
+          "type": "input_value",
+          "name": "B_MIN"
         }
       ],
       "inputsInline": true,
@@ -548,11 +552,15 @@ export function definePraxlyBlocks(workspace) {
     },
     { // math 10
       "type": "praxly_max_block",
-      "message0": "max ( %1 )",
+      "message0": "max ( %1, %2 )",
       "args0": [
         {
           "type": "input_value",
-          "name": "MAX"
+          "name": "A_MAX"
+        },
+        {
+          "type": "input_value",
+          "name": "B_MAX"
         }
       ],
       "inputsInline": true,

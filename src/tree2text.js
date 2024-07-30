@@ -1,4 +1,5 @@
 import { NODETYPES, TYPES } from "./common";
+import { text2tree } from "./text2tree";
 
 export const tree2text = (node, indentation) => {
     if (!node.type) {
@@ -189,11 +190,13 @@ export const tree2text = (node, indentation) => {
                 const conversion = tree2text(node.parameters[0], indentation);
                 return `float(${conversion})`;
             } else if (node.name === 'min') {
-                const minimum = tree2text(node.parameters[0], indentation);
-                return `min(${minimum})`;
+                const a_value = tree2text(node.parameters[0], indentation);
+                const b_value = text2tree(node.parameters[1], indentation);
+                return "min(" + a_value + ',' + b_value + ")";
             } else if (node.name === 'max') {
-                const maximum = tree2text(node.parameters[0], indentation);
-                return `max(${maximum})`;
+                const a_value = tree2text(node.parameters[0], indentation);
+                const b_value = text2tree(node.parameters[1], indentation);
+                return "max(" + a_value + ',' + b_value + ")";
             }
         }
 
