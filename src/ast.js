@@ -647,8 +647,8 @@ class Praxly_min {
         this.a_value = await this.a_value.evaluate(environment);
         this.b_value = await this.b_value.evaluate(environment);
 
-        let minimum = Math.min(this.a_value.value, this.b_value.value);
-        return new litNode_new("TODO", minimum, this.json);
+        let minimum = this.a_value.value < this.b_value.value ? this.a_value : this.b_value;
+        return new litNode_new(minimum.realType, minimum.value, this.json);
     }
 }
 
@@ -666,8 +666,8 @@ class Praxly_max {
         this.a_value = await this.a_value.evaluate(environment);
         this.b_value = await this.b_value.evaluate(environment);
 
-        let maximum = Math.max(this.a_value.value, this.b_value.value);
-        return new litNode_new("TODO", maximum, this.json);
+        let maximum = this.a_value.value > this.b_value.value ? this.a_value : this.b_value;
+        return new litNode_new(maximum.realType, maximum.value, this.json);
     }
 }
 
