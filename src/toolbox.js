@@ -250,6 +250,92 @@ export const toolbox = {
               }
             }
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_min_block',
+          'inputs': {
+            'A_MIN': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            },
+            'B_MIN': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 2
+                }
+              }
+            },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_max_block',
+          'inputs': {
+            'A_MAX': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            },
+            'B_MAX': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 2
+                }
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_abs_block',
+          'inputs': {
+            'VALUE': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_log_block',
+          'inputs': {
+            'VALUE': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_sqrt_block',
+          'inputs': {
+            'VALUE': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            }
+          }
         }
       ]
     },

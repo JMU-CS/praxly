@@ -156,6 +156,16 @@ export function createExecutable(tree) {
             } else if (tree.name === 'float') {
                 checkArity(tree, 1);
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'min') {
+                return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+            } else if (tree.name === 'max') {
+                return new Praxly_max(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+            } else if (tree.name === 'abs') {
+                return new Praxly_abs(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'log') {
+                return new Praxly_log(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name == 'sqrt') {
+                return new Praxly_sqrt(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error("unknown builtin function: " + tree.name);
             }
@@ -676,6 +686,92 @@ class Praxly_float_conversion {
         } else {
           throw new PraxlyError(`Function float doesn't accept a parameter of type ${node.realType}.`, this.json.line);
         }
+    }
+}
+
+class Praxly_min {
+    a_value;
+    b_value;
+
+    constructor(a, b, node) {
+        this.json = node;
+        this.a_value = a;
+        this.b_value = b;
+    }
+
+    async evaluate(environment) {
+        this.a_value = await this.a_value.evaluate(environment);
+        this.b_value = await this.b_value.evaluate(environment);
+
+        let minimum = this.a_value.value < this.b_value.value ? this.a_value : this.b_value;
+        return new litNode_new(minimum.realType, minimum.value, this.json);
+    }
+}
+
+class Praxly_max {
+    a_value;
+    b_value;
+
+    constructor(a, b, node) {
+        this.json = node;
+        this.a_value = a;
+        this.b_value = b;
+    }
+
+    async evaluate(environment) {
+        this.a_value = await this.a_value.evaluate(environment);
+        this.b_value = await this.b_value.evaluate(environment);
+
+        let maximum = this.a_value.value > this.b_value.value ? this.a_value : this.b_value;
+        return new litNode_new(maximum.realType, maximum.value, this.json);
+    }
+}
+
+class Praxly_abs {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the absolute value of type " + evaluated.realType, this.json.line);
+        }
+        let newValue = Math.abs(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
+    }
+}
+
+class Praxly_log {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the natural logarithm of type " + evaluated.realType, this.json.line);
+        }
+        let newValue = Math.log(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
+    }
+}
+
+class Praxly_sqrt {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment){
+        let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the square root of type " + evaluated.realType, this.json.line);
+        }
+        let newValue = Math.sqrt(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
     }
 }
 
@@ -1823,7 +1919,9 @@ function litNode_new(type, value, json) {
         case TYPES.SHORT:
             return new Praxly_short(value);
         case TYPES.INVALID:
-            console.error("Invalid literal: ", json);
+            // console.error("Invalid literal: ", json);
             return new Praxly_invalid();
+        default:
+            throw new PraxlyError("Unknown literal type", json.line);
     }
 }

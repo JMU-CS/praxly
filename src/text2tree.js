@@ -44,7 +44,7 @@ class Lexer {
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
     this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
-    this.builtins = ['input', 'random', 'randomInt', 'randomSeed', 'int', 'float'];
+    this.builtins = ['input', 'random', 'randomInt', 'randomSeed', 'int', 'float', 'min', 'max', 'abs', 'log', 'sqrt'];
     this.keywords = ["if", "else", "end", "print", "for", "while", 'and', 'or', 'do', 'repeat',
       'until', 'not', 'return', 'null'];
     this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];

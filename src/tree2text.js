@@ -1,4 +1,5 @@
 import { NODETYPES, TYPES } from "./common";
+import { text2tree } from "./text2tree";
 
 export const tree2text = (node, indentation) => {
     if (!node.type) {
@@ -38,6 +39,14 @@ export const tree2text = (node, indentation) => {
         case TYPES.STRING:
             try {
                 var result = '\"' + node.value + '\"';
+                return result;
+            } catch (error) {
+                return " ";
+            }
+
+        case TYPES.INVALID:
+            try {
+                var result = "// Invalid " + node.value;
                 return result;
             } catch (error) {
                 return " ";
@@ -180,6 +189,23 @@ export const tree2text = (node, indentation) => {
             } else if (node.name === 'float') {
                 const conversion = tree2text(node.parameters[0], indentation);
                 return `float(${conversion})`;
+            } else if (node.name === 'min') {
+                const a_value = tree2text(node.parameters[0], indentation);
+                const b_value = tree2text(node.parameters[1], indentation);
+                return "min(" + a_value + ", " + b_value + ")";
+            } else if (node.name === 'max') {
+                const a_value = tree2text(node.parameters[0], indentation);
+                const b_value = tree2text(node.parameters[1], indentation);
+                return "max(" + a_value + ", " + b_value + ")";
+            } else if (node.name === 'abs') {
+                const value = tree2text(node.parameters[0], indentation);
+                return `abs(${value})`;
+            } else if (node.name === 'log') {
+                const value = tree2text(node.parameters[0], indentation);
+                return `log(${value})`;
+            } else if (node.name = 'sqrt') {
+                const value = tree2text(node.parameters[0], indentation);
+                return `sqrt(${value})`;
             }
         }
 
