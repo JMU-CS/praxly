@@ -513,7 +513,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Converts a String into an Integer",
+      "tooltip": "Converts a String into an int",
       "helpURL": ""
     },
     { // math 8
@@ -528,7 +528,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Converts a String into an Float",
+      "tooltip": "Converts a String into a float",
       "helpURL": ""
     },
     { // math 9
@@ -547,7 +547,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Finds the lowest value in an array",
+      "tooltip": "Returns the lower value",
       "helpURL": ""
     },
     { // math 10
@@ -566,7 +566,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Finds the highest value in an array",
+      "tooltip": "Returns the higher value",
       "helpURL": ""
     },
     {
@@ -581,7 +581,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Calculates the absolute value",
+      "tooltip": "Returns the absolute value",
       "helpURL": ""
     },
     {
@@ -596,7 +596,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Calculates the log value",
+      "tooltip": "Calculates the natural logarithm",
       "helpURL": ""
     },
     {
@@ -611,7 +611,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Calculates the square root value",
+      "tooltip": "Calculates the square root",
       "helpURL": ""
     },
     { // logic 1
