@@ -294,6 +294,34 @@ export const toolbox = {
               }
             }
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_abs_block',
+          'inputs': {
+            'VALUE': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_log_block',
+          'inputs': {
+            'VALUE': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            }
+          }
         }
       ]
     },

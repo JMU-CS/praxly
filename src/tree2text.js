@@ -197,6 +197,12 @@ export const tree2text = (node, indentation) => {
                 const a_value = tree2text(node.parameters[0], indentation);
                 const b_value = tree2text(node.parameters[1], indentation);
                 return "max(" + a_value + ", " + b_value + ")";
+            } else if (node.name === 'abs') {
+                const value = tree2text(node.parameters[0], indentation);
+                return `abs(${value})`;
+            } else if (node.name === 'log') {
+                const value = tree2text(node.parameters[0], indentation);
+                return `log(${value})`;
             }
         }
 

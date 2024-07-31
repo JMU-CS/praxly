@@ -167,6 +167,14 @@ export const tree2blocks = (workspace, node) => {
 
               const child2 = tree2blocks(workspace, node?.parameters[1]);
               result.getInput('B_MAX').connection.connect(child2?.outputConnection);
+            } else if (node.name === 'abs') {
+              result = workspace.newBlock('praxly_abs_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('VALUE').connection.connect(child?.outputConnection);
+            } else if (node.name === 'log') {
+              result = workspace.newBlock('praxly_log_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('VALUE').connection.connect(child?.outputConnection);
             }
             break;
         }

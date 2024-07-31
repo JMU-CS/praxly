@@ -569,6 +569,36 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Finds the highest value in an array",
       "helpURL": ""
     },
+    {
+      "type": "praxly_abs_block",
+      "message0": "abs ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Calculates the absolute value",
+      "helpURL": ""
+    },
+    {
+      "type": "praxly_log_block",
+      "message0": "log ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Calculates the log value",
+      "helpURL": ""
+    },
     { // logic 1
       "type": "praxly_true_block",
       "message0": "true",

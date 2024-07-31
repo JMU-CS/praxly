@@ -148,6 +148,10 @@ export function createExecutable(tree) {
                 return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
             } else if (tree.name === 'max') {
                 return new Praxly_max(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+            } else if (tree.name === 'abs') {
+                return new Praxly_abs(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'log') {
+                return new Praxly_log(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error('unknown builtin function');
             }
@@ -668,6 +672,32 @@ class Praxly_max {
 
         let maximum = this.a_value.value > this.b_value.value ? this.a_value : this.b_value;
         return new litNode_new(maximum.realType, maximum.value, this.json);
+    }
+}
+
+class Praxly_abs {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        let evaluated = await this.value.evaluate(environment);
+        let newValue = Math.abs(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
+    }
+}
+
+class Praxly_log {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        let evaluated = await this.value.evaluate(environment);
+        let newValue = Math.log(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
     }
 }
 
