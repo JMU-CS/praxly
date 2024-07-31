@@ -173,7 +173,6 @@ function registerListeners() {
     openWindowButton.addEventListener('click', openInPraxly);
   }
 
-  runButton.addEventListener('click', runTasks);
   resetButton.addEventListener('click', showResetModal);
 
   workspace.addChangeListener(onBlocklyChange);
@@ -226,7 +225,7 @@ function registerListeners() {
     if ((event.key === 's' || event.key === 'S') && (event.ctrlKey || event.metaKey) || event.key === 'F5') {
       // Prevent the default save action (e.g., opening the save dialog, reloading the page)
       event.preventDefault();
-      runTasks();
+      runTasks(false);
       // console.log(trees);
     }
   });
@@ -244,10 +243,14 @@ function registerListeners() {
 
 
   /**
-   * Event listeners for the main circular buttons along the top.
+   * Event listeners for the main buttons along the top.
    */
 
-  debugButton.addEventListener('mouseup', function () {
+  runButton.addEventListener('click', function () {
+    runTasks(false);
+  });
+
+  debugButton.addEventListener('click', function () {
     runTasks(true);
   });
 

@@ -256,11 +256,11 @@ export function getStopClicked() {
 }
 
 
-const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
-const fontSize = isFirefox ? 18 : 16;
+// const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+// const fontSize = isFirefox ? 18 : 16;
 
 export const textEditor = ace.edit("aceCode", {
-  fontSize: fontSize,
+  fontSize: 16,
   mode: 'ace/mode/praxly',
 });
 
