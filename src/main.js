@@ -14,10 +14,10 @@ import "ace-builds/src-min-noconflict/theme-dracula";
 import "ace-builds/src-min-noconflict/theme-katzenmilch";
 import { tree2blocks } from './tree2blocks';
 import { text2tree } from './text2tree';
-import { generateUrl, loadFromUrl } from './share';
+import { generateUrl } from './share';
 
 import { codeText } from './examples';
-import { DEV_LOG, debugButton, addBlockErrors, annotationsBuffer, clearErrors, clearOutput, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor, setStopClicked } from './common';
+import { DEV_LOG, debugButton, defaultError, errorOutput, getDebugMode, setDebugMode, setStepInto, stepButton, stepIntoButton, stopButton, textEditor, setStopClicked, clearErrors } from './common';
 import { hideDebug, showDebug } from './debugger';
 
 let runButton;
@@ -33,7 +33,6 @@ let blockPane;
 let textPane;
 let stdOut;
 let stdErr;
-let clearOut;
 
 let examples;
 let titleRefresh;
@@ -86,7 +85,6 @@ function initializeGlobals() {
   textPane = document.querySelector('#aceCode');
   stdOut = document.querySelector('.stdout');
   stdErr = document.querySelector('.stderr');
-  clearOut = document.querySelector('.clearOut');
   bottomPart = document.getElementById('bottom-part');
   resizeBarBott = document.querySelector('.resizeBarBott');
   resizeSideInEmbed = document.querySelector('.resize-side-view');
@@ -130,7 +128,6 @@ function registerListeners() {
     shareButton.addEventListener('click', generateUrl);
 
     stepIntoButton.addEventListener('mouseup', function () {
-      // comingSoon();
       if (!getDebugMode()) {
         endDebugPrompt();
       }
@@ -176,8 +173,6 @@ function registerListeners() {
     openWindowButton.addEventListener('click', openInPraxly);
   }
 
-  runButton.addEventListener('click', runTasks);
-  clearOut.addEventListener('click', clear);
   resetButton.addEventListener('click', showResetModal);
 
   workspace.addChangeListener(onBlocklyChange);
@@ -230,7 +225,7 @@ function registerListeners() {
     if ((event.key === 's' || event.key === 'S') && (event.ctrlKey || event.metaKey) || event.key === 'F5') {
       // Prevent the default save action (e.g., opening the save dialog, reloading the page)
       event.preventDefault();
-      runTasks();
+      runTasks(false);
       // console.log(trees);
     }
   });
@@ -248,14 +243,15 @@ function registerListeners() {
 
 
   /**
-   * Event listeners for the main circular buttons along the top.
+   * Event listeners for the main buttons along the top.
    */
 
-  debugButton.addEventListener('mouseup', function () {
-    // comingSoon();
-    showDebug();
-    setDebugMode(true);
-    runTasks();
+  runButton.addEventListener('click', function () {
+    runTasks(false);
+  });
+
+  debugButton.addEventListener('click', function () {
+    runTasks(true);
   });
 
   stopButton.addEventListener('click', function () {
@@ -265,15 +261,6 @@ function registerListeners() {
     setStepInto(false);
     stepButton.click();  // in case awaiting
   });
-
-
-  //   stepButton.addEventListener('mouseup', function () {
-  //     // comingSoon();
-  //     if (!getDebugMode()) {
-  //       endDebugPrompt();
-  //     }
-  //     setDebugMode(true);
-  //   });
 
 }
 
@@ -400,9 +387,7 @@ function generateTable() {
 // }
 
 function clear() {
-  clearOutput();
-  // stdOut.innerHTML = "";
-  clearErrors();
+  stdOut.innerHTML = "";
   stdErr.innerHTML = "";
   varTable.innerHTML = "";
 }
@@ -450,58 +435,80 @@ function refresh() {
 /**
  * this function gets called every time the run button is pressed.
  */
-async function runTasks() {
+async function runTasks(startDebug) {
+
+  // clear previous results
   clear();
-  setStopClicked(false);
   await refresh();
+
+  // abort if compile-time error
+  if (errorOutput) {
+    stdErr.innerHTML = errorOutput;
+    return;
+  }
+
+  // do nothing if code is blank
+  if (!textEditor.getValue().trim()) {
+    return;
+  }
+
+  // if debug button was clicked
+  if (startDebug) {
+    showDebug();
+    setDebugMode(true);
+    setStopClicked(false);
+  }
+
   try {
-    // compile/run only if not blank
-    if (textEditor.getValue().trim()) {
-      const executable = createExecutable(mainTree);
+    // Create executable version of the AST
+    const executable = createExecutable(mainTree);
 
-      // This suggestion for the seed comes from the pure-rand
-      // documentation at https://github.com/dubzzz/pure-rand.
-      const seed = Date.now() ^ (Math.random() * 0x100000000);
-      const environment = {
-          name: 'global',
-          parent: "root",
-          variableList: {},
-          functionList: {},
-          random: {
-              seed,
-              generator: prand.xoroshiro128plus(seed),
-          },
-          blocklyWorkspace: workspace,
-      };
+    // This suggestion for the seed comes from the pure-rand
+    // documentation at https://github.com/dubzzz/pure-rand.
+    const seed = Date.now() ^ (Math.random() * 0x100000000);
 
-      // All scopes have a shortcut reference to the global scope. That
-      // way we can quickly find global data, like the random number
-      // generator, without having to iterate through the parent
-      // references.
-      environment.global = environment;
+    // Create initial environment for global variables
+    const environment = {
+        name: 'global',
+        parent: "root",
+        variableList: {},
+        functionList: {},
+        random: {
+            seed,
+            generator: prand.xoroshiro128plus(seed),
+        },
+        blocklyWorkspace: workspace,
+    };
 
-      await executable.evaluate(environment);
-    }
+    // All scopes have a shortcut reference to the global scope. That
+    // way we can quickly find global data, like the random number
+    // generator, without having to iterate through the parent references.
+    environment.global = environment;
+
+    // Run the compiled program
+    await executable.evaluate(environment);
+
   } catch (error) {
     if (error.message === "Stop_Debug") {
       // special case: abort running (not an error)
       clear();
-      // exit debug, clear output/vars, restart debugger
     } else if (!errorOutput) {
-      // if not previously handled (by PraxlyError)
+      // error not previously handled (by PraxlyError)
       defaultError(error);
       console.error(error);
     }
   }
+
   if (errorOutput) {
-    textEditor.session.setAnnotations(annotationsBuffer);
+    // run-time error; abort debugger
     stdErr.innerHTML = errorOutput;
-    addBlockErrors(workspace);
-    clearErrors();
+    if (getDebugMode()) {
+        stopButton.click();
+      }
   } else {
-    // replace special chars if ran without error
+    // successful run; replace special chars
     var pos = textEditor.getCursorPosition();
-    turnBlocksToCode();
+    turnBlocksToCode();  // reformats the code
     textEditor.moveCursorToPosition(pos);
     textEditor.addEventListener("input", turnCodeToBlocks);
   }
@@ -514,17 +521,17 @@ export function turnCodeToBlocks() {
   if (getDebugMode()) {
     stopButton.click();
   }
-  mainTree = text2tree();
 
+  // this is where lexing/parsing begins
+  clearErrors();
+  mainTree = text2tree();
   if (DEV_LOG) {
     console.log(mainTree);
   }
+
   workspace.clear();
   tree2blocks(workspace, mainTree);
   workspace.render();
-  //comment this out to stop the live error feedback.
-  textEditor.session.setAnnotations(annotationsBuffer);
-  addBlockErrors(workspace);
 }
 
 function onBlocklyChange(event) {
@@ -538,8 +545,9 @@ function onBlocklyChange(event) {
 function turnBlocksToCode() {
   textEditor.removeEventListener("input", turnCodeToBlocks);
   mainTree = blocks2tree(workspace, praxlyGenerator);
-  // console.info("here is the tree generated by the blocks:");
-  // console.debug(mainTree);
+  if (DEV_LOG) {
+    console.log(mainTree);
+  }
   const text = tree2text(mainTree, 0, 0);
   textEditor.setValue(text, -1);
 };

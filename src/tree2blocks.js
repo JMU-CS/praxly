@@ -151,6 +151,34 @@ export const tree2blocks = (workspace, node) => {
               result = workspace.newBlock('praxly_float_conversion_block');
               const child = tree2blocks(workspace, node?.parameters[0]);
               result.getInput('CONVERSION').connection.connect(child?.outputConnection);
+            } else if (node.name === 'min') {
+              result = workspace.newBlock('praxly_min_block');
+
+              const child1 = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('A_MIN').connection.connect(child1?.outputConnection);
+
+              const child2 = tree2blocks(workspace, node?.parameters[1]);
+              result.getInput('B_MIN').connection.connect(child2?.outputConnection);
+            } else if (node.name === 'max') {
+              result = workspace.newBlock('praxly_max_block');
+
+              const child1 = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('A_MAX').connection.connect(child1?.outputConnection);
+
+              const child2 = tree2blocks(workspace, node?.parameters[1]);
+              result.getInput('B_MAX').connection.connect(child2?.outputConnection);
+            } else if (node.name === 'abs') {
+              result = workspace.newBlock('praxly_abs_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('VALUE').connection.connect(child?.outputConnection);
+            } else if (node.name === 'log') {
+              result = workspace.newBlock('praxly_log_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('VALUE').connection.connect(child?.outputConnection);
+            } else if (node.name === 'sqrt') {
+              result = workspace.newBlock('praxly_sqrt_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('VALUE').connection.connect(child?.outputConnection);
             }
             break;
         }
@@ -341,11 +369,8 @@ export const tree2blocks = (workspace, node) => {
 
         case NODETYPES.FOR:
             var result = workspace.newBlock('praxly_for_loop_block');
-
-            //gohere
             try {
                 var initialization = tree2blocks(workspace, node?.initialization);
-                // console.error(initialization?.type);
                 if (!initialization || initialization.type !== 'praxly_statement_block') {
                     initialization.dispose();
                     var initialization = workspace.newBlock('praxly_assignment_expression_block');
@@ -399,7 +424,6 @@ export const tree2blocks = (workspace, node) => {
 
         case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
             var result = workspace.newBlock('praxly_array_reference_reassignment_block');
-            console.error(`reached here`);
             result.setFieldValue(node.name, "VARIABLENAME");
             var child = tree2blocks(workspace, node?.index);
             result.getInput('INDEX').connection.connect(child?.outputConnection);

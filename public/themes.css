@@ -526,7 +526,7 @@ body:not(.embed) .resizeBarY {
 
 body:not(.embed) #bottom-part {
   display: flex;
-  overflow: scroll;
+  overflow: auto;
   /* Add this */
   flex-direction: row-reverse;
   /* Add this */
@@ -545,16 +545,6 @@ body:not(.embed) #bottom-part {
   background-color: var(--output-bg-color);
   color: var(--output-text-color);
 }
-
-.clearOut {
-  display: none;
-  position: absolute;
-  font-size: x-large;
-  top: 5px;
-  right: 10px;
-  cursor: pointer;
-}
-
 
 .stdout {
   margin-top: 0;

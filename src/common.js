@@ -1,6 +1,5 @@
 import ace from 'ace-builds';
 import './mode-praxly.js';
-import Blockly from 'blockly';
 
 // this is going to be the place where all shared enums and constants. (this is the place for all shared enums and constants.)
 
@@ -89,23 +88,44 @@ export const NODETYPES = {
 }
 
 
-// this is the special Error type that is thrown when there is in error in the ide.
+export var errorOutput = "";  // buffer for error messages (don't display until run)
+export const MAX_LOOP = 100;  // prevents accidental infinite loops
+
+// this is the special Error type that is thrown when there is in error in the IDE.
 export class PraxlyError extends Error {
     constructor(message, line) {
-        super(`<pre>error occurred on line ${line}:\n\t${message}</pre>`);
-        this.errorMessage = this.message;
-        errorOutput = this.message;       // not appending run-time error
+        super(`runtime error occurred on line ${line}:\n\t${message}`);
+        textError("runtime", message, line);
     }
 }
 
+/**
+ * This is commonly used for lexing and parsing errors so that the correct tree
+ * is inferred but there is an error displayed for bad syntax.
+ * @param {string} type the type of error
+ * @param {string} message the error message
+ * @param {number} line the error line number
+ */
+export function textError(type, message, line) {
+    if (errorOutput) {
+        errorOutput += "<br><br>";
+    }
+    errorOutput += `${type} error occurred on line ${line}:\n\t${message}`;
+}
 
-export const MAX_LOOP = 100;  // prevents accidental infinite loops
-export var errorOutput = "";
-export var blockErrorsBuffer = {};
-export var annotationsBuffer = [];
-export var markersBuffer = [];
+export function defaultError(message) {
+    if (errorOutput) {
+        errorOutput += "<br><br>";
+    }
+    errorOutput += `${message}<br><br>We have not written an error message for this issue yet.`;
+}
 
-export function addToPrintBuffer(message) {
+export function clearErrors() {
+    errorOutput = "";
+}
+
+
+export function consoleOutput(message) {
     const stdOut = document.querySelector('.stdout');
     stdOut.insertAdjacentHTML('beforeend', message);
 }
@@ -160,52 +180,6 @@ export function consoleInput() {
     });
 }
 
-/**
- * this clears the output buffer. It does not clear what the user sees on their screen.
- * It also clears all of the ace error annotations.
- */
-export function clearOutput() {
-    const stdOut = document.querySelector('.stdout');
-    stdOut.innerHTML = '';
-}
-
-export function clearErrors() {
-    annotationsBuffer = [];
-    errorOutput = "";
-    blockErrorsBuffer = {};
-    markersBuffer.forEach((markerId) => {
-        textEditor.session.removeMarker(markerId);
-    });
-}
-
-/**
- * This is a unique function that will throw a compiling error. This is commonly used for
- *  lexing and parsing errors so that the correct tree is inferred but there is an error thrown for bad syntax.
- * @param {string} type the type of error
- * @param {string} error the error message
- * @param {number} line the error line number
- */
-export function textError(type, error, line) {
-    if (errorOutput) {
-        errorOutput += "<br><br>";
-    }
-    errorOutput += `${type} error occurred on line ${line}: ${error}`;
-    // appendAnnotation(error, line);
-}
-
-export function defaultError(message) {
-    if (errorOutput) {
-        errorOutput += "<br><br>";
-    }
-    errorOutput += `${message}<br><br>We have not written an error message for this issue yet.`;
-}
-
-export function addBlockErrors(workspace) {
-    for (var key in blockErrorsBuffer) {
-        var block = workspace.getBlockById(key);
-        block.setWarningText(blockErrorsBuffer[key]);
-    }
-}
 
 /**
  * This will highlight a line of code
@@ -230,7 +204,6 @@ export function highlightAstNode(environment, node) {
         environment.global.blocklyWorkspace.highlightBlock(node.blockID);
     }
 
-    markersBuffer.push(markerId);
     return markerId;
 }
 
@@ -282,11 +255,12 @@ export function getStopClicked() {
     return stopClicked;
 }
 
-const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
-const fontSize = isFirefox ? 18 : 16;
+
+// const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+// const fontSize = isFirefox ? 18 : 16;
 
 export const textEditor = ace.edit("aceCode", {
-  fontSize: fontSize,
+  fontSize: 16,
   mode: 'ace/mode/praxly',
 });
 

@@ -44,7 +44,7 @@ class Lexer {
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
     this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
-    this.builtins = ['input', 'random', 'randomInt', 'randomSeed', 'int', 'float'];
+    this.builtins = ['input', 'random', 'randomInt', 'randomSeed', 'int', 'float', 'min', 'max', 'abs', 'log', 'sqrt'];
     this.keywords = ["if", "else", "end", "print", "for", "while", 'and', 'or', 'do', 'repeat',
       'until', 'not', 'return', 'null'];
     this.types = ['int', 'double', 'String', 'char', 'float', 'boolean', 'short', 'void'];
@@ -54,7 +54,9 @@ class Lexer {
 
   has_letter() {
     const a = this.source[this.i];
-    return /^[A-Za-z_]$/.test(a);
+    // Ex: The pizza emoji has the surrogate pair \uD83C\uDF55.
+    const regex = /^[A-Za-z_]|[\uD83C-\uDBFF]|[\uDC00-\uDFFF]$/;
+    return regex.test(a);
   }
 
   has_valid_symbol() {
@@ -177,7 +179,7 @@ class Lexer {
       if (this.has("\"")) {
         var stringStart = this.currentLine;
         this.skip();
-        while (this.i < this.length && !this.has("\"")) {
+        while (this.i < this.length && !this.has("\"") && !this.has("\n")) {
           this.capture();
         }
         if (this.has("\"")) {
@@ -197,7 +199,6 @@ class Lexer {
         this.emit_token();
         continue;
       }
-
 
       if (this.has_multi_char_symbol()) {
         while (this.has_multi_char_symbol()) {
@@ -241,12 +242,12 @@ class Lexer {
       while (this.i < this.length && (this.has_letter() || this.has_digit())) {
         this.capture();
       }
-      if (this.has_builtin() && this.has("(")) {
-        this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
-        continue;
-      }
       if (this.has_type()) {
         this.emit_token('Type');
+        continue;
+      }
+      if (this.has_builtin()) {
+        this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
         continue;
       }
       if (this.token_so_far === 'end') {
@@ -264,7 +265,7 @@ class Lexer {
         this.emit_token();
         continue;
       }
-      this.emit_token("Location");
+      this.emit_token('Location');
     }
     this.emit_token("EOF");
     return this.tokens;
@@ -566,7 +567,7 @@ class Parser {
           this.advance();
           const r = this.parse_expression(precedence);
           if (r.type != NODETYPES.FUNCCALL) {
-            textError("compile-time", "classes are not fully supported yet. the right side of the . operator must be a supported string function", line);
+            textError('parsing', "classes are not fully supported yet. the right side of the . operator must be a supported string function", line);
           }
           l = {
             left: l,
@@ -596,6 +597,7 @@ class Parser {
             return this.literalNode_new(this.tokens[this.i - 1]);
 
           case NODETYPES.BUILTIN_FUNCTION_CALL:
+          case 'Type':  // type conversion function
             return this.parse_builtin_function_call(line);
 
           case '(':
@@ -637,7 +639,7 @@ class Parser {
             }
             result.params = args;
             if (this.hasNot('}')) {
-              textError("parsing", "didn't detect closing curly brace in the array declaration", this.tokens[this.i].line);
+              textError('parsing', "didn't detect closing curly brace in the array declaration", this.tokens[this.i].line);
             }
             result.endIndex = this.getCurrentToken().endIndex;
             this.advance();
@@ -690,8 +692,7 @@ class Parser {
             // TODO: this case needs to raise an exception or return some error
             // object. Right now if an expression can't be parsed, it
             // implicitly returns null/undefined.
-            // throw new Error("couldn't parse expression");
-            textError("parsing", `invalid Token ${this.getCurrentToken().value}`, line);
+            textError('parsing', `invalid Token ${this.getCurrentToken().value}`, line);
         }
     }
   }
@@ -832,7 +833,7 @@ class Parser {
       var contents = this.parse_block('end ' + result.name);
       result.contents = contents;
       if (this.hasNot('end ' + result.name)) {
-        textError('compile time', `missing the \'end ${result.name}\' token`, result.line);
+        textError('parsing', `missing the \'end ${result.name}\' token`, result.line);
         result.endIndex = this.getCurrentToken().endIndex;
         return result;
       }
@@ -918,7 +919,7 @@ class Parser {
           return result;
         }
         else {
-          textError('compile time', "missing the \'end if\' token", result.line);
+          textError('parsing', "missing the \'end if\' token", result.line);
         }
       }
 
@@ -949,7 +950,7 @@ class Parser {
             return result;
           }
           else {
-            textError('compile time', "missing the \'end for\' token", result.line);
+            textError('parsing', "missing the \'end for\' token", result.line);
           }
         }
       }
@@ -978,7 +979,7 @@ class Parser {
         this.advance();
         return result;
       } else {
-        textError('compile time', "missing the \'end while\' token", result.line);
+        textError('parsing', "missing the \'end while\' token", result.line);
       }
     }
 

@@ -501,7 +501,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Sets the seed of the random number generator",
       "helpUrl": ""
     },
-    {
+    { // math 7
       "type": "praxly_int_conversion_block",
       "message0": "int ( %1 )",
       "args0": [
@@ -513,10 +513,10 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Converts a String into an Integer",
+      "tooltip": "Converts a String into an int",
       "helpURL": ""
     },
-    {
+    { // math 8
       "type": "praxly_float_conversion_block",
       "message0": "float ( %1 )",
       "args0": [
@@ -528,7 +528,90 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'expression_blocks',
-      "tooltip": "Converts a String into an Float",
+      "tooltip": "Converts a String into a float",
+      "helpURL": ""
+    },
+    { // math 9
+      "type": "praxly_min_block",
+      "message0": "min ( %1 , %2 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "A_MIN"
+        },
+        {
+          "type": "input_value",
+          "name": "B_MIN"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Returns the lower value",
+      "helpURL": ""
+    },
+    { // math 10
+      "type": "praxly_max_block",
+      "message0": "max ( %1, %2 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "A_MAX"
+        },
+        {
+          "type": "input_value",
+          "name": "B_MAX"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Returns the higher value",
+      "helpURL": ""
+    },
+    {
+      "type": "praxly_abs_block",
+      "message0": "abs ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Returns the absolute value",
+      "helpURL": ""
+    },
+    {
+      "type": "praxly_log_block",
+      "message0": "log ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Calculates the natural logarithm",
+      "helpURL": ""
+    },
+    {
+      "type": "praxly_sqrt_block",
+      "message0": "sqrt ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Calculates the square root",
       "helpURL": ""
     },
     { // logic 1
@@ -646,7 +729,8 @@ export function definePraxlyBlocks(workspace) {
       "args0": [
         {
           "type": "input_value",
-          "name": "EXPRESSION"
+          "name": "EXPRESSION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"
@@ -719,7 +803,8 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_value",
@@ -740,7 +825,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "For loop (repeat a specific number of times)",
       "helpUrl": ""
     },
-    { // loops 2
+    { // variables
       "type": "praxly_assignment_expression_block",
       "message0": "%1%2 ⬅ %3 %4",
       "args0": [
@@ -776,7 +861,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Declares and initializes the loop variable",
       "helpUrl": ""
     },
-    { // loops 3
+    { // variables
       "type": "praxly_reassignment_expression_block",
       "message0": "%1⬅%2 %3",
       "args0": [
@@ -799,13 +884,14 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Updates the loop variable (usually adds 1)",
       "helpUrl": ""
     },
-    { // loops 4
+    { // loops 2
       "type": "praxly_while_loop_block",
       "message0": "while ( %1 ) %2 %3 end while",
       "args0": [
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"
@@ -822,7 +908,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "While loop (repeat until a condition is false)",
       "helpUrl": ""
     },
-    { // loops 5
+    { // loops 3
       "type": "praxly_do_while_loop_block",
       "message0": "do  %1  while (%2 )%3 ",
       "args0": [
@@ -832,7 +918,8 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"
@@ -845,7 +932,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Do-while loop (run once and repeat until a condition is false)",
       "helpUrl": ""
     },
-    { // loops 6
+    { // loops 4
       "type": "praxly_repeat_until_loop_block",
       "message0": "repeat  %1  until (%2 )%3 ",
       "args0": [
@@ -855,7 +942,8 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_value",
-          "name": "CONDITION"
+          "name": "CONDITION",
+          "check": "Boolean"
         },
         {
           "type": "input_dummy"
@@ -1133,7 +1221,7 @@ export function definePraxlyBlocks(workspace) {
   for (let [id, block] of Object.entries(Blockly.Blocks)) {
     if (id !== 'praxly_print_block') {
       block.customContextMenu = items => {
-        let commentIndex = items.findIndex(item => item.text === 'Add Comment'); 
+        let commentIndex = items.findIndex(item => item.text === 'Add Comment');
         if (commentIndex >= 0) {
           items.splice(commentIndex, 1);
         }

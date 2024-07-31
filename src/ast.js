@@ -3,7 +3,7 @@ import {
     OP,
     NODETYPES,
     PraxlyError,
-    addToPrintBuffer,
+    consoleOutput,
     consoleInput,
     defaultError,
     errorOutput,
@@ -46,6 +46,12 @@ class ReturnException extends Error {
         super(`attempting to return. this should return ${errorData}`);
         this.name = this.constructor.name;
         this.errorData = errorData;
+    }
+}
+
+function checkArity(node, expectedArity) {
+    if (node.parameters.length !== expectedArity) {
+        throw new PraxlyError(`Function ${node.name} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${node.parameters.length}.`, node.line);
     }
 }
 
@@ -133,19 +139,35 @@ export function createExecutable(tree) {
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (tree.name === 'input') {
+                checkArity(tree, 0);
                 return new Praxly_input(tree);
             } else if (tree.name === 'random') {
+                checkArity(tree, 0);
                 return new Praxly_random(tree);
             } else if (tree.name === 'randomInt') {
+                checkArity(tree, 1);
                 return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'randomSeed') {
+                checkArity(tree, 1);
                 return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'int') {
+                checkArity(tree, 1);
                 return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'float') {
+                checkArity(tree, 1);
                 return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'min') {
+                return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+            } else if (tree.name === 'max') {
+                return new Praxly_max(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+            } else if (tree.name === 'abs') {
+                return new Praxly_abs(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name === 'log') {
+                return new Praxly_log(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name == 'sqrt') {
+                return new Praxly_sqrt(createExecutable(tree.parameters[0]), tree);
             } else {
-                throw new Error('unknown builtin function');
+                throw new Error("unknown builtin function: " + tree.name);
             }
         }
 
@@ -190,7 +212,7 @@ export function createExecutable(tree) {
                 return new Praxly_assignment(tree, createExecutable(tree.location), createExecutable(tree.value), tree);
             }
             catch (error) {
-                console.error('assignment error: ', error);
+                // console.error('assignment error: ', error);
                 return null;
             }
 
@@ -207,7 +229,7 @@ export function createExecutable(tree) {
                 return new Praxly_array_assignment(tree, createExecutable(tree.location), createExecutable(tree.value));
             }
             catch (error) {
-                console.error('assignment error: ', error);
+                // console.error('array assignment error: ', error);
                 return null;
             }
 
@@ -232,7 +254,7 @@ export function createExecutable(tree) {
                 return new Praxly_for(initialization, condition, incrementation, statement, tree);
             }
             catch (error) {
-                console.error(error);
+                // console.error('for statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -243,7 +265,7 @@ export function createExecutable(tree) {
                 return new Praxly_while(condition, statement, tree);
             }
             catch (error) {
-                console.error(error);
+                // console.error('while statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -254,7 +276,7 @@ export function createExecutable(tree) {
                 return new Praxly_do_while(condition, statement, tree);
             }
             catch (error) {
-                console.error('An error occurred: empty statement', error);
+                // console.error('do while statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -265,7 +287,7 @@ export function createExecutable(tree) {
                 return new Praxly_repeat_until(condition, statement, tree);
             }
             catch (error) {
-                console.error('An error occurred: empty statement', error);
+                // console.error('repeat until statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -315,7 +337,8 @@ export function createExecutable(tree) {
             return new Praxly_emptyLine(tree);
 
         default:
-            console.error(`I don't recognize this type: ${tree.type}}`);
+            console.error("Unhandled node type: " + tree.type);
+            return new Praxly_invalid(tree);
     }
 }
 
@@ -474,7 +497,6 @@ class Praxly_array_literal {
 
     constructor(elements, node) {
         this.elements = elements;
-        this.node = node;
         this.json = node;
         this.jsonType = 'Praxly_array';
 
@@ -538,7 +560,7 @@ class Praxly_print {
             suffix = '<br>';
         }
 
-        addToPrintBuffer(result + suffix);
+        consoleOutput(result + suffix);
         return null;
     }
 }
@@ -581,9 +603,14 @@ class Praxly_random_int {
     }
 
     async evaluate(environment) {
-        const maxValue = (await this.max.evaluate(environment)).value;
-        const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
-        return new Praxly_int(x, this.json);
+        const maxNode = (await this.max.evaluate(environment));
+        if (maxNode.realType === TYPES.INT) {
+            const maxValue = maxNode.value;
+            const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
+            return new Praxly_int(x, this.json);
+        } else {
+            throw new PraxlyError(`randomInt's maximum parameter must be of type int, not ${maxNode.realType}.`, this.json.line);
+        }
     }
 }
 
@@ -594,10 +621,15 @@ class Praxly_random_seed {
     }
 
     async evaluate(environment) {
-        const seedValue = (await this.seed.evaluate(environment)).value;
-        environment.global.random.seed = seedValue;
-        environment.global.random.generator = prand.xoroshiro128plus(seedValue);
-        return null;
+        const seedNode = (await this.seed.evaluate(environment));
+        if (seedNode.realType === TYPES.INT) {
+            const seedValue = seedNode.value;
+            environment.global.random.seed = seedValue;
+            environment.global.random.generator = prand.xoroshiro128plus(seedValue);
+            return null;
+        } else {
+            throw new PraxlyError(`randomSeed's seed parameter must be of type int, not ${seedNode.realType}.`, this.json.line);
+        }
     }
 }
 
@@ -608,10 +640,24 @@ class Praxly_int_conversion {
     }
 
     async evaluate(environment) {
-        let valueEvaluated = await this.value.evaluate(environment);
-        // value is likely a Praxly_String; get the actual string
-        const convert = new Praxly_int(valueEvaluated.value);
-        return convert;
+        let node = await this.value.evaluate(environment);
+        if (node.realType === TYPES.INT) {
+          const convert = new Praxly_int(node.value);
+          return convert;
+        } else if (node.realType === TYPES.DOUBLE || node.realType === TYPES.FLOAT) {
+          const convert = new Praxly_int(Math.trunc(node.value));
+          return convert;
+        } else if (node.realType === TYPES.STRING) {
+          const number = Number(node.value);
+          if (isNaN(number)) {
+            throw new PraxlyError(`"${node.value}" cannot be converted to an int.`, this.json.line);
+          } else {
+            const convert = new Praxly_int(number);
+            return convert;
+          }
+        } else {
+          throw new PraxlyError(`Function int doesn't accept a parameter of type ${node.realType}.`, this.json.line);
+        }
     }
 }
 
@@ -622,10 +668,110 @@ class Praxly_float_conversion {
     }
 
     async evaluate(environment) {
-        let valueEvaluated = await this.value.evaluate(environment);
-        // value is likely a Praxly_String; get the actual string
-        const convert = new Praxly_float(valueEvaluated.value);
-        return convert;
+        let node = await this.value.evaluate(environment);
+        if (node.realType === TYPES.DOUBLE || node.realType === TYPES.FLOAT) {
+          const convert = new Praxly_float(node.value);
+          return convert;
+        } else if (node.realType === TYPES.INT) {
+          const convert = new Praxly_float(node.value);
+          return convert;
+        } else if (node.realType === TYPES.STRING) {
+          const number = Number(node.value);
+          if (isNaN(number)) {
+            throw new PraxlyError(`"${node.value}" cannot be converted to a float.`, this.json.line);
+          } else {
+            const convert = new Praxly_float(number);
+            return convert;
+          }
+        } else {
+          throw new PraxlyError(`Function float doesn't accept a parameter of type ${node.realType}.`, this.json.line);
+        }
+    }
+}
+
+class Praxly_min {
+    a_value;
+    b_value;
+
+    constructor(a, b, node) {
+        this.json = node;
+        this.a_value = a;
+        this.b_value = b;
+    }
+
+    async evaluate(environment) {
+        this.a_value = await this.a_value.evaluate(environment);
+        this.b_value = await this.b_value.evaluate(environment);
+
+        let minimum = this.a_value.value < this.b_value.value ? this.a_value : this.b_value;
+        return new litNode_new(minimum.realType, minimum.value, this.json);
+    }
+}
+
+class Praxly_max {
+    a_value;
+    b_value;
+
+    constructor(a, b, node) {
+        this.json = node;
+        this.a_value = a;
+        this.b_value = b;
+    }
+
+    async evaluate(environment) {
+        this.a_value = await this.a_value.evaluate(environment);
+        this.b_value = await this.b_value.evaluate(environment);
+
+        let maximum = this.a_value.value > this.b_value.value ? this.a_value : this.b_value;
+        return new litNode_new(maximum.realType, maximum.value, this.json);
+    }
+}
+
+class Praxly_abs {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the absolute value of type " + evaluated.realType, this.json.line);
+        }
+        let newValue = Math.abs(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
+    }
+}
+
+class Praxly_log {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment) {
+        let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the natural logarithm of type " + evaluated.realType, this.json.line);
+        }
+        let newValue = Math.log(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
+    }
+}
+
+class Praxly_sqrt {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment){
+        let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the square root of type " + evaluated.realType, this.json.line);
+        }
+        let newValue = Math.sqrt(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
     }
 }
 
@@ -922,6 +1068,9 @@ class Praxly_if {
 
     async evaluate(environment) {
         var cond = await this.condition.evaluate(environment);
+        if (cond.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
+        }
         if (cond.value) {
             await this.code.evaluate(environment);
         }
@@ -940,6 +1089,9 @@ class Praxly_if_else {
 
     async evaluate(environment) {
         var cond = await this.condition.evaluate(environment);
+        if (cond.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
+        }
         if (cond.value) {
             await this.code.evaluate(environment);
         } else {
@@ -1047,7 +1199,7 @@ function typeCoercion(varType, praxlyObj) {
             newValue = String(praxlyObj.value);
             return new Praxly_String(newValue, praxlyObj.json);
         default:
-            console.error("Unhandled varType:" + varType);
+            console.error("Unhandled var type: " + varType);
             return praxlyObj;
     }
 }
@@ -1125,7 +1277,7 @@ class Praxly_vardecl {
                     valueEvaluated = new Praxly_String("");
                     break;
                 default:
-                    console.error("Unhandled varType:" + this.json.varType);
+                    console.error("Unhandled var type: " + this.json.varType);
                     break;
             }
         }
@@ -1235,6 +1387,9 @@ class Praxly_for {
             // evaluate loop condition
             await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
+            if (cond.realType != TYPES.BOOLEAN) {
+                throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
+            }
             if (!cond.value) {
                 break;
             }
@@ -1276,6 +1431,9 @@ class Praxly_while {
             // evaluate loop condition
             await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
+            if (cond.realType != TYPES.BOOLEAN) {
+                throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
+            }
             if (!cond.value) {
                 break;
             }
@@ -1323,6 +1481,9 @@ class Praxly_do_while {
             // evaluate loop condition
             await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
+            if (cond.realType != TYPES.BOOLEAN) {
+                throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
+            }
             if (!cond.value) {
                 break;
             }
@@ -1360,6 +1521,9 @@ class Praxly_repeat_until {
             // evaluate loop condition
             await stepOver(environment, this.condition.json);
             var cond = await this.condition.evaluate(environment);
+            if (cond.realType != TYPES.BOOLEAN) {
+                throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
+            }
             if (cond.value) {
                 break;
             }
@@ -1467,7 +1631,7 @@ class Praxly_function_call {
             if (can_assign(parameterType, argument.realType, this.json.line)) {
                 newScope.variableList[parameterName] = argument;
             } else {
-                throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${parameterType}\n\tActual: ${argument.realType}`);
+                throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${parameterType}\n\tActual: ${argument.realType}`, this.json.line);
             }
         }
 
@@ -1505,20 +1669,20 @@ class Praxly_function_call {
 }
 
 class Praxly_String_funccall {
-    constructor(node, reciever, name, args) {
+    constructor(node, receiver, name, args) {
         this.args = args;
-        this.node = node;
+        this.json = node;
         this.name = name;
-        this.reciever = reciever
+        this.receiver = receiver;
     }
 
     typecheckhelper(argument, expected_types) {
         if (!expected_types.includes(argument.realType)) {
-            throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`);
+            throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`, this.json.line);
         }
     }
     async evaluate(environment) {
-        var str = await this.reciever.evaluate(environment);
+        var str = await this.receiver.evaluate(environment);
         var result;
         switch (this.name) {
             case StringFuncs.CHARAT:
@@ -1550,7 +1714,7 @@ class Praxly_String_funccall {
                 result = str.value.substring(startIndex.value, endIndex.value);
                 return new Praxly_String(result);
             default:
-                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.node.line);
+                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.json.line);
         }
     }
 
@@ -1773,8 +1937,9 @@ function litNode_new(type, value, json) {
         case TYPES.SHORT:
             return new Praxly_short(value);
         case TYPES.INVALID:
-            console.error(`invalid literal:`);
-            console.error(json);
+            // console.error("Invalid literal: ", json);
             return new Praxly_invalid();
+        default:
+            throw new PraxlyError("Unknown literal type", json.line);
     }
 }

@@ -8,14 +8,14 @@
   <link rel="stylesheet" href="/index.css">
   <link rel="icon" href="/fallen-leaf_1f342.ico" type="image/x-icon">
   <link rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
 
-  <header>
-    <a class="report" href="https://docs.google.com/forms/d/e/1FAIpQLSeo2mUrrhNZejPch9UcQQDHWk5e6ql_xFfFSdS6oiaNA-Tk8Q/viewform?embedded=true">Report a bug <span class="material-symbols-rounded bug">pest_control</span></a>
-  </header>
+  <!-- <header>
+    <button class="report">Report a bug <span class="material-symbols-rounded bug">pest_control</span></button>
+  </header> -->
 
   <div class="container">
     <h1>Welcome to Praxly 🍂</h1>
@@ -34,12 +34,44 @@
     <div class="button-container">
       <button class="praxly-button ">Start Coding</button>
       <button class="github-button">GitHub Repo</button>
+      <button class="report-button">Report a bug <span class="material-symbols-rounded bug">pest_control</span></button>
     </div>
 
     <iframe width="100%" height="580" frameborder="0"
       src="/embed.html?button=both&result=both#code=%2F%2F%0A%2F%2F%20Sample%20Question%208%0A%2F%2F%0A%0Avoid%20swap(int%5B%5D%20arr%2C%20int%20i%2C%20int%20j)%0A%20%20%20%20int%20temp%20←%20arr%5Bi%5D%0A%20%20%20%20arr%5Bi%5D%20←%20arr%5Bj%5D%0A%20%20%20%20arr%5Bj%5D%20←%20temp%0Aend%20swap%0A%0Avoid%20sort(int%5B%5D%20arr%2C%20int%20len)%0A%20%20%20%20int%20pos%20←%200%0A%20%20%20%20while%20(pos%20<%20len)%0A%20%20%20%20%20%20%20%20if%20(pos%20%3D%3D%200)%0A%20%20%20%20%20%20%20%20%20%20%20%20pos%20←%20pos%20%2B%201%0A%20%20%20%20%20%20%20%20else%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20(arr%5Bpos%5D%20>%20arr%5Bpos%20-%201%5D)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20pos%20←%20pos%20%2B%201%0A%20%20%20%20%20%20%20%20%20%20%20%20else%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20swap(arr%2C%20pos%2C%20pos%20-%201)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20pos%20←%20pos%20-%201%0A%20%20%20%20%20%20%20%20%20%20%20%20end%20if%0A%20%20%20%20%20%20%20%20end%20if%0A%20%20%20%20end%20while%0Aend%20sort%0A%0Aint%5B%5D%20numbers%20←%20%7B2%2C%201%2C%205%2C%203%2C%204%7D%0Asort(numbers%2C%205)%0Aprint%20numbers%0A">
     </iframe>
 
+    <h2>Praxly Team</h2>
+
+    <div class="people-container">
+      <div class="team-member">
+        <img class="member" src="people/saupp.png">
+        <h3>Ben Saupp</h3>
+        <div class="member-description"></div>
+      </div>
+      <div class="team-member">
+        <img class="member" src="people/macmillan.png">
+        <h3>Ellona Macmillan</h3>
+        <div class="member-description"></div>
+      </div>
+      <div class="team-member">
+        <img class="member" src="people/mayfield.jpg">
+        <h3>Dr. Chris Mayfield</h3>
+        <div class="member-description"></div>
+      </div>
+      <div class="team-member">
+        <img class="member" src="people/johnson.png">
+        <h3>Dr. Chris Johnson</h3>
+        <div class="member-description"></div>
+      </div>
+      <div class="team-member">
+        <img class="member" src="people/stewart.jpg">
+        <h3>Dr. Michael Stewart</h3>
+        <div class="member-description"></div>
+      </div>
+    </div>
+
+    <!-- <button class="learn-more">Learn More</button> -->
 
     <div class="footer">
       <img src="/images/NSF_logo.png" alt="NSF logo" class="logo">
@@ -56,6 +88,13 @@
   <script>
     const praxlyButton = document.querySelector('.praxly-button');
     const githubButton = document.querySelector('.github-button');
+    const peopleContainer = document.querySelector('.people-container');
+    const learnMoreButton = document.querySelector('.learn-more');
+    const reportButton = document.querySelector('.report-button');
+
+    reportButton.addEventListener('click', function () {
+      window.open("https://docs.google.com/forms/d/e/1FAIpQLSeo2mUrrhNZejPch9UcQQDHWk5e6ql_xFfFSdS6oiaNA-Tk8Q/viewform?embedded=true", '_blank');
+    })
 
     praxlyButton.addEventListener('click', function () {
       window.open("/main.html", "_blank");
@@ -63,6 +102,11 @@
 
     githubButton.addEventListener('click', function () {
       window.open("https://github.com/JMU-CS/praxly", '_blank');
+    });
+
+    learnMoreButton?.addEventListener('click', function () {
+      peopleContainer.classList.toggle('active');
+      peopleContainer.classList.contains('active') ? learnMoreButton.textContent = 'Show Less' : learnMoreButton.textContent = 'Learn More';
     });
   </script>
 
