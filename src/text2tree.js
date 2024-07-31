@@ -54,7 +54,9 @@ class Lexer {
 
   has_letter() {
     const a = this.source[this.i];
-    return /^[A-Za-z_]$/.test(a);
+    // Ex: The pizza emoji has the surrogate pair \uD83C\uDF55.
+    const regex = /^[A-Za-z_]|[\uD83C-\uDBFF]|[\uDC00-\uDFFF]$/;
+    return regex.test(a);
   }
 
   has_valid_symbol() {
@@ -198,7 +200,6 @@ class Lexer {
         continue;
       }
 
-
       if (this.has_multi_char_symbol()) {
         while (this.has_multi_char_symbol()) {
           this.capture();
@@ -241,12 +242,12 @@ class Lexer {
       while (this.i < this.length && (this.has_letter() || this.has_digit())) {
         this.capture();
       }
-      if (this.has_builtin()) {
-        this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
-        continue;
-      }
       if (this.has_type()) {
         this.emit_token('Type');
+        continue;
+      }
+      if (this.has_builtin()) {
+        this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
         continue;
       }
       if (this.token_so_far === 'end') {
@@ -264,7 +265,7 @@ class Lexer {
         this.emit_token();
         continue;
       }
-      this.emit_token("Location");
+      this.emit_token('Location');
     }
     this.emit_token("EOF");
     return this.tokens;
@@ -596,6 +597,7 @@ class Parser {
             return this.literalNode_new(this.tokens[this.i - 1]);
 
           case NODETYPES.BUILTIN_FUNCTION_CALL:
+          case 'Type':  // type conversion function
             return this.parse_builtin_function_call(line);
 
           case '(':
