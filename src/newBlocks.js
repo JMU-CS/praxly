@@ -599,6 +599,21 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Calculates the log value",
       "helpURL": ""
     },
+    {
+      "type": "praxly_sqrt_block",
+      "message0": "sqrt ( %1 )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "VALUE"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'expression_blocks',
+      "tooltip": "Calculates the square root value",
+      "helpURL": ""
+    },
     { // logic 1
       "type": "praxly_true_block",
       "message0": "true",

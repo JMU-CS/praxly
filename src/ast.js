@@ -152,6 +152,8 @@ export function createExecutable(tree) {
                 return new Praxly_abs(createExecutable(tree.parameters[0]), tree);
             } else if (tree.name === 'log') {
                 return new Praxly_log(createExecutable(tree.parameters[0]), tree);
+            } else if (tree.name == 'sqrt') {
+                return new Praxly_sqrt(createExecutable(tree.parameters[0]), tree);
             } else {
                 throw new Error('unknown builtin function');
             }
@@ -697,6 +699,19 @@ class Praxly_log {
     async evaluate(environment) {
         let evaluated = await this.value.evaluate(environment);
         let newValue = Math.log(evaluated.value);
+        return new litNode_new(evaluated.realType, newValue, this.json);
+    }
+}
+
+class Praxly_sqrt {
+    constructor(value, node) {
+        this.json = node;
+        this.value = value;
+    }
+
+    async evaluate(environment){
+        let evaluated = await this.value.evaluate(environment);
+        let newValue = Math.sqrt(evaluated.value);
         return new litNode_new(evaluated.realType, newValue, this.json);
     }
 }

@@ -322,6 +322,20 @@ export const toolbox = {
               }
             }
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_sqrt_block',
+          'inputs': {
+            'VALUE': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 1
+                }
+              }
+            }
+          }
         }
       ]
     },

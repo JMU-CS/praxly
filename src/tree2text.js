@@ -203,6 +203,9 @@ export const tree2text = (node, indentation) => {
             } else if (node.name === 'log') {
                 const value = tree2text(node.parameters[0], indentation);
                 return `log(${value})`;
+            } else if (node.name = 'sqrt') {
+                const value = tree2text(node.parameters[0], indentation);
+                return `sqrt(${value})`;
             }
         }
 

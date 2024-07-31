@@ -199,6 +199,18 @@ export const makeGenerator = () => {
         });
     }
 
+    praxlyGenerator['praxly_sqrt_block'] = (block) => {
+        const expression = block.getInputTargetBlock('VALUE');
+        return customizeMaybe(block, {
+            name: 'sqrt',
+            blockID: block.id,
+            type: NODETYPES.BUILTIN_FUNCTION_CALL,
+            parameters: [
+                praxlyGenerator[expression.type](expression),
+            ],
+        });
+    }
+
 
     praxlyGenerator['praxly_input_block'] = (block) => {
         return customizeMaybe(block, {

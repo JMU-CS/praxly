@@ -175,6 +175,10 @@ export const tree2blocks = (workspace, node) => {
               result = workspace.newBlock('praxly_log_block');
               const child = tree2blocks(workspace, node?.parameters[0]);
               result.getInput('VALUE').connection.connect(child?.outputConnection);
+            } else if (node.name === 'sqrt') {
+              result = workspace.newBlock('praxly_sqrt_block');
+              const child = tree2blocks(workspace, node?.parameters[0]);
+              result.getInput('VALUE').connection.connect(child?.outputConnection);
             }
             break;
         }
