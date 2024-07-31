@@ -711,6 +711,9 @@ class Praxly_sqrt {
 
     async evaluate(environment){
         let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the square root of type " + evaluated.realType, this.json.line);
+        }
         let newValue = Math.sqrt(evaluated.value);
         return new litNode_new(evaluated.realType, newValue, this.json);
     }
