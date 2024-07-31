@@ -685,6 +685,9 @@ class Praxly_abs {
 
     async evaluate(environment) {
         let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the absolute value of type " + evaluated.realType, this.json.line);
+        }
         let newValue = Math.abs(evaluated.value);
         return new litNode_new(evaluated.realType, newValue, this.json);
     }
@@ -698,6 +701,9 @@ class Praxly_log {
 
     async evaluate(environment) {
         let evaluated = await this.value.evaluate(environment);
+        if (evaluated.realType === NODETYPES.BOOLEAN || evaluated.realType === NODETYPES.STRING || evaluated.realType === NODETYPES.CHAR) {
+            throw new PraxlyError("Cannot take the natural logarithm of type " + evaluated.realType, this.json.line);
+        }
         let newValue = Math.log(evaluated.value);
         return new litNode_new(evaluated.realType, newValue, this.json);
     }
