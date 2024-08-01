@@ -334,22 +334,28 @@ export const tree2blocks = (workspace, node) => {
                 const child = tree2blocks(workspace, node?.args);
                 result.getInput('INDEX').connection.connect(child?.outputConnection);
                 result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            } else if (node.name === 'contains') {
+                result = workspace.newBlock('praxly_contains_block');
+                var recipient = tree2blocks(workspace, node.left); // left side
+                const child = tree2blocks(workspace, node?.args);
+                result.getInput('PARAM').connection.connect(child?.outputConnection);
+                result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
             }
 
 
-            var result = workspace.newBlock('praxly_StringFunc_block');
-            var params = workspace.newBlock('praxly_parameter_block');
-            var recipient = tree2blocks(workspace, node.left);
-            result.setFieldValue(node?.right?.name, 'FUNCTYPE');
-            result.getInput('PARAMS').connection.connect(params?.outputConnection);
-            var argsList = node?.right?.args;
-            for (var i = 0; i < (argsList?.length ?? 0); i++) {
-                params.appendValueInput(`PARAM_${i}`);
-                var argument = tree2blocks(workspace, argsList[i]);
-                params.getInput(`PARAM_${i}`).connection.connect(argument?.outputConnection);
-            }
-            result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
-            params.initSvg();
+            // var result = workspace.newBlock('praxly_StringFunc_block');
+            // var params = workspace.newBlock('praxly_parameter_block');
+            // var recipient = tree2blocks(workspace, node.left);
+            // result.setFieldValue(node?.right?.name, 'FUNCTYPE');
+            // result.getInput('PARAMS').connection.connect(params?.outputConnection);
+            // var argsList = node?.right?.args;
+            // for (var i = 0; i < (argsList?.length ?? 0); i++) {
+            //     params.appendValueInput(`PARAM_${i}`);
+            //     var argument = tree2blocks(workspace, argsList[i]);
+            //     params.getInput(`PARAM_${i}`).connection.connect(argument?.outputConnection);
+            // }
+            // result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            // params.initSvg();
             break;
 
 

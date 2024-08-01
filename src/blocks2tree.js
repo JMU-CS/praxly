@@ -628,26 +628,26 @@ export const makeGenerator = () => {
         })
     }
 
-    praxlyGenerator['praxly_StringFunc_block'] = (block) => {
-        const expression = block.getInputTargetBlock('EXPRESSION');
-        var procedureName = block.getFieldValue('FUNCTYPE');
-        var args = block.getInputTargetBlock('PARAMS');
-        var argschildren = args.getChildren(true);
-        var argsList = [];
-        argschildren.forEach(element => {
-            argsList.push(praxlyGenerator[element.type](element));
-        });
-        return customizeMaybe(block, {
-            blockID: block.id,
-            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
-            right: {
-                name: procedureName,
-                args: argsList,
-                type: NODETYPES.FUNCCALL
-            }
-        })
-    }
+    // praxlyGenerator['praxly_StringFunc_block'] = (block) => {
+    //     const expression = block.getInputTargetBlock('EXPRESSION');
+    //     var procedureName = block.getFieldValue('FUNCTYPE');
+    //     var args = block.getInputTargetBlock('PARAMS');
+    //     var argschildren = args.getChildren(true);
+    //     var argsList = [];
+    //     argschildren.forEach(element => {
+    //         argsList.push(praxlyGenerator[element.type](element));
+    //     });
+    //     return customizeMaybe(block, {
+    //         blockID: block.id,
+    //         type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+    //         left: praxlyGenerator[expression.type](expression),
+    //         right: {
+    //             name: procedureName,
+    //             args: argsList,
+    //             type: NODETYPES.FUNCCALL
+    //         }
+    //     });
+    // }
 
     praxlyGenerator['praxly_charAt_block'] = (block) => {
         const procedureName = StringFuncs.CHARAT;
@@ -660,7 +660,24 @@ export const makeGenerator = () => {
             left: praxlyGenerator[expression.type](expression),
             right: {
                 name: procedureName,
-                args: praxlyGenerator[index.type](index),
+                args: [praxlyGenerator[index.type](index)],
+                type: NODETYPES.FUNCCALL
+            }
+        });
+    }
+
+    praxlyGenerator['praxly_contains_block'] = (block) => {
+        const procedureName = StringFuncs.CONTAINS;
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const param = block.getInputTargetBlock('PARAM');
+        return customizeMaybe(block, {
+            blockID: block.id,
+            name: procedureName,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName,
+                args: [praxlyGenerator[param.type](param)],
                 type: NODETYPES.FUNCCALL
             }
         });

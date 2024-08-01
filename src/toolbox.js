@@ -325,25 +325,25 @@ export const toolbox = {
       "name": "text",
       "categorystyle": "class_blocks",
       "contents": [
-        {
-          'kind': 'block',
-          'type': 'praxly_StringFunc_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '\"hello, world\"',
-                }
-              },
-            },
-            'PARAMS': {
-              'block': {
-                'type': 'praxly_parameter_block',
-              }
-            }
-          }
-        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'praxly_StringFunc_block',
+        //   'inputs': {
+        //     'EXPRESSION': {
+        //       'shadow': {
+        //         'type': 'praxly_literal_block',
+        //         'fields': {
+        //           'LITERAL': '\"hello, world\"',
+        //         }
+        //       },
+        //     },
+        //     'PARAMS': {
+        //       'block': {
+        //         'type': 'praxly_parameter_block',
+        //       }
+        //     }
+        //   }
+        // },
         {
           'kind': 'block',
           'type': 'praxly_charAt_block',
@@ -352,7 +352,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'Literal': '\"hello, world\"',
+                  'LITERAL': '\"hello, world\"',
                 }
               },
             },
@@ -365,7 +365,29 @@ export const toolbox = {
               }
             }
           }
-        }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_contains_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '\"hello, world\"',
+                }
+              },
+            },
+            'PARAM': {
+              'block': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 'value'
+                }
+              }
+            }
+          }
+          }
       ]
     },
     {
