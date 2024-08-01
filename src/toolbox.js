@@ -39,25 +39,6 @@ export const toolbox = {
           'kind': 'block',
           'type': 'praxly_emptyline_block'
         },
-        {
-          'kind': 'block',
-          'type': 'praxly_StringFunc_block',
-          'inputs': {
-            'EXPRESSION': {
-              'shadow': {
-                'type': 'praxly_literal_block',
-                'fields': {
-                  'LITERAL': '\"hello, world\"',
-                }
-              },
-            },
-            'PARAMS': {
-              'block': {
-                'type': 'praxly_parameter_block',
-              }
-            }
-          }
-        }
       ]
     },
     {
@@ -332,6 +313,54 @@ export const toolbox = {
                 'type': 'praxly_literal_block',
                 'fields': {
                   'LITERAL': 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "category",
+      "name": "text",
+      "categorystyle": "class_blocks",
+      "contents": [
+        {
+          'kind': 'block',
+          'type': 'praxly_StringFunc_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '\"hello, world\"',
+                }
+              },
+            },
+            'PARAMS': {
+              'block': {
+                'type': 'praxly_parameter_block',
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_charAt_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'Literal': '\"hello, world\"',
+                }
+              },
+            },
+            'INDEX': {
+              'block': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 0
                 }
               }
             }

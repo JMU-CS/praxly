@@ -1,5 +1,5 @@
 import Blockly from 'blockly';
-import { NODETYPES, TYPES } from './common';
+import { NODETYPES, StringFuncs, TYPES } from './common';
 
 function containsOnlyNumbers(str) {
     return /^-?\d+$/.test(str);
@@ -647,6 +647,23 @@ export const makeGenerator = () => {
                 type: NODETYPES.FUNCCALL
             }
         })
+    }
+
+    praxlyGenerator['praxly_charAt_block'] = (block) => {
+        const procedureName = StringFuncs.CHARAT;
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const index = block.getInputTargetBlock('INDEX');
+        return customizeMaybe(block, {
+            blockID: block.id,
+            name : procedureName,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName,
+                args: praxlyGenerator[index.type](index),
+                type: NODETYPES.FUNCCALL
+            }
+        });
     }
 
     return praxlyGenerator;

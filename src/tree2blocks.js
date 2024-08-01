@@ -327,6 +327,16 @@ export const tree2blocks = (workspace, node) => {
             break;
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
+
+            if (node.name === 'charAt') {
+                result = workspace.newBlock('praxly_charAt_block');
+                var recipient = tree2blocks(workspace, node.left); // left side
+                const child = tree2blocks(workspace, node?.args);
+                result.getInput('INDEX').connection.connect(child?.outputConnection);
+                result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            }
+
+
             var result = workspace.newBlock('praxly_StringFunc_block');
             var params = workspace.newBlock('praxly_parameter_block');
             var recipient = tree2blocks(workspace, node.left);

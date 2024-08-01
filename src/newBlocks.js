@@ -145,39 +145,6 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Blank line in the code",
       "helpUrl": ""
     },
-    { // common 6
-      "type": "praxly_StringFunc_block",
-      "message0": "%1.%2(%3)",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "field_dropdown",
-          "name": "FUNCTYPE",
-          "options": [
-            ["charAt", StringFuncs.CHARAT],
-            ["contains", StringFuncs.CONTAINS],
-            ['indexOf', StringFuncs.INDEXOF],
-            ["length", StringFuncs.LENGTH],
-            ["substring", StringFuncs.SUBSTRING],
-            ["toLowerCase", StringFuncs.TOLOWERCSE],
-            ["toUpperCase", StringFuncs.TOUPPERCASE],
-          ]
-        },
-        {
-          "type": "input_value",
-          "name": "PARAMS",
-          "text": "params"
-        },
-      ],
-      "inputsInline": true,
-      "output": null,
-      "style": 'other_blocks',
-      "tooltip": "String methods:\ncharAt(i) - Returns the character at index i\ncontains(s) - Returns true if s is a substring\nindexOf(s) - Returns the first index of substring s, or -1 if not found\nlength() - Returns the length of the string\nsubstring(i, j) - Extracts characters from index i up to but not including index j\ntoLowerCase() - Converts the string to all lowercase\ntoUpperCase() - Converts the string to all uppercase",
-      "helpUrl": ""
-    },
     { // variables 1
       "type": "praxly_vardecl_block",
       "message0": "%1%2%3",
@@ -613,6 +580,59 @@ export function definePraxlyBlocks(workspace) {
       "style": 'expression_blocks',
       "tooltip": "Calculates the square root",
       "helpURL": ""
+    },
+    { // text 1
+      "type": "praxly_StringFunc_block",
+      "message0": "%1.%2(%3)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "FUNCTYPE",
+          "options": [
+            ["charAt", StringFuncs.CHARAT],
+            ["contains", StringFuncs.CONTAINS],
+            ['indexOf', StringFuncs.INDEXOF],
+            ["length", StringFuncs.LENGTH],
+            ["substring", StringFuncs.SUBSTRING],
+            ["toLowerCase", StringFuncs.TOLOWERCSE],
+            ["toUpperCase", StringFuncs.TOUPPERCASE],
+          ]
+        },
+        {
+          "type": "input_value",
+          "name": "PARAMS",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "String methods:\ncharAt(i) - Returns the character at index i\ncontains(s) - Returns true if s is a substring\nindexOf(s) - Returns the first index of substring s, or -1 if not found\nlength() - Returns the length of the string\nsubstring(i, j) - Extracts characters from index i up to but not including index j\ntoLowerCase() - Converts the string to all lowercase\ntoUpperCase() - Converts the string to all uppercase",
+      "helpUrl": ""
+    },
+    { // text 1
+      "type": "praxly_charAt_block",
+      "message0": "%1.charAt (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "INDEX",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "Returns the character at index i",
+      "helpUrl": ""
     },
     { // logic 1
       "type": "praxly_true_block",
