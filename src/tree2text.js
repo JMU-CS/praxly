@@ -252,7 +252,7 @@ export const tree2text = (node, indentation) => {
             var varname = tree2text(node.location, node.endIndex, indentation);
             var operator = ' ← ';
             var expression = tree2text(node.value, node.endIndex, indentation);
-            return varname + operator + expression;
+            return varname + operator + expression + '\n';
 
         case NODETYPES.VARDECL:
             try {

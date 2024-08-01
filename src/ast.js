@@ -1156,6 +1156,9 @@ class Praxly_codeBlock {
         // for each statement in the block
         for (let i = 0; i < this.praxly_blocks.length; i++) {
             const element = this.praxly_blocks[i];
+            if (element.json === undefined) {
+                throw new PraxlyError("Incomplete code (undefined)", 0);  // no line number
+            }
             // skip elements that have no effect
             if (element.json.type == NODETYPES.NEWLINE || element.json.type === NODETYPES.COMMENT || element.json.type === NODETYPES.SINGLE_LINE_COMMENT) {
                 continue;

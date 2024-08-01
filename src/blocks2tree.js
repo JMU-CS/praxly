@@ -243,6 +243,10 @@ export const makeGenerator = () => {
         })
     }
 
+    // NOTE: praxly_literal_block and praxly_variable_block work the same way.
+    // The only differences are the color of the outline and the error message
+    // when invalid. Ideally this code would not be duplicated.
+
     praxlyGenerator['praxly_literal_block'] = (block) => {
         const input = block.getFieldValue('LITERAL');
         const node = {
@@ -401,6 +405,7 @@ export const makeGenerator = () => {
         })
     }
 
+    // Note: declaration and assignment
     praxlyGenerator['praxly_assignment_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
         var variableName = block.getFieldValue('VARIABLENAME');
@@ -448,7 +453,6 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_reassignment_block'] = (block) => {
-        var varType = block.getFieldValue('VARTYPE');
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var value = praxlyGenerator[expression.type](expression);
@@ -457,7 +461,10 @@ export const makeGenerator = () => {
             name: variableName,
             value: value,
             blockID: block.id,
-            varType: 'reassignment'
+            location: {
+                name: variableName,
+                type: NODETYPES.LOCATION,
+            },
         })
     }
 
@@ -476,6 +483,7 @@ export const makeGenerator = () => {
         })
     }
 
+    // declaration and assignment (Ex: in a for loop)
     praxlyGenerator['praxly_assignment_expression_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
         var variableName = block.getFieldValue('VARIABLENAME');
@@ -495,18 +503,16 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_reassignment_expression_block'] = (block) => {
-        var varType = block.getFieldValue('VARTYPE');
         var location = block.getInputTargetBlock('LOCATION');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var loc = praxlyGenerator[location.type](location);
-        var value = praxlyGenerator[expression?.type](expression);
+        var value = praxlyGenerator[expression.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.ASSIGNMENT,
             name: loc.name,
             location: loc,
             value: value,
             blockID: block.id,
-            varType: varType,
         })
     }
 

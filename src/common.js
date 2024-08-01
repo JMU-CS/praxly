@@ -44,7 +44,6 @@ export const OP = {
     DIVISION:                       "DIVISION",
     MODULUS:                        "MODULUS",
     EXPONENTIATION:                 "EXPONENTIATION",
-    ASSIGNMENT:                     "ASSIGNMENT",
     EQUALITY:                       "EQUALITY",
     INEQUALITY:                     "INEQUALITY",
     GREATER_THAN:                   "GREATER THAN",
