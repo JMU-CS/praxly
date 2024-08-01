@@ -43,7 +43,7 @@ class Lexer {
     this.length = this.source?.length;
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
-    this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
+    this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", "←", "⟵", "≥", "≤"];
     this.builtins = ['input', 'random', 'randomInt', 'randomSeed', 'int', 'float', 'min', 'max', 'abs', 'log', 'sqrt'];
     this.keywords = ["if", "else", "end", "print", "for", "while", 'and', 'or', 'do', 'repeat',
       'until', 'not', 'return', 'null'];
@@ -167,29 +167,37 @@ class Lexer {
 
       if (this.has('\'')) {
         this.skip();
-        if (this.has_letter && this.has_ahead('\'')) {
+        while (this.i < this.length && !this.has("\'") && !this.has("\n")) {
           this.capture();
-          this.skip();
+        }
+        if (!this.has("\'")) {
+          textError('lexing', 'looks like you didn\'t close your quotes on your char. \n \tRemember chars start and end with a single quote mark (\').', this.currentLine);
+          this.token_so_far = "?";
           this.emit_token(NODETYPES.CHAR);
           continue;
         }
-        textError('lexing', 'looks like you didn\'t close your quotes on your char. \n \tRemember chars start and end with a single quote mark (\').', this.currentLine);
+        this.skip();  // close single quote
+        const length = this.token_so_far.length;
+        if (this.token_so_far.length != 1) {
+          textError('lexing', 'incorrect character length: ' + length, this.currentLine);
+          this.token_so_far = "?";
+        }
+        this.emit_token(NODETYPES.CHAR);
+        continue;
       }
 
       if (this.has("\"")) {
-        var stringStart = this.currentLine;
         this.skip();
         while (this.i < this.length && !this.has("\"") && !this.has("\n")) {
           this.capture();
         }
-        if (this.has("\"")) {
-          this.skip();
+        if (!this.has("\"")) {
+          textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a double quote mark (\").', this.currentLine);
+          this.token_so_far = "?";
           this.emit_token(NODETYPES.STRING);
           continue;
         }
-        textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a double quote mark (\").', stringStart);
-        this.i -= 1;
-        this.token_so_far = "";
+        this.skip();  // close double quote
         this.emit_token(NODETYPES.STRING);
         continue;
       }
