@@ -514,8 +514,9 @@ async function runTasks(startDebug) {
   textEditor.focus();
 }
 
+
 export function turnCodeToBlocks() {
-  // I need to make the listeners only be one at a time to prevent an infinite loop.
+  // only one listener at a time to prevent infinite loop
   workspace.removeChangeListener(onBlocklyChange);
   if (getDebugMode()) {
     stopButton.click();
@@ -528,6 +529,7 @@ export function turnCodeToBlocks() {
     console.log(mainTree);
   }
 
+  // update block side to match
   workspace.clear();
   tree2blocks(workspace, mainTree);
   workspace.render();
@@ -542,11 +544,20 @@ function onBlocklyChange(event) {
 }
 
 function turnBlocksToCode() {
+  // only one listener at a time to prevent infinite loop
   textEditor.removeEventListener("input", turnCodeToBlocks);
+  if (getDebugMode()) {
+    stopButton.click();
+  }
+
+  // this is where block compiling begins
+  clearErrors();
   mainTree = blocks2tree(workspace, praxlyGenerator);
   if (DEV_LOG) {
     console.log(mainTree);
   }
+
+  // update text side to match
   const text = tree2text(mainTree, 0, 0);
   textEditor.setValue(text, -1);
 };
