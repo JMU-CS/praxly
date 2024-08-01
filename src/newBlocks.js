@@ -165,7 +165,7 @@ export function definePraxlyBlocks(workspace) {
         {
           "type": "field_input",
           "name": "VARIABLENAME",
-          "text": "VariableName"
+          "text": "variableName"
         },
         {
           "type": "input_dummy"
@@ -198,7 +198,7 @@ export function definePraxlyBlocks(workspace) {
         {
           "type": "field_input",
           "name": "VARIABLENAME",
-          "text": "VariableName"
+          "text": "variableName"
         },
         {
           "type": "input_value",
@@ -222,7 +222,7 @@ export function definePraxlyBlocks(workspace) {
         {
           "type": "field_input",
           "name": "VARIABLENAME",
-          "text": "VariableName"
+          "text": "variableName"
         },
         {
           "type": "input_value",
