@@ -64,7 +64,7 @@ function checkArity(node, expectedArity) {
 export function createExecutable(tree) {
     if (typeof tree === 'undefined' || typeof tree.type === 'undefined') {
         if (errorOutput.length === 0) {
-            defaultError("invalid program.");
+            defaultError("invalid program (abstract syntax tree is undefined)");
         }
         return new Praxly_invalid(tree);
     }

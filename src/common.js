@@ -94,7 +94,7 @@ export const MAX_LOOP = 100;  // prevents accidental infinite loops
 // this is the special Error type that is thrown when there is in error in the IDE.
 export class PraxlyError extends Error {
     constructor(message, line) {
-        super(`runtime error occurred on line ${line}:\n\t${message}`);
+        super("runtime error occurred on line " + line + ":<br>" + message);
         textError("runtime", message, line);
     }
 }
@@ -110,14 +110,17 @@ export function textError(type, message, line) {
     if (errorOutput) {
         errorOutput += "<br><br>";
     }
-    errorOutput += `${type} error occurred on line ${line}:\n\t${message}`;
+    errorOutput += type + " error occurred on line " + line + ":<br>" + message;
 }
 
 export function defaultError(message) {
     if (errorOutput) {
         errorOutput += "<br><br>";
     }
-    errorOutput += `${message}<br><br>We have not written an error message for this issue yet.`;
+    errorOutput += message
+        + '<br><br><br>Will you please submit a '
+        + '<a href="https://forms.gle/ULnV7mxYjrqjx8ATA" target="_blank">bug report</a>'
+        + ' for this error?';
 }
 
 export function clearErrors() {

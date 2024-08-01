@@ -493,9 +493,8 @@ async function runTasks(startDebug) {
       // special case: abort running (not an error)
       clear();
     } else if (!errorOutput) {
-      // error not previously handled (by PraxlyError)
+      // error not previously handled by PraxlyError
       defaultError(error);
-      console.error(error);
     }
   }
 
