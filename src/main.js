@@ -493,6 +493,7 @@ async function runTasks(startDebug) {
       clear();
     } else if (!errorOutput) {
       // error not previously handled by PraxlyError
+      console.error(error);
       defaultError(error);
     }
   }

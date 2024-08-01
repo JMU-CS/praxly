@@ -31,7 +31,7 @@ export const blocks2tree = (workspace, generator) => {
 }
 
 function customizeMaybe(block, node) {
-    if (block.data) {
+    if (block?.data) {
         const data = JSON.parse(block.data);
         if (data.isParenthesized) {
             node = {
@@ -47,6 +47,10 @@ function customizeMaybe(block, node) {
 export const makeGenerator = () => {
     const praxlyGenerator = [];
 
+    praxlyGenerator[undefined] = (block) => {
+        return null;  // incomplete block
+    }
+
     praxlyGenerator['codeBlockJsonBuilder'] = (headBlock) => {
         var codeblock = {
             type: NODETYPES.CODEBLOCK,
@@ -54,11 +58,13 @@ export const makeGenerator = () => {
         }
         var statements = [];
         let currentBlock = headBlock;
-        while (currentBlock.getNextBlock() != null) {
+        if (currentBlock) {
+            while (currentBlock.getNextBlock() != null) {
+                statements.push(praxlyGenerator[currentBlock.type](currentBlock));
+                currentBlock = currentBlock.getNextBlock();
+            }
             statements.push(praxlyGenerator[currentBlock.type](currentBlock));
-            currentBlock = currentBlock.getNextBlock();
         }
-        statements.push(praxlyGenerator[currentBlock.type](currentBlock));
         codeblock.statements = statements;
         return customizeMaybe(headBlock, codeblock);
     }
@@ -81,7 +87,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             blockID: block.id,
             type: 'PRINT',
-            value: praxlyGenerator[expression.type](expression),
+            value: praxlyGenerator[expression?.type](expression),
             comment: block.getCommentText(),
         })
     }
@@ -222,7 +228,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             blockID: block.id,
             type: NODETYPES.STATEMENT,
-            value: praxlyGenerator[expression.type](expression),
+            value: praxlyGenerator[expression?.type](expression),
         })
     }
 
@@ -362,7 +368,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             type: NODETYPES.IF,
             blockID: block.id,
-            condition: praxlyGenerator[condition.type](condition),
+            condition: praxlyGenerator[condition?.type](condition),
             statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
         })
     }
@@ -374,7 +380,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             type: NODETYPES.IF_ELSE,
             blockID: block.id,
-            condition: praxlyGenerator[condition.type](condition),
+            condition: praxlyGenerator[condition?.type](condition),
             statement: praxlyGenerator['codeBlockJsonBuilder'](statements),
             alternative: praxlyGenerator['codeBlockJsonBuilder'](alternative),
         })
@@ -459,8 +465,8 @@ export const makeGenerator = () => {
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var indexInput = block.getInputTargetBlock('INDEX');
-        var value = praxlyGenerator[expression.type](expression);
-        var index = praxlyGenerator[indexInput.type](indexInput);
+        var value = praxlyGenerator[expression?.type](expression);
+        var index = praxlyGenerator[indexInput?.type](indexInput);
         return customizeMaybe(block, {
             type: NODETYPES.ARRAY_REFERENCE_ASSIGNMENT,
             name: variableName,
@@ -493,7 +499,7 @@ export const makeGenerator = () => {
         var location = block.getInputTargetBlock('LOCATION');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var loc = praxlyGenerator[location.type](location);
-        var value = praxlyGenerator[expression.type](expression);
+        var value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.ASSIGNMENT,
             name: loc.name,
@@ -510,7 +516,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             type: NODETYPES.WHILE,
             blockID: block.id,
-            condition: praxlyGenerator[condition.type](condition),
+            condition: praxlyGenerator[condition?.type](condition),
             statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
         });
     }
@@ -521,7 +527,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             type: NODETYPES.DO_WHILE,
             blockID: block.id,
-            condition: praxlyGenerator[condition.type](condition),
+            condition: praxlyGenerator[condition?.type](condition),
             statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
         });
     }
@@ -532,7 +538,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             type: NODETYPES.REPEAT_UNTIL,
             blockID: block.id,
-            condition: praxlyGenerator[condition.type](condition),
+            condition: praxlyGenerator[condition?.type](condition),
             statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
         });
     }
@@ -542,7 +548,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             blockID: block.id,
             type: NODETYPES.NOT,
-            value: praxlyGenerator[expression.type](expression),
+            value: praxlyGenerator[expression?.type](expression),
         })
     }
 
@@ -563,10 +569,10 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             type: NODETYPES.FOR,
             blockID: block.id,
-            initialization: praxlyGenerator[initialization.type](initialization),
+            initialization: praxlyGenerator[initialization?.type](initialization),
             statement: praxlyGenerator['codeBlockJsonBuilder'](statements),
-            increment: praxlyGenerator[reassignment.type](reassignment),
-            condition: praxlyGenerator[condition.type](condition),
+            increment: praxlyGenerator[reassignment?.type](reassignment),
+            condition: praxlyGenerator[condition?.type](condition),
         });
     }
 
@@ -615,7 +621,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             blockID: block.id,
             type: NODETYPES.RETURN,
-            value: praxlyGenerator[expression.type](expression),
+            value: praxlyGenerator[expression?.type](expression),
         })
     }
 

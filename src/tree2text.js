@@ -2,7 +2,7 @@ import { NODETYPES, TYPES } from "./common";
 import { text2tree } from "./text2tree";
 
 export const tree2text = (node, indentation) => {
-    if (!node.type) {
+    if (!node?.type) {
         return;  // undefined
     }
 
