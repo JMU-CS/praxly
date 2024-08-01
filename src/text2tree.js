@@ -10,8 +10,6 @@ export function text2tree() {
   let lexer = new Lexer(code);
   let ir;
   let tokens = lexer.lex();
-  // console.info('here are the tokens:');
-  // console.debug(tokens);
   let parser = new Parser(tokens);
   ir = parser?.parse();
   return ir;
@@ -124,13 +122,9 @@ class Lexer {
 
   emit_token(type = null) {
     var endIndex = this.i - this.index_before_this_line;
-    // console.error(endIndex);
     this.tokens.push(new Token(type ?? this.token_so_far, this.token_so_far, this.currentLine, this.startToken, [this.currentLine, endIndex]));
     this.token_so_far = '';
-
-    // console.error([this.currentLine, endIndex]);
     this.startToken = [this.currentLine, endIndex];
-    // console.error(this.startToken);
   }
 
   /**
@@ -422,7 +416,7 @@ class Parser {
         type = OP.OR;
         break;
       default:
-        // handle unknown type
+        textError('parsing', 'invalid operator ' + operation, line);
         break;
     }
     return {
@@ -962,7 +956,6 @@ class Parser {
           }
         }
       }
-      console.log(`parser messing up, current token is ${this.tokens[this.i].token_type}`);
       return result;
     }
 
@@ -1107,12 +1100,6 @@ class Parser {
     else {
       // this is a stand alone expression as a statement.
       let contents = this.parse_expression(9);
-
-      // if (!contents?.startIndex ?? false){
-      //   console.error(this.getCurrentToken());
-      //   console.error(this.tokens[this.i + 1]);
-      // }
-
       if (this.has(';')) {
         this.advance();
       }

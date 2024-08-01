@@ -13,7 +13,6 @@ function isValidIdentifier(str) {
 export const blocks2tree = (workspace, generator) => {
     var topBlocks = workspace.getTopBlocks();
 
-    // console.error(topBlocks);
     if (topBlocks.length === 0) {
         return {
             type: NODETYPES.PROGRAM,
@@ -49,9 +48,6 @@ export const makeGenerator = () => {
     const praxlyGenerator = [];
 
     praxlyGenerator['codeBlockJsonBuilder'] = (headBlock) => {
-        // console.log('this is the head block');
-        // console.log(headBlock);
-
         var codeblock = {
             type: NODETYPES.CODEBLOCK,
             blockID: "blocks[]",
@@ -419,7 +415,6 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_array_assignment_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        // console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var args = block.getInputTargetBlock('EXPRESSION');
         var argschildren = args.getChildren(true);
@@ -448,7 +443,6 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_reassignment_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        // console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var value = praxlyGenerator[expression.type](expression);
@@ -478,7 +472,6 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_assignment_expression_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        // console.log(`field input is ${varType}`);
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var value = praxlyGenerator[expression.type](expression);
@@ -497,7 +490,6 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_reassignment_expression_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
-        // console.log(`field input is ${varType}`);
         var location = block.getInputTargetBlock('LOCATION');
         var expression = block.getInputTargetBlock('EXPRESSION');
         var loc = praxlyGenerator[location.type](location);
@@ -580,7 +572,6 @@ export const makeGenerator = () => {
 
     praxlyGenerator['praxly_procedure_block'] = (block) => {
         var returnType = block.getFieldValue('RETURNTYPE');
-        // console.log(`field input is ${varType}`);
         var args = block.getInputTargetBlock('PARAMS');
         var argschildren = args.getChildren(true);
         var argsList = [];

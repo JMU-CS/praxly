@@ -191,10 +191,9 @@ export function consoleInput() {
  * @returns the marker id associated with the marker. This should not be needed.
  */
 export function highlightAstNode(environment, node) {
-    // console.log(`attempting to highlight index [${node.startIndex[0]},${ node.startIndex[1]}] to [${ node.endIndex[0]}, ${ node.endIndex[1] - 1}]`)
     var session = textEditor.session;
 
-    // var errorRange = indextoAceRange(line - 1);
+    // var errorRange = indexToAceRange(line - 1);
     var Range = ace.require('ace/range').Range;
     if (DEV_LOG) {
         console.log(`attempting to highlight: `, node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
@@ -286,5 +285,5 @@ export function comingSoon() {
 }
 
 
-//this will let information that I deemed important to be logged to the console.
+// this will let information deemed important to be logged to the console
 export const DEV_LOG = false;

@@ -64,7 +64,6 @@ export async function generateVariableTable(environment, level) {
     }
     let parent = environment.parent;
     const variableList = environment.variableList;
-    // console.error(variableList);
     for (const key in variableList) {
         if (Object.hasOwnProperty.call(variableList, key)) {
             const value = variableList[key];

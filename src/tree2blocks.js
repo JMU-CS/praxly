@@ -18,7 +18,7 @@ function connectStatements(statements) {
             }
         }
         else {
-            console.log("connection failed");
+            console.error("connection failed");
         }
     }
 }
@@ -189,10 +189,9 @@ export const tree2blocks = (workspace, node) => {
                     return tree2blocks(workspace, element);
                 }
                 catch (error) {
-                    console.error('An error occurred: empty statement', error);
+                    console.error('empty statement', error);
                     return null;
                 }
-
             });
             connectStatements(statements);
             return statements;
@@ -404,7 +403,7 @@ export const tree2blocks = (workspace, node) => {
                 }
             }
             catch (error) {
-                console.error('An error occurred: could not generate the nested block', error);
+                console.error('could not generate nested block', error);
                 initialization?.dispose();
                 increment?.dispose(); // the question marks here helped the for loop block generate when just typing
                 // the word "for", giving a little bit of predictive block rendering.

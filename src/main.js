@@ -226,7 +226,6 @@ function registerListeners() {
       // Prevent the default save action (e.g., opening the save dialog, reloading the page)
       event.preventDefault();
       runTasks(false);
-      // console.log(trees);
     }
   });
 

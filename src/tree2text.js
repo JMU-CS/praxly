@@ -227,8 +227,7 @@ export const tree2text = (node, indentation) => {
                 try {
                     return tree2text(element, indentation);
                 } catch (error) {
-                    console.error('An error occurred: empty statement', error);
-                    return null;
+                    return " ";
                 }
             });
             return statements.join('');
@@ -267,7 +266,6 @@ export const tree2text = (node, indentation) => {
                     return '    '.repeat(indentation) + varname + '\n';
                 }
             } catch (error) {
-                console.error(error);
                 return " ";
             }
 
@@ -386,8 +384,7 @@ export const tree2text = (node, indentation) => {
                 result += '}\n';
                 return '    '.repeat(indentation) + varname + operator + result;
             } catch (error) {
-                console.error(error);
-                return "assignment for arrays broke";
+                return " ";
             }
 
         case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
@@ -402,7 +399,7 @@ export const tree2text = (node, indentation) => {
             }
 
         default:
-            console.warn("Unknown node.type:" + node.type);
-            break;
+            console.error("unknown node type " + node.type);
+            return " ";
     }
 }
