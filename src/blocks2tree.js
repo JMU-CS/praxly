@@ -97,7 +97,7 @@ export const makeGenerator = () => {
             name: 'random',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [],
+            args: [],
         });
     }
 
@@ -107,7 +107,7 @@ export const makeGenerator = () => {
             name: 'randomInt',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
               praxlyGenerator[expression.type](expression),
             ],
         });
@@ -119,7 +119,7 @@ export const makeGenerator = () => {
             name: 'randomSeed',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
               praxlyGenerator[expression.type](expression),
             ],
         });
@@ -131,7 +131,7 @@ export const makeGenerator = () => {
             name: 'int',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
               praxlyGenerator[expression.type](expression),
             ],
         });
@@ -143,7 +143,7 @@ export const makeGenerator = () => {
             name: 'float',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
               praxlyGenerator[expression.type](expression),
             ],
         });
@@ -156,7 +156,7 @@ export const makeGenerator = () => {
             name: 'min',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
                 praxlyGenerator[expression.type](expression),
                 praxlyGenerator[expression2.type](expression2),
             ],
@@ -170,7 +170,7 @@ export const makeGenerator = () => {
             name: 'max',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
                 praxlyGenerator[expression.type](expression),
                 praxlyGenerator[expression2.type](expression2),
             ],
@@ -183,7 +183,7 @@ export const makeGenerator = () => {
             name: 'abs',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
                 praxlyGenerator[expression.type](expression),
             ],
         });
@@ -195,7 +195,7 @@ export const makeGenerator = () => {
             name: 'log',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
                 praxlyGenerator[expression.type](expression),
             ],
         });
@@ -207,7 +207,7 @@ export const makeGenerator = () => {
             name: 'sqrt',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [
+            args: [
                 praxlyGenerator[expression.type](expression),
             ],
         });
@@ -219,7 +219,7 @@ export const makeGenerator = () => {
             name: 'input',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
-            parameters: [],
+            args: [],
         });
     }
 

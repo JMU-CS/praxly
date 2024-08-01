@@ -705,15 +705,15 @@ class Parser {
     if (this.has('(')) {
       this.advance();
 
-      // Expect 0 or more parameters.
-      const parameters = [];
+      // Expect 0 or more arguments.
+      const args = [];
       if (this.hasNot(')')) {
         const parameter = this.parse_expression(9);
-        parameters.push(parameter);
+        args.push(parameter);
         while (this.has(',')) {
           this.advance();
           const parameter = this.parse_expression(9);
-          parameters.push(parameter);
+          args.push(parameter);
         }
       }
 
@@ -723,7 +723,7 @@ class Parser {
           blockID: "code",
           name: nameToken.value,
           line,
-          parameters,
+          args,
           type: NODETYPES.BUILTIN_FUNCTION_CALL,
           startIndex: nameToken.startIndex,
           endIndex: rightParenthesisToken.endIndex,

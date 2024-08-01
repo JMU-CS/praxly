@@ -137,47 +137,43 @@ export const tree2blocks = (workspace, node) => {
               result = workspace.newBlock('praxly_random_block');
             } else if (node.name === 'randomInt') {
               result = workspace.newBlock('praxly_random_int_block');
-              const child = tree2blocks(workspace, node?.parameters[0]);
+              const child = tree2blocks(workspace, node?.args[0]);
               result.getInput('MAX').connection.connect(child?.outputConnection);
             } else if (node.name === 'randomSeed') {
               result = workspace.newBlock('praxly_random_seed_block');
-              const child = tree2blocks(workspace, node?.parameters[0]);
+              const child = tree2blocks(workspace, node?.args[0]);
               result.getInput('SEED').connection.connect(child?.outputConnection);
             } else if (node.name === 'int') {
               result = workspace.newBlock('praxly_int_conversion_block');
-              const child = tree2blocks(workspace, node?.parameters[0]);
+              const child = tree2blocks(workspace, node?.args[0]);
               result.getInput('CONVERSION').connection.connect(child?.outputConnection);
             } else if (node.name === 'float') {
               result = workspace.newBlock('praxly_float_conversion_block');
-              const child = tree2blocks(workspace, node?.parameters[0]);
+              const child = tree2blocks(workspace, node?.args[0]);
               result.getInput('CONVERSION').connection.connect(child?.outputConnection);
             } else if (node.name === 'min') {
               result = workspace.newBlock('praxly_min_block');
-
-              const child1 = tree2blocks(workspace, node?.parameters[0]);
+              const child1 = tree2blocks(workspace, node?.args[0]);
               result.getInput('A_MIN').connection.connect(child1?.outputConnection);
-
-              const child2 = tree2blocks(workspace, node?.parameters[1]);
+              const child2 = tree2blocks(workspace, node?.args[1]);
               result.getInput('B_MIN').connection.connect(child2?.outputConnection);
             } else if (node.name === 'max') {
               result = workspace.newBlock('praxly_max_block');
-
-              const child1 = tree2blocks(workspace, node?.parameters[0]);
+              const child1 = tree2blocks(workspace, node?.args[0]);
               result.getInput('A_MAX').connection.connect(child1?.outputConnection);
-
-              const child2 = tree2blocks(workspace, node?.parameters[1]);
+              const child2 = tree2blocks(workspace, node?.args[1]);
               result.getInput('B_MAX').connection.connect(child2?.outputConnection);
             } else if (node.name === 'abs') {
               result = workspace.newBlock('praxly_abs_block');
-              const child = tree2blocks(workspace, node?.parameters[0]);
+              const child = tree2blocks(workspace, node?.args[0]);
               result.getInput('VALUE').connection.connect(child?.outputConnection);
             } else if (node.name === 'log') {
               result = workspace.newBlock('praxly_log_block');
-              const child = tree2blocks(workspace, node?.parameters[0]);
+              const child = tree2blocks(workspace, node?.args[0]);
               result.getInput('VALUE').connection.connect(child?.outputConnection);
             } else if (node.name === 'sqrt') {
               result = workspace.newBlock('praxly_sqrt_block');
-              const child = tree2blocks(workspace, node?.parameters[0]);
+              const child = tree2blocks(workspace, node?.args[0]);
               result.getInput('VALUE').connection.connect(child?.outputConnection);
             }
             break;

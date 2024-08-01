@@ -178,33 +178,33 @@ export const tree2text = (node, indentation) => {
             } else if (node.name === 'random') {
                 return "random()";
             } else if (node.name === 'randomInt') {
-                const max = tree2text(node.parameters[0], indentation);
+                const max = tree2text(node.args[0], indentation);
                 return `randomInt(${max})`;
             } else if (node.name === 'randomSeed') {
-                const seed = tree2text(node.parameters[0], indentation);
+                const seed = tree2text(node.args[0], indentation);
                 return `randomSeed(${seed})`;
             } else if (node.name === 'int') {
-                const conversion = tree2text(node.parameters[0], indentation);
+                const conversion = tree2text(node.args[0], indentation);
                 return `int(${conversion})`;
             } else if (node.name === 'float') {
-                const conversion = tree2text(node.parameters[0], indentation);
+                const conversion = tree2text(node.args[0], indentation);
                 return `float(${conversion})`;
             } else if (node.name === 'min') {
-                const a_value = tree2text(node.parameters[0], indentation);
-                const b_value = tree2text(node.parameters[1], indentation);
+                const a_value = tree2text(node.args[0], indentation);
+                const b_value = tree2text(node.args[1], indentation);
                 return "min(" + a_value + ", " + b_value + ")";
             } else if (node.name === 'max') {
-                const a_value = tree2text(node.parameters[0], indentation);
-                const b_value = tree2text(node.parameters[1], indentation);
+                const a_value = tree2text(node.args[0], indentation);
+                const b_value = tree2text(node.args[1], indentation);
                 return "max(" + a_value + ", " + b_value + ")";
             } else if (node.name === 'abs') {
-                const value = tree2text(node.parameters[0], indentation);
+                const value = tree2text(node.args[0], indentation);
                 return `abs(${value})`;
             } else if (node.name === 'log') {
-                const value = tree2text(node.parameters[0], indentation);
+                const value = tree2text(node.args[0], indentation);
                 return `log(${value})`;
             } else if (node.name = 'sqrt') {
-                const value = tree2text(node.parameters[0], indentation);
+                const value = tree2text(node.args[0], indentation);
                 return `sqrt(${value})`;
             }
         }

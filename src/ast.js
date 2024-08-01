@@ -50,8 +50,9 @@ class ReturnException extends Error {
 }
 
 function checkArity(node, expectedArity) {
-    if (node.parameters.length !== expectedArity) {
-        throw new PraxlyError(`Function ${node.name} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${node.parameters.length}.`, node.line);
+    const actualArity = node.args.length;
+    if (actualArity !== expectedArity) {
+        throw new PraxlyError(`Function ${node.name} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${actualArity}.`, node.line);
     }
 }
 
@@ -146,26 +147,31 @@ export function createExecutable(tree) {
                 return new Praxly_random(tree);
             } else if (tree.name === 'randomInt') {
                 checkArity(tree, 1);
-                return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_random_int(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'randomSeed') {
                 checkArity(tree, 1);
-                return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_random_seed(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'int') {
                 checkArity(tree, 1);
-                return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_int_conversion(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'float') {
                 checkArity(tree, 1);
-                return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_float_conversion(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'min') {
-                return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+                checkArity(tree, 2);
+                return new Praxly_min(createExecutable(tree.args[0]), createExecutable(tree.args[1]), tree);
             } else if (tree.name === 'max') {
-                return new Praxly_max(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+                checkArity(tree, 2);
+                return new Praxly_max(createExecutable(tree.args[0]), createExecutable(tree.args[1]), tree);
             } else if (tree.name === 'abs') {
-                return new Praxly_abs(createExecutable(tree.parameters[0]), tree);
+                checkArity(tree, 1);
+                return new Praxly_abs(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'log') {
-                return new Praxly_log(createExecutable(tree.parameters[0]), tree);
+                checkArity(tree, 1);
+                return new Praxly_log(createExecutable(tree.args[0]), tree);
             } else if (tree.name == 'sqrt') {
-                return new Praxly_sqrt(createExecutable(tree.parameters[0]), tree);
+                checkArity(tree, 1);
+                return new Praxly_sqrt(createExecutable(tree.args[0]), tree);
             } else {
                 throw new PraxlyError("unknown builtin function: " + tree.name, tree.line);
             }
