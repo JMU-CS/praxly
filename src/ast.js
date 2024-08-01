@@ -178,6 +178,23 @@ export function createExecutable(tree) {
         }
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
+            switch (tree.right.name) {
+                case StringFuncs.LENGTH:
+                case StringFuncs.TOLOWERCSE:
+                case StringFuncs.TOUPPERCASE:
+                    checkArity(tree.right, 0);
+                    break;
+                case StringFuncs.CHARAT:
+                case StringFuncs.CONTAINS:
+                case StringFuncs.INDEXOF:
+                    checkArity(tree.right, 1);
+                    break;
+                case StringFuncs.SUBSTRING:
+                    checkArity(tree.right, 2);
+                    break;
+                default:
+                    throw new PraxlyError("unknown string method: " + tree.right.name, tree.line);
+            }
             var args = [];
             tree.right.args.forEach((arg) => {
                 args.push(createExecutable(arg));
