@@ -248,12 +248,14 @@ export const tree2text = (node, indentation) => {
                 '    '.repeat(indentation) + 'end if\n';
             return result + condition + contents + alternative;
 
+        // Note: reassignment (either a statement or in a for loop)
         case NODETYPES.ASSIGNMENT:
             var varname = tree2text(node.location, node.endIndex, indentation);
             var operator = ' ← ';
             var expression = tree2text(node.value, node.endIndex, indentation);
             return varname + operator + expression + '\n';
 
+        // Note: declaration and assignment (possibly in a for loop)
         case NODETYPES.VARDECL:
             try {
                 var vartype = node.varType.toString();
@@ -304,7 +306,7 @@ export const tree2text = (node, indentation) => {
             initialization = initialization.replace("\n", "") + '; ';
             var condition = tree2text(node.condition, 0) + '; ';
             var increment = tree2text(node.increment, 0);
-            increment = increment + ")\n";
+            increment = increment.replace("\n", "") + ')\n';
             var contents = '    '.repeat(indentation) + tree2text(node.statement, indentation + 1) +
                 '    '.repeat(indentation) + 'end for\n';
             return result + initialization + condition + increment + contents;

@@ -225,10 +225,12 @@ class Lexer {
         this.emit_token(NODETYPES.INT);
         continue;
       }
+
       if (this.has(' ')) {
         this.skip();
         continue;
       }
+
       if (this.has("\n")) {
         this.capture();
         this.emit_token("\n");
@@ -237,21 +239,26 @@ class Lexer {
         this.startToken = [this.currentLine, this.i - this.index_before_this_line];
         continue;
       }
+
       if (!this.has_letter()) {
         textError('lexing', `unrecognized character \"${this.source[this.i]}\"`, this.i, this.i + 1);
         break;
       }
+
       while (this.i < this.length && (this.has_letter() || this.has_digit())) {
         this.capture();
       }
+
       if (this.has_type()) {
         this.emit_token('Type');
         continue;
       }
+
       if (this.has_builtin()) {
         this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
         continue;
       }
+
       if (this.token_so_far === 'end') {
         while (this.hasNot('\n')) {
           this.capture();
@@ -259,20 +266,24 @@ class Lexer {
         this.emit_token();
         continue;
       }
+
       if (this.has_boolean()) {
         this.emit_token(NODETYPES.BOOLEAN);
         continue;
       }
+
       if (this.has_keyword()) {
         this.emit_token();
         continue;
       }
       this.emit_token('Location');
     }
+
     this.emit_token("EOF");
     return this.tokens;
   }
 }
+
 
 class Parser {
 
@@ -304,7 +315,6 @@ class Parser {
     return this.i < this.length && types.includes(this.tokens[this.i].token_type);
   }
 
-
   hasNotAny() {
     var types = Array.prototype.slice.call(arguments);
     return this.i < this.length && !types.includes(this.tokens[this.i].token_type);
@@ -325,6 +335,7 @@ class Parser {
   has_keyword() {
     return this.keywords.includes(this.tokens[this.i].token_type);
   }
+
   has_statementKeyword() {
     return this.statementKeywords.includes(this.tokens[this.i].token_type);
   }
@@ -348,8 +359,6 @@ class Parser {
     }
     return this.parse_program();
   }
-
-
 
   /**
    * This function creates new nodes for the AST for any binary operation
@@ -425,12 +434,10 @@ class Parser {
       left: l,
       right: r,
       type: type,
-      startIndex: l.startIndex,
-      endIndex: r.endIndex,
+      startIndex: l?.startIndex,
+      endIndex: r?.endIndex,
     }
   }
-
-
 
   /**
    * Creates a new node for literal values in the AST.
@@ -473,7 +480,7 @@ class Parser {
       value: expression,
       type: type,
       startIndex: startIndex,
-      endIndex: expression.endIndex,
+      endIndex: expression?.endIndex,
     }
   }
 
@@ -488,6 +495,7 @@ class Parser {
     let startIndex = this.getCurrentToken().startIndex;
     let endIndex = this.getCurrentToken().endIndex;
     switch (precedence) {
+
       case 9:
         var l = this.parse_expression(precedence - 1);
         while (this.has("or")) {
@@ -498,6 +506,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 8:
         var l = this.parse_expression(precedence - 1);
         while (this.has("and")) {
@@ -519,6 +528,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 6:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('+', '-')) {
@@ -529,6 +539,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 5:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('*', '/', '%')) {
@@ -539,6 +550,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 4:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('^')) {
@@ -581,7 +593,7 @@ class Parser {
         }
         return l;
 
-      //This one gets really complicated
+      // This one gets really complicated
       case 1:
         switch (operation) {
           case 'EOF':
@@ -619,7 +631,7 @@ class Parser {
               textError('parsing', 'did not detect closing parentheses', line,);
             }
 
-          //ah yes, array literals....very fun
+          // ah yes, array literals....very fun
           case '{':
             let result = {
               blockID: 'code',
@@ -653,7 +665,7 @@ class Parser {
               this.advance();
               var value = this.parse_expression(9);
               l = {
-                type: NODETYPES.ASSIGNMENT,
+                type: l.isArray ? NODETYPES.ARRAY_REFERENCE_ASSIGNMENT : NODETYPES.ASSIGNMENT,
                 blockID: "code",
                 line: line,
                 location: l,
@@ -820,7 +832,6 @@ class Parser {
         stopLoop += 1;
       }
 
-
       result.endIndex = this.getCurrentToken().endIndex;
       this.match_and_discard_next_token(')');
       result.params = params;
@@ -845,8 +856,6 @@ class Parser {
     return result;
   }
 
-
-
   parse_program() {
     return {
       type: "PROGRAM",
@@ -856,7 +865,7 @@ class Parser {
   }
 
   /**
-   * parses a block of statements (think curlybraces)
+   * parses a block of statements (think curly braces)
    * @param  {...any} endToken any tokens that will determine the end of the block.
    * @returns
    */
@@ -924,20 +933,37 @@ class Parser {
           textError('parsing', "missing the \'end if\' token", result.line);
         }
       }
+    }
 
-    } else if (this.has('for')) {
+    else if (this.has('for')) {
       result.type = NODETYPES.FOR;
       this.advance();
       if (this.hasNot('(')) {
         return result;
       }
       this.advance();
-      result.initialization = this.parse_statement();
-      result.initialization.endIndex[1] -= 3;  // HACK
-      result.condition = this.parse_expression(9);
+      if (this.has(')') || this.has('\n')) {
+        this.advance();
+        return result;  // incomplete
+      }
 
+      result.initialization = this.parse_statement();
+      if (result.initialization.endIndex) {
+        result.initialization.endIndex[1] -= 3;  // HACK for debug highlighting
+      }
+      if (this.has(')') || this.has('\n')) {
+        this.advance();
+        return result;
+      }
+
+      result.condition = this.parse_expression(9);
+      if (this.has(')') || this.has('\n')) {
+        this.advance();
+        return result;
+      }
       if (this.has(';')) {
         this.advance();
+
         result.increment = this.parse_expression(1);
         if (this.hasNot(')')) {
           return result;
@@ -1098,10 +1124,15 @@ class Parser {
     }
 
     else {
-      // this is a stand alone expression as a statement.
+      // most likely an expression statement
       let contents = this.parse_expression(9);
       if (this.has(';')) {
         this.advance();
+      }
+      // special case: assume that assignment is a statement
+      // if in a for loop, later code will rebuild the object
+      if (contents?.type.endsWith("ASSIGNMENT")) {
+        return contents;
       }
       result = {
         type: NODETYPES.STATEMENT,

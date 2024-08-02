@@ -345,7 +345,7 @@ export function createExecutable(tree) {
             return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
 
         case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
-            return new Praxly_array_reference_assignment(tree.name, createExecutable(tree.index), createExecutable(tree.value), tree);
+            return new Praxly_array_reference_assignment(tree.location.name, createExecutable(tree.location.index), createExecutable(tree.value), tree);
 
         case 'INVALID':
             return new Praxly_invalid(tree);

@@ -405,12 +405,12 @@ export const makeGenerator = () => {
         })
     }
 
-    // Note: declaration and assignment
+    // Note: declaration and assignment (as a statement)
     praxlyGenerator['praxly_assignment_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
-        var value = praxlyGenerator[expression.type](expression);
+        var value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.VARDECL,
             name: variableName,
@@ -483,7 +483,7 @@ export const makeGenerator = () => {
         })
     }
 
-    // declaration and assignment (Ex: in a for loop)
+    // declaration and assignment (likely in a for loop)
     praxlyGenerator['praxly_assignment_expression_block'] = (block) => {
         var varType = block.getFieldValue('VARTYPE');
         var variableName = block.getFieldValue('VARIABLENAME');
