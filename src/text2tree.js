@@ -566,7 +566,7 @@ class Parser {
           line = this.getCurrentToken().line;
           this.advance();
           const r = this.parse_expression(precedence);
-          if (r.type != NODETYPES.FUNCCALL) {
+          if (r?.type != NODETYPES.FUNCCALL) {
             textError('parsing', "classes are not fully supported yet. the right side of the . operator must be a supported string function", line);
           }
           l = {

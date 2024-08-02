@@ -17,7 +17,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '\"hello, world\"',
+                  'LITERAL': '\"Hello, World!\"',
                 }
               },
             },
@@ -360,7 +360,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '\"hello, world\"',
+                  'LITERAL': '\"hello\"',
                 }
               },
             },
@@ -382,7 +382,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '\"hello, world\"',
+                  'LITERAL': '\"hello\"',
                 }
               },
             },
@@ -404,7 +404,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello, world\"',
+                    'LITERAL': '\"hello\"',
                   }
                 },
               },
@@ -426,7 +426,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello, world\"',
+                    'LITERAL': '\"hello\"',
                   }
                 },
               }
@@ -440,7 +440,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello, world\"',
+                    'LITERAL': '\"hello\"',
                   }
                 },
               },
@@ -470,7 +470,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello, world\"',
+                    'LITERAL': '\"hello\"',
                   }
                 },
               },
@@ -484,7 +484,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello, world\"',
+                    'LITERAL': '\"hello\"',
                   }
                 },
               },
