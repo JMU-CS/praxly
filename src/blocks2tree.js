@@ -694,7 +694,7 @@ export const makeGenerator = () => {
             left: praxlyGenerator[expression.type](expression),
             right: {
                 name: procedureName,
-                args: [[praxlyGenerator[param.type](param)]],
+                args: [praxlyGenerator[param.type](param)],
                 type: NODETYPES.FUNCCALL
             }
         });
