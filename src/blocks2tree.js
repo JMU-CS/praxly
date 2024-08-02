@@ -683,5 +683,33 @@ export const makeGenerator = () => {
         });
     }
 
+    praxlyGenerator['praxly_indexOf_block'] = (block) => {
+        const procedureName = StringFuncs.INDEXOF;
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const param = block.getInputTargetBlock('PARAM');
+        return customizeMaybe(block, {
+            blockID: block.id,
+            name: procedureName,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName,
+                args: [[praxlyGenerator[param.type](param)]],
+                type: NODETYPES.FUNCCALL
+            }
+        });
+    }
+
+    praxlyGenerator['praxly_length_block'] = (block) => {
+        const procedureName = StringFuncs.LENGTH;
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        return customizeMaybe(block, {
+            blockID: block.id,
+            name: procedureName,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+        });
+    }
+
     return praxlyGenerator;
 }

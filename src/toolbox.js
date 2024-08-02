@@ -395,6 +395,42 @@ export const toolbox = {
               }
             }
           }
+          },
+          {
+            'kind': 'block',
+            'type': 'praxly_indexOf_block',
+            'inputs': {
+              'EXPRESSION': {
+                'shadow': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': '\"hello, world\"',
+                  }
+                },
+              },
+              'PARAM': {
+                'block': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': 'value'
+                  }
+                }
+              }
+            }
+          },
+          {
+            'kind': 'block',
+            'type': 'praxly_length_block',
+            'inputs': {
+              'EXPRESSION': {
+                'shadow': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': '\"hello, world\"',
+                  }
+                },
+              }
+            }
           }
       ]
     },

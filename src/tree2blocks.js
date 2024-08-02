@@ -1,4 +1,4 @@
-import { NODETYPES, TYPES } from "./common";
+import { NODETYPES, StringFuncs, TYPES } from "./common";
 
 function connectStatements(statements) {
     for (let i = 0; i < statements.length - 1; i++) {
@@ -330,16 +330,32 @@ export const tree2blocks = (workspace, node) => {
 
             if (node.name === 'charAt') {
                 result = workspace.newBlock('praxly_charAt_block');
-                var recipient = tree2blocks(workspace, node.left); // left side
+                var recipient = tree2blocks(workspace, node.left);
                 const child = tree2blocks(workspace, node?.args);
                 result.getInput('INDEX').connection.connect(child?.outputConnection);
                 result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
             } else if (node.name === 'contains') {
                 result = workspace.newBlock('praxly_contains_block');
-                var recipient = tree2blocks(workspace, node.left); // left side
+                var recipient = tree2blocks(workspace, node.left);
                 const child = tree2blocks(workspace, node?.args);
                 result.getInput('PARAM').connection.connect(child?.outputConnection);
                 result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            } else if (node.name === 'indexOf') {
+                result = workspace.newBlock('praxly_indexOf_block');
+                var recipient = tree2blocks(workspace, node.left);
+                const child = tree2blocks(workspace, node?.args);
+                result.getInput('PARAM').connection.connect(child?.outputConnection);
+                result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            } else if (node.name === 'length') {
+                result = workspace.newBlock('praxly_indexOf_block');
+                var recipient = tree2blocks(workspace, node.left);
+                result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            } else if (node.name === 'substring') {
+
+            } else if (node.name === StringFuncs.TOLOWERCSE) {
+
+            } else if (node.name === StringFuncs.TOUPPERCASE) {
+
             }
 
 

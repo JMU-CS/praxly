@@ -654,6 +654,101 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Returns true if value is a substring",
       "helpUrl": ""
     },
+    { // text 3
+      "type": "praxly_indexOf_block",
+      "message0": "%1.indexOf (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "helpUrl": ""
+    },
+    { // text 4
+      "type": "praxly_length_block",
+      "message0": "%1.length ( )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "Returns the length of the string",
+      "helpUrl": ""
+    },
+    { // text 5
+      "type": "praxly_substring_block",
+      "message0": "%1.substringÍ (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "helpUrl": ""
+    },
+    { // text 6
+      "type": "praxly_toLowerCase_block",
+      "message0": "%1.toLowerCase (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "helpUrl": ""
+    },
+    { // text 7
+      "type": "praxly_toUpperCase_block",
+      "message0": "%1.toUpperCase (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'other_blocks',
+      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "helpUrl": ""
+    },
     { // logic 1
       "type": "praxly_true_block",
       "message0": "true",
