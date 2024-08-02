@@ -368,7 +368,7 @@ export const toolbox = {
               'block': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': 0
+                  'LITERAL': 'index'
                 }
               }
             }
@@ -390,7 +390,7 @@ export const toolbox = {
               'block': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': 'value'
+                  'LITERAL': '"string"'
                 }
               }
             }
@@ -412,7 +412,7 @@ export const toolbox = {
                 'block': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': 'value'
+                    'LITERAL': 'string'
                   }
                 }
               }

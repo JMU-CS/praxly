@@ -430,6 +430,7 @@ main {
   display: flex; /* Add this */
   flex-direction: row; /* Add this */
   flex-basis: 25%;
+  user-select: all;
 }
 
 .output {

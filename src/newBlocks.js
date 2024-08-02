@@ -631,7 +631,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'text_blocks',
-      "tooltip": "Returns the character at index i",
+      "tooltip": "Returns the character at the index",
       "helpUrl": ""
     },
     { // text 2
@@ -651,7 +651,7 @@ export function definePraxlyBlocks(workspace) {
       "inputsInline": true,
       "output": null,
       "style": 'text_blocks',
-      "tooltip": "Returns true if value is a substring",
+      "tooltip": "Returns true if string is a substring",
       "helpUrl": ""
     },
     { // text 3
