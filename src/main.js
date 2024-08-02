@@ -558,7 +558,7 @@ function turnBlocksToCode() {
   }
 
   // update text side to match
-  const text = tree2text(mainTree, 0, 0);
+  const text = tree2text(mainTree, 0);
   textEditor.setValue(text, -1);
 };
 
