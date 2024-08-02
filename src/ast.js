@@ -231,8 +231,9 @@ export function createExecutable(tree) {
             }
 
         case NODETYPES.ASSIGNMENT:
+        case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
             try {
-                return new Praxly_assignment(tree, createExecutable(tree.location), createExecutable(tree.value), tree);
+                return new Praxly_assignment(createExecutable(tree.location), createExecutable(tree.value), tree);
             }
             catch (error) {
                 return null;
@@ -248,7 +249,7 @@ export function createExecutable(tree) {
 
         case NODETYPES.ARRAY_ASSIGNMENT:
             try {
-                return new Praxly_array_assignment(tree, createExecutable(tree.location), createExecutable(tree.value));
+                return new Praxly_array_assignment(createExecutable(tree.location), createExecutable(tree.value), tree);
             }
             catch (error) {
                 return null;
@@ -344,9 +345,6 @@ export function createExecutable(tree) {
         case NODETYPES.ARRAY_REFERENCE:
             return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
 
-        case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
-            return new Praxly_array_reference_assignment(tree.location.name, createExecutable(tree.location.index), createExecutable(tree.value), tree);
-
         case 'INVALID':
             return new Praxly_invalid(tree);
 
@@ -355,21 +353,6 @@ export function createExecutable(tree) {
 
         default:
             throw new PraxlyError("unhandled node type " + tree.type, tree.line);
-    }
-}
-
-class Praxly_array_reference_assignment {
-
-    constructor(name, index, value, node) {
-        this.json = node;
-        this.name = name;
-        this.value = value;
-        this.index = index;
-    }
-
-    async evaluate(environment) {
-        var index = await this.index.evaluate(environment);
-        environment.variableList[this.name].elements[index.value] = await this.value.evaluate(environment);
     }
 }
 
@@ -1224,20 +1207,27 @@ function typeCoercion(varType, praxlyObj, line) {
 
 class Praxly_assignment {
 
-    constructor(json, location, expression, node) {
+    constructor(location, expression, node) {
         this.json = node;
         this.location = location;
         this.value = expression;
     }
 
     async evaluate(environment) {
-        // if it is a reassignment, the variable must be in the list and have a matching type.
-        let valueEvaluated = await this.value.evaluate(environment);
+        // the variable must be in the environment and have a matching type
         var storage = accessLocation(environment, this.location);
         if (!storage) {
             throw new PraxlyError(`Variable ${this.location.name} does not exist in this scope.`, this.json.line);
         }
+        if (this.location.isArray) {
+            var index = await this.location.index.evaluate(environment);
+            var length = storage[this.location.name].elements.length;
+            if (index.value >= length) {
+                throw new PraxlyError(`Array index ${index.value} out of bounds for length ${length}`, this.json.line);
+            }
+        }
 
+        let valueEvaluated = await this.value.evaluate(environment);
         let currentStoredVariableEvaluated = await this.location.evaluate(environment);
         if (!can_assign(currentStoredVariableEvaluated.realType, valueEvaluated.realType, this.json.line)) {
             throw new PraxlyError(`Error: variable reassignment does not match declared type: \n\t Expected: `
@@ -1246,7 +1236,6 @@ class Praxly_assignment {
 
         valueEvaluated = typeCoercion(currentStoredVariableEvaluated.realType, valueEvaluated, this.json.line);
         if (this.location.isArray) {
-            var index = await this.location.index.evaluate(environment);
             storage[this.location.name].elements[index.value] = valueEvaluated;
         } else {
             storage[this.location.name] = valueEvaluated;
@@ -1313,7 +1302,7 @@ class Praxly_vardecl {
 
 class Praxly_array_assignment {
 
-    constructor(json, location, expression) {
+    constructor(location, expression, json) {
         this.json = json;
         this.location = location;
         this.value = expression;
@@ -1329,22 +1318,8 @@ class Praxly_array_assignment {
             }
             valueEvaluated.elements[k] = typeCoercion(this.json.varType, valueEvaluated.elements[k], this.json.line);
         }
+        // store in current environment, because the array is being declared and initialized
         environment.variableList[this.name] = valueEvaluated;
-    }
-}
-
-class Praxly_variable {
-
-    constructor(json, name, node) {
-        this.json = node;
-        this.name = name;
-    }
-
-    async evaluate(environment) {
-        if (!environment.variableList.hasOwnProperty(this.name)) {
-            throw new PraxlyError(`the variable \'${this.name}\' is not recognized by the program. \n\tPerhaps you forgot to initialize it?`, this.json.line);
-        }
-        return environment.variableList[this.name];
     }
 }
 
@@ -1364,12 +1339,12 @@ class Praxly_Location {
         }
 
         if (this.isArray) {
-            var index = await this.index.evaluate(environment).value;
-            if (index >= storage[this.name].elements.length) {
-                throw new PraxlyError(`index ${index} out of bounds for array named ${this.name}`, this.json.line);
+            var index = await this.index.evaluate(environment);
+            var length = storage[this.name].elements.length;
+            if (index.value >= length) {
+                throw new PraxlyError(`Array index ${index.value} out of bounds for length ${length}`, this.json.line);
             }
-            var ind = await this.index.evaluate(environment);
-            return await storage[this.name].elements[ind.value].evaluate(environment);
+            return await storage[this.name].elements[index.value].evaluate(environment);
         } else {
             return await storage[this.name].evaluate(environment);
         }
