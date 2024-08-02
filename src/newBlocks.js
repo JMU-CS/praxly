@@ -691,7 +691,7 @@ export function definePraxlyBlocks(workspace) {
     },
     { // text 5
       "type": "praxly_substring_block",
-      "message0": "%1.substringÍ (%2)",
+      "message0": "%1.substring (%2 , %3)",
       "args0": [
         {
           "type": "input_value",
@@ -699,54 +699,49 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_value",
-          "name": "PARAM",
+          "name": "PARAM1",
           "text": "params"
         },
+        {
+          "type": "input_value",
+          "name": "PARAM2",
+          "text": "params"
+        }
       ],
       "inputsInline": true,
       "output": null,
       "style": 'other_blocks',
-      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "tooltip": "Extracts characters from the start index up to but not including the end index",
       "helpUrl": ""
     },
     { // text 6
       "type": "praxly_toLowerCase_block",
-      "message0": "%1.toLowerCase (%2)",
+      "message0": "%1.toLowerCase ( )",
       "args0": [
         {
           "type": "input_value",
           "name": "EXPRESSION"
-        },
-        {
-          "type": "input_value",
-          "name": "PARAM",
-          "text": "params"
-        },
+        }
       ],
       "inputsInline": true,
       "output": null,
       "style": 'other_blocks',
-      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "tooltip": "Converts the string to all lowercase",
       "helpUrl": ""
     },
     { // text 7
       "type": "praxly_toUpperCase_block",
-      "message0": "%1.toUpperCase (%2)",
+      "message0": "%1.toUpperCase ( )",
       "args0": [
         {
           "type": "input_value",
           "name": "EXPRESSION"
-        },
-        {
-          "type": "input_value",
-          "name": "PARAM",
-          "text": "params"
-        },
+        }
       ],
       "inputsInline": true,
       "output": null,
       "style": 'other_blocks',
-      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "tooltip": "Converts the string to all uppercase",
       "helpUrl": ""
     },
     { // logic 1

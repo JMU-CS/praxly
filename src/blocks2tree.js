@@ -708,6 +708,58 @@ export const makeGenerator = () => {
             name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
             left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName,
+                args: []
+            }
+        });
+    }
+
+    praxlyGenerator['praxly_substring_block'] = (block) => {
+        const procedureName = StringFuncs.SUBSTRING;
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const param1 = block.getInputTargetBlock('PARAM1');
+        const param2 = block.getInputTargetBlock('PARAM2');
+        return customizeMaybe(block, {
+            blockID: block.id,
+            name: procedureName,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName,
+                args: [praxlyGenerator[param1.type](param1), praxlyGenerator[param2.type](param2)],
+                type: NODETYPES.FUNCCALL
+            }
+        });
+    }
+
+    praxlyGenerator['praxly_toLowerCase_block'] = (block) => {
+        const procedureName = StringFuncs.TOLOWERCSE;
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        return customizeMaybe(block, {
+            blockID: block.id,
+            name: procedureName,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName,
+                args: []
+            }
+        });
+    }
+
+    praxlyGenerator['praxly_toUpperCase_block'] = (block) => {
+        const procedureName = StringFuncs.TOUPPERCASE;
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        return customizeMaybe(block, {
+            blockID: block.id,
+            name: procedureName,
+            type: NODETYPES.SPECIAL_STRING_FUNCCALL,
+            left: praxlyGenerator[expression.type](expression),
+            right: {
+                name: procedureName,
+                args: []
+            }
         });
     }
 

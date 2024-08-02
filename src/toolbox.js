@@ -431,7 +431,65 @@ export const toolbox = {
                 },
               }
             }
-          }
+          },
+          {
+            'kind': 'block',
+            'type': 'praxly_substring_block',
+            'inputs': {
+              'EXPRESSION': {
+                'shadow': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': '\"hello, world\"',
+                  }
+                },
+              },
+              'PARAM1': {
+                'block': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': 'indexStart'
+                  }
+                }
+              },
+              'PARAM2': {
+                'block': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': 'indexEnd'
+                  }
+                }
+              }
+            }
+          },
+          {
+            'kind': 'block',
+            'type': 'praxly_toLowerCase_block',
+            'inputs': {
+              'EXPRESSION': {
+                'shadow': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': '\"hello, world\"',
+                  }
+                },
+              },
+            }
+          },
+          {
+            'kind': 'block',
+            'type': 'praxly_toUpperCase_block',
+            'inputs': {
+              'EXPRESSION': {
+                'shadow': {
+                  'type': 'praxly_literal_block',
+                  'fields': {
+                    'LITERAL': '\"hello, world\"',
+                  }
+                },
+              },
+            }
+          },
       ]
     },
     {
