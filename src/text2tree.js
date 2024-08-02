@@ -795,13 +795,15 @@ class Parser {
       index: null,
       startIndex: startIndex,
     }
+
     if (this.hasAny('=', '<-', "←", "⟵")) {
       this.advance();
       result.value = this.parse_expression(9);
       if (this.has(';')) {
         this.advance();
       }
-    } else if (this.has('(')) {
+    }
+    else if (this.has('(')) {
       result.type = NODETYPES.FUNCDECL;
       result.returnType = vartype;
       if (type == NODETYPES.ARRAY_ASSIGNMENT) {
@@ -852,6 +854,13 @@ class Parser {
       }
       this.advance();
     }
+    else {
+      // variable declaration without assignment
+      if (this.has(';')) {
+        this.advance();
+      }
+    }
+
     result.endIndex = this.getCurrentToken().endIndex;
     return result;
   }

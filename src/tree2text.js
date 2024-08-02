@@ -253,7 +253,7 @@ export const tree2text = (node, indentation) => {
             var varname = tree2text(node.location, indentation);
             var operator = ' ← ';
             var expression = tree2text(node.value, 0);
-            return varname + operator + expression + '\n';
+            return '    '.repeat(indentation) + varname + operator + expression + '\n';
 
         // Note: declaration and assignment (possibly in a for loop)
         case NODETYPES.VARDECL:
