@@ -69,7 +69,7 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
             'colourPrimary': '#FA0000'
         },
         'logic_blocks': {
-            'colourPrimary': '#00D084'
+            'colourPrimary': '#3CB371'
         },
         'class_blocks': {
             'colourPrimary': '#6381fe'
@@ -83,14 +83,17 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
         'variable_blocks': {
             'colourPrimary': '#f80069'
         },
-        'expression_blocks': {
-            'colourPrimary': '#a7ca00'
+        'math_blocks': {
+            'colourPrimary': '#4B0082'
         },
         'parameter_blocks': {
             'colourPrimary': '#8F48B7'
         },
         'other_blocks': {
             'colourPrimary': '#00BFFF'
+        },
+        'text_blocks': {
+            'colourPrimary': '#1E90FF'
         }
     },
     'categoryStyles': {
@@ -101,7 +104,7 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
             'colour': '#6381fe'
         },
         'logic_blocks': {
-            'colour': '#00D084'
+            'colour': '#3CB371'
         },
         'class_blocks': {
             'colour': '#6381fe'
@@ -115,8 +118,11 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
         'variable_blocks': {
             'colour': '#f80069'
         },
-        'expression_blocks': {
-            'colour': '#a7ca00'
+        'math_blocks': {
+            'colour': '#4B0082'
+        },
+        'text_blocks': {
+            'colour': '#1E90FF'
         }
     },
     'componentStyles': {

@@ -134,7 +134,7 @@ export const toolbox = {
     {
       "kind": "category",
       "name": "math",
-      "categorystyle": "expression_blocks",
+      "categorystyle": "math_blocks",
       "contents": [
         {
           'kind': 'block',
@@ -331,7 +331,7 @@ export const toolbox = {
     {
       "kind": "category",
       "name": "text",
-      "categorystyle": "class_blocks",
+      "categorystyle": "text_blocks",
       "contents": [
         // {
         //   'kind': 'block',
@@ -499,14 +499,6 @@ export const toolbox = {
       "contents": [
         {
           'kind': 'block',
-          'type': 'praxly_true_block'
-        },
-        {
-          'kind': 'block',
-          'type': 'praxly_false_block'
-        },
-        {
-          'kind': 'block',
           'type': 'praxly_if_block',
           'inputs': {
             'CONDITION': {
@@ -575,6 +567,14 @@ export const toolbox = {
               },
             }
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_true_block'
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_false_block'
         }
       ]
     },

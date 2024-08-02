@@ -354,7 +354,7 @@ export function definePraxlyBlocks(workspace) {
         }
       ],
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "A literal value in the code",
       "helpUrl": ""
     },
@@ -408,7 +408,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Arithmetic operators:\n+ addition (and string concatenation)\n- subtraction\n* multiplication\n/ division (integer and floating-point)\n% remainder\n^ exponent",
       "helpUrl": "",
     },
@@ -425,7 +425,7 @@ export function definePraxlyBlocks(workspace) {
         }
       ],
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Negates a value",
       "helpUrl": ""
     },
@@ -434,7 +434,7 @@ export function definePraxlyBlocks(workspace) {
       "message0": "random ( )",
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Generates a random double greater than or equal to 0 and less than 1",
       "helpUrl": ""
     },
@@ -449,7 +449,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Generates a random integer greater than or equal to 0 and less than x",
       "helpUrl": ""
     },
@@ -464,7 +464,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Sets the seed of the random number generator",
       "helpUrl": ""
     },
@@ -479,7 +479,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Converts a String into an int",
       "helpURL": ""
     },
@@ -494,7 +494,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Converts a String into a float",
       "helpURL": ""
     },
@@ -513,7 +513,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Returns the lower value",
       "helpURL": ""
     },
@@ -532,7 +532,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Returns the higher value",
       "helpURL": ""
     },
@@ -547,7 +547,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Returns the absolute value",
       "helpURL": ""
     },
@@ -562,7 +562,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Calculates the natural logarithm",
       "helpURL": ""
     },
@@ -577,7 +577,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Calculates the square root",
       "helpURL": ""
     },
@@ -630,7 +630,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'other_blocks',
+      "style": 'text_blocks',
       "tooltip": "Returns the character at index i",
       "helpUrl": ""
     },
@@ -650,7 +650,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'other_blocks',
+      "style": 'text_blocks',
       "tooltip": "Returns true if value is a substring",
       "helpUrl": ""
     },
@@ -670,7 +670,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'other_blocks',
+      "style": 'text_blocks',
       "tooltip": "Returns the first index of substring value, or -1 if not found",
       "helpUrl": ""
     },
@@ -685,7 +685,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'other_blocks',
+      "style": 'text_blocks',
       "tooltip": "Returns the length of the string",
       "helpUrl": ""
     },
@@ -710,7 +710,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'other_blocks',
+      "style": 'text_blocks',
       "tooltip": "Extracts characters from the start index up to but not including the end index",
       "helpUrl": ""
     },
@@ -725,7 +725,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'other_blocks',
+      "style": 'text_blocks',
       "tooltip": "Converts the string to all lowercase",
       "helpUrl": ""
     },
@@ -740,7 +740,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'other_blocks',
+      "style": 'text_blocks',
       "tooltip": "Converts the string to all uppercase",
       "helpUrl": ""
     },
