@@ -31,8 +31,9 @@ class Token {
 
 class Lexer {
   constructor(source) {
+    // insert a final newline at the end of the program if missing
     if (source?.length > 0 && source[source?.length - 1] !== '\n') {
-      source += "\n";
+      source += '\n';
     }
     this.source = source;
     this.tokens = [];
@@ -247,7 +248,7 @@ class Lexer {
         continue;
       }
 
-      // words
+      // get the next word
       if (!this.has_letter()) {
         textError('lexing', `unrecognized character \"${this.source[this.i]}\"`, this.i, this.i + 1);
         break;
@@ -301,14 +302,9 @@ class Lexer {
 class Parser {
 
   constructor(tokens) {
-    this.statements = [];
     this.tokens = tokens;
     this.i = 0;
     this.length = tokens?.length;
-    this.eof = false;
-    this.keywords = ["if", "else", "then", "done"];
-    this.statementKeywords = ['if', 'print', 'for', 'while'];
-    this.specialStringFunctionKEywords = ["charAt", "contains", "indexOf", "length", "substring", "toLowerCase", "toUpperCase"];
   }
 
   hasNot(type) {
@@ -317,6 +313,10 @@ class Parser {
 
   getCurrentToken() {
     return this.tokens[this.i];
+  }
+
+  getCurrentLine() {
+    return this.tokens[this.i].line;
   }
 
   has(type) {
@@ -345,19 +345,11 @@ class Parser {
     return this.i < this.length && this.tokens[this.i].token_type === 'Type';
   }
 
-  has_keyword() {
-    return this.keywords.includes(this.tokens[this.i].token_type);
-  }
-
-  has_statementKeyword() {
-    return this.statementKeywords.includes(this.tokens[this.i].token_type);
-  }
-
   match_and_discard_next_token(type) {
     if (this.tokens[this.i].token_type === type) {
       this.advance();
     } else {
-      textError('parsing', `did not detect desired token at this location. \nexpected: \'${type}\'\n but was: ${this.tokens[this.i].token_type}`, this.tokens[this.i].line);
+      textError('parsing', `did not detect desired token at this location. \nexpected: \'${type}\'\n but was: ${this.tokens[this.i].token_type}`, this.getCurrentLine());
     }
   }
 
@@ -503,7 +495,7 @@ class Parser {
    */
   parse_expression(precedence = 9) {
     let operation = this.getCurrentToken().token_type;
-    let line = this.tokens[this.i].line;
+    let line = this.getCurrentLine();
     let startIndex = this.getCurrentToken().startIndex;
     switch (precedence) {
 
@@ -512,7 +504,7 @@ class Parser {
         var l = this.parse_expression(precedence - 1);
         while (this.has("or")) {
           operation = this.getCurrentToken().token_type;
-          line = this.getCurrentToken().line;
+          line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence - 1);
           l = this.binaryOpNode_new(operation, l, r, line);
@@ -524,7 +516,7 @@ class Parser {
         var l = this.parse_expression(precedence - 1);
         while (this.has("and")) {
           operation = this.getCurrentToken().token_type;
-          line = this.getCurrentToken().line;
+          line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence - 1);
           l = this.binaryOpNode_new(operation, l, r, line);
@@ -536,7 +528,7 @@ class Parser {
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('<', '>', '==', '!=', '>=', '<=', '≠', '≥', '≤')) {
           operation = this.getCurrentToken().token_type;
-          line = this.getCurrentToken().line;
+          line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence - 1);
           l = this.binaryOpNode_new(operation, l, r, line);
@@ -548,7 +540,7 @@ class Parser {
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('+', '-')) {
           operation = this.getCurrentToken().token_type;
-          line = this.getCurrentToken().line;
+          line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence - 1);
           l = this.binaryOpNode_new(operation, l, r, line);
@@ -560,7 +552,7 @@ class Parser {
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('*', '/', '%')) {
           operation = this.getCurrentToken().token_type;
-          line = this.getCurrentToken().line;
+          line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence - 1);
           l = this.binaryOpNode_new(operation, l, r, line);
@@ -572,7 +564,7 @@ class Parser {
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('^')) {
           operation = this.getCurrentToken().token_type;
-          line = this.getCurrentToken().line;
+          line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence);
           l = this.binaryOpNode_new(operation, l, r, line);
@@ -585,7 +577,7 @@ class Parser {
           return this.parse_expression(precedence - 1);
         }
         operation = this.getCurrentToken().token_type;
-        line = this.getCurrentToken().line;
+        line = this.getCurrentLine();
         this.advance();
         var exp = this.parse_expression(precedence - 1);
         return this.unaryOPNode_new(operation, exp, line, startIndex);
@@ -595,7 +587,7 @@ class Parser {
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('.')) {
           operation = this.getCurrentToken().token_type;
-          line = this.getCurrentToken().line;
+          line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence);
           if (r.type != NODETYPES.FUNCCALL) {
@@ -615,7 +607,6 @@ class Parser {
       case 1:
         switch (operation) {
           case 'EOF':
-            this.eof = true;
             return 'EOF';
 
           // literal value
@@ -674,7 +665,7 @@ class Parser {
             }
             result.params = args;
             if (this.hasNot('}')) {
-              textError('parsing', "didn't detect closing curly brace in the array declaration", this.tokens[this.i].line);
+              textError('parsing', "didn't detect closing curly brace in the array declaration", this.getCurrentLine());
             }
             result.endIndex = this.getCurrentToken().endIndex;
             this.advance();
@@ -716,10 +707,6 @@ class Parser {
                 args: args,
                 startIndex: startIndex,
               }
-              // this is used to give different behavior to these functions in particular
-              // if (this.specialStringFunctionKEywords.includes(l.name)){
-              //   l.type = NODETYPES.SPECIAL_STRING_FUNCCALL;
-              // }
             }
             l.endIndex = this.getCurrentToken().endIndex;
             return l;
@@ -774,7 +761,7 @@ class Parser {
       name: this.tokens[this.i].value,
       isArray: false,
       blockID: 'code',
-      line: this.tokens[this.i].line,
+      line: this.getCurrentLine(),
       index: null,
       startIndex: this.tokens[this.i].startIndex,
     }
@@ -791,9 +778,11 @@ class Parser {
 
   // this one kinda a mess ngl, but my goal is to support variable initialization and assignment all together
   parse_funcdecl_or_vardecl() {
+
+    // return type
     var isArray = false;
     var type = NODETYPES.VARDECL;
-    var vartype = this.tokens[this.i].value;
+    var vartype = this.getCurrentToken().value;
     var startIndex = this.getCurrentToken().startIndex;
     this.advance();
     if (this.has('[') && this.has_ahead(']')) {
@@ -803,6 +792,7 @@ class Parser {
       isArray = true;
     }
 
+    // variable/procedure name
     var location = this.parse_location();
     var result = {
       type: type,
@@ -811,11 +801,12 @@ class Parser {
       isArray: isArray,
       blockID: 'code',
       location: location,
-      line: this.tokens[this.i].line,
+      line: this.getCurrentLine(),
       index: null,
       startIndex: startIndex,
     }
 
+    // initialization (optional)
     if (this.hasAny('=', '<-', "←", "⟵")) {
       this.advance();
       result.value = this.parse_expression(9);
@@ -823,12 +814,16 @@ class Parser {
         this.advance();
       }
     }
+
+    // procedure definition
     else if (this.has('(')) {
       result.type = NODETYPES.FUNCDECL;
       result.returnType = vartype;
       if (type == NODETYPES.ARRAY_ASSIGNMENT) {
         result.returnType += "[]";
       }
+
+      // parameter list
       this.match_and_discard_next_token('(');
       var params = [];
       var stopLoop = 0;
@@ -853,7 +848,6 @@ class Parser {
         }
         stopLoop += 1;
       }
-
       result.endIndex = this.getCurrentToken().endIndex;
       this.match_and_discard_next_token(')');
       result.params = params;
@@ -865,6 +859,7 @@ class Parser {
         this.advance();
       }
 
+      // procedure body
       var contents = this.parse_block('end ' + result.name);
       result.contents = contents;
       if (this.hasNot('end ' + result.name)) {
@@ -899,26 +894,26 @@ class Parser {
    * @returns
    */
   parse_block(...endToken) {
-    let praxly_blocks = [];
+    let block_statements = [];
     while (this.hasNotAny(...endToken)) {
 
       if (this.has('EOF')) {
         break;
       }
-      praxly_blocks.push(this.parse_statement());
+      block_statements.push(this.parse_statement());
       // note: I for some reason always assumed that statements will not parse the final token, so I always did it here.
       // I think its because I assumed that all statements end with a newline.
       this.advance();
     }
     return {
       type: NODETYPES.CODEBLOCK,
-      statements: praxly_blocks,
+      statements: block_statements,
       blockID: "code"
     }
   }
 
   parse_statement() {
-    var line = this.tokens[this.i].line;
+    var line = this.getCurrentLine();
     let result = {
       startIndex: this.getCurrentToken().startIndex,
       endIndex: this.getCurrentToken().endIndex,
