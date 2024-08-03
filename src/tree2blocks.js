@@ -377,12 +377,19 @@ export const tree2blocks = (workspace, node) => {
                     // unpack the expression statement
                     var container1 = initialization;
                     initialization = initialization.getInputTargetBlock('EXPRESSION');
-                } else {
-                    // was likely praxly_assignment_block
+                } else if (initialization.type == 'praxly_assignment_block'
+                        || initialization.type == 'praxly_reassignment_block') {
+                    // convert statement to expression
                     initialization.dispose();
-                    initialization = workspace.newBlock('praxly_assignment_expression_block');
-                    initialization.setFieldValue(node?.initialization?.varType, "VARTYPE");
-                    initialization.setFieldValue(node?.initialization?.name, "VARIABLENAME");
+                    if (node?.initialization?.varType) {
+                        initialization = workspace.newBlock('praxly_assignment_expression_block');
+                        initialization.setFieldValue(node?.initialization?.varType, "VARTYPE");
+                        initialization.setFieldValue(node?.initialization?.name, "VARIABLENAME");
+                    } else {
+                        initialization = workspace.newBlock('praxly_reassignment_expression_block');
+                        var location = tree2blocks(workspace, node?.initialization?.location);
+                        initialization.getInput('LOCATION').connection.connect(location?.outputConnection);
+                    }
                     var expression = tree2blocks(workspace, node?.initialization?.value);
                     initialization.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
                     initialization.initSvg();
