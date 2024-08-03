@@ -214,14 +214,14 @@ export const tree2blocks = (workspace, node) => {
         case NODETYPES.IF_ELSE:
             var result = workspace.newBlock('praxly_if_else_block');
             var condition = tree2blocks(workspace, node?.condition);
-            var statements = tree2blocks(workspace, node?.codeblock);
-            var alternatives = tree2blocks(workspace, node?.alternative);
+            var codeblock = tree2blocks(workspace, node?.codeblock);
+            var alternative = tree2blocks(workspace, node?.alternative);
             result.getInput('CONDITION').connection.connect(condition?.outputConnection);
-            if (statements && statements.length > 0) {
-                result.getInput('STATEMENT').connection.connect(statements[0]?.previousConnection);
+            if (codeblock && codeblock.length > 0) {
+                result.getInput('STATEMENT').connection.connect(codeblock[0]?.previousConnection);
             }
-            if (alternatives && alternatives.length > 0) {
-                result.getInput('ALTERNATIVE').connection.connect(alternatives[0]?.previousConnection);
+            if (alternative && alternative.length > 0) {
+                result.getInput('ALTERNATIVE').connection.connect(alternative[0]?.previousConnection);
             }
             break;
 

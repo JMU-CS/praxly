@@ -274,7 +274,7 @@ export const tree2text = (node, indentation) => {
         case NODETYPES.WHILE:
             var result = '    '.repeat(indentation) + "while";
             var condition = " (" + tree2text(node.condition, 0) + ")\n";
-            var contents = tree2text(node.statement, indentation + 1) +
+            var contents = tree2text(node.codeblock, indentation + 1) +
                 '    '.repeat(indentation) + 'end while\n';
             return result + condition + contents;
 
