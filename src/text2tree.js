@@ -1,4 +1,4 @@
-import { MAX_LOOP, NODETYPES, OP, TYPES, indexToAceRange, textEditor, textError } from './common';
+import { MAX_LOOP, NODETYPES, OP, textEditor, textError } from './common';
 
 /**
  * this will take all of the text currently in the editor and generate the corresponding Intermediate Representation .
@@ -134,6 +134,7 @@ class Lexer {
   lex() {
     while (this.i < this.length) {
 
+      // end-of-line comment
       if (this.has_short_comment()) {
         this.skip(2);
         while (this.hasNot('\n')) {
@@ -145,6 +146,7 @@ class Lexer {
         continue;
       }
 
+      // missing code (/* comment */)
       if (this.has_long_comment()) {
         this.skip(2);
         while (this.hasNot('*') && this.hasNot_ahead('/')) {
@@ -159,6 +161,7 @@ class Lexer {
         continue;
       }
 
+      // character literal (single quotes)
       if (this.has('\'')) {
         this.skip();
         while (this.i < this.length && !this.has("\'") && !this.has("\n")) {
@@ -180,6 +183,7 @@ class Lexer {
         continue;
       }
 
+      // string literal (double quotes)
       if (this.has("\"")) {
         this.skip();
         while (this.i < this.length && !this.has("\"") && !this.has("\n")) {
@@ -196,12 +200,12 @@ class Lexer {
         continue;
       }
 
+      // operators and punctuation
       if (this.has_valid_symbol()) {
         this.capture();
         this.emit_token();
         continue;
       }
-
       if (this.has_multi_char_symbol()) {
         while (this.has_multi_char_symbol()) {
           this.capture();
@@ -210,6 +214,7 @@ class Lexer {
         continue;
       }
 
+      // integers and floating-points
       if (this.has_digit()) {
         while (this.i < this.length && this.has_digit()) {
           this.capture();
@@ -226,11 +231,13 @@ class Lexer {
         continue;
       }
 
+      // ignore spaces
       if (this.has(' ')) {
         this.skip();
         continue;
       }
 
+      // newline (increment line number)
       if (this.has("\n")) {
         this.capture();
         this.emit_token("\n");
@@ -240,25 +247,26 @@ class Lexer {
         continue;
       }
 
+      // words
       if (!this.has_letter()) {
         textError('lexing', `unrecognized character \"${this.source[this.i]}\"`, this.i, this.i + 1);
         break;
       }
-
       while (this.i < this.length && (this.has_letter() || this.has_digit())) {
         this.capture();
       }
 
+      // built-in types and functions
       if (this.has_type()) {
         this.emit_token('Type');
         continue;
       }
-
       if (this.has_builtin()) {
         this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
         continue;
       }
 
+      // end keyword (if, for, while, proc)
       if (this.token_so_far === 'end') {
         while (this.hasNot('\n')) {
           this.capture();
@@ -267,18 +275,23 @@ class Lexer {
         continue;
       }
 
+      // true/false literal
       if (this.has_boolean()) {
         this.emit_token(NODETYPES.BOOLEAN);
         continue;
       }
 
+      // other keywords
       if (this.has_keyword()) {
         this.emit_token();
         continue;
       }
+
+      // variable/procedure names
       this.emit_token('Location');
     }
 
+    // That's all folks!
     this.emit_token("EOF");
     return this.tokens;
   }
@@ -466,7 +479,6 @@ class Parser {
   unaryOPNode_new(operation, expression, line, startIndex) {
     var type;
     switch (operation) {
-      case '!':
       case 'not':
         type = OP.NOT;
         break;
@@ -493,9 +505,9 @@ class Parser {
     let operation = this.getCurrentToken().token_type;
     let line = this.tokens[this.i].line;
     let startIndex = this.getCurrentToken().startIndex;
-    let endIndex = this.getCurrentToken().endIndex;
     switch (precedence) {
 
+      // or logical operator
       case 9:
         var l = this.parse_expression(precedence - 1);
         while (this.has("or")) {
@@ -507,6 +519,7 @@ class Parser {
         }
         return l;
 
+      // and logical operator
       case 8:
         var l = this.parse_expression(precedence - 1);
         while (this.has("and")) {
@@ -518,6 +531,7 @@ class Parser {
         }
         return l;
 
+      // relational operators
       case 7:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('<', '>', '==', '!=', '>=', '<=', '≠', '≥', '≤')) {
@@ -529,6 +543,7 @@ class Parser {
         }
         return l;
 
+      // addition, subtraction
       case 6:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('+', '-')) {
@@ -540,6 +555,7 @@ class Parser {
         }
         return l;
 
+      // multiplication, division, modulo
       case 5:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('*', '/', '%')) {
@@ -551,6 +567,7 @@ class Parser {
         }
         return l;
 
+      // raise to the power
       case 4:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('^')) {
@@ -562,8 +579,9 @@ class Parser {
         }
         return l;
 
+      // not logical operator, negation operator
       case 3:
-        if (this.hasNotAny('not', '!', '-')) {
+        if (this.hasNotAny('not', '-')) {
           return this.parse_expression(precedence - 1);
         }
         operation = this.getCurrentToken().token_type;
@@ -572,7 +590,7 @@ class Parser {
         var exp = this.parse_expression(precedence - 1);
         return this.unaryOPNode_new(operation, exp, line, startIndex);
 
-      // This is the dot operator
+      // dot operator (for string methods)
       case 2:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('.')) {
@@ -600,6 +618,7 @@ class Parser {
             this.eof = true;
             return 'EOF';
 
+          // literal value
           case NODETYPES.BOOLEAN:
           case NODETYPES.CHAR:
           case NODETYPES.DOUBLE:
@@ -610,10 +629,12 @@ class Parser {
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
 
+          // function call
           case NODETYPES.BUILTIN_FUNCTION_CALL:
           case 'Type':  // type conversion function
             return this.parse_builtin_function_call(line);
 
+          // parentheses
           case '(':
             const leftToken = this.advance();
             const expression = this.parse_expression(9);
@@ -659,6 +680,7 @@ class Parser {
             this.advance();
             return result;
 
+          // variable assignment or procedure call
           case 'Location':
             var l = this.parse_location();
             if (this.hasAny('=', '<-', "←", "⟵")) {
@@ -703,12 +725,10 @@ class Parser {
             return l;
 
           default:
-            // TODO: this case needs to raise an exception or return some error
-            // object. Right now if an expression can't be parsed, it
-            // implicitly returns null/undefined.
             textError('parsing', `invalid Token ${this.getCurrentToken().value}`, line);
-        }
-    }
+
+        } // switch (operation)
+    } // switch (precedence)
   }
 
   parse_builtin_function_call(line) {
@@ -905,12 +925,15 @@ class Parser {
       blockID: 'code',
       line: line,
     };
+
+    // blank line (no statement)
     if (this.has('\n')) {
       result.type = NODETYPES.NEWLINE;
       return result;
     }
 
-    if (this.has("if")) {
+    // if or if-else
+    else if (this.has("if")) {
       result.type = NODETYPES.IF;
       this.advance();
       if (this.hasNot('(')) {
@@ -944,6 +967,7 @@ class Parser {
       }
     }
 
+    // for loop
     else if (this.has('for')) {
       result.type = NODETYPES.FOR;
       this.advance();
@@ -994,6 +1018,7 @@ class Parser {
       return result;
     }
 
+    // while loop
     else if (this.has('while')) {
       result.type = NODETYPES.WHILE;
       this.advance();
@@ -1019,6 +1044,7 @@ class Parser {
       }
     }
 
+    // do-while loop
     else if (this.has('do')) {
       result.type = NODETYPES.DO_WHILE;
       this.advance();
@@ -1041,6 +1067,7 @@ class Parser {
       }
     }
 
+    // repeat-until loop
     else if (this.has('repeat')) {
       result.type = NODETYPES.REPEAT_UNTIL;
       this.advance();
@@ -1063,6 +1090,7 @@ class Parser {
       }
     }
 
+    // print statement
     else if (this.has("print")) {
       this.advance();
       const expression = this.parse_expression(9);
@@ -1084,6 +1112,7 @@ class Parser {
       return result;
     }
 
+    // return statement
     else if (this.has("return")) {
       this.advance();
       const expression = this.parse_expression(9);
@@ -1095,20 +1124,25 @@ class Parser {
         result.value = expression;
         return result;
       }
+    }
 
-    } else if (this.has(NODETYPES.COMMENT)) {
+    // missing code (/* comment */)
+    else if (this.has(NODETYPES.COMMENT)) {
       const token = this.advance();
       result.type = NODETYPES.COMMENT;
       result.value = token.value;
       return result;
+    }
 
-    } else if (this.has(NODETYPES.SINGLE_LINE_COMMENT)) {
+    // end-of-line comment
+    else if (this.has(NODETYPES.SINGLE_LINE_COMMENT)) {
       const token = this.advance();
       result.type = NODETYPES.SINGLE_LINE_COMMENT;
       result.value = token.value;
       return result;
     }
 
+    // variable/function declaration
     else if (this.has_type()) {
       if (this.hasNot_ahead('(')) {
         return this.parse_funcdecl_or_vardecl();
@@ -1125,15 +1159,8 @@ class Parser {
       }
     }
 
-    else if (this.has('\n')) {
-      return {
-        type: NODETYPES.NEWLINE,
-        blockID: 'code',
-      }
-    }
-
+    // most likely a function call
     else {
-      // most likely an expression statement
       let contents = this.parse_expression(9);
       if (this.has(';')) {
         this.advance();
