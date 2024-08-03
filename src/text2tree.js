@@ -900,20 +900,17 @@ class Parser {
     if (this.i > 0) {
       let comment = this.parse_end_of_line(true);
       if (comment) {
-        block_statements.push(this.comment);
+        block_statements.push(comment);
       }
     }
 
     // parse all statements inside the block
     while (!this.has('EOF') && this.hasNotAny(...endToken)) {
       let stmt = this.parse_statement();
-      if (!stmt) {
-        break;  // empty block
-      }
       block_statements.push(stmt);
       let comment = this.parse_end_of_line(false);
       if (comment) {
-        block_statements.push(this.comment);
+        block_statements.push(comment);
       }
     }
 
@@ -963,7 +960,7 @@ class Parser {
       }
       this.advance();
 
-      result.statement = this.parse_block('else', 'end if');
+      result.codeblock = this.parse_block('else', 'end if');
       if (this.getPrevTokenType() == 'else') {
         result.type = NODETYPES.IF_ELSE;
         result.alternative = this.parse_block('end if');
@@ -1002,7 +999,7 @@ class Parser {
       this.advance();
 
       result.endIndex = this.getCurrentToken().endIndex;
-      result.statement = this.parse_block('end for');
+      result.codeblock = this.parse_block('end for');
       return result;
     }
 
@@ -1020,14 +1017,14 @@ class Parser {
         return result;
       }
       this.advance();
-      result.statement = this.parse_block('end while');
+      result.codeblock = this.parse_block('end while');
     }
 
     // do-while loop
     else if (this.has('do')) {
       result.type = NODETYPES.DO_WHILE;
       this.advance();
-      result.statement = this.parse_block('while');
+      result.codeblock = this.parse_block('while');
       if (this.hasNot('(')) {
         return result;
       }
@@ -1044,7 +1041,7 @@ class Parser {
     else if (this.has('repeat')) {
       result.type = NODETYPES.REPEAT_UNTIL;
       this.advance();
-      result.statement = this.parse_block('until');
+      result.codeblock = this.parse_block('until');
       if (this.hasNot('(')) {
         return result;
       }
@@ -1167,7 +1164,7 @@ class Parser {
         startIndex: token.startIndex,
         endIndex: token.endIndex,
         blockID: 'code',
-        line: line,
+        line: token.line,
       };
     }
 

@@ -235,14 +235,14 @@ export const tree2text = (node, indentation) => {
         case NODETYPES.IF:
             var result = '    '.repeat(indentation) + "if (";
             var condition = tree2text(node.condition, 0) + ")\n";
-            var contents = tree2text(node.statement, indentation + 1) +
+            var contents = tree2text(node.codeblock, indentation + 1) +
                 '    '.repeat(indentation) + 'end if\n';
             return result + condition + contents;
 
         case NODETYPES.IF_ELSE:
             var result = '    '.repeat(indentation) + "if (";
             var condition = tree2text(node.condition, 0) + ")\n";
-            var contents = tree2text(node.statement, indentation + 1);
+            var contents = tree2text(node.codeblock, indentation + 1);
             var alternative = '    '.repeat(indentation) + '\else\n' +
                 tree2text(node.alternative, indentation + 1) +
                 '    '.repeat(indentation) + 'end if\n';
@@ -280,13 +280,13 @@ export const tree2text = (node, indentation) => {
 
         case NODETYPES.DO_WHILE:
             var result = '    '.repeat(indentation) + 'do\n';
-            var contents = '    '.repeat(indentation) + tree2text(node.statement, indentation + 1);
+            var contents = '    '.repeat(indentation) + tree2text(node.codeblock, indentation + 1);
             var condition = '    '.repeat(indentation) + "while (" + tree2text(node.condition, 0) + ")\n";
             return result + contents + condition;
 
         case NODETYPES.REPEAT_UNTIL:
             var result = '    '.repeat(indentation) + 'repeat\n';
-            var contents = '    '.repeat(indentation) + tree2text(node.statement, indentation + 1);
+            var contents = '    '.repeat(indentation) + tree2text(node.codeblock, indentation + 1);
             var condition = '    '.repeat(indentation) + "until (" + tree2text(node.condition, 0) + ")\n";
             return result + contents + condition;
 
@@ -307,7 +307,7 @@ export const tree2text = (node, indentation) => {
             var condition = tree2text(node.condition, 0) + '; ';
             var increment = tree2text(node.increment, 0);
             increment = increment.replace("\n", "") + ')\n';
-            var contents = '    '.repeat(indentation) + tree2text(node.statement, indentation + 1) +
+            var contents = '    '.repeat(indentation) + tree2text(node.codeblock, indentation + 1) +
                 '    '.repeat(indentation) + 'end for\n';
             return result + initialization + condition + increment + contents;
 

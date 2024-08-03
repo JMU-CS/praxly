@@ -216,7 +216,7 @@ export function createExecutable(tree) {
 
         case NODETYPES.IF:
             try {
-                return new Praxly_if(createExecutable(tree.condition), createExecutable(tree.statement), tree);
+                return new Praxly_if(createExecutable(tree.condition), createExecutable(tree.codeblock), tree);
             }
             catch (error) {
                 return new Praxly_statement(null);
@@ -224,7 +224,7 @@ export function createExecutable(tree) {
 
         case NODETYPES.IF_ELSE:
             try {
-                return new Praxly_if_else(createExecutable(tree.condition), createExecutable(tree.statement), createExecutable(tree.alternative), tree);
+                return new Praxly_if_else(createExecutable(tree.condition), createExecutable(tree.codeblock), createExecutable(tree.alternative), tree);
             }
             catch (error) {
                 return new Praxly_statement(null);
@@ -272,8 +272,8 @@ export function createExecutable(tree) {
                 var initialization = createExecutable(tree.initialization);
                 var condition = createExecutable(tree.condition);
                 var incrementation = createExecutable(tree.increment);
-                var statement = createExecutable(tree.statement);
-                return new Praxly_for(initialization, condition, incrementation, statement, tree);
+                var codeblock = createExecutable(tree.codeblock);
+                return new Praxly_for(initialization, condition, incrementation, codeblock, tree);
             }
             catch (error) {
                 return new Praxly_statement(null);
@@ -282,8 +282,8 @@ export function createExecutable(tree) {
         case NODETYPES.WHILE:
             try {
                 var condition = createExecutable(tree.condition);
-                var statement = createExecutable(tree.statement);
-                return new Praxly_while(condition, statement, tree);
+                var codeblock = createExecutable(tree.codeblock);
+                return new Praxly_while(condition, codeblock, tree);
             }
             catch (error) {
                 return new Praxly_statement(null);
@@ -292,8 +292,8 @@ export function createExecutable(tree) {
         case NODETYPES.DO_WHILE:
             try {
                 var condition = createExecutable(tree.condition);
-                var statement = createExecutable(tree.statement);
-                return new Praxly_do_while(condition, statement, tree);
+                var codeblock = createExecutable(tree.codeblock);
+                return new Praxly_do_while(condition, codeblock, tree);
             }
             catch (error) {
                 return new Praxly_statement(null);
@@ -302,8 +302,8 @@ export function createExecutable(tree) {
         case NODETYPES.REPEAT_UNTIL:
             try {
                 var condition = createExecutable(tree.condition);
-                var statement = createExecutable(tree.statement);
-                return new Praxly_repeat_until(condition, statement, tree);
+                var codeblock = createExecutable(tree.codeblock);
+                return new Praxly_repeat_until(condition, codeblock, tree);
             }
             catch (error) {
                 return new Praxly_statement(null);
@@ -1059,10 +1059,10 @@ class Praxly_less_than_equal {
 
 class Praxly_if {
 
-    constructor(condition, code, node) {
+    constructor(condition, codeblock, node) {
         this.json = node;
         this.condition = condition;
-        this.code = code;
+        this.codeblock = codeblock;
     }
 
     async evaluate(environment) {
@@ -1071,7 +1071,7 @@ class Praxly_if {
             throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
         }
         if (cond.value) {
-            await this.code.evaluate(environment);
+            await this.codeblock.evaluate(environment);
         }
         return 'success';
     }
@@ -1079,10 +1079,10 @@ class Praxly_if {
 
 class Praxly_if_else {
 
-    constructor(condition, code, alternative, node) {
+    constructor(condition, codeblock, alternative, node) {
         this.json = node;
         this.condition = condition;
-        this.code = code;
+        this.codeblock = codeblock;
         this.alternative = alternative;
     }
 
@@ -1092,7 +1092,7 @@ class Praxly_if_else {
             throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
         }
         if (cond.value) {
-            await this.code.evaluate(environment);
+            await this.codeblock.evaluate(environment);
         } else {
             await this.alternative.evaluate(environment);
         }

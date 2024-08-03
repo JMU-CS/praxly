@@ -204,17 +204,17 @@ export const tree2blocks = (workspace, node) => {
         case NODETYPES.IF:
             var result = workspace.newBlock('praxly_if_block');
             var condition = tree2blocks(workspace, node?.condition);
-            var codeblocks = tree2blocks(workspace, node?.statement);
+            var codeblock = tree2blocks(workspace, node?.codeblock);
             result.getInput('CONDITION').connection.connect(condition?.outputConnection);
-            if (codeblocks && codeblocks.length > 0) {
-                result.getInput('STATEMENT').connection.connect(codeblocks[0]?.previousConnection);
+            if (codeblock && codeblock.length > 0) {
+                result.getInput('STATEMENT').connection.connect(codeblock[0]?.previousConnection);
             }
             break;
 
         case NODETYPES.IF_ELSE:
             var result = workspace.newBlock('praxly_if_else_block');
             var condition = tree2blocks(workspace, node?.condition);
-            var statements = tree2blocks(workspace, node?.statement);
+            var statements = tree2blocks(workspace, node?.codeblock);
             var alternatives = tree2blocks(workspace, node?.alternative);
             result.getInput('CONDITION').connection.connect(condition?.outputConnection);
             if (statements && statements.length > 0) {
@@ -267,30 +267,30 @@ export const tree2blocks = (workspace, node) => {
         case NODETYPES.WHILE:
             var result = workspace.newBlock('praxly_while_loop_block');
             var condition = tree2blocks(workspace, node?.condition);
-            var codeblocks = tree2blocks(workspace, node?.statement);
+            var codeblock = tree2blocks(workspace, node?.codeblock);
             result.getInput('CONDITION').connection.connect(condition?.outputConnection);
-            if (codeblocks && codeblocks.length > 0) {
-                result.getInput('STATEMENT').connection.connect(codeblocks[0]?.previousConnection);
+            if (codeblock && codeblock.length > 0) {
+                result.getInput('STATEMENT').connection.connect(codeblock[0]?.previousConnection);
             }
             break;
 
         case NODETYPES.DO_WHILE:
             var result = workspace.newBlock('praxly_do_while_loop_block');
             var condition = tree2blocks(workspace, node?.condition);
-            var codeblocks = tree2blocks(workspace, node?.statement);
+            var codeblock = tree2blocks(workspace, node?.codeblock);
             result.getInput('CONDITION').connection.connect(condition?.outputConnection);
-            if (codeblocks && codeblocks.length > 0) {
-                result.getInput('STATEMENT').connection.connect(codeblocks[0]?.previousConnection);
+            if (codeblock && codeblock.length > 0) {
+                result.getInput('STATEMENT').connection.connect(codeblock[0]?.previousConnection);
             }
             break;
 
         case NODETYPES.REPEAT_UNTIL:
             var result = workspace.newBlock('praxly_repeat_until_loop_block');
             var condition = tree2blocks(workspace, node?.condition);
-            var codeblocks = tree2blocks(workspace, node?.statement);
+            var codeblock = tree2blocks(workspace, node?.codeblock);
             result.getInput('CONDITION').connection.connect(condition?.outputConnection);
-            if (codeblocks && codeblocks.length > 0) {
-                result.getInput('STATEMENT').connection.connect(codeblocks[0]?.previousConnection);
+            if (codeblock && codeblock.length > 0) {
+                result.getInput('STATEMENT').connection.connect(codeblock[0]?.previousConnection);
             }
             break;
 
@@ -417,7 +417,7 @@ export const tree2blocks = (workspace, node) => {
                 }
 
                 // get the for loop body
-                var codeblocks = tree2blocks(workspace, node?.statement);
+                var codeblock = tree2blocks(workspace, node?.codeblock);
 
                 // connect everything together
                 result.getInput('INITIALIZATION').connection.connect(initialization?.outputConnection);
@@ -425,8 +425,8 @@ export const tree2blocks = (workspace, node) => {
                 result.getInput('CONDITION').connection.connect(condition?.outputConnection);
                 result.getInput('REASSIGNMENT').connection.connect(increment?.outputConnection);
                 container2?.dispose();
-                if (codeblocks && codeblocks.length > 0) {
-                    result.getInput('CODEBLOCK').connection.connect(codeblocks[0]?.previousConnection);
+                if (codeblock && codeblock.length > 0) {
+                    result.getInput('CODEBLOCK').connection.connect(codeblock[0]?.previousConnection);
                 }
             }
             catch (error) {
