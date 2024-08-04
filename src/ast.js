@@ -516,19 +516,28 @@ class Praxly_array_literal {
     }
 }
 
-export function valueToString(child, json) {
+export function valueToString(child, quotes, line) {
     if (child === "Exit_Success") {
-        throw new PraxlyError("no value returned from void procedure", json.line);
+        throw new PraxlyError("no value returned from void procedure", line);
     }
     var result;
     if (child.jsonType === 'Praxly_array') {
-        let values = child.elements.map(valueToString);
+        // always show quote marks for arrays
+        let values = child.elements.map((element) => valueToString(element, true, line));
         result = '{' + values.join(", ") + '}';
     } else {
         result = child.value.toString();
         if (child.realType === TYPES.DOUBLE || child.realType === TYPES.FLOAT) {
             if (result.indexOf('.') === -1) {
                 result += '.0';
+            }
+        }
+        if (quotes) {
+            if (child.realType === TYPES.CHAR) {
+                result = "'" + result + "'";
+            }
+            if (child.realType === TYPES.STRING) {
+                result = '"' + result + '"';
             }
         }
     }
@@ -544,7 +553,7 @@ class Praxly_print {
 
     async evaluate(environment) {
         var child = await (this.expression.evaluate(environment));
-        var result = valueToString(child, this.json);
+        var result = valueToString(child, false, this.json.line);
 
         let suffix;
         if (this.json.comment) {

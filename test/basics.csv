@@ -30,14 +30,14 @@ a
 7
 8
 nine",
-Assign float to int,int x ← 1.2,,,"error occurred on line 1:
-	incompatible types: possible lossy conversion from double to int"
+Assign float to int,int x ← 1.2,,,"runtime error occurred on line 1:
+incompatible types: possible lossy conversion from double to int"
 Assign int to float,"float y = 1
 print y",,1.0,
-Assign str to int,String s = 1,,,"error occurred on line 1:
-	incompatible types: int cannot be converted to String"
-Assign int to str,"int i = ""0""",,,"error occurred on line 1:
-	incompatible types: String cannot be converted to int"
+Assign str to int,String s = 1,,,"runtime error occurred on line 1:
+incompatible types: int cannot be converted to String"
+Assign int to str,"int i = ""0""",,,"runtime error occurred on line 1:
+incompatible types: String cannot be converted to int"
 Arithmetic ops,"int x ← 2
 int y ← 3
 print x + y

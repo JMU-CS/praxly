@@ -635,11 +635,6 @@ class Parser {
             this.advance();
             return this.literalNode_new(this.tokens[this.i - 1]);
 
-          // function call
-          case NODETYPES.BUILTIN_FUNCTION_CALL:
-          case 'Type':  // type conversion function
-            return this.parse_builtin_function_call(line);
-
           // parentheses
           case '(':
             const leftToken = this.advance();
@@ -685,6 +680,16 @@ class Parser {
             result.endIndex = this.getCurrentToken().endIndex;
             this.advance();
             return result;
+
+          // built-in function call
+          case NODETYPES.BUILTIN_FUNCTION_CALL:
+          case 'Type':  // type conversion function
+            if (this.has_ahead('(')) {
+              return this.parse_builtin_function_call(line);
+            }
+            else {
+              // parse as 'Location' instead (Ex: variable named max)
+            }
 
           // variable assignment or procedure call
           case 'Location':
@@ -771,7 +776,7 @@ class Parser {
         textError('parsing', 'did not detect right parenthesis', line);
       }
     } else {
-      textError('parsing', 'did not detect left parenthesis', line);
+      textError('parsing', `missing parentheses for built-in ${nameToken.value}() function`, line);
     }
   }
 
@@ -900,18 +905,18 @@ class Parser {
     if (this.i > 0) {
       let comment = this.parse_end_of_line(true);
       if (comment) {
-        block_statements.push(comment);
+        block_statements.push(comment);  // move trailing comment into the new block
       }
     }
 
     // parse all statements inside the block
     while (!this.has('EOF') && this.hasNotAny(...endToken)) {
       let stmt = this.parse_statement();
-      block_statements.push(stmt);
       let comment = this.parse_end_of_line(false);
       if (comment) {
-        block_statements.push(comment);
+        block_statements.push(comment);  // move trailing comment above the statement
       }
+      block_statements.push(stmt);
     }
 
     // make sure the block is correctly terminated

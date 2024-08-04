@@ -548,7 +548,7 @@ print index",,2,
 search-sort/4-search-algorithms.md binary search,"int binarySearch( String [] arr, int arrLength, String target )
     int lower ← 0  // lower and upper indices define range
     int upper ← arrLength - 1
-    while ( lower < upper )
+    while ( lower <= upper )
         int middle ← (lower+upper) / 2  // middle index in range
         String current ← arr[middle]
         if ( target > current )  // adjust range for next iteration
@@ -588,6 +588,7 @@ search-sort/5-sorting-algorithms.md selection sort,"void selectionSort( String [
           for ( int k ← j + 1; k < length; k ← k + 1 )  // find minimum
                if (arr[k] < arr[min])
                     min ← k
+               end if
           end for
           String temp ← arr[j]  // swap
           arr[j] ← arr[min]
