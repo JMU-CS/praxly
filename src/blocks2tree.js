@@ -480,6 +480,12 @@ export const makeGenerator = () => {
             index: index,
             value: value,
             blockID: block.id,
+            location: {
+                name: variableName,
+                type: NODETYPES.LOCATION,
+                isArray: true,
+                index: index,
+            },
         })
     }
 

@@ -173,7 +173,7 @@ export function createExecutable(tree) {
                 checkArity(tree, 1);
                 return new Praxly_sqrt(createExecutable(tree.args[0]), tree);
             } else {
-                throw new PraxlyError("unknown builtin function: " + tree.name, tree.line);
+                throw Error(`unknown builtin function ${tree.name} (line ${tree.line})`);
             }
         }
 
@@ -193,7 +193,7 @@ export function createExecutable(tree) {
                     checkArity(tree.right, 2);
                     break;
                 default:
-                    throw new PraxlyError("unknown string method: " + tree.right.name, tree.line);
+                    throw Error(`unknown string method ${tree.right.name} (line ${tree.line})`);
             }
             var args = [];
             tree.right.args.forEach((arg) => {
@@ -1762,7 +1762,7 @@ function can_assign(varType, expressionType, line) {
     } else if (varType === TYPES.CHAR) {
         return expressionType === TYPES.CHAR;
     } else {
-        throw new PraxlyError("unknown variable type", line);
+        throw Error(`unknown variable type ${varType} (line ${line})`);
     }
 }
 

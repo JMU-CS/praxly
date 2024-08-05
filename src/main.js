@@ -526,7 +526,7 @@ export function turnCodeToBlocks() {
   clearErrors();
   mainTree = text2tree();
   if (DEV_LOG) {
-    console.log(mainTree);
+    console.log("text2tree", mainTree);
   }
 
   // update block side to match
@@ -554,7 +554,7 @@ function turnBlocksToCode() {
   clearErrors();
   mainTree = blocks2tree(workspace, praxlyGenerator);
   if (DEV_LOG) {
-    console.log(mainTree);
+    console.log("blocks2tree", mainTree);
   }
 
   // update text side to match
