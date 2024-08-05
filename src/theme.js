@@ -93,7 +93,7 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
             'colourPrimary': '#00BFFF'
         },
         'text_blocks': {
-            'colourPrimary': '#2F4F4F'
+            'colourPrimary': '#cdd481'
         }
     },
     'categoryStyles': {
@@ -122,7 +122,7 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
             'colour': '#DAA520'
         },
         'text_blocks': {
-            'colour': '#2F4F4F'
+            'colour': '#cdd481'
         }
     },
     'componentStyles': {

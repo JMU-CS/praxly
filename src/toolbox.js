@@ -48,10 +48,6 @@ export const toolbox = {
       "contents": [
         {
           'kind': 'block',
-          'type': 'praxly_variable_block'
-        },
-        {
-          'kind': 'block',
           'type': 'praxly_vardecl_block',
         },
         {
@@ -81,6 +77,10 @@ export const toolbox = {
               },
             },
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_variable_block'
         },
         {
           'kind': 'block',
@@ -136,10 +136,6 @@ export const toolbox = {
       "name": "math",
       "categorystyle": "math_blocks",
       "contents": [
-        {
-          'kind': 'block',
-          'type': 'praxly_literal_block'
-        },
         // {
         //   'kind': 'block',
         //   'type': 'praxly_String_block'
@@ -179,6 +175,10 @@ export const toolbox = {
               },
             },
           }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_literal_block'
         },
         {
           'kind': 'block',
@@ -390,7 +390,7 @@ export const toolbox = {
               'block': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '"string"'
+                  'LITERAL': 'string'
                 }
               }
             }
