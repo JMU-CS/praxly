@@ -878,7 +878,7 @@ class Parser {
       result.params = params;
 
       // procedure body
-      result.contents = this.parse_block('end ' + result.name);
+      result.codeblock = this.parse_block('end ' + result.name);
     }
 
     result.endIndex = this.getCurrentToken().endIndex;
@@ -905,7 +905,8 @@ class Parser {
     if (this.i > 0) {
       let comment = this.parse_end_of_line(true);
       if (comment) {
-        block_statements.push(comment);  // move trailing comment into the new block
+        // move trailing comment into the new block
+        block_statements.push(comment);
       }
     }
 
@@ -913,10 +914,19 @@ class Parser {
     while (!this.has('EOF') && this.hasNotAny(...endToken)) {
       let stmt = this.parse_statement();
       let comment = this.parse_end_of_line(false);
-      if (comment) {
-        block_statements.push(comment);  // move trailing comment above the statement
+      if (stmt?.codeblock) {
+        // move trailing comment after the block end
+        block_statements.push(stmt);
+        if (comment) {
+            block_statements.push(comment);
+        }
+      } else {
+        // move trailing comment above the statement
+        if (comment) {
+            block_statements.push(comment);
+        }
+        block_statements.push(stmt);
       }
-      block_statements.push(stmt);
     }
 
     // make sure the block is correctly terminated

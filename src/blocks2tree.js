@@ -594,14 +594,14 @@ export const makeGenerator = () => {
             argsList.push(param);
         });
         var procedureName = block.getFieldValue('PROCEDURE_NAME');
-        const statements = block.getInputTargetBlock("CONTENTS");
+        const statements = block.getInputTargetBlock("CODEBLOCK");
         block.setFieldValue(procedureName, 'END_PROCEDURE_NAME');
         return customizeMaybe(block, {
             type: NODETYPES.FUNCDECL,
             name: procedureName,
             params: argsList,
             returnType: returnType,
-            contents: praxlyGenerator['codeBlockJsonBuilder'](statements),
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements),
             blockID: block.id,
         })
     }

@@ -352,9 +352,9 @@ export const tree2blocks = (workspace, node) => {
             result.setFieldValue(node?.name, 'PROCEDURE_NAME');
             result.setFieldValue(node?.name, 'END_PROCEDURE_NAME');
             result.getInput('PARAMS').connection.connect(params?.outputConnection);
-            var contents = tree2blocks(workspace, node?.contents);
-            if (contents && contents.length > 0) {
-                result.getInput('CONTENTS').connection.connect(contents[0]?.previousConnection);
+            var codeblock = tree2blocks(workspace, node?.codeblock);
+            if (codeblock && codeblock.length > 0) {
+                result.getInput('CODEBLOCK').connection.connect(codeblock[0]?.previousConnection);
             }
             for (var i = 0; i < (argsList?.length ?? 0); i++) {
                 params.appendValueInput(`PARAM_${i}`);

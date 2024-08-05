@@ -322,8 +322,8 @@ export function createExecutable(tree) {
             return new Praxly_single_line_comment(tree.value, tree);
 
         case NODETYPES.FUNCDECL:
-            var contents = createExecutable(tree.contents);
-            return new Praxly_function_declaration(tree.returnType, tree.name, tree.params, contents, tree);
+            var codeblock = createExecutable(tree.codeblock);
+            return new Praxly_function_declaration(tree.returnType, tree.name, tree.params, codeblock, tree);
 
         case NODETYPES.FUNCCALL:
             var args = [];
@@ -1569,11 +1569,11 @@ class Praxly_invalid {
 
 class Praxly_function_declaration {
 
-    constructor(returnType, name, params, contents, node) {
+    constructor(returnType, name, params, codeblock, node) {
         this.returnType = returnType;
         this.name = name;
         this.params = params;
-        this.codeblock = contents;
+        this.codeblock = codeblock;
         this.json = node;
     }
 
@@ -1581,7 +1581,7 @@ class Praxly_function_declaration {
         environment.functionList[this.name] = {
             returnType: this.returnType,
             params: this.params,
-            contents: this.codeblock,
+            codeblock: this.codeblock,
         }
     }
 }
@@ -1607,11 +1607,11 @@ class Praxly_function_call {
     //this one was tricky
     async evaluate(environment) {
         var func = findFunction(this.name, environment, this.json);
-        var functionParams = func.params;
-        var functionContents = func.contents;
+        var functionArgs = func.params;
+        var functionBody = func.codeblock;
         var returnType = func.returnType;
-        if (functionParams.length !== this.args.length) {
-            throw new PraxlyError(`incorrect amount of arguments passed, expected ${functionParams.length}, was ${this.args.length}`, this.json.line);
+        if (functionArgs.length !== this.args.length) {
+            throw new PraxlyError(`incorrect amount of arguments passed, expected ${functionArgs.length}, was ${this.args.length}`, this.json.line);
         }
 
         //NEW: parameter list is now a linkedList. expect some errors till I fix it.
@@ -1623,8 +1623,8 @@ class Praxly_function_call {
             global: environment.global,
         };
         for (let i = 0; i < this.args.length; i++) {
-            let parameterName = functionParams[i][1];
-            let parameterType = functionParams[i][0];
+            let parameterName = functionArgs[i][1];
+            let parameterType = functionArgs[i][0];
             let argument = await this.args[i].evaluate(environment);
 
             if (can_assign(parameterType, argument.realType, this.json.line)) {
@@ -1637,7 +1637,7 @@ class Praxly_function_call {
         // call the user's function
         let result = null;
         try {
-            result = await functionContents.evaluate(newScope);
+            result = await functionBody.evaluate(newScope);
         }
         catch (error) {
             if (error instanceof ReturnException) {
