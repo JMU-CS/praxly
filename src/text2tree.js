@@ -314,10 +314,6 @@ class Parser {
     this.length = tokens?.length;
   }
 
-  hasNot(type) {
-    return this.i < this.length && this.tokens[this.i].token_type !== type;
-  }
-
   getCurrentToken() {
     return this.tokens[this.i];
   }
@@ -336,6 +332,10 @@ class Parser {
 
   has(type) {
     return this.i < this.length && this.tokens[this.i].token_type === type;
+  }
+
+  hasNot(type) {
+    return this.i < this.length && this.tokens[this.i].token_type !== type;
   }
 
   hasAny() {
@@ -1171,10 +1171,10 @@ class Parser {
 
     // optional end-of-line comment
     let comment;
-    if (this.has(NODETYPES.SINGLE_LINE_COMMENT)) {
+    if (this.has(NODETYPES.SINGLE_LINE_COMMENT) || this.has(NODETYPES.COMMENT)) {
       const token = this.advance();
       comment = {
-        type: NODETYPES.SINGLE_LINE_COMMENT,
+        type: this.getPrevTokenType(),
         value: token.value,
         startIndex: token.startIndex,
         endIndex: token.endIndex,
