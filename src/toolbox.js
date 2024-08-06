@@ -360,7 +360,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '\"hello\"',
+                  'LITERAL': '"Hello"',
                 }
               },
             },
@@ -382,7 +382,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': '\"hello\"',
+                  'LITERAL': '"Hello"',
                 }
               },
             },
@@ -404,7 +404,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello\"',
+                    'LITERAL': '"Hello"',
                   }
                 },
               },
@@ -426,7 +426,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello\"',
+                    'LITERAL': '"Hello"',
                   }
                 },
               }
@@ -440,7 +440,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello\"',
+                    'LITERAL': '"Hello"',
                   }
                 },
               },
@@ -470,7 +470,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello\"',
+                    'LITERAL': '"Hello"',
                   }
                 },
               },
@@ -484,7 +484,7 @@ export const toolbox = {
                 'shadow': {
                   'type': 'praxly_literal_block',
                   'fields': {
-                    'LITERAL': '\"hello\"',
+                    'LITERAL': '"Hello"',
                   }
                 },
               },
