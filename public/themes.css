@@ -555,6 +555,15 @@ body:not(.embed) #bottom-part {
   color: red;
 }
 
+.stderr a {
+    color: skyblue;
+}
+
+.stderr a:active,
+.stderr a:hover {
+    color: white;
+}
+
 /* not sure where any of this goes */
 
 .menuButtons {
