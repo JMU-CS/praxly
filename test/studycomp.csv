@@ -125,8 +125,7 @@ print ( age > 10 ) and ( height > 36 )
 print not ( ( age ≤ 10 ) or ( height ≤ 36 ) )",,"true
 true",
 Q14,"String value ← ""Applesauce""
-value ← value.substring ( 0, 1 ).toLowerCase () +
-        value.substring ( 1, value.length () ).toUpperCase ()
+value ← value.substring ( 0, 1 ).toLowerCase () + value.substring ( 1, value.length () ).toUpperCase ()
 print value",,aPPLESAUCE,
 Q15,"int mystery ( int n )
     int temp ← 0

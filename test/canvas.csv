@@ -154,25 +154,24 @@ if( secret_number != guess )
 end if",14,"Guess a number!
 
 You did not get it...",
-conditionals/5.4 if-statements.md random guess,"// get the random number
-int r ⟵ random
+conditionals/5.4 if-statements.md random guess,"// get a random integer between 0 and 99
+int n ← randomInt(100);
 
-// scale the number so it is between 1 and 100
-int nf ⟵ float (r) / 6.0 * 100.0;
-int n  ⟵ int (nf);
+// adjust integer to be between 1 and 100
+n ← n + 1;
 
-// get the guess from the user;
-int guess ⟵ int(input())
+// get the guess from the user
+int guess ← int(input());
 
 // compare n to guess
-if(n == guess)
+if (n == guess)
     print 'y';
 end if
 
-if(n != guess)
+if (n != guess)
     print 'n';
-end if
-",,TODO random,
+end if",123,"
+n",
 conditionals/5.5 more-ifs.md if guess 5,"print ""Guess a number between 1 and 10"";
 int n ⟵ int(input())
 
@@ -184,32 +183,36 @@ end if",5,"Guess a number between 1 and 10
 
 You got it!",
 conditionals/5.5 more-ifs.md if else-if else,"print ""Guess a number between 1 and 10"";
-int n ⟵ int(input())
+int n ← int(input());
 
-if(n == 5)
+if (n == 5)
     print ""Correct!"";
-else if (n == 4 or n == 6)
-    print ""You're close!"";
 else
-    print ""Incorrect!"";
+    if (n == 4 or n == 6)
+        print ""You're close!"";
+    else
+        print ""Incorrect!"";
+    end if
 end if",4,"Guess a number between 1 and 10
 
 You're close!",
 conditionals/5.5 more-ifs.md nested if-else,"print ""Guess a number between 1 and 10"";
-int n ⟵ int(input())
+int n ← int(input());
 
 if (n < 5)
     print ""Too low!"";
     if (n == 4)
         print ""Pretty close, though."";
     end if
-else if (n > 5)
-    print ""Too high!"";
-    if(n == 6)
-        print ""Pretty close, though."";
-    end if
 else
-    print ""You got it!"";
+    if (n > 5)
+        print ""Too high!"";
+        if (n == 6)
+            print ""Pretty close, though."";
+        end if
+    else
+        print ""You got it!"";
+    end if
 end if",6,"Guess a number between 1 and 10
 
 Too high!
@@ -218,8 +221,8 @@ conditionals/5.6 loops.md infinite loop,"int count ⟵ 0;
 
 while ( count < 5)
     // print ""Looping!"";
-end while",,,"error occurred on line 3:
-	This is probably an infinite loop."
+end while",,,"runtime error occurred on line 3:
+This is probably an infinite loop."
 conditionals/5.6 loops.md while loop 5,"int count ⟵ 0;
 
 while (count < 5 )
@@ -249,13 +252,16 @@ conditionals/5.6 loops.md do-while false,"int count ⟵ 2;
 do
     print ""Loop!"";
 while ( count < 2 )",,Loop!,
-conditionals/5.7 compound-boolean.md game,"print ""Welcome to the game!"";
-int answer ⟵ random;
+conditionals/5.7 compound-boolean.md game,"randomSeed(0)
+
+print ""Welcome to the game!"";
+int answer ⟵ randomInt(6) + 1;
 int guesses ⟵ 0;
 
+int n;
 while (guesses <= 3)
     print ""Guess a number between 1 and 6"";
-    int n ⟵ int(input())
+    n ⟵ int(input())
 
     if(n == answer)
         print ""You got it!"";
@@ -273,7 +279,15 @@ if (n == answer)
     end if
 else
     print ""You lost!"";
-end if",,TODO random,
+end if","1
+2","Welcome to the game!
+Guess a number between 1 and 6
+
+That's not it!
+Guess a number between 1 and 6
+
+You got it!
+You won!",
 conditionals/5.7 compound-boolean.md license,"print ""How old are you?"";
 int age = int(input())
 
@@ -328,13 +342,13 @@ Hello!
 How are you?",
 procedures/2-procedure-basics.md global vs local,"// procedure definition
 void getRandom()
-    int r ⟵ random // local variable
+    double r ⟵ random();  // local variable
 end getRandom
 
 // main program
-int r ⟵ 10;   // global variable
-getRandom(); // call the procedure
-print r;",,TODO random,
+double r ⟵ 10;  // global variable
+getRandom();    // call the procedure
+print r;",,10.0,
 procedures/2-procedure-basics.md no global vars,"// procedure definition
 void printSum()
     int a ⟵ 10;
@@ -344,8 +358,8 @@ end printSum
 
 // main program
 printSum();
-print a * b; // ERROR!",,25,"error occurred on line 10:
-	Variable a does not exist."
+print a * b; // ERROR!",,25,"runtime error occurred on line 10:
+Variable a does not exist."
 procedures/3-params-and-return.md capital of VA,"print ""What is the capital of Virginia?"";
 print ""1: Washington 2: Richmond 3: Norfolk"";
 int ans ⟵ int(input())
@@ -534,7 +548,7 @@ print index",,2,
 search-sort/4-search-algorithms.md binary search,"int binarySearch( String [] arr, int arrLength, String target )
     int lower ← 0  // lower and upper indices define range
     int upper ← arrLength - 1
-    while ( lower < upper )
+    while ( lower <= upper )
         int middle ← (lower+upper) / 2  // middle index in range
         String current ← arr[middle]
         if ( target > current )  // adjust range for next iteration
@@ -574,6 +588,7 @@ search-sort/5-sorting-algorithms.md selection sort,"void selectionSort( String [
           for ( int k ← j + 1; k < length; k ← k + 1 )  // find minimum
                if (arr[k] < arr[min])
                     min ← k
+               end if
           end for
           String temp ← arr[j]  // swap
           arr[j] ← arr[min]

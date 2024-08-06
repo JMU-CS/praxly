@@ -373,7 +373,7 @@ export const makeGenerator = () => {
             type: NODETYPES.IF,
             blockID: block.id,
             condition: praxlyGenerator[condition?.type](condition),
-            statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements)
         })
     }
 
@@ -385,7 +385,7 @@ export const makeGenerator = () => {
             type: NODETYPES.IF_ELSE,
             blockID: block.id,
             condition: praxlyGenerator[condition?.type](condition),
-            statement: praxlyGenerator['codeBlockJsonBuilder'](statements),
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements),
             alternative: praxlyGenerator['codeBlockJsonBuilder'](alternative),
         })
     }
@@ -480,6 +480,12 @@ export const makeGenerator = () => {
             index: index,
             value: value,
             blockID: block.id,
+            location: {
+                name: variableName,
+                type: NODETYPES.LOCATION,
+                isArray: true,
+                index: index,
+            },
         })
     }
 
@@ -523,7 +529,7 @@ export const makeGenerator = () => {
             type: NODETYPES.WHILE,
             blockID: block.id,
             condition: praxlyGenerator[condition?.type](condition),
-            statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements)
         });
     }
 
@@ -534,7 +540,7 @@ export const makeGenerator = () => {
             type: NODETYPES.DO_WHILE,
             blockID: block.id,
             condition: praxlyGenerator[condition?.type](condition),
-            statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements)
         });
     }
 
@@ -545,7 +551,7 @@ export const makeGenerator = () => {
             type: NODETYPES.REPEAT_UNTIL,
             blockID: block.id,
             condition: praxlyGenerator[condition?.type](condition),
-            statement: praxlyGenerator['codeBlockJsonBuilder'](statements)
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements)
         });
     }
 
@@ -576,7 +582,7 @@ export const makeGenerator = () => {
             type: NODETYPES.FOR,
             blockID: block.id,
             initialization: praxlyGenerator[initialization?.type](initialization),
-            statement: praxlyGenerator['codeBlockJsonBuilder'](statements),
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements),
             increment: praxlyGenerator[reassignment?.type](reassignment),
             condition: praxlyGenerator[condition?.type](condition),
         });
@@ -594,14 +600,14 @@ export const makeGenerator = () => {
             argsList.push(param);
         });
         var procedureName = block.getFieldValue('PROCEDURE_NAME');
-        const statements = block.getInputTargetBlock("CONTENTS");
+        const statements = block.getInputTargetBlock("CODEBLOCK");
         block.setFieldValue(procedureName, 'END_PROCEDURE_NAME');
         return customizeMaybe(block, {
             type: NODETYPES.FUNCDECL,
             name: procedureName,
             params: argsList,
             returnType: returnType,
-            contents: praxlyGenerator['codeBlockJsonBuilder'](statements),
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements),
             blockID: block.id,
         })
     }

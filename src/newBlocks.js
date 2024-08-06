@@ -999,7 +999,7 @@ export function definePraxlyBlocks(workspace) {
         },
         {
           "type": "input_statement",
-          "name": "CONTENTS"
+          "name": "CODEBLOCK"
         },
         {
           "type": "field_input",

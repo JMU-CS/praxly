@@ -22,7 +22,7 @@ URL = "http://localhost:5173/"  # https://praxly.cs.jmu.edu/
 WAIT = 3
 
 # How long to sleep before performing actions.
-PAUSE = 0.2
+PAUSE = 0.25
 
 
 def main(csv_name, html_name):
@@ -65,17 +65,18 @@ def main(csv_name, html_name):
         expect_out = row[3].rstrip().replace("\r", "")
         expect_err = row[4].rstrip().replace("\r", "")
 
+        time.sleep(PAUSE)
         print(f"Test {test_id}: {name}...", end="", flush=True)
         if expect_out.startswith("TODO"):
             print(todo_msg)
             continue
 
         # reset Praxly, paste code, and run
-        time.sleep(PAUSE)
         reset.click()
         yes.click()
         driver.execute_script(f'ace.edit("aceCode").setValue(`{code}`);')
         editor.click()
+        time.sleep(PAUSE)
         play.click()
 
         # simulate each line of user input
