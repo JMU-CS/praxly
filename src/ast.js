@@ -1692,12 +1692,12 @@ class Praxly_String_funccall {
             case StringFuncs.CONTAINS:
                 var char = await this.args[0].evaluate(environment);
                 this.typecheckhelper(char, [TYPES.STRING, TYPES.CHAR]);
-                result = str.includes(char.value)
+                result = str.value.includes(char.value);
                 return new Praxly_boolean(result);
             case StringFuncs.INDEXOF:
-                var index = await this.args[0].evaluate(environment);
-                this.typecheckhelper(char, [TYPES.CHAR]);
-                result = str.value.indexOf(index.value);
+                var substr = await this.args[0].evaluate(environment);
+                this.typecheckhelper(substr, [TYPES.STRING, TYPES.CHAR]);
+                result = str.value.indexOf(substr.value);
                 return new Praxly_int(result);
             case StringFuncs.LENGTH:
                 return new Praxly_int(str.value.length);

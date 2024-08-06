@@ -531,6 +531,7 @@ body:not(.embed) #bottom-part {
   flex-direction: row-reverse;
   /* Add this */
   flex-basis: 25%;
+  user-select: text;
 }
 
 .output {

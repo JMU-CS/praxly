@@ -145,39 +145,6 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Blank line in the code",
       "helpUrl": ""
     },
-    { // common 6
-      "type": "praxly_StringFunc_block",
-      "message0": "%1.%2(%3)",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "EXPRESSION"
-        },
-        {
-          "type": "field_dropdown",
-          "name": "FUNCTYPE",
-          "options": [
-            ["charAt", StringFuncs.CHARAT],
-            ["contains", StringFuncs.CONTAINS],
-            ['indexOf', StringFuncs.INDEXOF],
-            ["length", StringFuncs.LENGTH],
-            ["substring", StringFuncs.SUBSTRING],
-            ["toLowerCase", StringFuncs.TOLOWERCSE],
-            ["toUpperCase", StringFuncs.TOUPPERCASE],
-          ]
-        },
-        {
-          "type": "input_value",
-          "name": "PARAMS",
-          "text": "params"
-        },
-      ],
-      "inputsInline": true,
-      "output": null,
-      "style": 'other_blocks',
-      "tooltip": "String methods:\ncharAt(i) - Returns the character at index i\ncontains(s) - Returns true if s is a substring\nindexOf(s) - Returns the first index of substring s, or -1 if not found\nlength() - Returns the length of the string\nsubstring(i, j) - Extracts characters from index i up to but not including index j\ntoLowerCase() - Converts the string to all lowercase\ntoUpperCase() - Converts the string to all uppercase",
-      "helpUrl": ""
-    },
     { // variables 1
       "type": "praxly_vardecl_block",
       "message0": "%1%2%3",
@@ -198,7 +165,7 @@ export function definePraxlyBlocks(workspace) {
         {
           "type": "field_input",
           "name": "VARIABLENAME",
-          "text": "VariableName"
+          "text": "variableName"
         },
         {
           "type": "input_dummy"
@@ -231,7 +198,7 @@ export function definePraxlyBlocks(workspace) {
         {
           "type": "field_input",
           "name": "VARIABLENAME",
-          "text": "VariableName"
+          "text": "variableName"
         },
         {
           "type": "input_value",
@@ -255,7 +222,7 @@ export function definePraxlyBlocks(workspace) {
         {
           "type": "field_input",
           "name": "VARIABLENAME",
-          "text": "VariableName"
+          "text": "variableName"
         },
         {
           "type": "input_value",
@@ -387,7 +354,7 @@ export function definePraxlyBlocks(workspace) {
         }
       ],
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "A literal value in the code",
       "helpUrl": ""
     },
@@ -441,7 +408,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Arithmetic operators:\n+ addition (and string concatenation)\n- subtraction\n* multiplication\n/ division (integer and floating-point)\n% remainder\n^ exponent",
       "helpUrl": "",
     },
@@ -458,7 +425,7 @@ export function definePraxlyBlocks(workspace) {
         }
       ],
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Negates a value",
       "helpUrl": ""
     },
@@ -467,7 +434,7 @@ export function definePraxlyBlocks(workspace) {
       "message0": "random ( )",
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Generates a random double greater than or equal to 0 and less than 1",
       "helpUrl": ""
     },
@@ -482,7 +449,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Generates a random integer greater than or equal to 0 and less than x",
       "helpUrl": ""
     },
@@ -497,7 +464,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Sets the seed of the random number generator",
       "helpUrl": ""
     },
@@ -512,7 +479,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Converts a String into an int",
       "helpURL": ""
     },
@@ -527,7 +494,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Converts a String into a float",
       "helpURL": ""
     },
@@ -546,7 +513,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Returns the lower value",
       "helpURL": ""
     },
@@ -565,7 +532,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Returns the higher value",
       "helpURL": ""
     },
@@ -580,7 +547,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Returns the absolute value",
       "helpURL": ""
     },
@@ -595,7 +562,7 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Calculates the natural logarithm",
       "helpURL": ""
     },
@@ -610,9 +577,172 @@ export function definePraxlyBlocks(workspace) {
       ],
       "inputsInline": true,
       "output": null,
-      "style": 'expression_blocks',
+      "style": 'math_blocks',
       "tooltip": "Calculates the square root",
       "helpURL": ""
+    },
+    // { // text 1
+    //   "type": "praxly_StringFunc_block",
+    //   "message0": "%1.%2(%3)",
+    //   "args0": [
+    //     {
+    //       "type": "input_value",
+    //       "name": "EXPRESSION"
+    //     },
+    //     {
+    //       "type": "field_dropdown",
+    //       "name": "FUNCTYPE",
+    //       "options": [
+    //         ["charAt", StringFuncs.CHARAT],
+    //         ["contains", StringFuncs.CONTAINS],
+    //         ['indexOf', StringFuncs.INDEXOF],
+    //         ["length", StringFuncs.LENGTH],
+    //         ["substring", StringFuncs.SUBSTRING],
+    //         ["toLowerCase", StringFuncs.TOLOWERCSE],
+    //         ["toUpperCase", StringFuncs.TOUPPERCASE],
+    //       ]
+    //     },
+    //     {
+    //       "type": "input_value",
+    //       "name": "PARAMS",
+    //       "text": "params"
+    //     },
+    //   ],
+    //   "inputsInline": true,
+    //   "output": null,
+    //   "style": 'other_blocks',
+    //   "tooltip": "String methods:\ncharAt(i) - Returns the character at index i\ncontains(s) - Returns true if s is a substring\nindexOf(s) - Returns the first index of substring s, or -1 if not found\nlength() - Returns the length of the string\nsubstring(i, j) - Extracts characters from index i up to but not including index j\ntoLowerCase() - Converts the string to all lowercase\ntoUpperCase() - Converts the string to all uppercase",
+    //   "helpUrl": ""
+    // },
+    { // text 1
+      "type": "praxly_charAt_block",
+      "message0": "%1.charAt (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "INDEX",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'text_blocks',
+      "tooltip": "Returns the character at the index",
+      "helpUrl": ""
+    },
+    { // text 2
+      "type": "praxly_contains_block",
+      "message0": "%1.contains (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'text_blocks',
+      "tooltip": "Returns true if string is a substring",
+      "helpUrl": ""
+    },
+    { // text 3
+      "type": "praxly_indexOf_block",
+      "message0": "%1.indexOf (%2)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM",
+          "text": "params"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'text_blocks',
+      "tooltip": "Returns the first index of substring value, or -1 if not found",
+      "helpUrl": ""
+    },
+    { // text 4
+      "type": "praxly_length_block",
+      "message0": "%1.length ( )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'text_blocks',
+      "tooltip": "Returns the length of the string",
+      "helpUrl": ""
+    },
+    { // text 5
+      "type": "praxly_substring_block",
+      "message0": "%1.substring (%2 , %3)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM1",
+          "text": "params"
+        },
+        {
+          "type": "input_value",
+          "name": "PARAM2",
+          "text": "params"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'text_blocks',
+      "tooltip": "Extracts characters from the start index up to but not including the end index",
+      "helpUrl": ""
+    },
+    { // text 6
+      "type": "praxly_toLowerCase_block",
+      "message0": "%1.toLowerCase ( )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'text_blocks',
+      "tooltip": "Converts the string to all lowercase",
+      "helpUrl": ""
+    },
+    { // text 7
+      "type": "praxly_toUpperCase_block",
+      "message0": "%1.toUpperCase ( )",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "EXPRESSION"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "style": 'text_blocks',
+      "tooltip": "Converts the string to all uppercase",
+      "helpUrl": ""
     },
     { // logic 1
       "type": "praxly_true_block",

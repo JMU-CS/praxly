@@ -63,13 +63,13 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
     'base': Blockly.Themes.Classic,
     'blockStyles': {
         'loop_blocks': {
-            'colourPrimary': '#0361FF'
+            'colourPrimary': '#395BBF'
         },
         'array_blocks': {
             'colourPrimary': '#FA0000'
         },
         'logic_blocks': {
-            'colourPrimary': '#00D084'
+            'colourPrimary': '#3CB371'
         },
         'class_blocks': {
             'colourPrimary': '#6381fe'
@@ -78,19 +78,22 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
             'colourPrimary': '#808080'
         },
         'procedure_blocks': {
-            'colourPrimary': '#6381fe'
+            'colourPrimary': '#9370DB'
         },
         'variable_blocks': {
             'colourPrimary': '#f80069'
         },
-        'expression_blocks': {
-            'colourPrimary': '#a7ca00'
+        'math_blocks': {
+            'colourPrimary': '#FF9966'
         },
         'parameter_blocks': {
             'colourPrimary': '#8F48B7'
         },
         'other_blocks': {
             'colourPrimary': '#00BFFF'
+        },
+        'text_blocks': {
+            'colourPrimary': '#FFC050',
         }
     },
     'categoryStyles': {
@@ -98,10 +101,10 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
             'colour': '#395BBF'
         },
         'procedure_blocks': {
-            'colour': '#6381fe'
+            'colour': '#9370DB'
         },
         'logic_blocks': {
-            'colour': '#00D084'
+            'colour': '#3CB371'
         },
         'class_blocks': {
             'colour': '#6381fe'
@@ -115,8 +118,11 @@ export const PraxlyDark = Blockly.Theme.defineTheme('PraxlyDark', {
         'variable_blocks': {
             'colour': '#f80069'
         },
-        'expression_blocks': {
-            'colour': '#a7ca00'
+        'math_blocks': {
+            'colour': '#FF9966'
+        },
+        'text_blocks': {
+            'colour': '#FFC050'
         }
     },
     'componentStyles': {

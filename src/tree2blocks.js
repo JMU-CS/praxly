@@ -1,4 +1,4 @@
-import { NODETYPES, TYPES } from "./common";
+import { NODETYPES, StringFuncs, TYPES } from "./common";
 
 function connectStatements(statements) {
     for (let i = 0; i < statements.length - 1; i++) {
@@ -327,21 +327,59 @@ export const tree2blocks = (workspace, node) => {
             break;
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
-            var result = workspace.newBlock('praxly_StringFunc_block');
-            var params = workspace.newBlock('praxly_parameter_block');
-            var recipient = tree2blocks(workspace, node.left);
-            result.setFieldValue(node?.right?.name, 'FUNCTYPE');
-            result.getInput('PARAMS').connection.connect(params?.outputConnection);
-            var argsList = node?.right?.args;
-            for (var i = 0; i < (argsList?.length ?? 0); i++) {
-                params.appendValueInput(`PARAM_${i}`);
-                var argument = tree2blocks(workspace, argsList[i]);
-                params.getInput(`PARAM_${i}`).connection.connect(argument?.outputConnection);
+            if (!node.right) {
+                break;  // user still typing (nothing after the dot)
             }
-            result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
-            params.initSvg();
-            break;
+            const name = node.right.name;
+            const args = node.right.args;
 
+            // create applicable string method block and connect args
+            if (name === StringFuncs.CHARAT) {
+                var result = workspace.newBlock('praxly_charAt_block');
+                if (args?.length == 1) {
+                    const index = tree2blocks(workspace, args[0]);
+                    result.getInput('INDEX').connection.connect(index?.outputConnection);
+                }
+            }
+            else if (name === StringFuncs.CONTAINS) {
+                var result = workspace.newBlock('praxly_contains_block');
+                if (args?.length == 1) {
+                    const param = tree2blocks(workspace, args[0]);
+                    result.getInput('PARAM').connection.connect(param?.outputConnection);
+                }
+            }
+            else if (name === StringFuncs.INDEXOF) {
+                result = workspace.newBlock('praxly_indexOf_block');
+                if (args?.length == 1) {
+                    const param = tree2blocks(workspace, args[0]);
+                    result.getInput('PARAM').connection.connect(param?.outputConnection);
+                }
+            }
+            else if (name === StringFuncs.LENGTH) {
+                result = workspace.newBlock('praxly_length_block');
+            }
+            else if (name === StringFuncs.SUBSTRING) {
+                result = workspace.newBlock('praxly_substring_block');
+                if (args?.length == 2) {
+                    const param1 = tree2blocks(workspace, args[0]);
+                    const param2 = tree2blocks(workspace, args[1]);
+                    result.getInput('PARAM1').connection.connect(param1?.outputConnection);
+                    result.getInput('PARAM2').connection.connect(param2?.outputConnection);
+                }
+            }
+            else if (name === StringFuncs.TOLOWERCSE) {
+                result = workspace.newBlock('praxly_toLowerCase_block');
+            }
+            else if (name === StringFuncs.TOUPPERCASE) {
+                result = workspace.newBlock('praxly_toUpperCase_block');
+            } else {
+                break;  // user still typing or misspelled name
+            }
+
+            // connect the string on the left of the result block
+            var recipient = tree2blocks(workspace, node.left);
+            result.getInput("EXPRESSION").connection.connect(recipient.outputConnection);
+            break;
 
         case NODETYPES.FUNCDECL:
             var returnType = node?.returnType;
