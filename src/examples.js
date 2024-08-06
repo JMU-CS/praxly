@@ -92,7 +92,7 @@ mystery(6)
 int countCharacter(String str, char targetChar)
     int count ← 0
     for (int i ← 0; i < str.length(); i ← i + 1)
-            if (str.charAt(i) == targetChar)
+        if (str.charAt(i) == targetChar)
             count ← count + 1
         end if
     end for
@@ -150,8 +150,8 @@ int[] myArray ← {5, 2, 9, 1, 5, 6}
 void bubbleSort()
     int n ← 6
     for (int i ← 0; i < n - 1; i ← i + 1)
-            for (int j ← 0; j < n - i - 1; j ← j + 1)
-                    if (myArray[j] > myArray[j + 1])
+        for (int j ← 0; j < n - i - 1; j ← j + 1)
+            if (myArray[j] > myArray[j + 1])
                 // Swap elements if they are in the wrong order
                 int temp ← myArray[j]
                 myArray[j] ← myArray[j + 1]
@@ -165,7 +165,7 @@ end bubbleSort
 void printArray()
     int n ← 6
     for (int i ← 0; i < n; i ← i + 1)
-            print myArray[i]
+        print myArray[i]
     end for
 end printArray
 
@@ -186,10 +186,10 @@ int[] myArray ← {5, 2, 9, 1, 5, 6}
 void selectionSort()
     int n ← 6
     for (int i ← 0; i < n - 1; i ← i + 1)
-            // Find the minimum element in the unsorted part of the array
+        // Find the minimum element in the unsorted part of the array
         int minIndex ← i
         for (int j ← i + 1; j < n; j ← j + 1)
-                    if (myArray[j] < myArray[minIndex])
+            if (myArray[j] < myArray[minIndex])
                 minIndex ← j
             end if
         end for
@@ -205,7 +205,7 @@ end selectionSort
 void printArray()
     int n ← 6
     for (int i ← 0; i < n; i ← i + 1)
-            print myArray[i]
+        print myArray[i]
     end for
 end printArray
 

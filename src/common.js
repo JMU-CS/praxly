@@ -44,7 +44,6 @@ export const OP = {
     DIVISION:                       "DIVISION",
     MODULUS:                        "MODULUS",
     EXPONENTIATION:                 "EXPONENTIATION",
-    ASSIGNMENT:                     "ASSIGNMENT",
     EQUALITY:                       "EQUALITY",
     INEQUALITY:                     "INEQUALITY",
     GREATER_THAN:                   "GREATER THAN",
@@ -94,7 +93,7 @@ export const MAX_LOOP = 100;  // prevents accidental infinite loops
 // this is the special Error type that is thrown when there is in error in the IDE.
 export class PraxlyError extends Error {
     constructor(message, line) {
-        super(`runtime error occurred on line ${line}:\n\t${message}`);
+        super("runtime error occurred on line " + line + ":<br>" + message);
         textError("runtime", message, line);
     }
 }
@@ -110,14 +109,17 @@ export function textError(type, message, line) {
     if (errorOutput) {
         errorOutput += "<br><br>";
     }
-    errorOutput += `${type} error occurred on line ${line}:\n\t${message}`;
+    errorOutput += type + " error occurred on line " + line + ":<br>" + message;
 }
 
 export function defaultError(message) {
     if (errorOutput) {
         errorOutput += "<br><br>";
     }
-    errorOutput += `${message}<br><br>We have not written an error message for this issue yet.`;
+    errorOutput += message
+        + '<br><br><br>Will you please submit a '
+        + '<a href="https://forms.gle/ULnV7mxYjrqjx8ATA" target="_blank">bug report</a>'
+        + ' for this error?';
 }
 
 export function clearErrors() {
@@ -188,10 +190,9 @@ export function consoleInput() {
  * @returns the marker id associated with the marker. This should not be needed.
  */
 export function highlightAstNode(environment, node) {
-    // console.log(`attempting to highlight index [${node.startIndex[0]},${ node.startIndex[1]}] to [${ node.endIndex[0]}, ${ node.endIndex[1] - 1}]`)
     var session = textEditor.session;
 
-    // var errorRange = indextoAceRange(line - 1);
+    // var errorRange = indexToAceRange(line - 1);
     var Range = ace.require('ace/range').Range;
     if (DEV_LOG) {
         console.log(`attempting to highlight: `, node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
@@ -283,5 +284,5 @@ export function comingSoon() {
 }
 
 
-//this will let information that I deemed important to be logged to the console.
+// this will let information deemed important to be logged to the console
 export const DEV_LOG = false;

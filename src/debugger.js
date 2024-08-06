@@ -64,7 +64,6 @@ export async function generateVariableTable(environment, level) {
     }
     let parent = environment.parent;
     const variableList = environment.variableList;
-    // console.error(variableList);
     for (const key in variableList) {
         if (Object.hasOwnProperty.call(variableList, key)) {
             const value = variableList[key];
@@ -76,10 +75,7 @@ export async function generateVariableTable(environment, level) {
             typeCell.textContent = value.realType;
 
             let valueEvaluated = await value.evaluate(environment);
-            valueCell.textContent = valueToString(valueEvaluated);
-            if (value.realType === "String") {
-                valueCell.textContent = '"' + valueCell.textContent + '"';
-            }
+            valueCell.textContent = valueToString(valueEvaluated, true, value.json?.line);
 
             const locationCell = document.createElement("td");
             locationCell.textContent = environment.name;

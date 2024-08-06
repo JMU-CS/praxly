@@ -531,6 +531,7 @@ body:not(.embed) #bottom-part {
   flex-direction: row-reverse;
   /* Add this */
   flex-basis: 25%;
+  user-select: text;
 }
 
 .output {
@@ -552,6 +553,15 @@ body:not(.embed) #bottom-part {
 
 .stderr {
   color: red;
+}
+
+.stderr a {
+    color: skyblue;
+}
+
+.stderr a:active,
+.stderr a:hover {
+    color: white;
 }
 
 /* not sure where any of this goes */
