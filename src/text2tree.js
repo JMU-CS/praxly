@@ -10,8 +10,6 @@ export function text2tree() {
   let lexer = new Lexer(code);
   let ir;
   let tokens = lexer.lex();
-  // console.info('here are the tokens:');
-  // console.debug(tokens);
   let parser = new Parser(tokens);
   ir = parser?.parse();
   return ir;
@@ -43,7 +41,7 @@ class Lexer {
     this.length = this.source?.length;
     this.token_so_far = "";
     this.multi_Char_symbols = ['>', '<', '=', '!', '-'];
-    this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", , "←", "⟵", "≥", "≤"];
+    this.symbols = [",", ";", "(", ")", "{", "}", "[", "]", ".", "+", "/", "*", "%", "^", "≠", "←", "⟵", "≥", "≤"];
     this.builtins = ['input', 'random', 'randomInt', 'randomSeed', 'int', 'float', 'min', 'max', 'abs', 'log', 'sqrt'];
     this.keywords = ["if", "else", "end", "print", "for", "while", 'and', 'or', 'do', 'repeat',
       'until', 'not', 'return', 'null'];
@@ -124,13 +122,9 @@ class Lexer {
 
   emit_token(type = null) {
     var endIndex = this.i - this.index_before_this_line;
-    // console.error(endIndex);
     this.tokens.push(new Token(type ?? this.token_so_far, this.token_so_far, this.currentLine, this.startToken, [this.currentLine, endIndex]));
     this.token_so_far = '';
-
-    // console.error([this.currentLine, endIndex]);
     this.startToken = [this.currentLine, endIndex];
-    // console.error(this.startToken);
   }
 
   /**
@@ -167,29 +161,37 @@ class Lexer {
 
       if (this.has('\'')) {
         this.skip();
-        if (this.has_letter && this.has_ahead('\'')) {
+        while (this.i < this.length && !this.has("\'") && !this.has("\n")) {
           this.capture();
-          this.skip();
+        }
+        if (!this.has("\'")) {
+          textError('lexing', 'looks like you didn\'t close your quotes on your char. \n \tRemember chars start and end with a single quote mark (\').', this.currentLine);
+          this.token_so_far = "?";
           this.emit_token(NODETYPES.CHAR);
           continue;
         }
-        textError('lexing', 'looks like you didn\'t close your quotes on your char. \n \tRemember chars start and end with a single quote mark (\').', this.currentLine);
+        this.skip();  // close single quote
+        const length = this.token_so_far.length;
+        if (this.token_so_far.length != 1) {
+          textError('lexing', 'incorrect character length: ' + length, this.currentLine);
+          this.token_so_far = "?";
+        }
+        this.emit_token(NODETYPES.CHAR);
+        continue;
       }
 
       if (this.has("\"")) {
-        var stringStart = this.currentLine;
         this.skip();
         while (this.i < this.length && !this.has("\"") && !this.has("\n")) {
           this.capture();
         }
-        if (this.has("\"")) {
-          this.skip();
+        if (!this.has("\"")) {
+          textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a double quote mark (\").', this.currentLine);
+          this.token_so_far = "?";
           this.emit_token(NODETYPES.STRING);
           continue;
         }
-        textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a double quote mark (\").', stringStart);
-        this.i -= 1;
-        this.token_so_far = "";
+        this.skip();  // close double quote
         this.emit_token(NODETYPES.STRING);
         continue;
       }
@@ -223,10 +225,12 @@ class Lexer {
         this.emit_token(NODETYPES.INT);
         continue;
       }
+
       if (this.has(' ')) {
         this.skip();
         continue;
       }
+
       if (this.has("\n")) {
         this.capture();
         this.emit_token("\n");
@@ -235,21 +239,26 @@ class Lexer {
         this.startToken = [this.currentLine, this.i - this.index_before_this_line];
         continue;
       }
+
       if (!this.has_letter()) {
         textError('lexing', `unrecognized character \"${this.source[this.i]}\"`, this.i, this.i + 1);
         break;
       }
+
       while (this.i < this.length && (this.has_letter() || this.has_digit())) {
         this.capture();
       }
+
       if (this.has_type()) {
         this.emit_token('Type');
         continue;
       }
+
       if (this.has_builtin()) {
         this.emit_token(NODETYPES.BUILTIN_FUNCTION_CALL);
         continue;
       }
+
       if (this.token_so_far === 'end') {
         while (this.hasNot('\n')) {
           this.capture();
@@ -257,20 +266,24 @@ class Lexer {
         this.emit_token();
         continue;
       }
+
       if (this.has_boolean()) {
         this.emit_token(NODETYPES.BOOLEAN);
         continue;
       }
+
       if (this.has_keyword()) {
         this.emit_token();
         continue;
       }
       this.emit_token('Location');
     }
+
     this.emit_token("EOF");
     return this.tokens;
   }
 }
+
 
 class Parser {
 
@@ -302,7 +315,6 @@ class Parser {
     return this.i < this.length && types.includes(this.tokens[this.i].token_type);
   }
 
-
   hasNotAny() {
     var types = Array.prototype.slice.call(arguments);
     return this.i < this.length && !types.includes(this.tokens[this.i].token_type);
@@ -323,6 +335,7 @@ class Parser {
   has_keyword() {
     return this.keywords.includes(this.tokens[this.i].token_type);
   }
+
   has_statementKeyword() {
     return this.statementKeywords.includes(this.tokens[this.i].token_type);
   }
@@ -346,8 +359,6 @@ class Parser {
     }
     return this.parse_program();
   }
-
-
 
   /**
    * This function creates new nodes for the AST for any binary operation
@@ -414,7 +425,7 @@ class Parser {
         type = OP.OR;
         break;
       default:
-        // handle unknown type
+        textError('parsing', 'invalid operator ' + operation, line);
         break;
     }
     return {
@@ -423,12 +434,10 @@ class Parser {
       left: l,
       right: r,
       type: type,
-      startIndex: l.startIndex,
-      endIndex: r.endIndex,
+      startIndex: l?.startIndex,
+      endIndex: r?.endIndex,
     }
   }
-
-
 
   /**
    * Creates a new node for literal values in the AST.
@@ -471,7 +480,7 @@ class Parser {
       value: expression,
       type: type,
       startIndex: startIndex,
-      endIndex: expression.endIndex,
+      endIndex: expression?.endIndex,
     }
   }
 
@@ -486,6 +495,7 @@ class Parser {
     let startIndex = this.getCurrentToken().startIndex;
     let endIndex = this.getCurrentToken().endIndex;
     switch (precedence) {
+
       case 9:
         var l = this.parse_expression(precedence - 1);
         while (this.has("or")) {
@@ -496,6 +506,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 8:
         var l = this.parse_expression(precedence - 1);
         while (this.has("and")) {
@@ -517,6 +528,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 6:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('+', '-')) {
@@ -527,6 +539,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 5:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('*', '/', '%')) {
@@ -537,6 +550,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+
       case 4:
         var l = this.parse_expression(precedence - 1);
         while (this.hasAny('^')) {
@@ -579,7 +593,7 @@ class Parser {
         }
         return l;
 
-      //This one gets really complicated
+      // This one gets really complicated
       case 1:
         switch (operation) {
           case 'EOF':
@@ -617,7 +631,7 @@ class Parser {
               textError('parsing', 'did not detect closing parentheses', line,);
             }
 
-          //ah yes, array literals....very fun
+          // ah yes, array literals....very fun
           case '{':
             let result = {
               blockID: 'code',
@@ -651,7 +665,7 @@ class Parser {
               this.advance();
               var value = this.parse_expression(9);
               l = {
-                type: NODETYPES.ASSIGNMENT,
+                type: l.isArray ? NODETYPES.ARRAY_REFERENCE_ASSIGNMENT : NODETYPES.ASSIGNMENT,
                 blockID: "code",
                 line: line,
                 location: l,
@@ -703,15 +717,15 @@ class Parser {
     if (this.has('(')) {
       this.advance();
 
-      // Expect 0 or more parameters.
-      const parameters = [];
+      // Expect 0 or more arguments.
+      const args = [];
       if (this.hasNot(')')) {
         const parameter = this.parse_expression(9);
-        parameters.push(parameter);
+        args.push(parameter);
         while (this.has(',')) {
           this.advance();
           const parameter = this.parse_expression(9);
-          parameters.push(parameter);
+          args.push(parameter);
         }
       }
 
@@ -721,7 +735,7 @@ class Parser {
           blockID: "code",
           name: nameToken.value,
           line,
-          parameters,
+          args,
           type: NODETYPES.BUILTIN_FUNCTION_CALL,
           startIndex: nameToken.startIndex,
           endIndex: rightParenthesisToken.endIndex,
@@ -818,7 +832,6 @@ class Parser {
         stopLoop += 1;
       }
 
-
       result.endIndex = this.getCurrentToken().endIndex;
       this.match_and_discard_next_token(')');
       result.params = params;
@@ -843,8 +856,6 @@ class Parser {
     return result;
   }
 
-
-
   parse_program() {
     return {
       type: "PROGRAM",
@@ -854,7 +865,7 @@ class Parser {
   }
 
   /**
-   * parses a block of statements (think curlybraces)
+   * parses a block of statements (think curly braces)
    * @param  {...any} endToken any tokens that will determine the end of the block.
    * @returns
    */
@@ -922,20 +933,37 @@ class Parser {
           textError('parsing', "missing the \'end if\' token", result.line);
         }
       }
+    }
 
-    } else if (this.has('for')) {
+    else if (this.has('for')) {
       result.type = NODETYPES.FOR;
       this.advance();
       if (this.hasNot('(')) {
         return result;
       }
       this.advance();
-      result.initialization = this.parse_statement();
-      result.initialization.endIndex[1] -= 3;  // HACK
-      result.condition = this.parse_expression(9);
+      if (this.has(')') || this.has('\n')) {
+        this.advance();
+        return result;  // incomplete
+      }
 
+      result.initialization = this.parse_statement();
+      if (result.initialization.endIndex) {
+        result.initialization.endIndex[1] -= 3;  // HACK for debug highlighting
+      }
+      if (this.has(')') || this.has('\n')) {
+        this.advance();
+        return result;
+      }
+
+      result.condition = this.parse_expression(9);
+      if (this.has(')') || this.has('\n')) {
+        this.advance();
+        return result;
+      }
       if (this.has(';')) {
         this.advance();
+
         result.increment = this.parse_expression(1);
         if (this.hasNot(')')) {
           return result;
@@ -954,7 +982,6 @@ class Parser {
           }
         }
       }
-      console.log(`parser messing up, current token is ${this.tokens[this.i].token_type}`);
       return result;
     }
 
@@ -1097,16 +1124,15 @@ class Parser {
     }
 
     else {
-      // this is a stand alone expression as a statement.
+      // most likely an expression statement
       let contents = this.parse_expression(9);
-
-      // if (!contents?.startIndex ?? false){
-      //   console.error(this.getCurrentToken());
-      //   console.error(this.tokens[this.i + 1]);
-      // }
-
       if (this.has(';')) {
         this.advance();
+      }
+      // special case: assume that assignment is a statement
+      // if in a for loop, later code will rebuild the object
+      if (contents?.type.endsWith("ASSIGNMENT")) {
+        return contents;
       }
       result = {
         type: NODETYPES.STATEMENT,

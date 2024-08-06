@@ -42,16 +42,17 @@ async function stepOver(environment, json) {
  * this is meant to halt the execution wherever it is at for return statements.
  */
 class ReturnException extends Error {
-    constructor(errorData) {
-        super(`attempting to return. this should return ${errorData}`);
+    constructor(returnValue) {
+        super(`attempting to return. this should return ${returnValue}`);
         this.name = this.constructor.name;
-        this.errorData = errorData;
+        this.returnValue = returnValue;
     }
 }
 
 function checkArity(node, expectedArity) {
-    if (node.parameters.length !== expectedArity) {
-        throw new PraxlyError(`Function ${node.name} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${node.parameters.length}.`, node.line);
+    const actualArity = node.args.length;
+    if (actualArity !== expectedArity) {
+        throw new PraxlyError(`Function ${node.name} expects ${expectedArity} parameter${expectedArity === 1 ? '' : 's'}, not ${actualArity}.`, node.line);
     }
 }
 
@@ -64,7 +65,7 @@ function checkArity(node, expectedArity) {
 export function createExecutable(tree) {
     if (typeof tree === 'undefined' || typeof tree.type === 'undefined') {
         if (errorOutput.length === 0) {
-            defaultError("invalid program.");
+            defaultError("invalid program (abstract syntax tree is undefined)");
         }
         return new Praxly_invalid(tree);
     }
@@ -146,32 +147,54 @@ export function createExecutable(tree) {
                 return new Praxly_random(tree);
             } else if (tree.name === 'randomInt') {
                 checkArity(tree, 1);
-                return new Praxly_random_int(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_random_int(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'randomSeed') {
                 checkArity(tree, 1);
-                return new Praxly_random_seed(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_random_seed(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'int') {
                 checkArity(tree, 1);
-                return new Praxly_int_conversion(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_int_conversion(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'float') {
                 checkArity(tree, 1);
-                return new Praxly_float_conversion(createExecutable(tree.parameters[0]), tree);
+                return new Praxly_float_conversion(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'min') {
-                return new Praxly_min(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+                checkArity(tree, 2);
+                return new Praxly_min(createExecutable(tree.args[0]), createExecutable(tree.args[1]), tree);
             } else if (tree.name === 'max') {
-                return new Praxly_max(createExecutable(tree.parameters[0]), createExecutable(tree.parameters[1]), tree);
+                checkArity(tree, 2);
+                return new Praxly_max(createExecutable(tree.args[0]), createExecutable(tree.args[1]), tree);
             } else if (tree.name === 'abs') {
-                return new Praxly_abs(createExecutable(tree.parameters[0]), tree);
+                checkArity(tree, 1);
+                return new Praxly_abs(createExecutable(tree.args[0]), tree);
             } else if (tree.name === 'log') {
-                return new Praxly_log(createExecutable(tree.parameters[0]), tree);
+                checkArity(tree, 1);
+                return new Praxly_log(createExecutable(tree.args[0]), tree);
             } else if (tree.name == 'sqrt') {
-                return new Praxly_sqrt(createExecutable(tree.parameters[0]), tree);
+                checkArity(tree, 1);
+                return new Praxly_sqrt(createExecutable(tree.args[0]), tree);
             } else {
-                throw new Error("unknown builtin function: " + tree.name);
+                throw new PraxlyError("unknown builtin function: " + tree.name, tree.line);
             }
         }
 
         case NODETYPES.SPECIAL_STRING_FUNCCALL:
+            switch (tree.right.name) {
+                case StringFuncs.LENGTH:
+                case StringFuncs.TOLOWERCSE:
+                case StringFuncs.TOUPPERCASE:
+                    checkArity(tree.right, 0);
+                    break;
+                case StringFuncs.CHARAT:
+                case StringFuncs.CONTAINS:
+                case StringFuncs.INDEXOF:
+                    checkArity(tree.right, 1);
+                    break;
+                case StringFuncs.SUBSTRING:
+                    checkArity(tree.right, 2);
+                    break;
+                default:
+                    throw new PraxlyError("unknown string method: " + tree.right.name, tree.line);
+            }
             var args = [];
             tree.right.args.forEach((arg) => {
                 args.push(createExecutable(arg));
@@ -208,11 +231,11 @@ export function createExecutable(tree) {
             }
 
         case NODETYPES.ASSIGNMENT:
+        case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
             try {
-                return new Praxly_assignment(tree, createExecutable(tree.location), createExecutable(tree.value), tree);
+                return new Praxly_assignment(createExecutable(tree.location), createExecutable(tree.value), tree);
             }
             catch (error) {
-                // console.error('assignment error: ', error);
                 return null;
             }
 
@@ -226,10 +249,9 @@ export function createExecutable(tree) {
 
         case NODETYPES.ARRAY_ASSIGNMENT:
             try {
-                return new Praxly_array_assignment(tree, createExecutable(tree.location), createExecutable(tree.value));
+                return new Praxly_array_assignment(createExecutable(tree.location), createExecutable(tree.value), tree);
             }
             catch (error) {
-                // console.error('array assignment error: ', error);
                 return null;
             }
 
@@ -242,7 +264,7 @@ export function createExecutable(tree) {
                 return new Praxly_Location(tree, index);
             }
             catch (error) {
-                return;
+                return null;
             }
 
         case NODETYPES.FOR:
@@ -254,7 +276,6 @@ export function createExecutable(tree) {
                 return new Praxly_for(initialization, condition, incrementation, statement, tree);
             }
             catch (error) {
-                // console.error('for statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -265,7 +286,6 @@ export function createExecutable(tree) {
                 return new Praxly_while(condition, statement, tree);
             }
             catch (error) {
-                // console.error('while statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -276,7 +296,6 @@ export function createExecutable(tree) {
                 return new Praxly_do_while(condition, statement, tree);
             }
             catch (error) {
-                // console.error('do while statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -287,7 +306,6 @@ export function createExecutable(tree) {
                 return new Praxly_repeat_until(condition, statement, tree);
             }
             catch (error) {
-                // console.error('repeat until statement error: ', error);
                 return new Praxly_statement(null);
             }
 
@@ -327,9 +345,6 @@ export function createExecutable(tree) {
         case NODETYPES.ARRAY_REFERENCE:
             return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
 
-        case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
-            return new Praxly_array_reference_assignment(tree.name, createExecutable(tree.index), createExecutable(tree.value), tree);
-
         case 'INVALID':
             return new Praxly_invalid(tree);
 
@@ -337,23 +352,7 @@ export function createExecutable(tree) {
             return new Praxly_emptyLine(tree);
 
         default:
-            console.error("Unhandled node type: " + tree.type);
-            return new Praxly_invalid(tree);
-    }
-}
-
-class Praxly_array_reference_assignment {
-
-    constructor(name, index, value, node) {
-        this.json = node;
-        this.name = name;
-        this.value = value;
-        this.index = index;
-    }
-
-    async evaluate(environment) {
-        var index = await this.index.evaluate(environment);
-        environment.variableList[this.name].elements[index.value] = await this.value.evaluate(environment);
+            throw new PraxlyError("unhandled node type " + tree.type, tree.line);
     }
 }
 
@@ -1140,6 +1139,9 @@ class Praxly_codeBlock {
         // for each statement in the block
         for (let i = 0; i < this.praxly_blocks.length; i++) {
             const element = this.praxly_blocks[i];
+            if (element.json === undefined) {
+                throw new PraxlyError("Incomplete code (undefined)", 0);  // no line number
+            }
             // skip elements that have no effect
             if (element.json.type == NODETYPES.NEWLINE || element.json.type === NODETYPES.COMMENT || element.json.type === NODETYPES.SINGLE_LINE_COMMENT) {
                 continue;
@@ -1171,7 +1173,7 @@ function accessLocation(environment, json) {
 }
 
 // converts the evaluated value to the variable's type when assigned.
-function typeCoercion(varType, praxlyObj) {
+function typeCoercion(varType, praxlyObj, line) {
     if (varType === praxlyObj.realType) {
         return praxlyObj;
     }
@@ -1199,37 +1201,41 @@ function typeCoercion(varType, praxlyObj) {
             newValue = String(praxlyObj.value);
             return new Praxly_String(newValue, praxlyObj.json);
         default:
-            console.error("Unhandled var type: " + varType);
-            return praxlyObj;
+            throw new PraxlyError("unhandled var type: " + varType, line);
     }
 }
 
 class Praxly_assignment {
 
-    constructor(json, location, expression, node) {
+    constructor(location, expression, node) {
         this.json = node;
         this.location = location;
         this.value = expression;
     }
 
     async evaluate(environment) {
-        // if it is a reassignment, the variable must be in the list and have a matching type.
-        let valueEvaluated = await this.value.evaluate(environment);
+        // the variable must be in the environment and have a matching type
         var storage = accessLocation(environment, this.location);
         if (!storage) {
             throw new PraxlyError(`Variable ${this.location.name} does not exist in this scope.`, this.json.line);
         }
+        if (this.location.isArray) {
+            var index = await this.location.index.evaluate(environment);
+            var length = storage[this.location.name].elements.length;
+            if (index.value >= length) {
+                throw new PraxlyError(`Array index ${index.value} out of bounds for length ${length}`, this.json.line);
+            }
+        }
 
+        let valueEvaluated = await this.value.evaluate(environment);
         let currentStoredVariableEvaluated = await this.location.evaluate(environment);
         if (!can_assign(currentStoredVariableEvaluated.realType, valueEvaluated.realType, this.json.line)) {
             throw new PraxlyError(`Error: variable reassignment does not match declared type: \n\t Expected: `
                 + `${currentStoredVariableEvaluated.realType}, \n\t Actual: ${valueEvaluated.realType}`, this.json.line);
         }
 
-        // console.warn(storage);
-        valueEvaluated = typeCoercion(currentStoredVariableEvaluated.realType, valueEvaluated);
+        valueEvaluated = typeCoercion(currentStoredVariableEvaluated.realType, valueEvaluated, this.json.line);
         if (this.location.isArray) {
-            var index = await this.location.index.evaluate(environment);
             storage[this.location.name].elements[index.value] = valueEvaluated;
         } else {
             storage[this.location.name] = valueEvaluated;
@@ -1277,8 +1283,7 @@ class Praxly_vardecl {
                     valueEvaluated = new Praxly_String("");
                     break;
                 default:
-                    console.error("Unhandled var type: " + this.json.varType);
-                    break;
+                    throw new PraxlyError("unhandled var type: " + this.json.varType, this.json.line);
             }
         }
         if (environment.variableList.hasOwnProperty(this.name)) {
@@ -1288,7 +1293,7 @@ class Praxly_vardecl {
         if (!can_assign(this.json.varType, valueEvaluated.realType, this.json.line)) {
             throw new PraxlyError(`incompatible types: ${valueEvaluated.realType} cannot be converted to ${this.json.varType}`, this.json.line);
         }
-        valueEvaluated = typeCoercion(this.json.varType, valueEvaluated);
+        valueEvaluated = typeCoercion(this.json.varType, valueEvaluated, this.json.line);
         environment.variableList[this.name] = valueEvaluated;
 
         return;
@@ -1297,7 +1302,7 @@ class Praxly_vardecl {
 
 class Praxly_array_assignment {
 
-    constructor(json, location, expression) {
+    constructor(location, expression, json) {
         this.json = json;
         this.location = location;
         this.value = expression;
@@ -1311,25 +1316,10 @@ class Praxly_array_assignment {
             if (!can_assign(this.json.varType, valueEvaluated.elements[k].realType, this.json.line)) {
                 throw new PraxlyError(`at least one element in the array did not match declared type:\n\texpected type: ${this.json.varType} \n\texpression type: ${valueEvaluated.realType}`, this.json.line);
             }
-            valueEvaluated.elements[k] = typeCoercion(this.json.varType, valueEvaluated.elements[k]);
+            valueEvaluated.elements[k] = typeCoercion(this.json.varType, valueEvaluated.elements[k], this.json.line);
         }
+        // store in current environment, because the array is being declared and initialized
         environment.variableList[this.name] = valueEvaluated;
-    }
-}
-
-class Praxly_variable {
-
-    constructor(json, name, node) {
-        this.json = node;
-        this.name = name;
-    }
-
-    async evaluate(environment) {
-        if (!environment.variableList.hasOwnProperty(this.name)) {
-            throw new PraxlyError(`the variable \'${this.name}\' is not recognized by the program. \n\tPerhaps you forgot to initialize it?`, this.json.line);
-            // return new Praxly_invalid(this.json);
-        }
-        return environment.variableList[this.name];
     }
 }
 
@@ -1349,12 +1339,12 @@ class Praxly_Location {
         }
 
         if (this.isArray) {
-            var index = await this.index.evaluate(environment).value;
-            if (index >= storage[this.name].elements.length) {
-                throw new PraxlyError(`index ${index} out of bounds for array named ${this.name}`, this.json.line);
+            var index = await this.index.evaluate(environment);
+            var length = storage[this.name].elements.length;
+            if (index.value >= length) {
+                throw new PraxlyError(`Array index ${index.value} out of bounds for length ${length}`, this.json.line);
             }
-            var ind = await this.index.evaluate(environment);
-            return await storage[this.name].elements[ind.value].evaluate(environment);
+            return await storage[this.name].elements[index.value].evaluate(environment);
         } else {
             return await storage[this.name].evaluate(environment);
         }
@@ -1560,11 +1550,11 @@ class Praxly_negate {
 class Praxly_invalid {
 
     constructor() {
-        this.value = 'error';
+        this.value = 'INVALID';
     }
 
     async evaluate(environment) {
-        console.info(`invalid tree. Problem detected here:`);
+        throw new PraxlyError("attempting to evaluate invalid tree node");
     }
 }
 
@@ -1642,7 +1632,7 @@ class Praxly_function_call {
         }
         catch (error) {
             if (error instanceof ReturnException) {
-                result = error.errorData;
+                result = error.returnValue;
             }
             else if (error instanceof RangeError) {
                 // most likely infinite recursion
@@ -1714,7 +1704,7 @@ class Praxly_String_funccall {
                 result = str.value.substring(startIndex.value, endIndex.value);
                 return new Praxly_String(result);
             default:
-                throw new PraxlyError(`unrecognized function name ${this.name} for strings.`, this.json.line);
+                throw new PraxlyError("unhandled string method " + this.name, this.json.line);
         }
     }
 
@@ -1763,7 +1753,7 @@ function can_assign(varType, expressionType, line) {
     } else if (varType === TYPES.CHAR) {
         return expressionType === TYPES.CHAR;
     } else {
-        return false; // Invalid varType
+        throw new PraxlyError("unknown variable type", line);
     }
 }
 
@@ -1916,7 +1906,7 @@ function binop_typecheck(operation, type1, type2, json) {
             return can_compare(operation, type1, type2, json);
 
         default:
-            throw new PraxlyError(`typecheck called when it shouldn't have been`, json.line);// Invalid operation
+            throw new PraxlyError("unhandled operation " + operation, json.line);
     }
 }
 
@@ -1937,9 +1927,8 @@ function litNode_new(type, value, json) {
         case TYPES.SHORT:
             return new Praxly_short(value);
         case TYPES.INVALID:
-            // console.error("Invalid literal: ", json);
             return new Praxly_invalid();
         default:
-            throw new PraxlyError("Unknown literal type", json.line);
+            throw new PraxlyError("unhandled literal type " + type, json.line);
     }
 }

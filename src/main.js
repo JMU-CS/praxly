@@ -226,7 +226,6 @@ function registerListeners() {
       // Prevent the default save action (e.g., opening the save dialog, reloading the page)
       event.preventDefault();
       runTasks(false);
-      // console.log(trees);
     }
   });
 
@@ -493,9 +492,9 @@ async function runTasks(startDebug) {
       // special case: abort running (not an error)
       clear();
     } else if (!errorOutput) {
-      // error not previously handled (by PraxlyError)
-      defaultError(error);
+      // error not previously handled by PraxlyError
       console.error(error);
+      defaultError(error);
     }
   }
 
@@ -515,8 +514,9 @@ async function runTasks(startDebug) {
   textEditor.focus();
 }
 
+
 export function turnCodeToBlocks() {
-  // I need to make the listeners only be one at a time to prevent an infinite loop.
+  // only one listener at a time to prevent infinite loop
   workspace.removeChangeListener(onBlocklyChange);
   if (getDebugMode()) {
     stopButton.click();
@@ -529,6 +529,7 @@ export function turnCodeToBlocks() {
     console.log(mainTree);
   }
 
+  // update block side to match
   workspace.clear();
   tree2blocks(workspace, mainTree);
   workspace.render();
@@ -543,12 +544,21 @@ function onBlocklyChange(event) {
 }
 
 function turnBlocksToCode() {
+  // only one listener at a time to prevent infinite loop
   textEditor.removeEventListener("input", turnCodeToBlocks);
+  if (getDebugMode()) {
+    stopButton.click();
+  }
+
+  // this is where block compiling begins
+  clearErrors();
   mainTree = blocks2tree(workspace, praxlyGenerator);
   if (DEV_LOG) {
     console.log(mainTree);
   }
-  const text = tree2text(mainTree, 0, 0);
+
+  // update text side to match
+  const text = tree2text(mainTree, 0);
   textEditor.setValue(text, -1);
 };
 
