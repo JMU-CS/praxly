@@ -224,15 +224,20 @@ function registerListeners() {
    */
 
   document.addEventListener("keydown", function (event) {
-    // F5 or Ctrl+S
     if (event.key === 'F5' || (event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S')) {
-      // Prevent the default action (i.e., reloading the page / opening the save dialog)
-      event.preventDefault();
+      event.preventDefault();  // reloading the page / opening the save dialog
       if ((!examples || exampleModal.style.display !== 'flex') && resetModal.style.display !== 'flex') {
         runTasks(false);
       }
     }
-    // Escape
+    if (event.key === 'F10') {
+        event.preventDefault();  // browser menu
+        if (getDebugMode()) {
+            stepButton.click();
+        } else {
+            debugButton.click();
+        }
+    }
     if (event.key === 'Escape') {
       if (examples) {
         exampleModal.style.display = 'none';
