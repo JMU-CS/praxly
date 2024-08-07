@@ -433,9 +433,9 @@ function refresh() {
  * this function gets called every time the run button is pressed.
  */
 async function runTasks(startDebug) {
+
   // clear previous results
   clear();
-  clearErrors();
   await refresh();
 
   // abort if compile-time error
@@ -501,7 +501,10 @@ async function runTasks(startDebug) {
     stdErr.innerHTML = errorOutput;
     if (getDebugMode()) {
         stopButton.click();
-      }
+    }
+    if (errorOutput.endsWith("input canceled")) {
+      clearErrors();  // no errors in the code
+    }
   } else {
     // successful run; replace special chars
     var pos = textEditor.getCursorPosition();
