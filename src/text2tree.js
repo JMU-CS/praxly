@@ -613,7 +613,9 @@ class Parser {
             right: r,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
             blockID: "code",
-            line: line
+            line: line,
+            startIndex: startIndex,
+            endIndex: r.endIndex,
           }
         }
         return l;
@@ -728,7 +730,7 @@ class Parser {
                 startIndex: startIndex,
               }
             }
-            l.endIndex = this.getCurrentToken().endIndex;
+            l.endIndex = this.tokens[this.i - 1].endIndex;
             return l;
 
           default:
@@ -792,6 +794,7 @@ class Parser {
       line: this.getCurrentLine(),
       index: null,
       startIndex: this.tokens[this.i].startIndex,
+      endIndex: this.tokens[this.i].endIndex,
     }
     this.advance();
     if (this.has('[')) {
@@ -832,14 +835,14 @@ class Parser {
       line: this.getCurrentLine(),
       index: null,
       startIndex: startIndex,
-      endIndex: this.getCurrentToken().endIndex,
+      endIndex: location.endIndex,
     }
 
     // initialization (optional)
     if (this.hasAny('=', '<-', "←", "⟵")) {
       this.advance();
       result.value = this.parse_expression();
-      result.endIndex = this.getCurrentToken().endIndex;
+      result.endIndex = this.tokens[this.i - 1].endIndex;
     }
 
     // procedure definition
@@ -1001,7 +1004,6 @@ class Parser {
         return result;
       }
       this.advance();
-      result.initialization.endIndex[1]--;  // don't highlight semicolon
 
       result.condition = this.parse_expression();
       if (this.hasNot(';')) {  // 2nd required
@@ -1015,7 +1017,6 @@ class Parser {
         return result;
       }
       this.advance();
-      result.increment.endIndex[1]--;  // don't highlight parenthesis
 
       result.codeblock = this.parse_block('end for');
       return result;
