@@ -1,5 +1,5 @@
-import Blockly, { Block } from 'blockly';
-import { NODETYPES, StringFuncs } from './common';
+import Blockly from 'blockly';
+import { NODETYPES } from './common';
 
 export function definePraxlyBlocks(workspace) {
   let callbacks = {
@@ -13,12 +13,9 @@ export function definePraxlyBlocks(workspace) {
       this.params = state.params || [];
       for (let i = 0; i < this.params.length; i++) {
         this.appendValueInput(`PARAM_${i}`);
-
       }
     }
   };
-
-
 
   Blockly.Extensions.registerMutator('praxly_arity', callbacks);
 
@@ -344,21 +341,6 @@ export function definePraxlyBlocks(workspace) {
       "output": null
     },
     { // math 1
-      "type": "praxly_literal_block",
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "LITERAL",
-          "text": "value"
-        }
-      ],
-      "output": null,
-      "style": 'math_blocks',
-      "tooltip": "A literal value in the code",
-      "helpUrl": ""
-    },
-    { // math 2
       "type": "praxly_arithmetic_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -412,7 +394,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Arithmetic operators:\n+ addition (and string concatenation)\n- subtraction\n* multiplication\n/ division (integer and floating-point)\n% remainder\n^ exponent",
       "helpUrl": "",
     },
-    { // math 3
+    { // math 2
       "type": "praxly_negate_block",
       "message0": "- %1 %2",
       "args0": [
@@ -427,6 +409,21 @@ export function definePraxlyBlocks(workspace) {
       "output": null,
       "style": 'math_blocks',
       "tooltip": "Negates a value",
+      "helpUrl": ""
+    },
+    { // math 3
+      "type": "praxly_literal_block",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "LITERAL",
+          "text": "value"
+        }
+      ],
+      "output": null,
+      "style": 'math_blocks',
+      "tooltip": "A literal value in the code",
       "helpUrl": ""
     },
     { // math 4
@@ -536,7 +533,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Returns the higher value",
       "helpURL": ""
     },
-    {
+    { // math 11
       "type": "praxly_abs_block",
       "message0": "abs ( %1 )",
       "args0": [
@@ -551,7 +548,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Returns the absolute value",
       "helpURL": ""
     },
-    {
+    { // math 12
       "type": "praxly_log_block",
       "message0": "log ( %1 )",
       "args0": [
@@ -566,7 +563,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Calculates the natural logarithm",
       "helpURL": ""
     },
-    {
+    { // math 13
       "type": "praxly_sqrt_block",
       "message0": "sqrt ( %1 )",
       "args0": [
@@ -581,39 +578,6 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Calculates the square root",
       "helpURL": ""
     },
-    // { // text 1
-    //   "type": "praxly_StringFunc_block",
-    //   "message0": "%1.%2(%3)",
-    //   "args0": [
-    //     {
-    //       "type": "input_value",
-    //       "name": "EXPRESSION"
-    //     },
-    //     {
-    //       "type": "field_dropdown",
-    //       "name": "FUNCTYPE",
-    //       "options": [
-    //         ["charAt", StringFuncs.CHARAT],
-    //         ["contains", StringFuncs.CONTAINS],
-    //         ['indexOf', StringFuncs.INDEXOF],
-    //         ["length", StringFuncs.LENGTH],
-    //         ["substring", StringFuncs.SUBSTRING],
-    //         ["toLowerCase", StringFuncs.TOLOWERCSE],
-    //         ["toUpperCase", StringFuncs.TOUPPERCASE],
-    //       ]
-    //     },
-    //     {
-    //       "type": "input_value",
-    //       "name": "PARAMS",
-    //       "text": "params"
-    //     },
-    //   ],
-    //   "inputsInline": true,
-    //   "output": null,
-    //   "style": 'other_blocks',
-    //   "tooltip": "String methods:\ncharAt(i) - Returns the character at index i\ncontains(s) - Returns true if s is a substring\nindexOf(s) - Returns the first index of substring s, or -1 if not found\nlength() - Returns the length of the string\nsubstring(i, j) - Extracts characters from index i up to but not including index j\ntoLowerCase() - Converts the string to all lowercase\ntoUpperCase() - Converts the string to all uppercase",
-    //   "helpUrl": ""
-    // },
     { // text 1
       "type": "praxly_charAt_block",
       "message0": "%1.charAt (%2)",
@@ -745,24 +709,6 @@ export function definePraxlyBlocks(workspace) {
       "helpUrl": ""
     },
     { // logic 1
-      "type": "praxly_true_block",
-      "message0": "true",
-      "inputsInline": true,
-      "output": "Boolean",
-      "style": 'logic_blocks',
-      "tooltip": "The literal value true",
-      "helpUrl": ""
-    },
-    { // logic 2
-      "type": "praxly_false_block",
-      "message0": "false",
-      "inputsInline": true,
-      "output": "Boolean",
-      "style": 'logic_blocks',
-      "tooltip": "The literal value false",
-      "helpUrl": ""
-    },
-    { // logic 3
       "type": "praxly_if_block",
       "style": "logic_blocks",
       "message0": "if ( %1 ) %2  %3 end if",
@@ -785,7 +731,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "If statement",
       "helpUrl": ""
     },
-    { // logic 4
+    { // logic 2
       "type": "praxly_if_else_block",
       "message0": "if ( %1 ) %2 %3 else  %4  %5 end if",
       "args0": [
@@ -815,7 +761,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "If-else statement",
       "helpUrl": ""
     },
-    { // logic 5
+    { // logic 3
       "type": "praxly_boolean_operators_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -853,7 +799,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Logical operators",
       "helpUrl": ""
     },
-    { // logic 6
+    { // logic 4
       "type": "praxly_not_block",
       "message0": "not %1 %2",
       "args0": [
@@ -871,7 +817,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Negates a boolean",
       "helpUrl": ""
     },
-    { // logic 7
+    { // logic 5
       "type": "praxly_compare_block",
       "message0": "%1 %2 %3 %4",
       "args0": [
@@ -923,6 +869,24 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Relational operators:\n< less than\n> greater than\n≤ less than or equal to\n≥ greater than or equal to\n== equal to\n≠ not equal to",
       "helpUrl": ""
     },
+    { // logic 6
+      "type": "praxly_true_block",
+      "message0": "true",
+      "inputsInline": true,
+      "output": "Boolean",
+      "style": 'logic_blocks',
+      "tooltip": "The literal value true",
+      "helpUrl": ""
+    },
+    { // logic 7
+      "type": "praxly_false_block",
+      "message0": "false",
+      "inputsInline": true,
+      "output": "Boolean",
+      "style": 'logic_blocks',
+      "tooltip": "The literal value false",
+      "helpUrl": ""
+    },
     { // loops 1
       "type": "praxly_for_loop_block",
       "message0": "for (%1 ; %2 ; %3 )%4 %5 end for",
@@ -955,7 +919,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "For loop (repeat a specific number of times)",
       "helpUrl": ""
     },
-    { // variables
+    { // for loop initialize
       "type": "praxly_assignment_expression_block",
       "message0": "%1%2 ⬅ %3 %4",
       "args0": [
@@ -991,7 +955,7 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Declares and initializes the loop variable",
       "helpUrl": ""
     },
-    { // variables
+    { // for loop reassignment
       "type": "praxly_reassignment_expression_block",
       "message0": "%1⬅%2 %3",
       "args0": [
@@ -1158,11 +1122,6 @@ export function definePraxlyBlocks(workspace) {
           'alt': '*',
 
         },
-        // {
-        //   "type": "field_input",
-        //   "name": "LITERAL",
-        //   "text": "parameterName"
-        // },
         {
           'type': 'field_image',
           'src': 'images/icons8-minus-50.png',
@@ -1272,75 +1231,6 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Expression statement for calling a void procedure",
       "helpUrl": ""
     },
-    { // not used
-      "type": "praxly_null_block",
-      "message0": "null",
-      "inputsInline": true,
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    { // not used
-      "type": "praxly_class_block",
-      "message0": "class %1 %2 end class",
-      "args0": [
-        {
-          "type": "input_dummy"
-        },
-        {
-          "type": "input_statement",
-          "name": "class"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "style": "class_blocks",
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    { // not used
-      "type": "praxly_String_block",
-      "message0": "\"%1\"",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "LITERAL",
-          "text": "String"
-        }
-      ],
-      "output": null,
-      "style": 'expression_blocks',
-      "tooltip": "",
-      "helpUrl": ""
-    },
-    { // not used
-      "type": "custom_operation_block",
-      "message0": "Custom Operation %1 %2",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "input1",
-          "check": "Number",
-          "align": "RIGHT",
-          "defaultType": "math_number",
-          "defaultValue": 5
-        },
-        {
-          "type": "input_value",
-          "name": "input2",
-          "check": "Number",
-          "align": "RIGHT",
-          "defaultType": "math_number",
-          "defaultValue": 10
-        }
-      ],
-      "output": "Number",
-      "colour": 230,
-      "tooltip": "Perform custom operation",
-      "helpUrl": ""
-    }
   ]);
 
   // The default context menu from Blockly has an item for annotating a block

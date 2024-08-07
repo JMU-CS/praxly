@@ -1,4 +1,4 @@
-import Blockly, { Block } from 'blockly';
+import Blockly from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
@@ -190,7 +190,6 @@ function registerListeners() {
   })
 
 
-
   document.addEventListener('mouseup', function (e) {
     isResizingHoriz = false;
     document.removeEventListener('mousemove', resizeHandler);
@@ -204,7 +203,6 @@ function registerListeners() {
     Blockly.svgResize(workspace);
     textEditor.resize();
   });
-
 
 
   // these make it so that the blocks and text take turns.
@@ -281,7 +279,6 @@ function toggleTextOn() {
     document.querySelector('#text-tip').innerHTML = "Text Off";
   }
 }
-
 
 
 let isBlocksOn = true;
