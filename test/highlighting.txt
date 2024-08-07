@@ -1,0 +1,71 @@
+// common
+print "Hello, World!"
+String name ← input()
+/* skip this line */
+
+// variables
+boolean b
+int i ← 3
+b ← true
+print b
+float[] a ← {1.2, 3.4}
+a[1] ← 5.6
+print a[0]
+
+// math
+print 1 + 2
+print -i
+print random()
+print randomInt(100)
+randomSeed(0)
+print int("123")
+print float("456.789")
+print min(4, 3)
+print max(2, 1)
+print abs(-5)
+print log(2.718)
+print sqrt(25)
+
+// text
+print "Hello".charAt(1)
+print "Hello".contains("lo")
+print "Hello".indexOf("lo")
+print "Hello".length()
+print "Hello".substring(0, 2)
+print "Hello".toLowerCase()
+print "Hello".toUpperCase()
+
+// logic
+if (i < 10)
+    print "Yes"
+end if
+if (i > 10)
+    print "Oops"
+else
+    print "Nice"
+end if
+print b and false
+print not b
+
+// loops
+for (int x ← 0; x < 3; x ← x + 1)
+    print "for " + x
+end for
+while (i > 2)
+    print "while " + i
+    i ← i - 1
+end while
+do
+    print "do " + i
+while (i > 2)
+repeat
+    print "repeat " + i
+until (i == 2)
+
+// procedures
+int proc(int a, int b)
+    print "Sum: " + (a + b)
+    return a + b
+end proc
+proc(8, 9)
+print proc(2, 3)

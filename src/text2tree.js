@@ -811,7 +811,6 @@ class Parser {
     var isArray = false;
     var type = NODETYPES.VARDECL;
     var vartype = this.getCurrentToken().value;
-    var startIndex = this.getCurrentToken().startIndex;
     this.advance();
     if (this.has('[') && this.has_ahead(']')) {
       this.advance();
@@ -831,13 +830,15 @@ class Parser {
       location: location,
       line: this.getCurrentLine(),
       index: null,
-      startIndex: startIndex,
+      startIndex: this.getCurrentToken().startIndex,
+      endIndex: this.getCurrentToken().endIndex,
     }
 
     // initialization (optional)
     if (this.hasAny('=', '<-', "←", "⟵")) {
       this.advance();
       result.value = this.parse_expression();
+      result.endIndex = this.getCurrentToken().endIndex;
     }
 
     // procedure definition
@@ -881,7 +882,6 @@ class Parser {
       result.codeblock = this.parse_block('end ' + result.name);
     }
 
-    result.endIndex = this.getCurrentToken().endIndex;
     return result;
   }
 
@@ -1122,31 +1122,33 @@ class Parser {
         return this.parse_funcdecl_or_vardecl();
       } else {
         // type conversion function
-        let contents = this.parse_builtin_function_call(line);
+        let call = this.parse_builtin_function_call(line);
         return {
           type: NODETYPES.STATEMENT,
-          value: contents,
+          value: call,
           blockID: "code",
-          startIndex: contents?.startIndex,
-          endIndex: contents?.endIndex,
+          line: call.line,
+          startIndex: call?.startIndex,
+          endIndex: call?.endIndex,
         };
       }
     }
 
     // most likely a function call
     else {
-      let contents = this.parse_expression();
+      let expr = this.parse_expression();
       // special case: assume that assignment is a statement
       // if in a for loop, later code will rebuild the object
-      if (contents?.type.endsWith("ASSIGNMENT")) {
-        return contents;
+      if (expr?.type.endsWith("ASSIGNMENT")) {
+        return expr;
       }
       result = {
         type: NODETYPES.STATEMENT,
-        value: contents,
+        value: expr,
         blockID: "code",
-        startIndex: contents?.startIndex,
-        endIndex: contents?.endIndex,
+        line: expr.line,
+        startIndex: expr?.startIndex,
+        endIndex: expr?.endIndex,
       };
     }
     return result;
@@ -1174,7 +1176,7 @@ class Parser {
     if (this.has(NODETYPES.SINGLE_LINE_COMMENT) || this.has(NODETYPES.COMMENT)) {
       const token = this.advance();
       comment = {
-        type: this.getPrevTokenType(),
+        type: token.token_type,
         value: token.value,
         startIndex: token.startIndex,
         endIndex: token.endIndex,

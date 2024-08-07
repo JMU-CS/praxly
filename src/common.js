@@ -186,23 +186,31 @@ export function consoleInput() {
 
 
 /**
- * This will highlight a line of code
- * @param {number} line the desired line that you want to highlight
- * @param {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
- * @returns the marker id associated with the marker. This should not be needed.
+ * This will highlight a line of code.
+ * old param: {number} line the desired line that you want to highlight
+ * old param: {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
+ * old returns: the marker id associated with the marker.
  */
 export function highlightAstNode(environment, node) {
-    var session = textEditor.session;
-
-    // var errorRange = indexToAceRange(line - 1);
-    var Range = ace.require('ace/range').Range;
     if (DEV_LOG) {
         console.log(`attempting to highlight: `, node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
     }
 
-    var errorRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
-    var markerId = session.addMarker(errorRange, 'step-marker', 'text');
+    // scroll the text into view if necessary
+    if (node.line) {
+        let row = node.line - 1;
+        if (!textEditor.isRowFullyVisible(row)) {
+            // arguments: line number, center vertically, animate the scroll
+            textEditor.scrollToLine(row, true, true);
+        }
+    }
 
+    // highlight the text
+    var Range = ace.require('ace/range').Range;
+    var debugRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
+    var markerId = textEditor.session.addMarker(debugRange, 'step-marker', 'text');
+
+    // highlight the block
     if (node.blockID) {
         environment.global.blocklyWorkspace.highlightBlock(node.blockID);
     }
