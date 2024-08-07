@@ -173,7 +173,7 @@ export function createExecutable(tree) {
                 checkArity(tree, 1);
                 return new Praxly_sqrt(createExecutable(tree.args[0]), tree);
             } else {
-                throw Error(`unknown builtin function ${tree.name} (line ${tree.line})`);
+                throw new Error(`unknown builtin function ${tree.name} (line ${tree.line})`);
             }
         }
 
@@ -193,7 +193,7 @@ export function createExecutable(tree) {
                     checkArity(tree.right, 2);
                     break;
                 default:
-                    throw Error(`unknown string method ${tree.right.name} (line ${tree.line})`);
+                    throw new Error(`unknown string method ${tree.right.name} (line ${tree.line})`);
             }
             var args = [];
             tree.right.args.forEach((arg) => {
@@ -352,7 +352,7 @@ export function createExecutable(tree) {
             return new Praxly_emptyLine(tree);
 
         default:
-            throw new PraxlyError("unhandled node type " + tree.type, tree.line);
+            throw new Error(`unhandled node type ${tree.type} (line ${tree.line})`);
     }
 }
 
@@ -1209,7 +1209,7 @@ function typeCoercion(varType, praxlyObj, line) {
             newValue = String(praxlyObj.value);
             return new Praxly_String(newValue, praxlyObj.json);
         default:
-            throw new PraxlyError("unhandled var type: " + varType, line);
+            throw new Error(`unhandled var type ${varType} (line ${line})`);
     }
 }
 
@@ -1291,7 +1291,7 @@ class Praxly_vardecl {
                     valueEvaluated = new Praxly_String("");
                     break;
                 default:
-                    throw new PraxlyError("unhandled var type: " + this.json.varType, this.json.line);
+                    throw new Error(`unhandled var type ${this.json.varType} (line ${this.json.line})`);
             }
         }
         if (environment.variableList.hasOwnProperty(this.name)) {
@@ -1679,6 +1679,7 @@ class Praxly_String_funccall {
             throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`, this.json.line);
         }
     }
+
     async evaluate(environment) {
         var str = await this.receiver.evaluate(environment);
         var result;
@@ -1712,7 +1713,7 @@ class Praxly_String_funccall {
                 result = str.value.substring(startIndex.value, endIndex.value);
                 return new Praxly_String(result);
             default:
-                throw new PraxlyError("unhandled string method " + this.name, this.json.line);
+                throw new Error(`unhandled string method ${this.name} (line ${this.json.line})`);
         }
     }
 
@@ -1761,7 +1762,7 @@ function can_assign(varType, expressionType, line) {
     } else if (varType === TYPES.CHAR) {
         return expressionType === TYPES.CHAR;
     } else {
-        throw Error(`unknown variable type ${varType} (line ${line})`);
+        throw new Error(`unknown variable type ${varType} (line ${line})`);
     }
 }
 
@@ -1847,8 +1848,7 @@ function can_compare(operation, type1, type2, json) {
             return TYPES.BOOLEAN; // Result of comparison is always a boolean
         }
     }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);
-    // throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid comparison operation
+    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid comparison operation
 }
 
 // yea I know this is sloppy but I am getting tired and I'm running outta time
@@ -1862,8 +1862,7 @@ function can_negate(operation, type1, json) {
             return type1;
         }
     }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tchild: ${type1}`, json.line);
-    // throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid comparison operation
+    throw new PraxlyError(`bad operand types for ${operation}, \n\tchild: ${type1}`, json.line);// Invalid negation
 }
 
 /**
@@ -1914,7 +1913,7 @@ function binop_typecheck(operation, type1, type2, json) {
             return can_compare(operation, type1, type2, json);
 
         default:
-            throw new PraxlyError("unhandled operation " + operation, json.line);
+            throw new Error(`unhandled operation ${operation} (line ${json.line})`);
     }
 }
 
@@ -1937,6 +1936,6 @@ function litNode_new(type, value, json) {
         case TYPES.INVALID:
             return new Praxly_invalid();
         default:
-            throw new PraxlyError("unhandled literal type " + type, json.line);
+            throw new Error(`unhandled literal type ${type} (line ${json.line})`);
     }
 }
