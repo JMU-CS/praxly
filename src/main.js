@@ -433,9 +433,9 @@ function refresh() {
  * this function gets called every time the run button is pressed.
  */
 async function runTasks(startDebug) {
-
   // clear previous results
   clear();
+  clearErrors();
   await refresh();
 
   // abort if compile-time error

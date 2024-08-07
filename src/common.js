@@ -168,14 +168,16 @@ export function consoleInput() {
 
     return new Promise((resolve, reject) => {
       const listener = event => {
-        if (event.key === 'Enter') {
-          resolve(inputElement.value);
+        if (event.key === 'Enter' || event.key === 'Escape') {
           inputElement.removeEventListener('keyup', listener);
           inputElement.readOnly = true;
           inputElement.classList.remove('prompt');
           blocker.style.display = 'none';
-        } else if (event.key === 'Escape') {
-          reject();
+          if (event.key === 'Enter') {
+            resolve(inputElement.value);
+          } else if (event.key === 'Escape') {
+            reject();
+          }
         }
       };
       inputElement.addEventListener('keyup', listener);
