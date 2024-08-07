@@ -411,6 +411,7 @@ function reset() {
     // reload the code if the URL hasn't changed
     textEditor.setValue(configuration.code ?? "", 1);
     turnCodeToBlocks();
+    clear();
   }
 }
 
