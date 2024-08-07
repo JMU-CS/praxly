@@ -21,18 +21,18 @@ import prand from 'pure-rand';
 const FOR_LOOP_LIMIT = 1000000;
 const WHILE_LOOP_LIMIT = 1000;
 
-async function stepInto(environment, json) {
+async function stepInto(environment, node) {
     if (getStepInto()) {
-        let markerId = highlightAstNode(environment, json);
+        let markerId = highlightAstNode(environment, node);
         await waitForStep();
         textEditor.session.removeMarker(markerId);
     }
 }
 
-async function stepOver(environment, json) {
+async function stepOver(environment, node) {
     if (getDebugMode()) {
         await generateVariableTable(environment, 1);
-        let markerId = highlightAstNode(environment, json);
+        let markerId = highlightAstNode(environment, node);
         await waitForStep();
         textEditor.session.removeMarker(markerId);
     }

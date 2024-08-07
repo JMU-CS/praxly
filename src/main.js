@@ -458,6 +458,7 @@ async function runTasks(startDebug) {
 
   // if debug button was clicked
   if (startDebug) {
+    turnCodeToBlocks();  // rebuilds indexes for highlight
     showDebug();
     setDebugMode(true);
   }
@@ -496,6 +497,9 @@ async function runTasks(startDebug) {
     if (error.message === "Stop_Debug") {
       // special case: abort running (not an error)
       clear();
+      workspace.highlightBlock(null);
+      textEditor.focus();
+      return;
     } else if (!errorOutput) {
       // error not previously handled by PraxlyError
       console.error(error);
