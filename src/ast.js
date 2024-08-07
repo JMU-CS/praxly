@@ -573,7 +573,6 @@ class Praxly_print {
     }
 }
 
-
 class Praxly_input {
 
     constructor(node) {
@@ -598,9 +597,9 @@ class Praxly_random {
     async evaluate(environment) {
         // Pure-rand only generates integers. That's strange. We'll generate an
         // integer in a range and normalize it.
-        const max = 10000;
+        const max = 2e9;
         const x = prand.unsafeUniformIntDistribution(0, max - 1, environment.global.random.generator) / max;
-        return new Praxly_float(x, this.json);
+        return new Praxly_double(x, this.json);
     }
 }
 
