@@ -153,7 +153,7 @@ export function consoleInput() {
           inputElement.classList.remove('prompt');
           blocker.style.display = 'none';
         } else if (event.key === 'Escape') {
-          // TODO: what should we do on escape?
+          reject();
         }
       };
       inputElement.addEventListener('keyup', listener);
