@@ -1235,7 +1235,7 @@ class Praxly_assignment {
         if (this.location.isArray) {
             var index = await this.location.index.evaluate(environment);
             var length = storage[this.location.name].elements.length;
-            if (index.value >= length) {
+            if (index.value < 0 || index.value >= length) {
                 throw new PraxlyError(`Array index ${index.value} out of bounds for length ${length}`, this.json.line);
             }
         }
@@ -1355,7 +1355,7 @@ class Praxly_Location {
         if (this.isArray) {
             var index = await this.index.evaluate(environment);
             var length = storage[this.name].elements.length;
-            if (index.value >= length) {
+            if (index.value < 0 || index.value >= length) {
                 throw new PraxlyError(`Array index ${index.value} out of bounds for length ${length}`, this.json.line);
             }
             return await storage[this.name].elements[index.value].evaluate(environment);
@@ -1686,6 +1686,12 @@ class Praxly_String_funccall {
         }
     }
 
+    check_bounds(str_value, index_value, inclusive) {
+        if (index_value < 0 || index_value > str_value.length || inclusive && index_value == str_value.length) {
+            throw new PraxlyError(`String index ${index_value} out of bounds for length ${str_value.length}`, this.json.line);
+        }
+    }
+
     async evaluate(environment) {
         var str = await this.receiver.evaluate(environment);
         var result;
@@ -1693,6 +1699,7 @@ class Praxly_String_funccall {
             case StringFuncs.CHARAT:
                 var index = await this.args[0].evaluate(environment);
                 this.typecheckhelper(index, [TYPES.INT, TYPES.SHORT]);
+                this.check_bounds(str.value, index.value, true);
                 result = str.value[index.value];
                 return new Praxly_char(result);
             case StringFuncs.CONTAINS:
@@ -1712,11 +1719,13 @@ class Praxly_String_funccall {
             case StringFuncs.TOUPPERCASE:
                 return new Praxly_String(str.value.toUpperCase());
             case StringFuncs.SUBSTRING:
-                var startIndex = await this.args[0].evaluate(environment);
-                var endIndex = await this.args[1].evaluate(environment);
-                this.typecheckhelper(startIndex, [TYPES.INT, TYPES.SHORT]);
-                this.typecheckhelper(endIndex, [TYPES.INT, TYPES.SHORT]);
-                result = str.value.substring(startIndex.value, endIndex.value);
+                var beg = await this.args[0].evaluate(environment);
+                var end = await this.args[1].evaluate(environment);
+                this.typecheckhelper(beg, [TYPES.INT, TYPES.SHORT]);
+                this.typecheckhelper(end, [TYPES.INT, TYPES.SHORT]);
+                this.check_bounds(str.value, beg.value, false);
+                this.check_bounds(str.value, end.value, false);
+                result = str.value.substring(beg.value, end.value);
                 return new Praxly_String(result);
             default:
                 throw new Error(`unhandled string method ${this.name} (line ${this.json.line})`);
