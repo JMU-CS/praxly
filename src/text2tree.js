@@ -811,6 +811,7 @@ class Parser {
     var isArray = false;
     var type = NODETYPES.VARDECL;
     var vartype = this.getCurrentToken().value;
+    var startIndex = this.getCurrentToken().startIndex;
     this.advance();
     if (this.has('[') && this.has_ahead(']')) {
       this.advance();
@@ -830,7 +831,7 @@ class Parser {
       location: location,
       line: this.getCurrentLine(),
       index: null,
-      startIndex: this.getCurrentToken().startIndex,
+      startIndex: startIndex,
       endIndex: this.getCurrentToken().endIndex,
     }
 
@@ -1000,6 +1001,7 @@ class Parser {
         return result;
       }
       this.advance();
+      result.initialization.endIndex[1]--;  // don't highlight semicolon
 
       result.condition = this.parse_expression();
       if (this.hasNot(';')) {  // 2nd required
@@ -1008,12 +1010,13 @@ class Parser {
       this.advance();
 
       result.increment = this.parse_expression(1);
+      result.endIndex = this.getCurrentToken().endIndex;
       if (this.hasNot(')')) {
         return result;
       }
       this.advance();
+      result.increment.endIndex[1]--;  // don't highlight parenthesis
 
-      result.endIndex = this.getCurrentToken().endIndex;
       result.codeblock = this.parse_block('end for');
       return result;
     }
@@ -1045,6 +1048,7 @@ class Parser {
       }
       this.advance();
       result.condition = this.parse_expression();
+      result.endIndex = this.getCurrentToken().endIndex;
       if (this.hasNot(')')) {
         return result;
       }
@@ -1097,6 +1101,7 @@ class Parser {
       const expression = this.parse_expression();
       result.type = NODETYPES.RETURN;
       result.value = expression;
+      result.endIndex = expression?.endIndex;
       return result;
     }
 

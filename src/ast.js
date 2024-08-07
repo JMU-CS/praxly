@@ -1079,6 +1079,7 @@ class Praxly_if {
     }
 
     async evaluate(environment) {
+        await stepOver(environment, this.condition.json);
         var cond = await this.condition.evaluate(environment);
         if (cond.realType != TYPES.BOOLEAN) {
             throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
@@ -1100,6 +1101,7 @@ class Praxly_if_else {
     }
 
     async evaluate(environment) {
+        await stepOver(environment, this.condition.json);
         var cond = await this.condition.evaluate(environment);
         if (cond.realType != TYPES.BOOLEAN) {
             throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
