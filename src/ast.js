@@ -580,11 +580,12 @@ class Praxly_input {
     }
 
     async evaluate(environment) {
-        const result = await consoleInput();
-        // if (result === null) {
-        // throw new PraxlyError("input canceled", this.json.line);
-        // }
-        return new Praxly_String(result, this.json);
+        try {
+            const result = await consoleInput();
+            return new Praxly_String(result, this.json);
+        } catch (e) {
+            throw new PraxlyError("input canceled", this.json.line);
+        }
     }
 }
 

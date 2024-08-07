@@ -35,6 +35,7 @@ let stdOut;
 let stdErr;
 
 let examples;
+let exampleModal;
 let titleRefresh;
 let bottomPart;
 let darkmodediv;
@@ -68,6 +69,7 @@ function initializeGlobals() {
     darkModeButton = document.getElementById('darkMode');
     settingsButton = document.getElementById("settings");
     examples = document.getElementById('examplesButton');
+    exampleModal = document.querySelector('.exampleModal');
     titleRefresh = document.getElementById('titleRefresh');
     darkmodediv = document.querySelector('.settingsOptions');
     toggleText = document.querySelector('#toggle-text');
@@ -152,11 +154,11 @@ function registerListeners() {
     });
 
     examples.addEventListener('click', function () {
-      document.querySelector('.exampleModal').style.display = 'flex';
+      exampleModal.style.display = 'flex';
     });
 
     document.querySelector('.close').addEventListener('click', function () {
-      document.querySelector('.exampleModal').style.display = 'none';
+      exampleModal.style.display = 'none';
     });
   } else { // embed only
 
@@ -217,29 +219,34 @@ function registerListeners() {
   });
 
 
-  // this is how you add custom keybinds!
-  document.addEventListener("keydown", function (event) {
-    // Check if the event key is 's' and Ctrl or Command key is pressed
-    if ((event.key === 's' || event.key === 'S') && (event.ctrlKey || event.metaKey) || event.key === 'F5') {
-      // Prevent the default save action (e.g., opening the save dialog, reloading the page)
-      event.preventDefault();
-      runTasks(false);
-    }
-  });
+  /*
+   * Keyboard shortcuts.
+   */
 
-  document.addEventListener('keydown', function(event) {
+  document.addEventListener("keydown", function (event) {
+    if (event.key === 'F5' || (event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S')) {
+      event.preventDefault();  // reloading the page / opening the save dialog
+      if ((!examples || exampleModal.style.display !== 'flex') && resetModal.style.display !== 'flex') {
+        runTasks(false);
+      }
+    }
+    if (event.key === 'F10') {
+        event.preventDefault();  // browser menu
+        if (getDebugMode()) {
+            stepButton.click();
+        } else {
+            debugButton.click();
+        }
+    }
     if (event.key === 'Escape') {
       if (examples) {
-        document.querySelector('.exampleModal').style.display = 'none';
+        exampleModal.style.display = 'none';
       }
-      if (resetModal.style.display = 'flex') {
-        resetModal.style.display  = 'none';
-      }
+      resetModal.style.display  = 'none';
     }
   });
 
-
-  /**
+  /*
    * Event listeners for the main buttons along the top.
    */
 
@@ -347,7 +354,7 @@ function generateTable() {
     link.addEventListener('click', function() {
       textEditor.setValue(codeText[i].code.trimStart(), -1);
       textPane.click();
-      document.querySelector('.exampleModal').style.display = 'none';
+      exampleModal.style.display = 'none';
     });
     link.classList.add("example_links");
     const nameCell = document.createElement("td");
@@ -501,7 +508,10 @@ async function runTasks(startDebug) {
     stdErr.innerHTML = errorOutput;
     if (getDebugMode()) {
         stopButton.click();
-      }
+    }
+    if (errorOutput.endsWith("input canceled")) {
+      clearErrors();  // no errors in the code
+    }
   } else {
     // successful run; replace special chars
     var pos = textEditor.getCursorPosition();
@@ -734,7 +744,7 @@ function synchronizeToConfiguration() {
   if (configuration.code) {
     textEditor.setValue(configuration.code, 1);
   } else if (examples) {
-    document.querySelector('.exampleModal').style.display = 'flex';
+    exampleModal.style.display = 'flex';
   }
   stepButton.style.display = 'none';
   stopButton.style.display = 'none';
