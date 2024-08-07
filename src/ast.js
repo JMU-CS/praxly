@@ -968,10 +968,10 @@ class Praxly_equals {
     }
 
     async evaluate(environment) {
-        var left = await this.a_operand.evaluate(environment);
-        var right = await this.b_operand.evaluate(environment);
+        var a = await this.a_operand.evaluate(environment);
+        var b = await this.b_operand.evaluate(environment);
         await stepInto(environment, this.json);
-        return new Praxly_boolean(left.value === right.value);
+        return litNode_new(binop_typecheck(OP.EQUALITY, a.realType, b.realType, this.json), a.value === b.value);
     }
 }
 
@@ -986,10 +986,10 @@ class Praxly_not_equals {
     }
 
     async evaluate(environment) {
-        var left = await this.a_operand.evaluate(environment);
-        var right = await this.b_operand.evaluate(environment);
+        var a = await this.a_operand.evaluate(environment);
+        var b = await this.b_operand.evaluate(environment);
         await stepInto(environment, this.json);
-        return new Praxly_boolean(left.value != await right.value);
+        return litNode_new(binop_typecheck(OP.INEQUALITY, a.realType, b.realType, this.json), a.value !== b.value);
     }
 }
 
@@ -1004,10 +1004,10 @@ class Praxly_greater_than {
     }
 
     async evaluate(environment) {
-        var left = await this.a_operand.evaluate(environment);
-        var right = await this.b_operand.evaluate(environment);
+        var a = await this.a_operand.evaluate(environment);
+        var b = await this.b_operand.evaluate(environment);
         await stepInto(environment, this.json);
-        return new Praxly_boolean(left.value > right.value);
+        return litNode_new(binop_typecheck(OP.GREATER_THAN, a.realType, b.realType, this.json), a.value > b.value);
     }
 }
 
@@ -1022,10 +1022,10 @@ class Praxly_less_than {
     }
 
     async evaluate(environment) {
-        var left = await this.a_operand.evaluate(environment);
-        var right = await this.b_operand.evaluate(environment);
+        var a = await this.a_operand.evaluate(environment);
+        var b = await this.b_operand.evaluate(environment);
         await stepInto(environment, this.json);
-        return new Praxly_boolean(left.value < right.value);
+        return litNode_new(binop_typecheck(OP.LESS_THAN, a.realType, b.realType, this.json), a.value < b.value);
     }
 }
 
@@ -1040,10 +1040,10 @@ class Praxly_greater_than_equal {
     }
 
     async evaluate(environment) {
-        var left = await this.a_operand.evaluate(environment);
-        var right = await this.b_operand.evaluate(environment);
+        var a = await this.a_operand.evaluate(environment);
+        var b = await this.b_operand.evaluate(environment);
         await stepInto(environment, this.json);
-        return new Praxly_boolean(left.value >= right.value);
+        return litNode_new(binop_typecheck(OP.GREATER_THAN_OR_EQUAL, a.realType, b.realType, this.json), a.value >= b.value);
     }
 }
 
@@ -1058,10 +1058,10 @@ class Praxly_less_than_equal {
     }
 
     async evaluate(environment) {
-        var left = await this.a_operand.evaluate(environment);
-        var right = await this.b_operand.evaluate(environment);
+        var a = await this.a_operand.evaluate(environment);
+        var b = await this.b_operand.evaluate(environment);
         await stepInto(environment, this.json);
-        return new Praxly_boolean(left.value <= right.value);
+        return litNode_new(binop_typecheck(OP.LESS_THAN_OR_EQUAL, a.realType, b.realType, this.json), a.value <= b.value);
     }
 }
 
@@ -1238,8 +1238,8 @@ class Praxly_assignment {
         let valueEvaluated = await this.value.evaluate(environment);
         let currentStoredVariableEvaluated = await this.location.evaluate(environment);
         if (!can_assign(currentStoredVariableEvaluated.realType, valueEvaluated.realType, this.json.line)) {
-            throw new PraxlyError(`Error: variable reassignment does not match declared type: \n\t Expected: `
-                + `${currentStoredVariableEvaluated.realType}, \n\t Actual: ${valueEvaluated.realType}`, this.json.line);
+            throw new PraxlyError(`Variable reassignment does not match declared type (Expected: `
+                + `${currentStoredVariableEvaluated.realType}, Actual: ${valueEvaluated.realType})`, this.json.line);
         }
 
         valueEvaluated = typeCoercion(currentStoredVariableEvaluated.realType, valueEvaluated, this.json.line);
@@ -1322,7 +1322,8 @@ class Praxly_array_assignment {
         let valueEvaluated = await this.value.evaluate(environment);
         for (var k = 0; k < valueEvaluated.elements.length; k++) {
             if (!can_assign(this.json.varType, valueEvaluated.elements[k].realType, this.json.line)) {
-                throw new PraxlyError(`at least one element in the array did not match declared type:\n\texpected type: ${this.json.varType} \n\texpression type: ${valueEvaluated.realType}`, this.json.line);
+                throw new PraxlyError(`Array element did not match declared type ` +
+                    `(Expected: ${this.json.varType}, Actual: ${valueEvaluated.elements[k].realType})`, this.json.line);
             }
             valueEvaluated.elements[k] = typeCoercion(this.json.varType, valueEvaluated.elements[k], this.json.line);
         }
@@ -1538,7 +1539,7 @@ class Praxly_not {
 
     async evaluate(environment) {
         var a = await this.expression.evaluate(environment);
-        return new litNode_new(binop_typecheck(OP.NOT, a.realType, this.json), !a.value, this.json);
+        return new litNode_new(binop_typecheck(OP.NOT, a.realType, null, this.json), !a.value, this.json);
     }
 }
 
@@ -1551,7 +1552,7 @@ class Praxly_negate {
 
     async evaluate(environment) {
         var a = await this.expression.evaluate(environment);
-        return new litNode_new(binop_typecheck(OP.NEGATE, a.realType, this.json), -1 * a.value, this.json);
+        return new litNode_new(binop_typecheck(OP.NEGATE, a.realType, null, this.json), -1 * a.value, this.json);
     }
 }
 
@@ -1629,7 +1630,7 @@ class Praxly_function_call {
             if (can_assign(parameterType, argument.realType, this.json.line)) {
                 newScope.variableList[parameterName] = argument;
             } else {
-                throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${parameterType}\n\tActual: ${argument.realType}`, this.json.line);
+                throw new PraxlyError(`Argument ${parameterName} does not match parameter type (Expected: ${parameterType}, Actual: ${argument.realType})`, this.json.line);
             }
         }
 
@@ -1657,7 +1658,7 @@ class Praxly_function_call {
                 throw new PraxlyError(`function ${this.name} missing return statement`, this.json.line);
             }
         } else if (!can_assign(returnType, result.realType, this.json.line)) {
-            throw new PraxlyError(`function ${this.name} returned the wrong type.\n\tExpected: ${returnType}\n\tActual: ${result.realType}`, this.json.line);
+            throw new PraxlyError(`Function ${this.name} returned the wrong type (Expected: ${returnType}, Actual: ${result.realType})`, this.json.line);
         }
 
         // extra debugger step to highlight the function call after returning
@@ -1676,7 +1677,7 @@ class Praxly_String_funccall {
 
     typecheckhelper(argument, expected_types) {
         if (!expected_types.includes(argument.realType)) {
-            throw new PraxlyError(`argument ${parameterName} does not match parameter type.\n\tExpected: ${expected_type}\n\tActual: ${argument.realType}`, this.json.line);
+            throw new PraxlyError(`Argument ${parameterName} does not match parameter type (Expected: ${expected_types}, Actual: ${argument.realType})`, this.json.line);
         }
     }
 
@@ -1731,6 +1732,15 @@ class Praxly_emptyLine {
     }
 }
 
+function is_integer(varType) {
+    return varType === TYPES.INT || varType === TYPES.SHORT;
+}
+
+function is_numeric(varType) {
+    return varType === TYPES.DOUBLE || varType === TYPES.FLOAT
+        || varType === TYPES.INT || varType === TYPES.SHORT;
+}
+
 /**
  * This function is used to determine if something can be assigned.
  * @param {*} varType
@@ -1748,13 +1758,13 @@ function can_assign(varType, expressionType, line) {
         expressionType = expressionType.slice(0, -2);
     }
 
-    if (varType === TYPES.INT || varType === TYPES.SHORT) {
+    if (is_integer(varType)) {
         if (expressionType === TYPES.DOUBLE || expressionType === TYPES.FLOAT) {
             throw new PraxlyError(`incompatible types: possible lossy conversion from ${expressionType} to ${varType}`, line);
         }
-        return expressionType === TYPES.INT || expressionType === TYPES.SHORT;
+        return is_integer(expressionType);
     } else if (varType === TYPES.DOUBLE || varType === TYPES.FLOAT) {
-        return expressionType === TYPES.INT || expressionType === TYPES.DOUBLE || expressionType === TYPES.FLOAT || expressionType === TYPES.SHORT;
+        return is_numeric(expressionType);
     } else if (varType === TYPES.STRING) {
         return expressionType === TYPES.STRING || expressionType === TYPES.NULL;
     } else if (varType === TYPES.BOOLEAN) {
@@ -1766,103 +1776,61 @@ function can_assign(varType, expressionType, line) {
     }
 }
 
+function can_numeric(operation, type1, type2, json) {
+    if (is_numeric(type1) && is_numeric(type2)) {
+        if (type1 === type2) {
+            return type1;
+        }
+        // Different numeric types; promote to integer or double
+        if (is_integer(type1) && is_integer(type2)) {
+            return TYPES.INT;
+        } else {
+            return TYPES.DOUBLE;
+        }
+    }
+    throw new PraxlyError(`bad operand types for ${operation}, left: ${type1}, right: ${type2}`, json.line);
+}
+
 function can_add(operation, type1, type2, json) {
-    if (type1 === type2) {
-        return type1;
+    if (type1 === TYPES.BOOLEAN && type2 === TYPES.BOOLEAN) {
+        throw new PraxlyError(`bad operand types for ${operation} (left: ${type1}, right: ${type2})`, json.line);
+    }
+    if (type1 === TYPES.CHAR && type2 === TYPES.CHAR) {
+        return TYPES.STRING;  // TODO should this be INT like in Java? (would have to do more work to make INT and CHAR interchangeable)
     }
     if (type1 === TYPES.STRING || type2 === TYPES.STRING) {
-        return TYPES.STRING;
+        return TYPES.STRING;  // Promote to String if either operand is a String
     }
-    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
-        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
-            return TYPES.DOUBLE; // Result is promoted to double for numeric types
-        }
-    }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid addition
+    return can_numeric(operation, type1, type2, json);
 }
 
-function can_subtract(operation, type1, type2, json) {
-    if (type1 === type2) {
-        return type1;
-    }
-    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
-        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
-            return TYPES.DOUBLE; // Result is promoted to double for numeric types
-        }
-    }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid subtraction
-}
-
-function can_multiply(operation, type1, type2, json) {
-    if (type1 === type2) {
-        return type1;
-    }
-    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
-        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
-            return TYPES.DOUBLE; // Result is promoted to double for numeric types
-        }
-    }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid multiplication
-}
-
-function can_divide(operation, type1, type2, json) {
-    if (type1 === type2) {
-        return type1;
-    }
-    if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT || type1 === TYPES.CHAR) {
-        if (type2 === TYPES.INT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT || type2 === TYPES.SHORT || type2 === TYPES.CHAR) {
-            if (type1 === TYPES.INT && type2 === TYPES.INT) {
-                return TYPES.INT; // Integer division results in an integer
-            } else {
-                return TYPES.DOUBLE; // Result is promoted to double for numeric types
-            }
-        }
-    }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid division
-}
-
-function can_modulus(operation, type1, type2, json) {
-    if (type1 === type2) {
-        return type1;
-    }
-    if (type1 === TYPES.INT || type1 === TYPES.SHORT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT) {
-        if (type2 === TYPES.INT || type2 === TYPES.SHORT || type2 === TYPES.DOUBLE || type2 === TYPES.FLOAT) {
-            return TYPES.INT; // Modulus of integers is an integer
-        }
-    }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid modulus
-}
-
-function can_boolean_operation(operation, type1, type2, json) {
-    if ((operation === OP.AND || operation === OP.OR) && type1 === TYPES.BOOLEAN && type2 === TYPES.BOOLEAN) {
-        return TYPES.BOOLEAN;
-    } else if (operation === OP.NOT && type1 === TYPES.BOOLEAN) {
+function can_boolean(operation, type1, type2, json) {
+    if (type1 === TYPES.BOOLEAN && type2 === TYPES.BOOLEAN) {
         return TYPES.BOOLEAN;
     }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid boolean operation
+    throw new PraxlyError(`bad operand types for ${operation} (left: ${type1}, right: ${type2})`, json.line);
 }
 
 function can_compare(operation, type1, type2, json) {
-    if (operation === OP.EQUALITY || operation === OP.INEQUALITY || operation === OP.GREATER_THAN || operation === OP.LESS_THAN || operation === OP.GREATER_THAN_OR_EQUAL || operation === OP.LESS_THAN_OR_EQUAL) {
-        if (type1 === type2) {
-            return TYPES.BOOLEAN; // Result of comparison is always a boolean
-        }
+    if (type1 === type2 || is_numeric(type1) && is_numeric(type2)) {
+        return TYPES.BOOLEAN;
     }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tleft: ${type1}\n\tright: ${type2}`, json.line);// Invalid comparison operation
+    throw new PraxlyError(`bad operand types for ${operation} (left: ${type1}, right: ${type2})`, json.line);
 }
 
 // yea I know this is sloppy but I am getting tired and I'm running outta time
 function can_negate(operation, type1, json) {
     if (operation === OP.NEGATE) {
-        if (type1 === TYPES.INT || type1 === TYPES.DOUBLE || type1 === TYPES.FLOAT || type1 === TYPES.SHORT) {
+        if (is_numeric(type1)) {
             return type1;
         }
-    } if (operation === OP.NOT) {
+    }
+    if (operation === OP.NOT) {
         if (type1 === TYPES.BOOLEAN) {
             return type1;
         }
     }
-    throw new PraxlyError(`bad operand types for ${operation}, \n\tchild: ${type1}`, json.line);// Invalid negation
+    throw new PraxlyError(`bad operand type for ${operation} (${type1})`, json.line);
 }
 
 /**
@@ -1888,21 +1856,19 @@ function binop_typecheck(operation, type1, type2, json) {
             return can_add(operation, type1, type2, json);
 
         case OP.SUBTRACTION:
-            return can_subtract(operation, type1, type2, json);
+            return can_numeric(operation, type1, type2, json);
 
         case OP.MULTIPLICATION:
         case OP.EXPONENTIATION:
-            return can_multiply(operation, type1, type2, json);
+            return can_numeric(operation, type1, type2, json);
 
         case OP.DIVISION:
-            return can_divide(operation, type1, type2, json);
-
         case OP.MODULUS:
-            return can_modulus(operation, type1, type2, json);
+            return can_numeric(operation, type1, type2, json);
 
         case OP.AND:
         case OP.OR:
-            return can_boolean_operation(operation, type1, type2, json);
+            return can_boolean(operation, type1, type2, json);
 
         case OP.EQUALITY:
         case OP.INEQUALITY:

@@ -170,7 +170,7 @@ class Lexer {
           this.capture();
         }
         if (!this.has("\'")) {
-          textError('lexing', 'looks like you didn\'t close your quotes on your char. \n \tRemember chars start and end with a single quote mark (\').', this.currentLine + 1);
+          textError('lexing', 'unclosed character literal (missing single quote mark)', this.currentLine + 1);
           this.emit_token(NODETYPES.CHAR);
           continue;
         }
@@ -190,7 +190,7 @@ class Lexer {
           this.capture();
         }
         if (!this.has("\"")) {
-          textError('lexing', 'looks like you didn\'t close your quotes on your String. \n \tRemember Strings start and end with a double quote mark (\").', this.currentLine + 1);
+          textError('lexing', 'unclosed string literal (missing double quote mark)', this.currentLine + 1);
           this.emit_token(NODETYPES.STRING);
           continue;
         }
