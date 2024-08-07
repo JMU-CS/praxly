@@ -460,7 +460,6 @@ async function runTasks(startDebug) {
   if (startDebug) {
     showDebug();
     setDebugMode(true);
-    setStopClicked(false);
   }
 
   try {
@@ -490,6 +489,7 @@ async function runTasks(startDebug) {
     environment.global = environment;
 
     // Run the compiled program
+    setStopClicked(false);
     await executable.evaluate(environment);
 
   } catch (error) {

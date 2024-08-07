@@ -236,15 +236,14 @@ let debugMode = false;
 export function setDebugMode(value) {
     debugMode = value;
 }
-
 export function getDebugMode() {
     return debugMode;
 }
+
 let stepInto = false;
 export function setStepInto(value) {
     stepInto = value;
 }
-
 export function getStepInto() {
     return stepInto;
 }
@@ -253,7 +252,6 @@ let stopClicked = false;
 export function setStopClicked(value) {
     stopClicked = value;
 }
-
 export function getStopClicked() {
     return stopClicked;
 }
