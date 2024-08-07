@@ -821,8 +821,12 @@ class Praxly_addition {
         let a = await this.a_operand.evaluate(environment);
         let b = await this.b_operand.evaluate(environment);
         await stepInto(environment, this.json);
-        return litNode_new(binop_typecheck(OP.ADDITION, a.realType,
-            b.realType, this.json), a.value + b.value);
+        if (a.realType === TYPES.STRING || b.realType === TYPES.STRING) {
+            // Special case: string concatenation
+            return litNode_new(TYPES.STRING,
+                valueToString(a, false, this.json.line) + valueToString(b, false, this.json.line));
+        }
+        return litNode_new(binop_typecheck(OP.ADDITION, a.realType, b.realType, this.json), a.value + b.value);
     }
 }
 
