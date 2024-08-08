@@ -436,8 +436,9 @@ function refresh() {
   });
 }
 
+
 /**
- * this function gets called every time the run button is pressed.
+ * This function gets called every time the run or debug button is pressed.
  */
 async function runTasks(startDebug) {
 
@@ -527,6 +528,22 @@ async function runTasks(startDebug) {
 }
 
 
+/**
+ * Executes code within a try-catch block, and immediately displays
+ * errors on the screen, prompting the user to submit a bug report.
+ * @param {Function} fn - The anonymous function to be executed.
+ */
+function tryToRun(fn) {
+  try {
+    fn();
+  } catch (error) {
+    console.error(error);
+    defaultError(error);
+    clear();  // show only the error
+    stdErr.innerHTML = errorOutput;
+  }
+}
+
 export function turnCodeToBlocks() {
   // only one listener at a time to prevent infinite loop
   workspace.removeChangeListener(onBlocklyChange);
@@ -536,15 +553,19 @@ export function turnCodeToBlocks() {
 
   // this is where lexing/parsing begins
   clearErrors();
-  mainTree = text2tree();
+  tryToRun(() => {
+    mainTree = text2tree();
+  });
   if (DEV_LOG) {
     console.log("text2tree", mainTree);
   }
 
   // update block side to match
   workspace.clear();
-  tree2blocks(workspace, mainTree);
-  workspace.render();
+  tryToRun(() => {
+    tree2blocks(workspace, mainTree);
+    workspace.render();
+  });
 }
 
 function onBlocklyChange(event) {
@@ -564,14 +585,18 @@ function turnBlocksToCode() {
 
   // this is where block compiling begins
   clearErrors();
-  mainTree = blocks2tree(workspace, praxlyGenerator);
+  tryToRun(() => {
+    mainTree = blocks2tree(workspace, praxlyGenerator);
+  });
   if (DEV_LOG) {
     console.log("blocks2tree", mainTree);
   }
 
   // update text side to match
-  const text = tree2text(mainTree, 0);
-  textEditor.setValue(text, -1);
+  tryToRun(() => {
+    const text = tree2text(mainTree, 0);
+    textEditor.setValue(text, -1);
+  });
 };
 
 

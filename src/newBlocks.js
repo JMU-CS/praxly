@@ -369,13 +369,13 @@ export function definePraxlyBlocks(workspace) {
               NODETYPES.DIVISION
             ],
             [
+              "^",
+              NODETYPES.EXPONENTIATION
+            ],
+            [
               "%",
               NODETYPES.MODULUS
             ],
-            [
-              "^",
-              NODETYPES.EXPONENTIATION
-            ]
           ]
         },
         {
@@ -834,14 +834,6 @@ export function definePraxlyBlocks(workspace) {
               NODETYPES.EQUALITY
             ],
             [
-              "≤",
-              NODETYPES.LESS_THAN_OR_EQUAL
-            ],
-            [
-              "≥",
-              NODETYPES.GREATER_THAN_OR_EQUAL
-            ],
-            [
               "≠",
               NODETYPES.INEQUALITY
             ],
@@ -852,7 +844,15 @@ export function definePraxlyBlocks(workspace) {
             [
               ">",
               NODETYPES.GREATER_THAN
-            ]
+            ],
+            [
+              "≤",
+              NODETYPES.LESS_THAN_OR_EQUAL
+            ],
+            [
+              "≥",
+              NODETYPES.GREATER_THAN_OR_EQUAL
+            ],
           ]
         },
         {

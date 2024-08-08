@@ -159,6 +159,8 @@ class Lexer {
           textError('lexing', `looks like you didn\'t close your comment. Remember comments
             start with a \'/*\' and end with a \'*/\'.`, this.currentLine + 1);
         }
+        // Trim whitespace before/after comment text.
+        this.token_so_far = this.token_so_far.trim()
         this.emit_token(NODETYPES.COMMENT);
         continue;
       }
@@ -605,8 +607,8 @@ class Parser {
           line = this.getCurrentLine();
           this.advance();
           const r = this.parse_expression(precedence - 1);
-          if (r.type != NODETYPES.FUNCCALL) {
-            textError('parsing', "classes are not fully supported yet. the right side of the dot operator must be a supported string function", line);
+          if (r && r.type != NODETYPES.FUNCCALL) {
+            textError('parsing', "the right side of the dot operator must be a string method", line);
           }
           l = {
             left: l,
@@ -615,7 +617,7 @@ class Parser {
             blockID: "code",
             line: line,
             startIndex: startIndex,
-            endIndex: r.endIndex,
+            endIndex: r?.endIndex,
           }
         }
         return l;
@@ -835,7 +837,7 @@ class Parser {
       line: this.getCurrentLine(),
       index: null,
       startIndex: startIndex,
-      endIndex: location.endIndex,
+      endIndex: location?.endIndex,
     }
 
     // initialization (optional)
@@ -969,12 +971,14 @@ class Parser {
       result.type = NODETYPES.IF;
       this.advance();
       if (this.hasNot('(')) {
+        textError('parsing', "open parenthesis '(' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
       result.condition = this.parse_expression();
       result.endIndex = this.getCurrentToken().endIndex;
       if (this.hasNot(')')) {
+        textError('parsing', "closing parenthesis ')' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
@@ -991,6 +995,7 @@ class Parser {
       result.type = NODETYPES.FOR;
       this.advance();
       if (this.hasNot('(')) {
+        textError('parsing', "open parenthesis '(' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
@@ -1001,12 +1006,14 @@ class Parser {
         result.initialization = this.parse_expression(1);
       }
       if (this.hasNot(';')) {  // 1st required
+        textError('parsing', "semicolon ';' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
 
       result.condition = this.parse_expression();
       if (this.hasNot(';')) {  // 2nd required
+        textError('parsing', "semicolon ';' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
@@ -1014,6 +1021,7 @@ class Parser {
       result.increment = this.parse_expression(1);
       result.endIndex = this.getCurrentToken().endIndex;
       if (this.hasNot(')')) {
+        textError('parsing', "closing parenthesis ')' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
@@ -1027,12 +1035,14 @@ class Parser {
       result.type = NODETYPES.WHILE;
       this.advance();
       if (this.hasNot('(')) {
+        textError('parsing', "open parenthesis '(' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
       result.condition = this.parse_expression();
       result.endIndex = this.getCurrentToken().endIndex;
       if (this.hasNot(')')) {
+        textError('parsing', "closing parenthesis ')' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
@@ -1045,12 +1055,14 @@ class Parser {
       this.advance();
       result.codeblock = this.parse_block('while');
       if (this.hasNot('(')) {
+        textError('parsing', "open parenthesis '(' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
       result.condition = this.parse_expression();
       result.endIndex = this.getCurrentToken().endIndex;
       if (this.hasNot(')')) {
+        textError('parsing', "closing parenthesis ')' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
@@ -1063,11 +1075,13 @@ class Parser {
       this.advance();
       result.codeblock = this.parse_block('until');
       if (this.hasNot('(')) {
+        textError('parsing', "open parenthesis '(' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
       result.condition = this.parse_expression();
       if (this.hasNot(')')) {
+        textError('parsing', "closing parenthesis ')' expected", this.getCurrentLine());
         return result;
       }
       this.advance();
@@ -1152,7 +1166,7 @@ class Parser {
         type: NODETYPES.STATEMENT,
         value: expr,
         blockID: "code",
-        line: expr.line,
+        line: expr?.line,
         startIndex: expr?.startIndex,
         endIndex: expr?.endIndex,
       };

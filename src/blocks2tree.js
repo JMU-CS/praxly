@@ -74,8 +74,8 @@ export const makeGenerator = () => {
         const b = children[1];
         const node = {
             blockID: block.id,
-            left: praxlyGenerator[a.type](a),
-            right: praxlyGenerator[b.type](b)
+            left: praxlyGenerator[a?.type](a),
+            right: praxlyGenerator[b?.type](b)
         }
         node.type = block.getFieldValue('OPERATOR');
         return customizeMaybe(block, node);
@@ -107,7 +107,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -119,7 +119,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -131,7 +131,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -143,35 +143,35 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
 
     praxlyGenerator['praxly_min_block'] = (block) => {
-        const expression = block.getInputTargetBlock('A_MIN');
-        const expression2 = block.getInputTargetBlock('B_MIN');
+        const a = block.getInputTargetBlock('A_MIN');
+        const b = block.getInputTargetBlock('B_MIN');
         return customizeMaybe(block, {
             name: 'min',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression.type](expression),
-                praxlyGenerator[expression2.type](expression2),
+                praxlyGenerator[a?.type](a),
+                praxlyGenerator[b?.type](b),
             ],
         });
     }
 
     praxlyGenerator['praxly_max_block'] = (block) => {
-        const expression = block.getInputTargetBlock('A_MAX');
-        const expression2 = block.getInputTargetBlock('B_MAX');
+        const a = block.getInputTargetBlock('A_MAX');
+        const b = block.getInputTargetBlock('B_MAX');
         return customizeMaybe(block, {
             name: 'max',
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression.type](expression),
-                praxlyGenerator[expression2.type](expression2),
+                praxlyGenerator[a?.type](a),
+                praxlyGenerator[b?.type](b),
             ],
         });
     }
@@ -183,7 +183,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression.type](expression),
+                praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -195,7 +195,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression.type](expression),
+                praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -207,11 +207,10 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression.type](expression),
+                praxlyGenerator[expression?.type](expression),
             ],
         });
     }
-
 
     praxlyGenerator['praxly_input_block'] = (block) => {
         return customizeMaybe(block, {
@@ -237,7 +236,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.LOCATION,
             name: block.getFieldValue("VARIABLENAME"),
-            index: praxlyGenerator[index.type](index),
+            index: praxlyGenerator[index?.type](index),
             isArray: true,
         })
     }
@@ -306,8 +305,8 @@ export const makeGenerator = () => {
         const b = children[1];
         const node = {
             blockID: block.id,
-            left: praxlyGenerator[a.type](a),
-            right: praxlyGenerator[b.type](b)
+            left: praxlyGenerator[a?.type](a),
+            right: praxlyGenerator[b?.type](b)
         }
         node.type = block.getFieldValue('OPERATOR');
         return customizeMaybe(block, node);
@@ -319,8 +318,8 @@ export const makeGenerator = () => {
         const b = children[1];
         const node = {
             blockID: block.id,
-            left: praxlyGenerator[a.type](a),
-            right: praxlyGenerator[b.type](b)
+            left: praxlyGenerator[a?.type](a),
+            right: praxlyGenerator[b?.type](b)
         }
         node.type = block.getFieldValue('OPERATOR');
         return customizeMaybe(block, node);
@@ -427,17 +426,17 @@ export const makeGenerator = () => {
         var varType = block.getFieldValue('VARTYPE');
         var variableName = block.getFieldValue('VARIABLENAME');
         var args = block.getInputTargetBlock('EXPRESSION');
-        var argschildren = args.getChildren(true);
+        var argschildren = args?.getChildren(true);
         var argsList = [];
-        argschildren.forEach(element => {
-            argsList.push(praxlyGenerator[element.type](element));
+        argschildren?.forEach(element => {
+            argsList.push(praxlyGenerator[element?.type](element));
         });
 
         return customizeMaybe(block, {
             type: 'ARRAY_ASSIGNMENT',
             name: variableName,
             value: {
-                blockID: args.id,
+                blockID: args?.id,
                 params: argsList,
                 type: NODETYPES.ARRAY_LITERAL,
                 isArray: true,
@@ -454,7 +453,7 @@ export const makeGenerator = () => {
     praxlyGenerator['praxly_reassignment_block'] = (block) => {
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
-        var value = praxlyGenerator[expression.type](expression);
+        var value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.ASSIGNMENT,
             name: variableName,
@@ -493,7 +492,7 @@ export const makeGenerator = () => {
         var varType = block.getFieldValue('VARTYPE');
         var variableName = block.getFieldValue('VARIABLENAME');
         var expression = block.getInputTargetBlock('EXPRESSION');
-        var value = praxlyGenerator[expression.type](expression);
+        var value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.VARDECL,
             name: variableName,
@@ -510,11 +509,11 @@ export const makeGenerator = () => {
     praxlyGenerator['praxly_reassignment_expression_block'] = (block) => {
         var location = block.getInputTargetBlock('LOCATION');
         var expression = block.getInputTargetBlock('EXPRESSION');
-        var loc = praxlyGenerator[location.type](location);
-        var value = praxlyGenerator[expression.type](expression);
+        var loc = praxlyGenerator[location?.type](location);
+        var value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.ASSIGNMENT,
-            name: loc.name,
+            name: loc?.name,
             location: loc,
             value: value,
             blockID: block.id,
@@ -568,7 +567,7 @@ export const makeGenerator = () => {
         return customizeMaybe(block, {
             blockID: block.id,
             type: NODETYPES.NEGATE,
-            value: praxlyGenerator[expression.type](expression),
+            value: praxlyGenerator[expression?.type](expression),
         })
     }
 
@@ -581,21 +580,21 @@ export const makeGenerator = () => {
             type: NODETYPES.FOR,
             blockID: block.id,
             initialization: praxlyGenerator[initialization?.type](initialization),
-            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements),
-            increment: praxlyGenerator[reassignment?.type](reassignment),
             condition: praxlyGenerator[condition?.type](condition),
+            increment: praxlyGenerator[reassignment?.type](reassignment),
+            codeblock: praxlyGenerator['codeBlockJsonBuilder'](statements),
         });
     }
 
     praxlyGenerator['praxly_procedure_block'] = (block) => {
         var returnType = block.getFieldValue('RETURNTYPE');
         var args = block.getInputTargetBlock('PARAMS');
-        var argschildren = args.getChildren(true);
+        var argschildren = args?.getChildren(true);
         var argsList = [];
-        argschildren.forEach(element => {
+        argschildren?.forEach(element => {
             var param = [];
-            param[0] = (element.getFieldValue('VARTYPE'));
-            param[1] = element.getFieldValue('VARIABLENAME');
+            param[0] = (element?.getFieldValue('VARTYPE'));
+            param[1] = element?.getFieldValue('VARIABLENAME');
             argsList.push(param);
         });
         var procedureName = block.getFieldValue('PROCEDURE_NAME');
@@ -614,10 +613,10 @@ export const makeGenerator = () => {
     praxlyGenerator['praxly_function_call_block'] = (block) => {
         var procedureName = block.getFieldValue('PROCEDURE_NAME');
         var args = block.getInputTargetBlock('PARAMS');
-        var argschildren = args.getChildren(true);
+        var argschildren = args?.getChildren(true);
         var argsList = [];
-        argschildren.forEach(element => {
-            argsList.push(praxlyGenerator[element.type](element));
+        argschildren?.forEach(element => {
+            argsList.push(praxlyGenerator[element?.type](element));
         });
         return customizeMaybe(block, {
             blockID: block.id,
@@ -644,10 +643,10 @@ export const makeGenerator = () => {
             blockID: block.id,
             name : procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
+            left: praxlyGenerator[expression?.type](expression),
             right: {
                 name: procedureName,
-                args: [praxlyGenerator[index.type](index)],
+                args: [praxlyGenerator[index?.type](index)],
                 type: NODETYPES.FUNCCALL
             }
         });
@@ -661,10 +660,10 @@ export const makeGenerator = () => {
             blockID: block.id,
             name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
+            left: praxlyGenerator[expression?.type](expression),
             right: {
                 name: procedureName,
-                args: [praxlyGenerator[param.type](param)],
+                args: [praxlyGenerator[param?.type](param)],
                 type: NODETYPES.FUNCCALL
             }
         });
@@ -678,10 +677,10 @@ export const makeGenerator = () => {
             blockID: block.id,
             name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
+            left: praxlyGenerator[expression?.type](expression),
             right: {
                 name: procedureName,
-                args: [praxlyGenerator[param.type](param)],
+                args: [praxlyGenerator[param?.type](param)],
                 type: NODETYPES.FUNCCALL
             }
         });
@@ -694,7 +693,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
+            left: praxlyGenerator[expression?.type](expression),
             right: {
                 name: procedureName,
                 args: []
@@ -711,10 +710,11 @@ export const makeGenerator = () => {
             blockID: block.id,
             name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
+            left: praxlyGenerator[expression?.type](expression),
             right: {
                 name: procedureName,
-                args: [praxlyGenerator[param1.type](param1), praxlyGenerator[param2.type](param2)],
+                args: [praxlyGenerator[param1?.type](param1),
+                       praxlyGenerator[param2?.type](param2)],
                 type: NODETYPES.FUNCCALL
             }
         });
@@ -727,7 +727,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
+            left: praxlyGenerator[expression?.type](expression),
             right: {
                 name: procedureName,
                 args: []
@@ -742,7 +742,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
-            left: praxlyGenerator[expression.type](expression),
+            left: praxlyGenerator[expression?.type](expression),
             right: {
                 name: procedureName,
                 args: []

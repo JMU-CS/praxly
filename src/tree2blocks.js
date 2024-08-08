@@ -5,8 +5,9 @@ function connectStatements(statements) {
         let currentStatement = statements[i];
         let nextStatement = statements[i + 1];
         if (currentStatement && nextStatement) {
-            currentStatement.nextConnection.connect(nextStatement.previousConnection);
-        } else if (currentStatement && !nextStatement) {
+            currentStatement.nextConnection?.connect(nextStatement.previousConnection);
+        }
+        else if (currentStatement && !nextStatement) {
             // Find the next valid statement in the array
             var j = i + 2;
             while (j < statements.length && !statements[j]) {
@@ -14,11 +15,11 @@ function connectStatements(statements) {
             }
             if (j < statements.length) {
                 // Set the connection from the current statement to the next valid statement
-                currentStatement.nextConnection.connect(statements[j].previousConnection);
+                currentStatement.nextConnection?.connect(statements[j].previousConnection);
             }
         }
         else {
-            console.error("connection failed");
+            throw new Error("block connection failed");
         }
     }
 }
@@ -126,68 +127,62 @@ export const tree2blocks = (workspace, node) => {
         case NODETYPES.ASSOCIATION:
             var result = tree2blocks(workspace, node?.expression);
             result.data = JSON.stringify({
-              isParenthesized: true,
+                isParenthesized: true,
             });
             break;
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {
             if (node.name === 'input') {
-              result = workspace.newBlock('praxly_input_block');
+                result = workspace.newBlock('praxly_input_block');
             } else if (node.name === 'random') {
-              result = workspace.newBlock('praxly_random_block');
+                result = workspace.newBlock('praxly_random_block');
             } else if (node.name === 'randomInt') {
-              result = workspace.newBlock('praxly_random_int_block');
-              const child = tree2blocks(workspace, node?.args[0]);
-              result.getInput('MAX').connection.connect(child?.outputConnection);
+                result = workspace.newBlock('praxly_random_int_block');
+                const child = tree2blocks(workspace, node?.args[0]);
+                result.getInput('MAX').connection.connect(child?.outputConnection);
             } else if (node.name === 'randomSeed') {
-              result = workspace.newBlock('praxly_random_seed_block');
-              const child = tree2blocks(workspace, node?.args[0]);
-              result.getInput('SEED').connection.connect(child?.outputConnection);
+                result = workspace.newBlock('praxly_random_seed_block');
+                const child = tree2blocks(workspace, node?.args[0]);
+                result.getInput('SEED').connection.connect(child?.outputConnection);
             } else if (node.name === 'int') {
-              result = workspace.newBlock('praxly_int_conversion_block');
-              const child = tree2blocks(workspace, node?.args[0]);
-              result.getInput('CONVERSION').connection.connect(child?.outputConnection);
+                result = workspace.newBlock('praxly_int_conversion_block');
+                const child = tree2blocks(workspace, node?.args[0]);
+                result.getInput('CONVERSION').connection.connect(child?.outputConnection);
             } else if (node.name === 'float') {
-              result = workspace.newBlock('praxly_float_conversion_block');
-              const child = tree2blocks(workspace, node?.args[0]);
-              result.getInput('CONVERSION').connection.connect(child?.outputConnection);
+                result = workspace.newBlock('praxly_float_conversion_block');
+                const child = tree2blocks(workspace, node?.args[0]);
+                result.getInput('CONVERSION').connection.connect(child?.outputConnection);
             } else if (node.name === 'min') {
-              result = workspace.newBlock('praxly_min_block');
-              const child1 = tree2blocks(workspace, node?.args[0]);
-              result.getInput('A_MIN').connection.connect(child1?.outputConnection);
-              const child2 = tree2blocks(workspace, node?.args[1]);
-              result.getInput('B_MIN').connection.connect(child2?.outputConnection);
+                result = workspace.newBlock('praxly_min_block');
+                const child1 = tree2blocks(workspace, node?.args[0]);
+                result.getInput('A_MIN').connection.connect(child1?.outputConnection);
+                const child2 = tree2blocks(workspace, node?.args[1]);
+                result.getInput('B_MIN').connection.connect(child2?.outputConnection);
             } else if (node.name === 'max') {
-              result = workspace.newBlock('praxly_max_block');
-              const child1 = tree2blocks(workspace, node?.args[0]);
-              result.getInput('A_MAX').connection.connect(child1?.outputConnection);
-              const child2 = tree2blocks(workspace, node?.args[1]);
-              result.getInput('B_MAX').connection.connect(child2?.outputConnection);
+                result = workspace.newBlock('praxly_max_block');
+                const child1 = tree2blocks(workspace, node?.args[0]);
+                result.getInput('A_MAX').connection.connect(child1?.outputConnection);
+                const child2 = tree2blocks(workspace, node?.args[1]);
+                result.getInput('B_MAX').connection.connect(child2?.outputConnection);
             } else if (node.name === 'abs') {
-              result = workspace.newBlock('praxly_abs_block');
-              const child = tree2blocks(workspace, node?.args[0]);
-              result.getInput('VALUE').connection.connect(child?.outputConnection);
+                result = workspace.newBlock('praxly_abs_block');
+                const child = tree2blocks(workspace, node?.args[0]);
+                result.getInput('VALUE').connection.connect(child?.outputConnection);
             } else if (node.name === 'log') {
-              result = workspace.newBlock('praxly_log_block');
-              const child = tree2blocks(workspace, node?.args[0]);
-              result.getInput('VALUE').connection.connect(child?.outputConnection);
+                result = workspace.newBlock('praxly_log_block');
+                const child = tree2blocks(workspace, node?.args[0]);
+                result.getInput('VALUE').connection.connect(child?.outputConnection);
             } else if (node.name === 'sqrt') {
-              result = workspace.newBlock('praxly_sqrt_block');
-              const child = tree2blocks(workspace, node?.args[0]);
-              result.getInput('VALUE').connection.connect(child?.outputConnection);
+                result = workspace.newBlock('praxly_sqrt_block');
+                const child = tree2blocks(workspace, node?.args[0]);
+                result.getInput('VALUE').connection.connect(child?.outputConnection);
             }
             break;
         }
 
         case NODETYPES.CODEBLOCK:
             var statements = node.statements.map(element => {
-                try {
-                    return tree2blocks(workspace, element);
-                }
-                catch (error) {
-                    console.error('invalid statement', error);
-                    return null;
-                }
+                return tree2blocks(workspace, element);
             });
             connectStatements(statements);
             return statements;
@@ -407,73 +402,63 @@ export const tree2blocks = (workspace, node) => {
 
         case NODETYPES.FOR:
             var result = workspace.newBlock('praxly_for_loop_block');
-            try {
-                var initialization = tree2blocks(workspace, node?.initialization);
-                if (!initialization) {
-                    // do nothing; user still typing
-                } else if (initialization.type == 'praxly_statement_block') {
-                    // unpack the expression statement
-                    var container1 = initialization;
-                    initialization = initialization.getInputTargetBlock('EXPRESSION');
-                } else if (initialization.type == 'praxly_assignment_block'
-                        || initialization.type == 'praxly_reassignment_block') {
-                    // convert statement to expression
-                    initialization.dispose();
-                    if (node?.initialization?.varType) {
-                        initialization = workspace.newBlock('praxly_assignment_expression_block');
-                        initialization.setFieldValue(node?.initialization?.varType, "VARTYPE");
-                        initialization.setFieldValue(node?.initialization?.name, "VARIABLENAME");
-                    } else {
-                        initialization = workspace.newBlock('praxly_reassignment_expression_block');
-                        var location = tree2blocks(workspace, node?.initialization?.location);
-                        initialization.getInput('LOCATION').connection.connect(location?.outputConnection);
-                    }
-                    var expression = tree2blocks(workspace, node?.initialization?.value);
-                    initialization.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
-                    initialization.initSvg();
-                }
-
-                // this will always be an expression, so nothing more to do
-                var condition = tree2blocks(workspace, node?.condition);
-
-                var increment = tree2blocks(workspace, node?.increment);
-                if (!increment) {
-                    // do nothing; user still typing
-                } else if (increment.type == 'praxly_statement_block') {
-                    // unpack the expression statement
-                    var container2 = increment;
-                    increment = increment.getInputTargetBlock('EXPRESSION');
+            var initialization = tree2blocks(workspace, node?.initialization);
+            if (!initialization) {
+                // do nothing; user still typing
+            } else if (initialization.type == 'praxly_statement_block') {
+                // unpack the expression statement
+                var container1 = initialization;
+                initialization = initialization.getInputTargetBlock('EXPRESSION');
+            } else if (initialization.type == 'praxly_assignment_block'
+                || initialization.type == 'praxly_reassignment_block') {
+                // convert statement to expression
+                initialization.dispose();
+                if (node?.initialization?.varType) {
+                    initialization = workspace.newBlock('praxly_assignment_expression_block');
+                    initialization.setFieldValue(node?.initialization?.varType, "VARTYPE");
+                    initialization.setFieldValue(node?.initialization?.name, "VARIABLENAME");
                 } else {
-                    // was likely praxly_reassignment_block
-                    increment.dispose();
-                    increment = workspace.newBlock('praxly_reassignment_expression_block');
-                    var location2 = tree2blocks(workspace, node?.increment?.location);
-                    var expression2 = tree2blocks(workspace, node?.increment?.value);
-                    increment.getInput('LOCATION').connection.connect(location2?.outputConnection);
-                    increment.getInput('EXPRESSION').connection.connect(expression2?.outputConnection);
-                    increment.initSvg();
+                    initialization = workspace.newBlock('praxly_reassignment_expression_block');
+                    var location = tree2blocks(workspace, node?.initialization?.location);
+                    initialization.getInput('LOCATION').connection.connect(location?.outputConnection);
                 }
-
-                // get the for loop body
-                var codeblock = tree2blocks(workspace, node?.codeblock);
-
-                // connect everything together
-                result.getInput('INITIALIZATION').connection.connect(initialization?.outputConnection);
-                container1?.dispose();
-                result.getInput('CONDITION').connection.connect(condition?.outputConnection);
-                result.getInput('REASSIGNMENT').connection.connect(increment?.outputConnection);
-                container2?.dispose();
-                if (codeblock && codeblock.length > 0) {
-                    result.getInput('CODEBLOCK').connection.connect(codeblock[0]?.previousConnection);
-                }
+                var expression = tree2blocks(workspace, node?.initialization?.value);
+                initialization.getInput('EXPRESSION').connection.connect(expression?.outputConnection);
+                initialization.initSvg();
             }
-            catch (error) {
-                console.error('for loop header', error);
-                // the question marks here helped the for loop block generate when just typing
-                // the word "for", giving a little bit of predictive block rendering.
-                initialization?.dispose();
-                condition?.dispose();
-                increment?.dispose();
+
+            // this will always be an expression, so nothing more to do
+            var condition = tree2blocks(workspace, node?.condition);
+
+            var increment = tree2blocks(workspace, node?.increment);
+            if (!increment) {
+                // do nothing; user still typing
+            } else if (increment.type == 'praxly_statement_block') {
+                // unpack the expression statement
+                var container2 = increment;
+                increment = increment.getInputTargetBlock('EXPRESSION');
+            } else {
+                // was likely praxly_reassignment_block
+                increment.dispose();
+                increment = workspace.newBlock('praxly_reassignment_expression_block');
+                var location2 = tree2blocks(workspace, node?.increment?.location);
+                var expression2 = tree2blocks(workspace, node?.increment?.value);
+                increment.getInput('LOCATION').connection.connect(location2?.outputConnection);
+                increment.getInput('EXPRESSION').connection.connect(expression2?.outputConnection);
+                increment.initSvg();
+            }
+
+            // get the for loop body
+            var codeblock = tree2blocks(workspace, node?.codeblock);
+
+            // connect everything together
+            result.getInput('INITIALIZATION').connection.connect(initialization?.outputConnection);
+            container1?.dispose();
+            result.getInput('CONDITION').connection.connect(condition?.outputConnection);
+            result.getInput('REASSIGNMENT').connection.connect(increment?.outputConnection);
+            container2?.dispose();
+            if (codeblock && codeblock.length > 0) {
+                result.getInput('CODEBLOCK').connection.connect(codeblock[0]?.previousConnection);
             }
             break;
 

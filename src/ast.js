@@ -63,12 +63,6 @@ function checkArity(node, expectedArity) {
  * @returns
  */
 export function createExecutable(tree) {
-    if (typeof tree === 'undefined' || typeof tree.type === 'undefined') {
-        if (errorOutput.length === 0) {
-            defaultError("invalid program (abstract syntax tree is undefined)");
-        }
-        return new Praxly_invalid(tree);
-    }
 
     switch (tree.type) {
 
@@ -345,7 +339,7 @@ export function createExecutable(tree) {
         case NODETYPES.ARRAY_REFERENCE:
             return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
 
-        case 'INVALID':
+        case NODETYPES.INVALID:
             return new Praxly_invalid(tree);
 
         case NODETYPES.NEWLINE:
@@ -612,13 +606,15 @@ class Praxly_random_int {
 
     async evaluate(environment) {
         const maxNode = (await this.max.evaluate(environment));
-        if (maxNode.realType === TYPES.INT) {
-            const maxValue = maxNode.value;
-            const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
-            return new Praxly_int(x, this.json);
-        } else {
+        if (maxNode.realType !== TYPES.INT) {
             throw new PraxlyError(`randomInt's maximum parameter must be of type int, not ${maxNode.realType}.`, this.json.line);
         }
+        const maxValue = maxNode.value;
+        if (maxValue < 1) {
+            throw new PraxlyError(`randomInt's maximum parameter must be at least 1`, this.json.line);
+        }
+        const x = prand.unsafeUniformIntDistribution(0, maxValue - 1, environment.global.random.generator);
+        return new Praxly_int(x, this.json);
     }
 }
 
@@ -1684,7 +1680,8 @@ class Praxly_String_funccall {
 
     typecheckhelper(argument, expected_types) {
         if (!expected_types.includes(argument.realType)) {
-            throw new PraxlyError(`Argument ${parameterName} does not match parameter type (Expected: ${expected_types}, Actual: ${argument.realType})`, this.json.line);
+            const argStr = valueToString(argument, true, this.json.line);
+            throw new PraxlyError(`Argument ${argStr} does not match parameter type (Expected: ${expected_types}, Actual: ${argument.realType})`, this.json.line);
         }
     }
 

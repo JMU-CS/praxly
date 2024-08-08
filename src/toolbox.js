@@ -304,7 +304,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': 2.718
+                  'LITERAL': 2.71828
                 }
               }
             }
