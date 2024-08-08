@@ -191,7 +191,7 @@ export function consoleInput() {
  * old param: {boolean} debug set this flag to true if this is being used for debugging. (it changes the color to green)
  * old returns: the marker id associated with the marker.
  */
-export function highlightAstNode(environment, node) {
+export function highlightAstNode(environment, node, cssClass) {
     if (DEV_LOG) {
         console.log(`attempting to highlight: `, node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
     }
@@ -208,7 +208,7 @@ export function highlightAstNode(environment, node) {
     // highlight the text
     var Range = ace.require('ace/range').Range;
     var debugRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
-    var markerId = textEditor.session.addMarker(debugRange, 'step-marker', 'text');
+    var markerId = textEditor.session.addMarker(debugRange, cssClass, 'text');
 
     // highlight the block
     if (node.blockID) {

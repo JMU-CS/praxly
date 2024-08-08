@@ -21,18 +21,18 @@ import prand from 'pure-rand';
 const FOR_LOOP_LIMIT = 1000000;
 const WHILE_LOOP_LIMIT = 1000;
 
-async function stepInto(environment, node) {
+async function stepInto(environment, node, cssClass = "step-marker") {
     if (getStepInto()) {
-        let markerId = highlightAstNode(environment, node);
+        let markerId = highlightAstNode(environment, node, cssClass);
         await waitForStep();
         textEditor.session.removeMarker(markerId);
     }
 }
 
-async function stepOver(environment, node) {
+async function stepOver(environment, node, cssClass = "step-marker") {
     if (getDebugMode()) {
         await generateVariableTable(environment, 1);
-        let markerId = highlightAstNode(environment, node);
+        let markerId = highlightAstNode(environment, node, cssClass);
         await waitForStep();
         textEditor.session.removeMarker(markerId);
     }
@@ -1665,7 +1665,7 @@ class Praxly_function_call {
         }
 
         // extra debugger step to highlight the function call after returning
-        await stepOver(environment, this.json);
+        await stepOver(environment, this.json, "return-step");
         return result;
     }
 }
