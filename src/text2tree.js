@@ -321,7 +321,7 @@ class Parser {
   }
 
   getCurrentLine() {
-    return this.tokens[this.i].line;
+    return this.tokens[this.i]?.line;
   }
 
   getCurrentValue() {
@@ -644,18 +644,18 @@ class Parser {
             const leftToken = this.advance();
             const expression = this.parse_expression();
             if (this.has(")")) {
-              const rightToken = this.advance();
-              return {
-                blockID: "code",
-                expression,
-                line,
-                type: NODETYPES.ASSOCIATION,
-                startIndex: leftToken.startIndex,
-                endIndex: rightToken.endIndex,
-              };
+              var rightToken = this.advance();
             } else {
               textError('parsing', 'did not detect closing parentheses', line);
             }
+            return {
+              blockID: "code",
+              expression,
+              line,
+              type: NODETYPES.ASSOCIATION,
+              startIndex: leftToken.startIndex,
+              endIndex: rightToken?.endIndex,
+            };
 
           // ah yes, array literals....very fun
           case '{':
