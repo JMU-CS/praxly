@@ -1,4 +1,4 @@
-import Blockly, { Block } from 'blockly';
+import Blockly from 'blockly';
 import { praxlyDefaultTheme } from "./theme"
 import { PraxlyDark } from './theme';
 import { toolbox } from './toolbox';
@@ -35,6 +35,7 @@ let stdOut;
 let stdErr;
 
 let examples;
+let exampleModal;
 let titleRefresh;
 let bottomPart;
 let darkmodediv;
@@ -68,6 +69,7 @@ function initializeGlobals() {
     darkModeButton = document.getElementById('darkMode');
     settingsButton = document.getElementById("settings");
     examples = document.getElementById('examplesButton');
+    exampleModal = document.querySelector('.exampleModal');
     titleRefresh = document.getElementById('titleRefresh');
     darkmodediv = document.querySelector('.settingsOptions');
     toggleText = document.querySelector('#toggle-text');
@@ -152,11 +154,11 @@ function registerListeners() {
     });
 
     examples.addEventListener('click', function () {
-      document.querySelector('.exampleModal').style.display = 'flex';
+      exampleModal.style.display = 'flex';
     });
 
     document.querySelector('.close').addEventListener('click', function () {
-      document.querySelector('.exampleModal').style.display = 'none';
+      exampleModal.style.display = 'none';
     });
   } else { // embed only
 
@@ -190,7 +192,6 @@ function registerListeners() {
   })
 
 
-
   document.addEventListener('mouseup', function (e) {
     isResizingHoriz = false;
     document.removeEventListener('mousemove', resizeHandler);
@@ -206,7 +207,6 @@ function registerListeners() {
   });
 
 
-
   // these make it so that the blocks and text take turns.
   blockPane.addEventListener('click', () => {
     workspace.removeChangeListener(onBlocklyChange);
@@ -219,29 +219,34 @@ function registerListeners() {
   });
 
 
-  // this is how you add custom keybinds!
-  document.addEventListener("keydown", function (event) {
-    // Check if the event key is 's' and Ctrl or Command key is pressed
-    if ((event.key === 's' || event.key === 'S') && (event.ctrlKey || event.metaKey) || event.key === 'F5') {
-      // Prevent the default save action (e.g., opening the save dialog, reloading the page)
-      event.preventDefault();
-      runTasks(false);
-    }
-  });
+  /*
+   * Keyboard shortcuts.
+   */
 
-  document.addEventListener('keydown', function(event) {
+  document.addEventListener("keydown", function (event) {
+    if (event.key === 'F5' || (event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S')) {
+      event.preventDefault();  // reloading the page / opening the save dialog
+      if ((!examples || exampleModal.style.display !== 'flex') && resetModal.style.display !== 'flex') {
+        runTasks(false);
+      }
+    }
+    if (event.key === 'F10') {
+        event.preventDefault();  // browser menu
+        if (getDebugMode()) {
+            stepButton.click();
+        } else {
+            debugButton.click();
+        }
+    }
     if (event.key === 'Escape') {
       if (examples) {
-        document.querySelector('.exampleModal').style.display = 'none';
+        exampleModal.style.display = 'none';
       }
-      if (resetModal.style.display = 'flex') {
-        resetModal.style.display  = 'none';
-      }
+      resetModal.style.display  = 'none';
     }
   });
 
-
-  /**
+  /*
    * Event listeners for the main buttons along the top.
    */
 
@@ -281,7 +286,6 @@ function toggleTextOn() {
     document.querySelector('#text-tip').innerHTML = "Text Off";
   }
 }
-
 
 
 let isBlocksOn = true;
@@ -350,7 +354,7 @@ function generateTable() {
     link.addEventListener('click', function() {
       textEditor.setValue(codeText[i].code.trimStart(), -1);
       textPane.click();
-      document.querySelector('.exampleModal').style.display = 'none';
+      exampleModal.style.display = 'none';
     });
     link.classList.add("example_links");
     const nameCell = document.createElement("td");
@@ -414,6 +418,7 @@ function reset() {
     // reload the code if the URL hasn't changed
     textEditor.setValue(configuration.code ?? "", 1);
     turnCodeToBlocks();
+    clear();
   }
 }
 
@@ -431,8 +436,9 @@ function refresh() {
   });
 }
 
+
 /**
- * this function gets called every time the run button is pressed.
+ * This function gets called every time the run or debug button is pressed.
  */
 async function runTasks(startDebug) {
 
@@ -453,9 +459,9 @@ async function runTasks(startDebug) {
 
   // if debug button was clicked
   if (startDebug) {
+    turnCodeToBlocks();  // rebuilds indexes for highlight
     showDebug();
     setDebugMode(true);
-    setStopClicked(false);
   }
 
   try {
@@ -485,12 +491,16 @@ async function runTasks(startDebug) {
     environment.global = environment;
 
     // Run the compiled program
+    setStopClicked(false);
     await executable.evaluate(environment);
 
   } catch (error) {
     if (error.message === "Stop_Debug") {
       // special case: abort running (not an error)
       clear();
+      workspace.highlightBlock(null);
+      textEditor.focus();
+      return;
     } else if (!errorOutput) {
       // error not previously handled by PraxlyError
       console.error(error);
@@ -503,7 +513,10 @@ async function runTasks(startDebug) {
     stdErr.innerHTML = errorOutput;
     if (getDebugMode()) {
         stopButton.click();
-      }
+    }
+    if (errorOutput.endsWith("input canceled")) {
+      clearErrors();  // no errors in the code
+    }
   } else {
     // successful run; replace special chars
     var pos = textEditor.getCursorPosition();
@@ -515,6 +528,22 @@ async function runTasks(startDebug) {
 }
 
 
+/**
+ * Executes code within a try-catch block, and immediately displays
+ * errors on the screen, prompting the user to submit a bug report.
+ * @param {Function} fn - The anonymous function to be executed.
+ */
+function tryToRun(fn) {
+  try {
+    fn();
+  } catch (error) {
+    console.error(error);
+    defaultError(error);
+    clear();  // show only the error
+    stdErr.innerHTML = errorOutput;
+  }
+}
+
 export function turnCodeToBlocks() {
   // only one listener at a time to prevent infinite loop
   workspace.removeChangeListener(onBlocklyChange);
@@ -524,15 +553,19 @@ export function turnCodeToBlocks() {
 
   // this is where lexing/parsing begins
   clearErrors();
-  mainTree = text2tree();
+  tryToRun(() => {
+    mainTree = text2tree();
+  });
   if (DEV_LOG) {
     console.log("text2tree", mainTree);
   }
 
   // update block side to match
   workspace.clear();
-  tree2blocks(workspace, mainTree);
-  workspace.render();
+  tryToRun(() => {
+    tree2blocks(workspace, mainTree);
+    workspace.render();
+  });
 }
 
 function onBlocklyChange(event) {
@@ -552,14 +585,18 @@ function turnBlocksToCode() {
 
   // this is where block compiling begins
   clearErrors();
-  mainTree = blocks2tree(workspace, praxlyGenerator);
+  tryToRun(() => {
+    mainTree = blocks2tree(workspace, praxlyGenerator);
+  });
   if (DEV_LOG) {
     console.log("blocks2tree", mainTree);
   }
 
   // update text side to match
-  const text = tree2text(mainTree, 0);
-  textEditor.setValue(text, -1);
+  tryToRun(() => {
+    const text = tree2text(mainTree, 0);
+    textEditor.setValue(text, -1);
+  });
 };
 
 
@@ -736,7 +773,7 @@ function synchronizeToConfiguration() {
   if (configuration.code) {
     textEditor.setValue(configuration.code, 1);
   } else if (examples) {
-    document.querySelector('.exampleModal').style.display = 'flex';
+    exampleModal.style.display = 'flex';
   }
   stepButton.style.display = 'none';
   stopButton.style.display = 'none';

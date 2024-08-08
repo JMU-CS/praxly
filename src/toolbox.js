@@ -41,6 +41,7 @@ export const toolbox = {
         },
       ]
     },
+
     {
       "kind": "category",
       "name": "variables",
@@ -131,15 +132,12 @@ export const toolbox = {
         }
       ]
     },
+
     {
       "kind": "category",
       "name": "math",
       "categorystyle": "math_blocks",
       "contents": [
-        // {
-        //   'kind': 'block',
-        //   'type': 'praxly_String_block'
-        // },
         {
           'kind': 'block',
           'type': 'praxly_arithmetic_block',
@@ -306,7 +304,7 @@ export const toolbox = {
               'shadow': {
                 'type': 'praxly_literal_block',
                 'fields': {
-                  'LITERAL': 2.718
+                  'LITERAL': 2.71828
                 }
               }
             }
@@ -328,30 +326,12 @@ export const toolbox = {
         }
       ]
     },
+
     {
       "kind": "category",
       "name": "text",
       "categorystyle": "text_blocks",
       "contents": [
-        // {
-        //   'kind': 'block',
-        //   'type': 'praxly_StringFunc_block',
-        //   'inputs': {
-        //     'EXPRESSION': {
-        //       'shadow': {
-        //         'type': 'praxly_literal_block',
-        //         'fields': {
-        //           'LITERAL': '\"hello, world\"',
-        //         }
-        //       },
-        //     },
-        //     'PARAMS': {
-        //       'block': {
-        //         'type': 'praxly_parameter_block',
-        //       }
-        //     }
-        //   }
-        // },
         {
           'kind': 'block',
           'type': 'praxly_charAt_block',
@@ -395,103 +375,104 @@ export const toolbox = {
               }
             }
           }
-          },
-          {
-            'kind': 'block',
-            'type': 'praxly_indexOf_block',
-            'inputs': {
-              'EXPRESSION': {
-                'shadow': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': '"Hello"',
-                  }
-                },
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_indexOf_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"Hello"',
+                }
               },
-              'PARAM': {
-                'block': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': 'string'
-                  }
+            },
+            'PARAM': {
+              'block': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 'string'
                 }
               }
             }
-          },
-          {
-            'kind': 'block',
-            'type': 'praxly_length_block',
-            'inputs': {
-              'EXPRESSION': {
-                'shadow': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': '"Hello"',
-                  }
-                },
-              }
-            }
-          },
-          {
-            'kind': 'block',
-            'type': 'praxly_substring_block',
-            'inputs': {
-              'EXPRESSION': {
-                'shadow': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': '"Hello"',
-                  }
-                },
-              },
-              'PARAM1': {
-                'block': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': 'indexStart'
-                  }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_length_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"Hello"',
                 }
               },
-              'PARAM2': {
-                'block': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': 'indexEnd'
-                  }
+            }
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_substring_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"Hello"',
+                }
+              },
+            },
+            'PARAM1': {
+              'block': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 'beginIndex'
+                }
+              }
+            },
+            'PARAM2': {
+              'block': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 'endIndex'
                 }
               }
             }
-          },
-          {
-            'kind': 'block',
-            'type': 'praxly_toLowerCase_block',
-            'inputs': {
-              'EXPRESSION': {
-                'shadow': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': '"Hello"',
-                  }
-                },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_toLowerCase_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"Hello"',
+                }
               },
-            }
-          },
-          {
-            'kind': 'block',
-            'type': 'praxly_toUpperCase_block',
-            'inputs': {
-              'EXPRESSION': {
-                'shadow': {
-                  'type': 'praxly_literal_block',
-                  'fields': {
-                    'LITERAL': '"Hello"',
-                  }
-                },
+            },
+          }
+        },
+        {
+          'kind': 'block',
+          'type': 'praxly_toUpperCase_block',
+          'inputs': {
+            'EXPRESSION': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': '"Hello"',
+                }
               },
-            }
-          },
+            },
+          }
+        },
       ]
     },
+
     {
       "kind": "category",
       "name": "logic",
@@ -578,6 +559,7 @@ export const toolbox = {
         }
       ]
     },
+
     {
       "kind": "category",
       "name": "loops",
@@ -674,7 +656,7 @@ export const toolbox = {
         {
           'kind': 'block',
           'type': 'praxly_while_loop_block',
-          'inputs' : {
+          'inputs': {
             'CONDITION': {
               'block': {
                 'type': 'praxly_compare_block',
@@ -706,7 +688,7 @@ export const toolbox = {
         {
           'kind': 'block',
           'type': 'praxly_do_while_loop_block',
-          'inputs' : {
+          'inputs': {
             'CONDITION': {
               'block': {
                 'type': 'praxly_compare_block',
@@ -738,7 +720,7 @@ export const toolbox = {
         {
           'kind': 'block',
           'type': 'praxly_repeat_until_loop_block',
-          'inputs' : {
+          'inputs': {
             'CONDITION': {
               'block': {
                 'type': 'praxly_compare_block',
@@ -769,37 +751,6 @@ export const toolbox = {
         }
       ]
     },
-
-    // {
-    //   "kind": "category",
-    //   "name": "statements",
-    //   "categorystyle": "array_blocks",
-    //   "contents": [
-    //     {
-    //       'kind': 'block',
-    //       'type': 'custom_operation_block'
-    //     },
-    //   ]
-    // },
-    // {
-    //   "kind": "category",
-    //   "name": "experimental",
-    //   "categorystyle" : "class_blocks",
-    //   // "categorystyle": "class_blocks",
-    //   "contents": [
-    //         {
-    //           'kind': 'block',
-    //           'type': 'praxly_parameter_block',
-    //           'extraState': {
-    //             'arity': 3,
-    //           }
-    //         },
-    //         {
-    //           'kind': 'block',
-    //           'type': 'praxly_singular_param_block'
-    //         },
-    //   ]
-    // },
 
     {
       "kind": "category",
