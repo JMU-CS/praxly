@@ -6,7 +6,8 @@ import { MAX_LOOP, NODETYPES, OP, textEditor, textError } from './common';
  */
 export function text2tree() {
   let code = textEditor?.getValue();
-  code = code.replace(/\t/g, "    ");
+  code = code.replace(/\t/g, "    ");  // replace tabs with 4 spaces
+  code = code.replace(/\r/g, "");      // remove any carriage returns
   let lexer = new Lexer(code);
   let ir;
   let tokens = lexer.lex();
