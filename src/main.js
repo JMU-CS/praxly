@@ -751,7 +751,11 @@ function parseUrlConfiguration() {
   const pattern = '#code=';
   if (hash.startsWith(pattern)) {
     let source = hash.substring(pattern.length);
-    configuration.code = decodeURIComponent(source);
+    try {
+      configuration.code = decodeURIComponent(source);
+    } catch (error) {
+      configuration.code = '// Unable to get code from URL\n// '+ error + '\n';
+    }
   } else {
     configuration.code = null;
   }

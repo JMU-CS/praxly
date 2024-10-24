@@ -577,7 +577,8 @@ class Praxly_input {
         try {
             const result = await consoleInput();
             return new Praxly_String(result, this.json);
-        } catch (e) {
+        }
+        catch (error) {
             throw new PraxlyError("input canceled", this.json.line);
         }
     }
