@@ -1375,9 +1375,17 @@ class Praxly_for {
     }
 
     async evaluate(environment) {
+        var newScope = {
+            parent: environment,
+            name: 'for loop',
+            functionList: {},
+            variableList: {},
+            global: environment.global,
+        };
+
         // highlight loop init
-        await stepOver(environment, this.initialization.json);
-        await this.initialization.evaluate(environment);
+        await stepOver(newScope, this.initialization.json);
+        await this.initialization.evaluate(newScope);
 
         var loopCount = 0;
         while (true) {
@@ -1388,8 +1396,8 @@ class Praxly_for {
             }
 
             // evaluate loop condition
-            await stepOver(environment, this.condition.json);
-            var cond = await this.condition.evaluate(environment);
+            await stepOver(newScope, this.condition.json);
+            var cond = await this.condition.evaluate(newScope);
             if (cond.realType != TYPES.BOOLEAN) {
                 throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
             }
@@ -1398,17 +1406,10 @@ class Praxly_for {
             }
 
             // evaluate loop body
-            var newScope = {
-                parent: environment,
-                name: 'for loop',
-                functionList: {},
-                variableList: {},
-                global: environment.global,
-            };
             await this.codeblock.evaluate(newScope);
 
             // highlight loop update
-            await stepOver(environment, this.incrementation.json);
+            await stepOver(newScope, this.incrementation.json);
             await this.incrementation.evaluate(newScope);
         }
     }
