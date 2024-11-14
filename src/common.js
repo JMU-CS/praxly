@@ -80,6 +80,7 @@ export const NODETYPES = {
     FUNCCALL:                       "FUNCTION_CALL",
     RETURN:                         "RETURN",
     ARRAY_LITERAL:                  "ARRAY_LITERAL",
+    ARRAY_CREATE:                   "ARRAY_CREATE",
     ARRAY_REFERENCE:                "ARRAY_REFERENCE",
     ARRAY_REFERENCE_ASSIGNMENT:     "ARRAY_REFERENCE_ASSIGNMENT", // remove?
     SPECIAL_STRING_FUNCCALL:        "SPECIAL_STRING_FUNCCALL",

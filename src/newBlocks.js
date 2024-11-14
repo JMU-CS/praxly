@@ -288,6 +288,53 @@ export function definePraxlyBlocks(workspace) {
       "tooltip": "Declares and initializes an array",
       "helpUrl": ""
     },
+    {
+      "type": "praxly_array_create_block",
+      "message0": "%1[] %2 ⬅ %3[%4]",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "VARTYPE",
+          "options": [
+            ["boolean", NODETYPES.BOOLEAN],
+            ["char", NODETYPES.CHAR],
+            ["double", NODETYPES.DOUBLE],
+            ["float", NODETYPES.FLOAT],
+            ["int", NODETYPES.INT],
+            ["short", NODETYPES.SHORT],
+            ["String", NODETYPES.STRING],
+          ]
+        },
+        {
+          "type": "field_input",
+          "name": "VARIABLENAME",
+          "text": "arrayName"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "ELEMTYPE",
+          "options": [
+            ["boolean", NODETYPES.BOOLEAN],
+            ["char", NODETYPES.CHAR],
+            ["double", NODETYPES.DOUBLE],
+            ["float", NODETYPES.FLOAT],
+            ["int", NODETYPES.INT],
+            ["short", NODETYPES.SHORT],
+            ["String", NODETYPES.STRING],
+          ]
+        },
+        {
+          "type": "input_value",
+          "name": "LENGTH",
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": 'variable_blocks',
+      "tooltip": "Initialize and declare an array of desired length", // of length n?
+      "helpUrl": ""
+    },
     { // variables 6
       "type": "praxly_array_reference_reassignment_block",
       "message0": "%1[%2] ⬅%3 %4",

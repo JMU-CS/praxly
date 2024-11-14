@@ -107,7 +107,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression?.type](expression),
+                praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -119,7 +119,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression?.type](expression),
+                praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -131,7 +131,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression?.type](expression),
+                praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -143,7 +143,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-              praxlyGenerator[expression?.type](expression),
+                praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -239,6 +239,23 @@ export const makeGenerator = () => {
             index: praxlyGenerator[index?.type](index),
             isArray: true,
         })
+    }
+
+    praxlyGenerator['praxly_array_create_block'] = (block) => {
+        var varType = block.getFieldValue('VARTYPE');
+        var variableName = block.getFieldValue("VARIABLENAME");
+        var elemType = block.getFieldValue('ELEMTYPE');
+        var arrayLength = block.getInputTargetBlock('LENGTH');
+
+        return customizeMaybe(block, {
+            type: NODETYPES.ARRAY_CREATE,
+            varType: varType,
+            name: variableName,
+            elemType: elemType,
+            arrayLength: praxlyGenerator[arrayLength?.type](arrayLength),
+            isArray: true,
+            blockID: block.id,
+        });
     }
 
     // NOTE: praxly_literal_block and praxly_variable_block work the same way.
@@ -641,7 +658,7 @@ export const makeGenerator = () => {
         const index = block.getInputTargetBlock('INDEX');
         return customizeMaybe(block, {
             blockID: block.id,
-            name : procedureName,
+            name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
             left: praxlyGenerator[expression?.type](expression),
             right: {
@@ -714,7 +731,7 @@ export const makeGenerator = () => {
             right: {
                 name: procedureName,
                 args: [praxlyGenerator[param1?.type](param1),
-                       praxlyGenerator[param2?.type](param2)],
+                praxlyGenerator[param2?.type](param2)],
                 type: NODETYPES.FUNCCALL
             }
         });
