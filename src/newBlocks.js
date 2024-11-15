@@ -293,6 +293,7 @@ export function definePraxlyBlocks(workspace) {
       "message0": "%1[] %2 ⬅ %3[%4]",
       "args0": [
         {
+          // TODO set initial type to int
           "type": "field_dropdown",
           "name": "VARTYPE",
           "options": [

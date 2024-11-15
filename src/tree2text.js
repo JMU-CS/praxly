@@ -325,6 +325,9 @@ export const tree2text = (node, indentation) => {
             result += '}';
             return result;
 
+        case NODETYPES.ARRAY_CREATE:
+            return node.varType + "[] " + node.name + " ← " + node.elemType + '[' + tree2text(node.arrayLength) + ']';
+
         case NODETYPES.ARRAY_REFERENCE:
             result = node.name + '[';
             var expression = tree2text(node.index, 0) + ']';
