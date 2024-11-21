@@ -693,7 +693,28 @@ class Parser {
               return this.parse_builtin_function_call(line);
             }
             if (this.has_ahead('[')) {  // create array expression
-                // TODO parse array length and closing bracket
+                var elemType = this.advance().value;
+                // opening bracket
+                this.advance();
+                var arrayLength = this.parse_expression(line);
+                // closing bracket
+                if (this.has(']')) {
+                    this.advance();
+                } else {
+                    textError('parsing', "didn't detect closing bracket in the array length", this.getCurrentLine());
+                }
+                return {
+                    type: NODETYPES.ARRAY_CREATE,
+                    varType: "type",
+                    name: "name",
+                    elemType: elemType,
+                    arrayLength: arrayLength,
+                    isArray: true,
+                    blockID: "code",
+                    line: line,
+                    startIndex: startIndex,
+                    endIndex: this.getCurrentToken().endIndex,
+                };
             }
             else {
               // parse as 'Location' instead (Ex: variable named max)
@@ -850,7 +871,12 @@ class Parser {
       result.value = this.parse_expression();
       result.endIndex = this.tokens[this.i - 1].endIndex;
 
-      // TODO if applicable, rebuild the result as NODETYPES.ARRAY_CREATE
+      // special case: array initialization
+      if (result.value.type == NODETYPES.ARRAY_CREATE) {
+        result.value.varType = result.varType;
+        result.value.name = result.name;
+        return result.value;
+      }
     }
 
     // procedure definition
