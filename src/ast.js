@@ -336,6 +336,9 @@ export function createExecutable(tree) {
             });
             return new Praxly_array_literal(args, tree);
 
+        case NODETYPES.ARRAY_CREATE:
+            return new Praxly_array_create(tree.elemType, tree.varType, tree.arrayLength,tree);
+
         case NODETYPES.ARRAY_REFERENCE:
             return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
 
@@ -507,6 +510,26 @@ class Praxly_array_literal {
 
     async evaluate(environment) {
         return this;
+    }
+}
+
+class Praxly_array_create {
+
+    constructor(elemType, varType, arrayLength, node) {
+        this.elemType = elemType;
+        this.varType = varType;
+        this.arrayLength = arrayLength;
+        this.json = node;
+        this.jsonType = 'Praxly_array_create';
+    }
+
+    async evaluate(environment) {
+        let args = [];
+        for (let i = 0; i < this.arrayLength; i++) {
+            args.push(litNode_new(this.elemType, 0, this.json));
+        }
+
+        return new Praxly_array_literal(args, this.json);
     }
 }
 
