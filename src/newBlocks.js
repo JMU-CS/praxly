@@ -297,11 +297,11 @@ export function definePraxlyBlocks(workspace) {
           "type": "field_dropdown",
           "name": "VARTYPE",
           "options": [
+            ["int", NODETYPES.INT],
             ["boolean", NODETYPES.BOOLEAN],
             ["char", NODETYPES.CHAR],
             ["double", NODETYPES.DOUBLE],
             ["float", NODETYPES.FLOAT],
-            ["int", NODETYPES.INT],
             ["short", NODETYPES.SHORT],
             ["String", NODETYPES.STRING],
           ]
@@ -315,11 +315,11 @@ export function definePraxlyBlocks(workspace) {
           "type": "field_dropdown",
           "name": "ELEMTYPE",
           "options": [
+            ["int", NODETYPES.INT],
             ["boolean", NODETYPES.BOOLEAN],
             ["char", NODETYPES.CHAR],
             ["double", NODETYPES.DOUBLE],
             ["float", NODETYPES.FLOAT],
-            ["int", NODETYPES.INT],
             ["short", NODETYPES.SHORT],
             ["String", NODETYPES.STRING],
           ]
