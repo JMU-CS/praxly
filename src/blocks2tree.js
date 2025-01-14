@@ -107,7 +107,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression?.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -119,7 +119,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression?.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -131,7 +131,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression?.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -143,7 +143,7 @@ export const makeGenerator = () => {
             blockID: block.id,
             type: NODETYPES.BUILTIN_FUNCTION_CALL,
             args: [
-                praxlyGenerator[expression?.type](expression),
+              praxlyGenerator[expression?.type](expression),
             ],
         });
     }
@@ -731,7 +731,7 @@ export const makeGenerator = () => {
             right: {
                 name: procedureName,
                 args: [praxlyGenerator[param1?.type](param1),
-                praxlyGenerator[param2?.type](param2)],
+                       praxlyGenerator[param2?.type](param2)],
                 type: NODETYPES.FUNCCALL
             }
         });

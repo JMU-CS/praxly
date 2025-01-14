@@ -337,7 +337,7 @@ export function createExecutable(tree) {
             return new Praxly_array_literal(args, tree);
 
         case NODETYPES.ARRAY_CREATE:
-            return new Praxly_array_create(tree.elemType, tree.varType, tree.arrayLength,tree);
+            return new Praxly_array_create(tree.elemType, tree.varType, tree.arrayLength, tree);
 
         case NODETYPES.ARRAY_REFERENCE:
             return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
@@ -356,7 +356,6 @@ export function createExecutable(tree) {
 class Praxly_single_line_comment {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_single_line_comment';
         this.json = node;
         this.value = value;
     }
@@ -368,7 +367,6 @@ class Praxly_single_line_comment {
 class Praxly_comment {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_comment';
         this.json = node;
         this.value = value;
     }
@@ -380,7 +378,6 @@ class Praxly_comment {
 class Praxly_int {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_int';
         this.json = node;
         this.value = Math.floor(value);
         this.realType = TYPES.INT;
@@ -394,7 +391,6 @@ class Praxly_int {
 class Praxly_short {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_int';
         this.json = node;
         this.value = Math.floor(value);
         this.realType = TYPES.SHORT;
@@ -408,7 +404,6 @@ class Praxly_short {
 class Praxly_double {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_double';
         this.json = node;
         this.value = parseFloat(value);
         this.realType = TYPES.DOUBLE;
@@ -422,7 +417,6 @@ class Praxly_double {
 class Praxly_float {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_double';
         this.json = node;
         this.value = parseFloat(value);
         this.realType = TYPES.FLOAT;
@@ -437,7 +431,6 @@ class Praxly_boolean {
 
     constructor(value, node) {
         this.json = node;
-        this.jsonType = 'Praxly_boolean';
         this.value = value;
         this.realType = TYPES.BOOLEAN;
     }
@@ -452,7 +445,6 @@ class Praxly_char {
     constructor(value, node) {
         this.value = value;
         this.json = node;
-        this.jsonType = 'Praxly_String';
         this.realType = TYPES.CHAR;
     }
 
@@ -464,7 +456,6 @@ class Praxly_char {
 class Praxly_String {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_String';
         this.json = node;
         this.value = value;
         this.realType = TYPES.STRING;
@@ -478,7 +469,6 @@ class Praxly_String {
 class Praxly_null {
 
     constructor(value, node) {
-        this.jsonType = 'Praxly_null';
         this.json = node;
         this.value = value;
         this.realType = TYPES.NULL;
@@ -494,7 +484,6 @@ class Praxly_array_literal {
     constructor(elements, node) {
         this.elements = elements;
         this.json = node;
-        this.jsonType = 'Praxly_array';
 
         // set array type to "largest type" of element
         let types = ["boolean", "char", "short", "int", "float", "double", "String"];
@@ -520,7 +509,6 @@ class Praxly_array_create {
         this.varType = varType;
         this.arrayLength = arrayLength;
         this.json = node;
-        this.jsonType = 'Praxly_array_create';
     }
 
     async evaluate(environment) {
@@ -538,8 +526,8 @@ export function valueToString(child, quotes, line) {
         throw new PraxlyError("no value returned from void procedure", line);
     }
     var result;
-    if (child.jsonType === 'Praxly_array') {
-        // always show quote marks for arrays
+    if (child instanceof Praxly_array_literal) {
+        // always show curly braces for arrays
         let values = child.elements.map((element) => valueToString(element, true, line));
         result = '{' + values.join(", ") + '}';
     } else {

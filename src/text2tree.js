@@ -689,10 +689,12 @@ class Parser {
           // built-in function call
           case NODETYPES.BUILTIN_FUNCTION_CALL:
           case 'Type':
-            if (this.has_ahead('(')) {  // type conversion function
+            if (this.has_ahead('(')) {
+              // type conversion function
               return this.parse_builtin_function_call(line);
             }
-            if (this.has_ahead('[')) {  // create array expression
+            if (this.has_ahead('[')) {
+                // create array expression
                 var elemType = this.advance().value;
                 // opening bracket
                 this.advance();

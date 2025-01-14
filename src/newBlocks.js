@@ -293,7 +293,6 @@ export function definePraxlyBlocks(workspace) {
       "message0": "%1[] %2 ⬅ %3[%4]",
       "args0": [
         {
-          // TODO set initial type to int
           "type": "field_dropdown",
           "name": "VARTYPE",
           "options": [
@@ -333,7 +332,7 @@ export function definePraxlyBlocks(workspace) {
       "previousStatement": null,
       "nextStatement": null,
       "style": 'variable_blocks',
-      "tooltip": "Initialize and declare an array of desired length", // of length n?
+      "tooltip": "Initialize and declare an array of desired length",  // of length n?
       "helpUrl": ""
     },
     { // variables 6
