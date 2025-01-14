@@ -473,16 +473,14 @@ export const tree2blocks = (workspace, node) => {
             var result = params;
             break;
 
-        case NODETYPES.ARRAY_CREATE:
-            var result = workspace.newBlock('praxly_array_create_block');
+        case NODETYPES.ARRAY_CREATE:  // similar to ARRAY_ASSIGNMENT
             var arrayLength = tree2blocks(workspace, node?.arrayLength);
-
+            var result = workspace.newBlock('praxly_array_create_block');
             result.setFieldValue(node?.varType, 'VARTYPE');
             result.setFieldValue(node?.name, "VARIABLENAME");
             result.setFieldValue(node?.elemType, "ELEMTYPE");
             result.getInput("LENGTH").connection.connect(arrayLength?.outputConnection);
             break;
-
 
         case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
             var result = workspace.newBlock('praxly_array_reference_reassignment_block');

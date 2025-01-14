@@ -698,12 +698,17 @@ class Parser {
                 var elemType = this.advance().value;
                 // opening bracket
                 this.advance();
-                var arrayLength = this.parse_expression(line);
-                // closing bracket
                 if (this.has(']')) {
+                    textError('parsing', "missing array length", this.getCurrentLine());
                     this.advance();
                 } else {
-                    textError('parsing', "didn't detect closing bracket in the array length", this.getCurrentLine());
+                    var arrayLength = this.parse_expression();
+                    // closing bracket
+                    if (this.has(']')) {
+                        this.advance();
+                    } else {
+                        textError('parsing', "didn't detect closing bracket in the array length", this.getCurrentLine());
+                    }
                 }
                 return {
                     type: NODETYPES.ARRAY_CREATE,
@@ -874,7 +879,7 @@ class Parser {
       result.endIndex = this.tokens[this.i - 1].endIndex;
 
       // special case: array initialization
-      if (result.value.type == NODETYPES.ARRAY_CREATE) {
+      if (result.value?.type == NODETYPES.ARRAY_CREATE) {
         result.value.varType = result.varType;
         result.value.name = result.name;
         return result.value;

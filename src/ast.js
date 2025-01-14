@@ -337,7 +337,7 @@ export function createExecutable(tree) {
             return new Praxly_array_literal(args, tree);
 
         case NODETYPES.ARRAY_CREATE:
-            return new Praxly_array_create(tree.elemType, tree.varType, tree.arrayLength, tree);
+            return new Praxly_array_create(tree.varType, tree.name, tree.elemType, createExecutable(tree.arrayLength), tree);
 
         case NODETYPES.ARRAY_REFERENCE:
             return new Praxly_array_reference(tree.name, createExecutable(tree.index), tree);
@@ -481,20 +481,24 @@ class Praxly_null {
 
 class Praxly_array_literal {
 
-    constructor(elements, node) {
+    constructor(elements, node, elemType) {
         this.elements = elements;
         this.json = node;
 
-        // set array type to "largest type" of element
-        let types = ["boolean", "char", "short", "int", "float", "double", "String"];
-        let max_type = -1;
-        for (let i = 0; i < elements.length; i++) {
-            let cur_type = types.indexOf(elements[i].realType);
-            if (cur_type > max_type) {
-                max_type = cur_type;
+        if (elemType) {
+            this.realType = elemType + "[]";
+        } else {
+            // set array type to "largest type" of element
+            let types = ["boolean", "char", "short", "int", "float", "double", "String"];
+            let max_type = -1;
+            for (let i = 0; i < elements.length; i++) {
+                let cur_type = types.indexOf(elements[i].realType);
+                if (cur_type > max_type) {
+                    max_type = cur_type;
+                }
             }
+            this.realType = types[max_type] + "[]";
         }
-        this.realType = types[max_type] + "[]";
     }
 
     async evaluate(environment) {
@@ -504,20 +508,46 @@ class Praxly_array_literal {
 
 class Praxly_array_create {
 
-    constructor(elemType, varType, arrayLength, node) {
-        this.elemType = elemType;
+    constructor(varType, varName, elemType, arrayLength, node) {
         this.varType = varType;
+        this.varName = varName;
+        this.elemType = elemType;
         this.arrayLength = arrayLength;
         this.json = node;
     }
 
     async evaluate(environment) {
-        let args = [];
-        for (let i = 0; i < this.arrayLength; i++) {
-            args.push(litNode_new(this.elemType, 0, this.json));
+        // type checking
+        if (!can_assign(this.varType, this.elemType, this.json.line)) {
+            throw new PraxlyError(`Array element did not match declared type ` +
+                `(Expected: ${this.varType}, Actual: ${this.elemType})`, this.json.line);
         }
-
-        return new Praxly_array_literal(args, this.json);
+        let length = await this.arrayLength.evaluate(environment);
+        if (length.realType != NODETYPES.INT) {
+            throw new PraxlyError(`Array length must be an integer ` +
+                `(Actual: ${length.realType})`, this.json.line);
+        }
+        length = length.value;
+        // default value for new array of n elements
+        let value;
+        switch (this.elemType) {
+            case TYPES.BOOLEAN:
+                value = false;
+            case TYPES.CHAR:
+                value = "0";  // null character not in language
+            case TYPES.STRING:
+                value = "0";  // null reference not implemented
+            default:
+                value = 0;
+        }
+        // construct the array of n default values
+        let elements = [];
+        for (let i = 0; i < length; i++) {
+            elements.push(litNode_new(this.elemType, value, this.json));
+        }
+        // array is being declared and initialized
+        let array = new Praxly_array_literal(elements, this.json, this.elemType);
+        environment.variableList[this.varName] = array;
     }
 }
 
