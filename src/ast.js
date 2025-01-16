@@ -528,17 +528,25 @@ class Praxly_array_create {
                 `(Actual: ${length.realType})`, this.json.line);
         }
         length = length.value;
+        if (length < 0) {
+            throw new PraxlyError(`Array length must be nonnegative ` +
+                `(Actual: ${length})`, this.json.line);
+        }
         // default value for new array of n elements
         let value;
         switch (this.elemType) {
             case TYPES.BOOLEAN:
                 value = false;
+                break;
             case TYPES.CHAR:
                 value = "0";  // null character not in language
+                break;
             case TYPES.STRING:
-                value = "0";  // null reference not implemented
+                value = "";   // null reference not implemented
+                break;
             default:
                 value = 0;
+                break;
         }
         // construct the array of n default values
         let elements = [];
