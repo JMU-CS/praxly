@@ -241,6 +241,23 @@ export const makeGenerator = () => {
         })
     }
 
+    praxlyGenerator['praxly_array_create_block'] = (block) => {
+        var varType = block.getFieldValue('VARTYPE');
+        var variableName = block.getFieldValue("VARIABLENAME");
+        var elemType = block.getFieldValue('ELEMTYPE');
+        var arrayLength = block.getInputTargetBlock('LENGTH');
+
+        return customizeMaybe(block, {
+            type: NODETYPES.ARRAY_CREATE,
+            varType: varType,
+            name: variableName,
+            elemType: elemType,
+            arrayLength: praxlyGenerator[arrayLength?.type](arrayLength),
+            isArray: true,
+            blockID: block.id,
+        });
+    }
+
     // NOTE: praxly_literal_block and praxly_variable_block work the same way.
     // The only differences are the color of the outline and the error message
     // when invalid. Ideally this code would not be duplicated.
@@ -641,7 +658,7 @@ export const makeGenerator = () => {
         const index = block.getInputTargetBlock('INDEX');
         return customizeMaybe(block, {
             blockID: block.id,
-            name : procedureName,
+            name: procedureName,
             type: NODETYPES.SPECIAL_STRING_FUNCCALL,
             left: praxlyGenerator[expression?.type](expression),
             right: {

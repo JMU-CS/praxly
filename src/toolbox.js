@@ -96,6 +96,20 @@ export const toolbox = {
         },
         {
           'kind': 'block',
+          'type': 'praxly_array_create_block',
+          'inputs': {
+            'LENGTH': {
+              'shadow': {
+                'type': 'praxly_literal_block',
+                'fields': {
+                  'LITERAL': 10,
+                }
+              }
+            }
+          }
+        },
+        {
+          'kind': 'block',
           'type': 'praxly_array_reference_reassignment_block',
           'inputs': {
             'INDEX': {
