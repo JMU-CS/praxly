@@ -688,9 +688,40 @@ class Parser {
 
           // built-in function call
           case NODETYPES.BUILTIN_FUNCTION_CALL:
-          case 'Type':  // type conversion function
+          case 'Type':
             if (this.has_ahead('(')) {
+              // type conversion function
               return this.parse_builtin_function_call(line);
+            }
+            if (this.has_ahead('[')) {
+                // create array expression
+                var elemType = this.advance().value;
+                // opening bracket
+                this.advance();
+                if (this.has(']')) {
+                    textError('parsing', "missing array length", this.getCurrentLine());
+                    this.advance();
+                } else {
+                    var arrayLength = this.parse_expression();
+                    // closing bracket
+                    if (this.has(']')) {
+                        this.advance();
+                    } else {
+                        textError('parsing', "didn't detect closing bracket in the array length", this.getCurrentLine());
+                    }
+                }
+                return {
+                    type: NODETYPES.ARRAY_CREATE,
+                    varType: "type",
+                    name: "name",
+                    elemType: elemType,
+                    arrayLength: arrayLength,
+                    isArray: true,
+                    blockID: "code",
+                    line: line,
+                    startIndex: startIndex,
+                    endIndex: this.getCurrentToken().endIndex,
+                };
             }
             else {
               // parse as 'Location' instead (Ex: variable named max)
@@ -813,7 +844,7 @@ class Parser {
   // this one kinda a mess ngl, but my goal is to support variable initialization and assignment all together
   parse_funcdecl_or_vardecl() {
 
-    // return type
+    // variable/return type
     var isArray = false;
     var type = NODETYPES.VARDECL;
     var vartype = this.getCurrentToken().value;
@@ -846,6 +877,13 @@ class Parser {
       this.advance();
       result.value = this.parse_expression();
       result.endIndex = this.tokens[this.i - 1].endIndex;
+
+      // special case: array initialization
+      if (result.value?.type == NODETYPES.ARRAY_CREATE) {
+        result.value.varType = result.varType;
+        result.value.name = result.name;
+        return result.value;
+      }
     }
 
     // procedure definition
