@@ -37,16 +37,16 @@ $ cd test
 $ ./run_all.sh
 ```
 
-*Note: This script connects to the local dev server.*
+_Note: This script connects to the local dev server._
 
 ## Deployment
-
-*Note: This process is automated via GitHub actions.*
 
 To build (manually) for production:
 ```
 PRAXLY_PATH=/relative/path/on/server npm run build
 ```
+
+_Note: Deployment to praxly.cs.jmu.edu is automated via GitHub actions._
 
 ## Embedding
 
@@ -71,3 +71,7 @@ Parameter | Options               | Description             |
 
 _Screenshot of Praxly embedded in an iframe on Canvas LMS_
 ![](public/images/praxly-screenshot-embed.png)
+
+## License
+
+Praxly's source code is available under [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/).
