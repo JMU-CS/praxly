@@ -9,11 +9,8 @@ The text editor uses [Ace][3], and the block editor uses [Blockly][4].
 [3]: https://ace.c9.io/
 [4]: https://developers.google.com/blockly
 
-<figure>
-    <img src="public/images/praxly-screenshot-narrow.png">
-    <figcaption>Screenshot of Praxly running a recursive factorial function</figcaption>
-</figure>
-
+_Screenshot of Praxly running a recursive factorial function_
+![](public/images/praxly-screenshot-full.png)
 
 ## Development
 
@@ -71,3 +68,6 @@ Parameter | Options               | Description             |
 \#code=   | url-encoded format    | The initial source code |
 
 \* = default values for embedded mode
+
+_Screenshot of Praxly embedded in an iframe on Canvas LMS_
+![](public/images/praxly-screenshot-embed.png)
