@@ -989,9 +989,19 @@ class Praxly_and {
 
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
+        if (a.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.AND} left side: ${a.realType}`, this.json.line);
+        }
+        // short-circuit evaluation
+        if (a.value === false) {
+            return litNode_new(TYPES.BOOLEAN, false);
+        }
         let b = await this.b_operand.evaluate(environment);
+        if (b.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.AND} right side: ${b.realType}`, this.json.line);
+        }
         await stepInto(environment, this.json);
-        return litNode_new(binop_typecheck(OP.AND, a.realType, b.realType, this.json), a.value && b.value);
+        return litNode_new(TYPES.BOOLEAN, a.value && b.value);
     }
 }
 
@@ -1007,9 +1017,19 @@ class Praxly_or {
 
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
+        if (a.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.OR} left side: ${a.realType}`, this.json.line);
+        }
+        // short-circuit evaluation
+        if (a.value === true) {
+            return litNode_new(TYPES.BOOLEAN, true);
+        }
         let b = await this.b_operand.evaluate(environment);
+        if (b.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.OR} right side: ${b.realType}`, this.json.line);
+        }
         await stepInto(environment, this.json);
-        return litNode_new(binop_typecheck(OP.OR, a.realType, b.realType, this.json), a.value || b.value);
+        return litNode_new(TYPES.BOOLEAN, a.value || b.value);
     }
 }
 
