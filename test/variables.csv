@@ -12,7 +12,7 @@ double u ← 6
 float f ← 3.75
 boolean b ← true
 char c ← a",,,"runtime error occurred on line 6:
-Variable a does not exist."
+Variable a does not exist in this scope."
 Correct vars,"int n ← 12
 double u ← 6
 //short t ← 12.2
@@ -60,4 +60,4 @@ end printSum
 // main program
 printSum();
 print a * b; // ERROR!",,25,"runtime error occurred on line 10:
-Variable a does not exist."
+Variable a does not exist in this scope."

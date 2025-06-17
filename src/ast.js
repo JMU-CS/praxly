@@ -484,24 +484,29 @@ class Praxly_array_literal {
     constructor(elements, node, elemType) {
         this.elements = elements;
         this.json = node;
+        this.elemType = elemType;
+    }
 
-        if (elemType) {
-            this.realType = elemType + "[]";
+    async evaluate(environment) {
+        // evaluate the array elements
+        for (let i = 0; i < this.elements.length; i++) {
+            this.elements[i] = await this.elements[i].evaluate(environment);
+        }
+        // infer the array's data type
+        if (this.elemType) {
+            this.realType = this.elemType + "[]";
         } else {
             // set array type to "largest type" of element
             let types = ["boolean", "char", "short", "int", "float", "double", "String"];
             let max_type = -1;
-            for (let i = 0; i < elements.length; i++) {
-                let cur_type = types.indexOf(elements[i].realType);
+            for (let i = 0; i < this.elements.length; i++) {
+                let cur_type = types.indexOf(this.elements[i].realType);
                 if (cur_type > max_type) {
                     max_type = cur_type;
                 }
             }
             this.realType = types[max_type] + "[]";
         }
-    }
-
-    async evaluate(environment) {
         return this;
     }
 }
@@ -984,9 +989,19 @@ class Praxly_and {
 
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
+        if (a.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.AND} left side: ${a.realType}`, this.json.line);
+        }
+        // short-circuit evaluation
+        if (a.value === false) {
+            return litNode_new(TYPES.BOOLEAN, false);
+        }
         let b = await this.b_operand.evaluate(environment);
+        if (b.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.AND} right side: ${b.realType}`, this.json.line);
+        }
         await stepInto(environment, this.json);
-        return litNode_new(binop_typecheck(OP.AND, a.realType, b.realType, this.json), a.value && b.value);
+        return litNode_new(TYPES.BOOLEAN, a.value && b.value);
     }
 }
 
@@ -1002,9 +1017,19 @@ class Praxly_or {
 
     async evaluate(environment) {
         let a = await this.a_operand.evaluate(environment);
+        if (a.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.OR} left side: ${a.realType}`, this.json.line);
+        }
+        // short-circuit evaluation
+        if (a.value === true) {
+            return litNode_new(TYPES.BOOLEAN, true);
+        }
         let b = await this.b_operand.evaluate(environment);
+        if (b.realType != TYPES.BOOLEAN) {
+            throw new PraxlyError(`bad operand type for ${OP.OR} right side: ${b.realType}`, this.json.line);
+        }
         await stepInto(environment, this.json);
-        return litNode_new(binop_typecheck(OP.OR, a.realType, b.realType, this.json), a.value || b.value);
+        return litNode_new(TYPES.BOOLEAN, a.value || b.value);
     }
 }
 
@@ -1116,6 +1141,25 @@ class Praxly_less_than_equal {
     }
 }
 
+/**
+ * Extend the environment before entering a codeblock.
+ * @param {object} environment The current environment.
+ * @param {string} name Optional name for new environment.
+ * @returns {object} New environment for the codeblock.
+ */
+function new_env(environment, name) {
+    if (!name) {
+        name = environment.name;
+    }
+    return {
+        parent: environment,
+        name: name,
+        functionList: {},
+        variableList: {},
+        global: environment.global,
+    };
+}
+
 class Praxly_if {
 
     constructor(condition, codeblock, node) {
@@ -1131,7 +1175,8 @@ class Praxly_if {
             throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
         }
         if (cond.value) {
-            await this.codeblock.evaluate(environment);
+            let blockScope = new_env(environment, 'if block');
+            await this.codeblock.evaluate(blockScope);
         }
         return 'success';
     }
@@ -1153,9 +1198,11 @@ class Praxly_if_else {
             throw new PraxlyError("Invalid condition (must be boolean)", this.json.line);
         }
         if (cond.value) {
-            await this.codeblock.evaluate(environment);
+            let blockScope = new_env(environment, 'if block');
+            await this.codeblock.evaluate(blockScope);
         } else {
-            await this.alternative.evaluate(environment);
+            let blockScope = new_env(environment, 'else block');
+            await this.alternative.evaluate(blockScope);
         }
         return 'success';
     }
@@ -1223,13 +1270,19 @@ class Praxly_codeBlock {
 }
 
 // searches through the linked list to find the nearest match to enable shadowing.
-function accessLocation(environment, json) {
-    if (environment.variableList.hasOwnProperty(json.name)) {
+function accessLocation(name, environment, decl) {
+    if (environment.variableList.hasOwnProperty(name)) {
         return environment.variableList;
     } else if (environment.parent === "root") {
         return null;
+    } else if (environment.name.endsWith('()')) {
+        if (decl) {
+            return null;  // allow shadowing in current function
+        }
+        // skip over previous function calls on the stack
+        return accessLocation(name, environment.global, decl);
     } else {
-        return accessLocation(environment.parent, json);
+        return accessLocation(name, environment.parent, decl);
     }
 }
 
@@ -1276,7 +1329,7 @@ class Praxly_assignment {
 
     async evaluate(environment) {
         // the variable must be in the environment and have a matching type
-        var storage = accessLocation(environment, this.location);
+        var storage = accessLocation(this.location.name, environment);
         if (!storage) {
             throw new PraxlyError(`Variable ${this.location.name} does not exist in this scope.`, this.json.line);
         }
@@ -1347,8 +1400,8 @@ class Praxly_vardecl {
                     throw new Error(`unhandled var type ${this.json.varType} (line ${this.json.line})`);
             }
         }
-        if (environment.variableList.hasOwnProperty(this.name)) {
-            throw new PraxlyError(`variable ${this.name} has already been declared in this scope. `, this.json.line);
+        if (accessLocation(this.name, environment, true)) {
+            throw new PraxlyError(`variable ${this.name} has already been declared in this scope.`, this.json.line);
         }
 
         if (!can_assign(this.json.varType, valueEvaluated.realType, this.json.line)) {
@@ -1395,9 +1448,9 @@ class Praxly_Location {
     }
 
     async evaluate(environment) {
-        var storage = accessLocation(environment, this.json);
+        var storage = accessLocation(this.json.name, environment);
         if (!storage) {
-            throw new PraxlyError(`Variable ${this.name} does not exist.`, this.json.line);
+            throw new PraxlyError(`Variable ${this.name} does not exist in this scope.`, this.json.line);
         }
 
         if (this.isArray) {
@@ -1424,13 +1477,7 @@ class Praxly_for {
     }
 
     async evaluate(environment) {
-        var newScope = {
-            parent: environment,
-            name: 'for loop',
-            functionList: {},
-            variableList: {},
-            global: environment.global,
-        };
+        let newScope = new_env(environment, 'for loop');
 
         // highlight loop init
         await stepOver(newScope, this.initialization.json);
@@ -1454,8 +1501,9 @@ class Praxly_for {
                 break;
             }
 
-            // evaluate loop body
-            await this.codeblock.evaluate(newScope);
+            // evaluate loop body (in a second environment)
+            let blockScope = new_env(newScope, 'for body');
+            await this.codeblock.evaluate(blockScope);
 
             // highlight loop update
             await stepOver(newScope, this.incrementation.json);
@@ -1492,13 +1540,7 @@ class Praxly_while {
             }
 
             // evaluate loop body
-            var newScope = {
-                parent: environment,
-                name: 'while loop',
-                functionList: {},
-                variableList: {},
-                global: environment.global,
-            };
+            let newScope = new_env(environment, 'while loop');
             await this.codeblock.evaluate(newScope);
         }
     }
@@ -1522,13 +1564,7 @@ class Praxly_do_while {
             }
 
             // evaluate loop body
-            var newScope = {
-                parent: environment,
-                name: 'do while loop',
-                functionList: {},
-                variableList: {},
-                global: environment.global,
-            };
+            let newScope = new_env(environment, 'do-while loop');
             await this.codeblock.evaluate(newScope);
 
             // evaluate loop condition
@@ -1562,13 +1598,7 @@ class Praxly_repeat_until {
             }
 
             // evaluate loop body
-            var newScope = {
-                parent: environment,
-                name: 'repeat until loop',
-                functionList: {},
-                variableList: {},
-                global: environment.global,
-            };
+            let newScope = new_env(environment, 'repeat loop');
             await this.codeblock.evaluate(newScope);
 
             // evaluate loop condition
@@ -1669,13 +1699,7 @@ class Praxly_function_call {
         }
 
         //NEW: parameter list is now a linkedList. expect some errors till I fix it.
-        var newScope = {
-            parent: environment,
-            name: `function: ${this.name}`,
-            functionList: {},
-            variableList: {},
-            global: environment.global,
-        };
+        let newScope = new_env(environment, `${this.name}()`);
         for (let i = 0; i < this.args.length; i++) {
             let parameterName = functionArgs[i][1];
             let parameterType = functionArgs[i][0];

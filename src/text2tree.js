@@ -1,4 +1,4 @@
-import { MAX_LOOP, NODETYPES, OP, textEditor, textError } from './common';
+import { MAX_LOOP, NODETYPES, OP, TYPES, textEditor, textError } from './common';
 
 /**
  * this will take all of the text currently in the editor and generate the corresponding Intermediate Representation .
@@ -495,6 +495,12 @@ class Parser {
       case '-':
         type = OP.NEGATE;
         break;
+    }
+    // special case for negative literals
+    if (operation == '-' && [TYPES.INT, TYPES.SHORT, TYPES.DOUBLE, TYPES.FLOAT].includes(expression?.type)) {
+      expression.startIndex = startIndex;
+      expression.value = "-" + expression.value;
+      return expression;
     }
     return {
       blockID: "code",

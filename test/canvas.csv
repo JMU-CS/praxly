@@ -359,7 +359,7 @@ end printSum
 // main program
 printSum();
 print a * b; // ERROR!",,25,"runtime error occurred on line 10:
-Variable a does not exist."
+Variable a does not exist in this scope."
 procedures/3-params-and-return.md capital of VA,"print ""What is the capital of Virginia?"";
 print ""1: Washington 2: Richmond 3: Norfolk"";
 int ans ⟵ int(input())

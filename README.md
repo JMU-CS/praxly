@@ -9,11 +9,8 @@ The text editor uses [Ace][3], and the block editor uses [Blockly][4].
 [3]: https://ace.c9.io/
 [4]: https://developers.google.com/blockly
 
-<figure>
-    <img src="public/images/praxly-screenshot-narrow.png">
-    <figcaption>Screenshot of Praxly running a recursive factorial function</figcaption>
-</figure>
-
+_Screenshot of Praxly running a recursive factorial function_
+![](public/images/praxly-screenshot-full.png)
 
 ## Development
 
@@ -40,16 +37,16 @@ $ cd test
 $ ./run_all.sh
 ```
 
-*Note: This script connects to the local dev server.*
+_Note: This script connects to the local dev server._
 
 ## Deployment
-
-*Note: This process is automated via GitHub actions.*
 
 To build (manually) for production:
 ```
 PRAXLY_PATH=/relative/path/on/server npm run build
 ```
+
+_Note: Deployment to praxly.cs.jmu.edu is automated via GitHub actions._
 
 ## Embedding
 
@@ -71,3 +68,10 @@ Parameter | Options               | Description             |
 \#code=   | url-encoded format    | The initial source code |
 
 \* = default values for embedded mode
+
+_Screenshot of Praxly embedded in an iframe on Canvas LMS_
+![](public/images/praxly-screenshot-embed.png)
+
+## License
+
+Praxly's source code is available under [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/).
