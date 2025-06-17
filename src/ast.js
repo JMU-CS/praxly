@@ -484,24 +484,29 @@ class Praxly_array_literal {
     constructor(elements, node, elemType) {
         this.elements = elements;
         this.json = node;
+        this.elemType = elemType;
+    }
 
-        if (elemType) {
-            this.realType = elemType + "[]";
+    async evaluate(environment) {
+        // evaluate the array elements
+        for (let i = 0; i < this.elements.length; i++) {
+            this.elements[i] = await this.elements[i].evaluate(environment);
+        }
+        // infer the array's data type
+        if (this.elemType) {
+            this.realType = this.elemType + "[]";
         } else {
             // set array type to "largest type" of element
             let types = ["boolean", "char", "short", "int", "float", "double", "String"];
             let max_type = -1;
-            for (let i = 0; i < elements.length; i++) {
-                let cur_type = types.indexOf(elements[i].realType);
+            for (let i = 0; i < this.elements.length; i++) {
+                let cur_type = types.indexOf(this.elements[i].realType);
                 if (cur_type > max_type) {
                     max_type = cur_type;
                 }
             }
             this.realType = types[max_type] + "[]";
         }
-    }
-
-    async evaluate(environment) {
         return this;
     }
 }
