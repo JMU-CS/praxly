@@ -76,8 +76,8 @@ def main(csv_name, html_name):
         yes.click()
         driver.execute_script(f'ace.edit("aceCode").setValue(`{code}`);')
         editor.click()
-        time.sleep(PAUSE)
         play.click()
+        time.sleep(PAUSE)
 
         # simulate each line of user input
         for line in user_input.splitlines():
