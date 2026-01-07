@@ -3,7 +3,7 @@
 # to be deployed to the same website (hosted on a JMU server) under different paths.
 
 npm run build
-rsync -vcaOz --chown=:praxly --delete dist/ w3:/data/praxly/
+rsync -vcaOz --chown=:praxly --delete --exclude=v2 dist/ w3:/data/praxly/
 
 # -v, --verbose               increase verbosity
 # -c, --checksum              skip based on checksum, not mod-time & size
@@ -23,3 +23,4 @@ rsync -vcaOz --chown=:praxly --delete dist/ w3:/data/praxly/
 # -z, --compress              compress file data during the transfer
 #     --chown=USER:GROUP      simple username/groupname mapping
 #     --delete                delete extraneous files from dest dirs
+#     --exclude=PATTERN       exclude files matching PATTERN
