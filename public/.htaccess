@@ -1,0 +1,3 @@
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "frame-ancestors 'self' https://*.instructure.com https://*.codevirginia.org https://*.jmu.edu;"
+</IfModule>
