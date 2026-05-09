@@ -328,12 +328,23 @@ h3 {
 /* ── Footer ──────────────────────────────────────────────────── */
 .site-footer {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 1.25rem;
   margin-top: 4rem;
   padding-top: 2rem;
   border-top: 1px solid var(--color-border);
   text-align: left;
+}
+
+.footer-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.codeva-row {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
 }
 
 .logo {
@@ -342,16 +353,21 @@ h3 {
   flex-shrink: 0;
 }
 
-.nsf-ack {
+.nsf-ack,
+.codeva-ack {
   font-size: 0.8rem;
   line-height: 1.65;
   color: var(--color-text-muted);
 }
 
-.nsf-ack a { color: var(--color-accent); }
+.nsf-ack a,
+.codeva-ack a { color: var(--color-accent); }
+
+.codeva-ack em { font-style: italic; }
 
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 720px) {
   .version-columns { grid-template-columns: 1fr; }
-  .site-footer { flex-direction: column; text-align: center; }
+  .site-footer { text-align: center; }
+  .footer-row { flex-direction: column; }
 }
