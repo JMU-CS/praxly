@@ -18,15 +18,20 @@
 
   <header class="site-header">
     <img src="/Praxly.svg" alt="Praxly" class="site-logo">
+    <p class="site-tagline">Master Coding with Language Translation</p>
+    <p class="site-subtitle">A visual programming environment that bridges the gap between pseudocode and standard programming languages.</p>
     <div class="about">
       <p>Praxly is a web-based IDE that empowers users to read, write, and run the
         <a href="https://www.ets.org/pdfs/praxis/5652.pdf#page=21">pseudocode</a>
         used in the <a href="https://praxis.ets.org/test/5652.html">CS Praxis Test</a>.
         Praxly supports bidirectional synchronization between both block-based and text-based editors,
         allowing users to learn and visualize the code while also offering the efficiency of editing text.
-        The text editor uses <a href="https://ace.c9.io/">Ace</a>,
-        and the block editor uses <a href="https://developers.google.com/blockly">Blockly</a>.
       </p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost report-button">
+        Report a bug <span class="material-symbols-rounded bug">pest_control</span>
+      </button>
     </div>
   </header>
 
@@ -44,9 +49,6 @@
           <button class="btn btn-secondary v1-github-btn">
             <svg class="github-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
             GitHub
-          </button>
-          <button class="btn btn-ghost report-button">
-            Report a bug <span class="material-symbols-rounded bug">pest_control</span>
           </button>
         </div>
         <div class="iframe-wrapper">
@@ -70,7 +72,7 @@
         </div>
         <div class="iframe-wrapper">
           <iframe width="100%" height="500" frameborder="0"
-            src="http://localhost:5174/v2/embed?code=N4Igxg9gJgpiBcIBmEBOACAlugPAWnQAYBuLXdAVlO3zIGp0BGAHQDt10AHVTVgFwAUmAJRsYrKOhSoQAGhAAbAIasA5ghDclAD0wBnEAF8gA">
+            src="/v2/embed?code=N4Igxg9gJgpiBcIBmEBOACAlugPAWnQAYBuLXdAVlO3zIGp0BGAHQDt10AHVTVgFwAUmAJRsYrKOhSoQAGhAAbAIasA5ghDclAD0wBnEAF8gA">
           </iframe>
         </div>
       </div>
@@ -119,32 +121,52 @@
       </div>
     </section>
 
+    <section class="project-section" id="project">
+      <div class="section-label">The Project</div>
+      <h2>CS for CTE Partnership</h2>
+      <div class="project-card">
+        <a href="https://codevirginia.org/csforcte" target="_blank" rel="noopener">
+          <img src="https://codevirginia.org/hubfs/CS%20for%20CTE%20Logo%20(4).png" alt="CS for CTE Logo" class="codeva-logo">
+        </a>
+        <p class="project-text">
+          Praxly is supported by the <a href="https://codevirginia.org/csforcte" target="_blank" rel="noopener">CodeVA Research-Practice Partnership</a>
+          through <em>Equipping for Praxis: Advancing Computer Science Teachers Through Endorsement</em> —
+          a three-year NSF-funded initiative preparing Career and Technical Education (CTE) teachers,
+          especially those in schools with underserved student populations, to earn CS endorsements and teach advanced computer science.
+          The project offers personalized, flexible professional development and builds both teacher confidence and identity
+          in computer science instruction. Led by <a href="https://codevirginia.org" target="_blank" rel="noopener">CodeVA</a>,
+          a nonprofit committed to inclusive CS education in Virginia, in collaboration with
+          James Madison University and TERC.
+        </p>
+      </div>
+    </section>
+
     <section class="publications-section" id="publications">
       <div class="section-label">Research &amp; Outreach</div>
       <h2>Learn More</h2>
       <div class="publications-grid">
         <div class="publication-card">
           <a href="Praxly_Poster_2025.pdf" target="_blank" rel="noopener">
-            <img src="Praxly_Poster_2025.png" alt="Praxly Poster 2025">
-            <div class="pub-label">Poster · 2025</div>
+            <img src="Praxly_Poster_2025.png" alt="Praxly v1 Research Poster 2025">
+            <div class="pub-label">Praxly v1 Research Poster · CCSC:SE 2025</div>
           </a>
         </div>
         <div class="publication-card">
           <a href="https://dl.acm.org/doi/pdf/10.1145/3641555.3705231" target="_blank" rel="noopener">
-            <img src="Praxly_SIGCSE_2025.png" alt="SIGCSE 2025 Abstract">
-            <div class="pub-label">SIGCSE 2025 · Abstract</div>
-          </a>
-        </div>
-        <div class="publication-card publication-placeholder">
-          <a href="praxly2-poster.pdf" target="_blank" rel="noopener">
-            <img src="A0.png" alt="Praxly Poster 2026">
-            <div class="pub-label">Poster · 2026</div>
+            <img src="Praxly_SIGCSE_2025.png" alt="SIGCSE Technical Symposium 2025">
+            <div class="pub-label">SIGCSE Technical Symposium 2025 · Abstract</div>
           </a>
         </div>
         <div class="publication-card">
           <a href="https://dl.acm.org/doi/10.1145/3770762.3772594" target="_blank" rel="noopener">
-            <img src="Praxly_SIGCSE_2026.png" alt="SIGCSE 2026 Paper">
-            <div class="pub-label">SIGCSE 2026 · Paper</div>
+            <img src="Praxly_SIGCSE_2026.png" alt="SIGCSE Technical Symposium 2026">
+            <div class="pub-label">SIGCSE Technical Symposium 2026 · Full Paper</div>
+          </a>
+        </div>
+        <div class="publication-card">
+          <a href="praxly2-poster.pdf" target="_blank" rel="noopener">
+            <img src="A0.png" alt="Praxly v2 Research Poster 2026">
+            <div class="pub-label">Praxly v2 Research Poster · 2026</div>
           </a>
         </div>
       </div>
@@ -160,16 +182,6 @@
           of the author(s) and do not necessarily reflect the views of the National Science Foundation.
         </div>
       </div>
-      <div class="footer-row codeva-row">
-        <div class="codeva-ack">
-          Praxly is also supported by the <a href="https://codevirginia.org/csforcte" target="_blank" rel="noopener">CodeVA Research-Practice Partnership</a>
-          through the <em>Equipping for Praxis: Advancing Computer Science Teachers Through Endorsement</em> project —
-          a three-year NSF-funded initiative preparing Career and Technical Education (CTE) teachers,
-          especially in underserved schools, to earn CS endorsements and teach advanced computer science.
-          The project is led by <a href="https://codevirginia.org" target="_blank" rel="noopener">CodeVA</a>
-          in collaboration with James Madison University and TERC.
-        </div>
-      </div>
     </footer>
 
   </div>
@@ -179,18 +191,16 @@
       window.open('https://docs.google.com/forms/d/e/1FAIpQLSeo2mUrrhNZejPch9UcQQDHWk5e6ql_xFfFSdS6oiaNA-Tk8Q/viewform', '_blank');
     });
     document.querySelector('.v1-editor-btn')?.addEventListener('click', () => {
-      window.open('/main.html', '_blank');
+      window.open('/main.html', '_self');
     });
     document.querySelector('.v1-github-btn')?.addEventListener('click', () => {
       window.open('https://github.com/JMU-CS/praxly', '_blank');
     });
     document.querySelector('.v2-editor-btn')?.addEventListener('click', () => {
-      // TODO: update with v2 editor URL
-      window.open('#', '_blank');
+      window.open('/v2/editor', '_self');
     });
     document.querySelector('.v2-github-btn')?.addEventListener('click', () => {
-      // TODO: update with v2 GitHub URL
-      window.open('https://github.com/JMU-CS/praxly', '_blank');
+      window.open('https://github.com/JMU-CS/praxly2', '_blank');
     });
   </script>
 

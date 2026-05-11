@@ -62,15 +62,34 @@ h3 {
   height: 72px;
   width: auto;
   display: block;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1rem;
+}
+
+.site-tagline {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+}
+
+.site-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin: 0 auto 1.25rem;
+  max-width: 540px;
 }
 
 .about {
   max-width: 660px;
   margin: 0 auto;
   color: var(--color-text-muted);
-  font-size: 0.975rem;
+  font-size: 0.925rem;
   line-height: 1.75;
+}
+
+.header-actions {
+  margin-top: 1.25rem;
 }
 
 /* ── Section labels ──────────────────────────────────────────── */
@@ -265,6 +284,43 @@ h3 {
   user-select: none;
 }
 
+/* ── Project (CodeVA) section ────────────────────────────────── */
+.project-section {
+  text-align: center;
+  padding-top: 2rem;
+}
+
+.project-card {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.codeva-logo {
+  height: 90px;
+  width: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.project-text {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.project-text a { color: var(--color-accent); }
+.project-text em { font-style: italic; }
+
 /* ── Publications section ────────────────────────────────────── */
 .publications-section {
   text-align: center;
@@ -368,6 +424,7 @@ h3 {
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 720px) {
   .version-columns { grid-template-columns: 1fr; }
+  .project-card { flex-direction: column; text-align: center; }
   .site-footer { text-align: center; }
   .footer-row { flex-direction: column; }
 }
