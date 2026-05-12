@@ -12,7 +12,6 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "16": "^0.0.2",
     "ace-builds": "^1.22.0",
     "blockly": "^9.3.3",
     "pure-rand": "^6.1.0"
