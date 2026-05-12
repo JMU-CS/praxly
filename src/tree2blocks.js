@@ -126,9 +126,11 @@ export const tree2blocks = (workspace, node) => {
 
         case NODETYPES.ASSOCIATION:
             var result = tree2blocks(workspace, node?.expression);
-            result.data = JSON.stringify({
-                isParenthesized: true,
-            });
+            if (result) {
+                result.data = JSON.stringify({
+                    isParenthesized: true,
+                });
+            }
             break;
 
         case NODETYPES.BUILTIN_FUNCTION_CALL: {

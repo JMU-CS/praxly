@@ -279,7 +279,7 @@ class Lexer {
         while (this.has(' ')) {  // ignore extra spaces
           this.skip();
         }
-        while (this.has_letter()) {
+        while (this.has_letter() || this.has_digit()) {
           this.capture();
         }
         this.emit_token();
