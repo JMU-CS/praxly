@@ -10,7 +10,7 @@ function isValidIdentifier(str) {
 }
 
 export const blocks2tree = (workspace, generator) => {
-    var topBlocks = workspace.getTopBlocks();
+    const topBlocks = workspace.getTopBlocks();
 
     if (topBlocks.length === 0) {
         return {
@@ -20,13 +20,11 @@ export const blocks2tree = (workspace, generator) => {
         };
     }
 
-    var result = {
+    return {
         type: NODETYPES.PROGRAM,
         blockID: 'blocksRoot',
         value: generator['codeBlockJsonBuilder'](topBlocks[0])
-    }
-
-    return result;
+    };
 }
 
 function customizeMaybe(block, node) {
@@ -46,16 +44,14 @@ function customizeMaybe(block, node) {
 export const makeGenerator = () => {
     const praxlyGenerator = [];
 
-    praxlyGenerator[undefined] = (block) => {
-        return null;  // incomplete block
-    }
+    praxlyGenerator[undefined] = () => null;  // incomplete block
 
     praxlyGenerator['codeBlockJsonBuilder'] = (headBlock) => {
-        var codeblock = {
+        const codeblock = {
             type: NODETYPES.CODEBLOCK,
             blockID: "blocks[]",
-        }
-        var statements = [];
+        };
+        const statements = [];
         let currentBlock = headBlock;
         if (currentBlock) {
             while (currentBlock.getNextBlock() != null) {
@@ -231,7 +227,7 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_array_reference_block'] = (block) => {
-        var index = block.getInputTargetBlock("INDEX");
+        const index = block.getInputTargetBlock("INDEX");
         return customizeMaybe(block, {
             blockID: block.id,
             type: NODETYPES.LOCATION,
@@ -242,10 +238,10 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_array_create_block'] = (block) => {
-        var varType = block.getFieldValue('VARTYPE');
-        var variableName = block.getFieldValue("VARIABLENAME");
-        var elemType = block.getFieldValue('ELEMTYPE');
-        var arrayLength = block.getInputTargetBlock('LENGTH');
+        const varType = block.getFieldValue('VARTYPE');
+        const variableName = block.getFieldValue("VARIABLENAME");
+        const elemType = block.getFieldValue('ELEMTYPE');
+        const arrayLength = block.getInputTargetBlock('LENGTH');
 
         return customizeMaybe(block, {
             type: NODETYPES.ARRAY_CREATE,
@@ -284,7 +280,7 @@ export const makeGenerator = () => {
             node.name = input;
         } else {
             node.type = TYPES.INVALID;
-            node.value = "literal: " + input;
+            node.value = `literal: ${input}`;
         }
         return customizeMaybe(block, node);
     }
@@ -311,7 +307,7 @@ export const makeGenerator = () => {
             node.name = input;
         } else {
             node.type = TYPES.INVALID;
-            node.value = "variable: " + input;
+            node.value = `variable: ${input}`;
         }
         return customizeMaybe(block, node);
     }
@@ -406,8 +402,8 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_vardecl_block'] = (block) => {
-        var varType = block.getFieldValue('VARTYPE');
-        var variableName = block.getFieldValue('VARIABLENAME');
+        const varType = block.getFieldValue('VARTYPE');
+        const variableName = block.getFieldValue('VARIABLENAME');
         return customizeMaybe(block, {
             type: NODETYPES.VARDECL,
             name: variableName,
@@ -422,10 +418,10 @@ export const makeGenerator = () => {
 
     // Note: declaration and assignment (as a statement)
     praxlyGenerator['praxly_assignment_block'] = (block) => {
-        var varType = block.getFieldValue('VARTYPE');
-        var variableName = block.getFieldValue('VARIABLENAME');
-        var expression = block.getInputTargetBlock('EXPRESSION');
-        var value = praxlyGenerator[expression?.type](expression);
+        const varType = block.getFieldValue('VARTYPE');
+        const variableName = block.getFieldValue('VARIABLENAME');
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.VARDECL,
             name: variableName,
@@ -440,11 +436,11 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_array_assignment_block'] = (block) => {
-        var varType = block.getFieldValue('VARTYPE');
-        var variableName = block.getFieldValue('VARIABLENAME');
-        var args = block.getInputTargetBlock('EXPRESSION');
-        var argschildren = args?.getChildren(true);
-        var argsList = [];
+        const varType = block.getFieldValue('VARTYPE');
+        const variableName = block.getFieldValue('VARIABLENAME');
+        const args = block.getInputTargetBlock('EXPRESSION');
+        const argschildren = args?.getChildren(true);
+        const argsList = [];
         argschildren?.forEach(element => {
             argsList.push(praxlyGenerator[element?.type](element));
         });
@@ -468,9 +464,9 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_reassignment_block'] = (block) => {
-        var variableName = block.getFieldValue('VARIABLENAME');
-        var expression = block.getInputTargetBlock('EXPRESSION');
-        var value = praxlyGenerator[expression?.type](expression);
+        const variableName = block.getFieldValue('VARIABLENAME');
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.ASSIGNMENT,
             name: variableName,
@@ -484,11 +480,11 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_array_reference_reassignment_block'] = (block) => {
-        var variableName = block.getFieldValue('VARIABLENAME');
-        var expression = block.getInputTargetBlock('EXPRESSION');
-        var indexInput = block.getInputTargetBlock('INDEX');
-        var value = praxlyGenerator[expression?.type](expression);
-        var index = praxlyGenerator[indexInput?.type](indexInput);
+        const variableName = block.getFieldValue('VARIABLENAME');
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const indexInput = block.getInputTargetBlock('INDEX');
+        const value = praxlyGenerator[expression?.type](expression);
+        const index = praxlyGenerator[indexInput?.type](indexInput);
         return customizeMaybe(block, {
             type: NODETYPES.ARRAY_REFERENCE_ASSIGNMENT,
             name: variableName,
@@ -506,10 +502,10 @@ export const makeGenerator = () => {
 
     // declaration and assignment (likely in a for loop)
     praxlyGenerator['praxly_assignment_expression_block'] = (block) => {
-        var varType = block.getFieldValue('VARTYPE');
-        var variableName = block.getFieldValue('VARIABLENAME');
-        var expression = block.getInputTargetBlock('EXPRESSION');
-        var value = praxlyGenerator[expression?.type](expression);
+        const varType = block.getFieldValue('VARTYPE');
+        const variableName = block.getFieldValue('VARIABLENAME');
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.VARDECL,
             name: variableName,
@@ -524,10 +520,10 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_reassignment_expression_block'] = (block) => {
-        var location = block.getInputTargetBlock('LOCATION');
-        var expression = block.getInputTargetBlock('EXPRESSION');
-        var loc = praxlyGenerator[location?.type](location);
-        var value = praxlyGenerator[expression?.type](expression);
+        const location = block.getInputTargetBlock('LOCATION');
+        const expression = block.getInputTargetBlock('EXPRESSION');
+        const loc = praxlyGenerator[location?.type](location);
+        const value = praxlyGenerator[expression?.type](expression);
         return customizeMaybe(block, {
             type: NODETYPES.ASSIGNMENT,
             name: loc?.name,
@@ -589,9 +585,9 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_for_loop_block'] = (block) => {
-        var initialization = block.getInputTargetBlock('INITIALIZATION');
-        var condition = block.getInputTargetBlock("CONDITION");
-        var reassignment = block.getInputTargetBlock('REASSIGNMENT');
+        const initialization = block.getInputTargetBlock('INITIALIZATION');
+        const condition = block.getInputTargetBlock("CONDITION");
+        const reassignment = block.getInputTargetBlock('REASSIGNMENT');
         const statements = block.getInputTargetBlock("CODEBLOCK");
         return customizeMaybe(block, {
             type: NODETYPES.FOR,
@@ -604,17 +600,17 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_procedure_block'] = (block) => {
-        var returnType = block.getFieldValue('RETURNTYPE');
-        var args = block.getInputTargetBlock('PARAMS');
-        var argschildren = args?.getChildren(true);
-        var argsList = [];
+        const returnType = block.getFieldValue('RETURNTYPE');
+        const args = block.getInputTargetBlock('PARAMS');
+        const argschildren = args?.getChildren(true);
+        const argsList = [];
         argschildren?.forEach(element => {
-            var param = [];
+            const param = [];
             param[0] = (element?.getFieldValue('VARTYPE'));
             param[1] = element?.getFieldValue('VARIABLENAME');
             argsList.push(param);
         });
-        var procedureName = block.getFieldValue('PROCEDURE_NAME');
+        const procedureName = block.getFieldValue('PROCEDURE_NAME');
         const statements = block.getInputTargetBlock("CODEBLOCK");
         block.setFieldValue(procedureName, 'END_PROCEDURE_NAME');
         return customizeMaybe(block, {
@@ -628,10 +624,10 @@ export const makeGenerator = () => {
     }
 
     praxlyGenerator['praxly_function_call_block'] = (block) => {
-        var procedureName = block.getFieldValue('PROCEDURE_NAME');
-        var args = block.getInputTargetBlock('PARAMS');
-        var argschildren = args?.getChildren(true);
-        var argsList = [];
+        const procedureName = block.getFieldValue('PROCEDURE_NAME');
+        const args = block.getInputTargetBlock('PARAMS');
+        const argschildren = args?.getChildren(true);
+        const argsList = [];
         argschildren?.forEach(element => {
             argsList.push(praxlyGenerator[element?.type](element));
         });

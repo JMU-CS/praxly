@@ -9,132 +9,84 @@ export const tree2text = (node, indentation) => {
         case TYPES.BOOLEAN:
         case TYPES.DOUBLE:
         case TYPES.INT:
-            var result = node.value.toString();
-            return result;
+            return node.value.toString();
 
-        case NODETYPES.LOCATION:
-            var result = node.name.toString();
+        case NODETYPES.LOCATION: {
+            let result = node.name.toString();
             if (node.isArray) {
                 result += `[${tree2text(node.index, 0)}]`;
             }
             return result;
+        }
 
         case TYPES.CHAR:
-            var result = '\'' + node.value + '\'';
-            return result;
+            return `'${node.value}'`;
 
         case TYPES.STRING:
-            var result = '\"' + node.value + '\"';
-            return result;
+            return `"${node.value}"`;
 
         case TYPES.INVALID:
-            var result = "// Invalid " + node.value;
-            return result;
+            return `// Invalid ${node.value}`;
 
         case NODETYPES.COMMENT:
-            var result = '    '.repeat(indentation) + '/* ' + node.value + ' */\n';
-            return result;
+            return `${'    '.repeat(indentation)}/* ${node.value} */\n`;
 
         case NODETYPES.NEWLINE:
-            var result = '\n';
-            return result;
+            return '\n';
 
         case NODETYPES.SINGLE_LINE_COMMENT:
-            var result = '    '.repeat(indentation) + '// ' + node.value + '\n';
-            return result;
+            return `${'    '.repeat(indentation)}// ${node.value}\n`;
 
         case NODETYPES.ADDITION:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " + ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} + ${tree2text(node.right, 0)}`;
 
         case NODETYPES.SUBTRACTION:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " - ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} - ${tree2text(node.right, 0)}`;
 
         case NODETYPES.MULTIPLICATION:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " * ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} * ${tree2text(node.right, 0)}`;
 
         case NODETYPES.DIVISION:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " / ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} / ${tree2text(node.right, 0)}`;
 
         case NODETYPES.EXPONENTIATION:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " ^ ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} ^ ${tree2text(node.right, 0)}`;
 
         case NODETYPES.MODULUS:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " % ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} % ${tree2text(node.right, 0)}`;
 
         case NODETYPES.AND:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " and ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} and ${tree2text(node.right, 0)}`;
 
         case NODETYPES.OR:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " or ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} or ${tree2text(node.right, 0)}`;
 
         case NODETYPES.EQUALITY:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " == ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} == ${tree2text(node.right, 0)}`;
 
         case NODETYPES.LESS_THAN_OR_EQUAL:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " ≤ ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} ≤ ${tree2text(node.right, 0)}`;
 
         case NODETYPES.GREATER_THAN_OR_EQUAL:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " ≥ ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} ≥ ${tree2text(node.right, 0)}`;
 
         case NODETYPES.GREATER_THAN:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " > ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} > ${tree2text(node.right, 0)}`;
 
         case NODETYPES.LESS_THAN:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " < ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} < ${tree2text(node.right, 0)}`;
 
         case NODETYPES.INEQUALITY:
-            var a_operand = tree2text(node.left, 0);
-            var operator = " ≠ ";
-            var b_operand = tree2text(node.right, 0);
-            return a_operand + operator + b_operand;
+            return `${tree2text(node.left, 0)} ≠ ${tree2text(node.right, 0)}`;
 
-        case NODETYPES.PRINT:
-            var result = '    '.repeat(indentation) + "print ";
-            var expression = tree2text(node.value, 0);
+        case NODETYPES.PRINT: {
+            const indent = '    '.repeat(indentation);
+            let expression = tree2text(node.value, 0);
             if (node.comment) {
-                expression += '  // ' + node.comment;
+                expression += `  // ${node.comment}`;
             }
-            expression += '\n';
-            return result + expression;
+            return `${indent}print ${expression}\n`;
+        }
 
         case NODETYPES.ASSOCIATION:
             return `(${tree2text(node.expression, 0)})`;
@@ -177,184 +129,140 @@ export const tree2text = (node, indentation) => {
         }
 
         case NODETYPES.RETURN:
-            var result = '    '.repeat(indentation) + "return ";
-            var expression = tree2text(node.value, 0) + '\n';
-            return result + expression;
+            return `${'    '.repeat(indentation)}return ${tree2text(node.value, 0)}\n`;
 
         case NODETYPES.PROGRAM:
             return tree2text(node.value, indentation);
 
         case NODETYPES.STATEMENT:
-            var result = '    '.repeat(indentation);
-            var expression = tree2text(node.value, 0) + '\n';
-            return result + expression;
+            return `${'    '.repeat(indentation)}${tree2text(node.value, 0)}\n`;
 
         case NODETYPES.CODEBLOCK:
-            var statements = node.statements.map(element => {
-                return tree2text(element, indentation);
-            });
-            return statements.join('');
+            return node.statements.map(element => tree2text(element, indentation)).join('');
 
         case NODETYPES.IF:
-            var result = '    '.repeat(indentation) + "if (";
-            var condition = tree2text(node.condition, 0) + ")\n";
-            var codeblock = tree2text(node.codeblock, indentation + 1) +
-                '    '.repeat(indentation) + 'end if\n';
-            return result + condition + codeblock;
+            return `${'    '.repeat(indentation)}if (${tree2text(node.condition, 0)})\n` +
+                tree2text(node.codeblock, indentation + 1) +
+                `${'    '.repeat(indentation)}end if\n`;
 
         case NODETYPES.IF_ELSE:
-            var result = '    '.repeat(indentation) + "if (";
-            var condition = tree2text(node.condition, 0) + ")\n";
-            var codeblock = tree2text(node.codeblock, indentation + 1);
-            var alternative = '    '.repeat(indentation) + '\else\n' +
+            return `${'    '.repeat(indentation)}if (${tree2text(node.condition, 0)})\n` +
+                tree2text(node.codeblock, indentation + 1) +
+                `${'    '.repeat(indentation)}else\n` +
                 tree2text(node.alternative, indentation + 1) +
-                '    '.repeat(indentation) + 'end if\n';
-            return result + condition + codeblock + alternative;
+                `${'    '.repeat(indentation)}end if\n`;
 
         // Note: reassignment (either a statement or in a for loop)
-        case NODETYPES.ASSIGNMENT:
-            var varname = tree2text(node.location, indentation);
-            var operator = ' ← ';
-            var expression = tree2text(node.value, 0);
-            return '    '.repeat(indentation) + varname + operator + expression + '\n';
+        case NODETYPES.ASSIGNMENT: {
+            const varname = tree2text(node.location, indentation);
+            return `${'    '.repeat(indentation)}${varname} ← ${tree2text(node.value, 0)}\n`;
+        }
 
         // Note: declaration and assignment (possibly in a for loop)
-        case NODETYPES.VARDECL:
-            var vartype = node.varType.toString();
-            var varname = vartype + ' ' + node.name.toString();
+        case NODETYPES.VARDECL: {
+            const varname = `${node.varType} ${node.name}`;
             if (node.value !== undefined) {
-                var operator = ' ← ';
-                var expression = tree2text(node.value, 0);
-                return '    '.repeat(indentation) + varname + operator + expression + '\n';
+                return `${'    '.repeat(indentation)}${varname} ← ${tree2text(node.value, 0)}\n`;
             } else {
-                return '    '.repeat(indentation) + varname + '\n';
+                return `${'    '.repeat(indentation)}${varname}\n`;
             }
+        }
 
         case NODETYPES.WHILE:
-            var result = '    '.repeat(indentation) + "while";
-            var condition = " (" + tree2text(node.condition, 0) + ")\n";
-            var codeblock = tree2text(node.codeblock, indentation + 1) +
-                '    '.repeat(indentation) + 'end while\n';
-            return result + condition + codeblock;
+            return `${'    '.repeat(indentation)}while (${tree2text(node.condition, 0)})\n` +
+                tree2text(node.codeblock, indentation + 1) +
+                `${'    '.repeat(indentation)}end while\n`;
 
         case NODETYPES.DO_WHILE:
-            var result = '    '.repeat(indentation) + 'do\n';
-            var codeblock = tree2text(node.codeblock, indentation + 1);
-            var condition = '    '.repeat(indentation) + "while (" + tree2text(node.condition, 0) + ")\n";
-            return result + codeblock + condition;
+            return `${'    '.repeat(indentation)}do\n` +
+                tree2text(node.codeblock, indentation + 1) +
+                `${'    '.repeat(indentation)}while (${tree2text(node.condition, 0)})\n`;
 
         case NODETYPES.REPEAT_UNTIL:
-            var result = '    '.repeat(indentation) + 'repeat\n';
-            var codeblock = tree2text(node.codeblock, indentation + 1);
-            var condition = '    '.repeat(indentation) + "until (" + tree2text(node.condition, 0) + ")\n";
-            return result + codeblock + condition;
+            return `${'    '.repeat(indentation)}repeat\n` +
+                tree2text(node.codeblock, indentation + 1) +
+                `${'    '.repeat(indentation)}until (${tree2text(node.condition, 0)})\n`;
 
         case NODETYPES.NOT:
-            var result = "not ";
-            var expression = tree2text(node.value, 0);
-            return result + expression;
+            return `not ${tree2text(node.value, 0)}`;
 
         case NODETYPES.NEGATE:
-            var result = "-";
-            var expression = tree2text(node.value, 0);
-            return result + expression;
+            return `-${tree2text(node.value, 0)}`;
 
-        case NODETYPES.FOR:
-            var result = '    '.repeat(indentation) + "for";
-            var initialization = " (" + tree2text(node.initialization, 0);
-            initialization = initialization.replace("\n", "") + '; ';
-            var condition = tree2text(node.condition, 0) + '; ';
-            var increment = tree2text(node.increment, 0);
-            increment = increment.replace("\n", "") + ')\n';
-            var codeblock = tree2text(node.codeblock, indentation + 1) +
-                '    '.repeat(indentation) + 'end for\n';
-            return result + initialization + condition + increment + codeblock;
+        case NODETYPES.FOR: {
+            const initialization = ` (${tree2text(node.initialization, 0).replace("\n", "")}; `;
+            const condition = `${tree2text(node.condition, 0)}; `;
+            const increment = `${tree2text(node.increment, 0).replace("\n", "")})\n`;
+            return `${'    '.repeat(indentation)}for${initialization}${condition}${increment}` +
+                tree2text(node.codeblock, indentation + 1) +
+                `${'    '.repeat(indentation)}end for\n`;
+        }
 
-        case NODETYPES.FUNCDECL:
-            var vartype = node.returnType.toString();
-            var result = vartype + ' ' + node.name + '(';
-            var argsList = node.params;
+        case NODETYPES.FUNCDECL: {
+            const argsList = node.params;
+            let header = `${node.returnType} ${node.name}(`;
             if (argsList !== null && argsList.length !== 0) {
-                argsList.forEach(element => {
-                    result += element[0] + ' ' + element[1] + ', ';
-                });
-                result = result.slice(0, result.length - 2)
+                header += argsList.map(element => `${element[0]} ${element[1]}`).join(', ');
             }
-            result += ')';
-            result += '\n';
-            var codeblock = tree2text(node.codeblock, indentation + 1);
-            result += codeblock;
-            result += '    '.repeat(indentation) + `end ${node.name}\n`;
-            return result;
+            header += ')\n';
+            return header +
+                tree2text(node.codeblock, indentation + 1) +
+                `${'    '.repeat(indentation)}end ${node.name}\n`;
+        }
 
-        case NODETYPES.FUNCCALL:
-            var result = node.name + '(';
-            var argsList = node.args;
+        case NODETYPES.FUNCCALL: {
+            const argsList = node.args;
+            let result = `${node.name}(`;
             if (argsList !== null && argsList.length > 0) {
-                argsList.forEach(element => {
-                    result += tree2text(element, 0) + ', ';
-                });
-                result = result.slice(0, result.length - 2);
+                result += argsList.map(element => tree2text(element, 0)).join(', ');
             }
             result += ')';
             return result;
+        }
 
-        case NODETYPES.SPECIAL_STRING_FUNCCALL:
-            var result = '    '.repeat(indentation) + tree2text(node.left, 0) + '.' + node.right.name;
-            result += '(';
-            var argsList = node.right.args;
+        case NODETYPES.SPECIAL_STRING_FUNCCALL: {
+            const argsList = node.right.args;
+            let result = `${'    '.repeat(indentation)}${tree2text(node.left, 0)}.${node.right.name}(`;
             if (argsList !== null && argsList.length !== 0) {
-                argsList.forEach(element => {
-                    result += tree2text(element, 0) + ', ';
-                });
-                result = result.slice(0, result.length - 2)
+                result += argsList.map(element => tree2text(element, 0)).join(', ');
             }
             result += ')';
             return result;
+        }
 
-
-        case NODETYPES.ARRAY_LITERAL:
-            var result = '{';
-            var argsList = node.params;
+        case NODETYPES.ARRAY_LITERAL: {
+            const argsList = node.params;
+            let result = '{';
             if (argsList !== null && argsList.length > 0) {
-                argsList.forEach(element => {
-                    result += tree2text(element, 0) + ', ';
-                });
-                result = result.slice(0, result.length - 2);
+                result += argsList.map(element => tree2text(element, 0)).join(', ');
             }
             result += '}';
             return result;
+        }
 
         case NODETYPES.ARRAY_CREATE:
-            return node.varType + "[] " + node.name + " ← " + node.elemType + '[' + tree2text(node.arrayLength) + ']\n';
+            return `${node.varType}[] ${node.name} ← ${node.elemType}[${tree2text(node.arrayLength)}]\n`;
 
         case NODETYPES.ARRAY_REFERENCE:
-            result = node.name + '[';
-            var expression = tree2text(node.index, 0) + ']';
-            return result + expression;
+            return `${node.name}[${tree2text(node.index, 0)}]`;
 
-        case NODETYPES.ARRAY_ASSIGNMENT:
-            var varname = node.varType.toString() + '[] ' + node.name.toString();
-            var operator = ' ← ';
-            var result = '{';
-            var argsList = node.value.params;
+        case NODETYPES.ARRAY_ASSIGNMENT: {
+            const varname = `${node.varType}[] ${node.name}`;
+            const argsList = node.value.params;
+            let inner = '{';
             if (argsList !== null && argsList.length > 0) {
-                argsList.forEach(element => {
-                    result += tree2text(element, 0) + ', ';
-                });
-                result = result.slice(0, result.length - 2);
+                inner += argsList.map(element => tree2text(element, 0)).join(', ');
             }
-            result += '}\n';
-            return '    '.repeat(indentation) + varname + operator + result;
+            inner += '}';
+            return `${'    '.repeat(indentation)}${varname} ← ${inner}\n`;
+        }
 
-        case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT:
-            var index = tree2text(node.index, 0) + ']';
-            var varname = node.name.toString() + '[' + index;
-            var operator = ' ← ';
-            var expression = tree2text(node.value, 0) + '\n';
-            return '    '.repeat(indentation) + varname + operator + expression;
+        case NODETYPES.ARRAY_REFERENCE_ASSIGNMENT: {
+            const varname = `${node.name}[${tree2text(node.index, 0)}]`;
+            return `${'    '.repeat(indentation)}${varname} ← ${tree2text(node.value, 0)}\n`;
+        }
 
         default:
-            throw new Error("unknown node type " + node.type);
+            throw new Error(`unknown node type ${node.type}`);
     }
 }
