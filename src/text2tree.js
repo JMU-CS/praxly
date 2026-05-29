@@ -123,7 +123,7 @@ class Lexer {
   }
 
   emit_token(type = null) {
-    var endIndex = this.i - this.index_before_this_line;
+    const endIndex = this.i - this.index_before_this_line;
     this.tokens.push(new Token(type ?? this.token_so_far, this.token_so_far, this.currentLine, this.startToken, [this.currentLine, endIndex]));
     this.token_so_far = '';
     this.startToken = [this.currentLine, endIndex];
@@ -279,7 +279,7 @@ class Lexer {
         while (this.has(' ')) {  // ignore extra spaces
           this.skip();
         }
-        while (this.has_letter()) {
+        while (this.has_letter() || this.has_digit()) {
           this.capture();
         }
         this.emit_token();
@@ -341,13 +341,11 @@ class Parser {
     return this.i < this.length && this.tokens[this.i].token_type !== type;
   }
 
-  hasAny() {
-    var types = Array.prototype.slice.call(arguments);
+  hasAny(...types) {
     return this.i < this.length && types.includes(this.tokens[this.i].token_type);
   }
 
-  hasNotAny() {
-    var types = Array.prototype.slice.call(arguments);
+  hasNotAny(...types) {
     return this.i < this.length && !types.includes(this.tokens[this.i].token_type);
   }
 
@@ -367,7 +365,7 @@ class Parser {
     if (this.tokens[this.i].token_type === type) {
       this.advance();
     } else {
-      textError('parsing', `did not detect desired token at this location. \nexpected: \'${type}\'\n but was: ${this.tokens[this.i].token_type}`, this.getCurrentLine());
+      textError('parsing', `did not detect desired token at this location. \nexpected: '${type}'\n but was: ${this.tokens[this.i].token_type}`, this.getCurrentLine());
     }
   }
 
@@ -392,7 +390,7 @@ class Parser {
    * @returns
    */
   binaryOpNode_new(operation, l, r, line) {
-    var type;
+    let type;
     switch (operation) {
       case '+':
         type = OP.ADDITION;
@@ -448,7 +446,7 @@ class Parser {
         type = OP.OR;
         break;
       default:
-        textError('parsing', 'invalid operator ' + operation, line);
+        textError('parsing', `invalid operator ${operation}`, line);
         break;
     }
     return {
@@ -487,7 +485,7 @@ class Parser {
    * @returns
    */
   unaryOPNode_new(operation, expression, line, startIndex) {
-    var type;
+    let type;
     switch (operation) {
       case 'not':
         type = OP.NOT;
@@ -524,8 +522,8 @@ class Parser {
     switch (precedence) {
 
       // or logical operator
-      case 9:
-        var l = this.parse_expression(precedence - 1);
+      case 9: {
+        let l = this.parse_expression(precedence - 1);
         while (this.has("or")) {
           operation = this.getCurrentToken().token_type;
           line = this.getCurrentLine();
@@ -534,10 +532,11 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+      }
 
       // and logical operator
-      case 8:
-        var l = this.parse_expression(precedence - 1);
+      case 8: {
+        let l = this.parse_expression(precedence - 1);
         while (this.has("and")) {
           operation = this.getCurrentToken().token_type;
           line = this.getCurrentLine();
@@ -546,10 +545,11 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+      }
 
       // relational operators
-      case 7:
-        var l = this.parse_expression(precedence - 1);
+      case 7: {
+        let l = this.parse_expression(precedence - 1);
         while (this.hasAny('<', '>', '==', '!=', '>=', '<=', '≠', '≥', '≤')) {
           operation = this.getCurrentToken().token_type;
           line = this.getCurrentLine();
@@ -558,10 +558,11 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+      }
 
       // addition, subtraction
-      case 6:
-        var l = this.parse_expression(precedence - 1);
+      case 6: {
+        let l = this.parse_expression(precedence - 1);
         while (this.hasAny('+', '-')) {
           operation = this.getCurrentToken().token_type;
           line = this.getCurrentLine();
@@ -570,10 +571,11 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+      }
 
       // multiplication, division, modulo
-      case 5:
-        var l = this.parse_expression(precedence - 1);
+      case 5: {
+        let l = this.parse_expression(precedence - 1);
         while (this.hasAny('*', '/', '%')) {
           operation = this.getCurrentToken().token_type;
           line = this.getCurrentLine();
@@ -582,10 +584,11 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+      }
 
       // raise to the power
-      case 4:
-        var l = this.parse_expression(precedence - 1);
+      case 4: {
+        let l = this.parse_expression(precedence - 1);
         while (this.hasAny('^')) {
           operation = this.getCurrentToken().token_type;
           line = this.getCurrentLine();
@@ -594,6 +597,7 @@ class Parser {
           l = this.binaryOpNode_new(operation, l, r, line);
         }
         return l;
+      }
 
       // not logical operator, negation operator
       case 3:
@@ -607,8 +611,8 @@ class Parser {
         return this.unaryOPNode_new(operation, exp, line, startIndex);
 
       // dot operator (for string methods)
-      case 2:
-        var l = this.parse_expression(precedence - 1);
+      case 2: {
+        let l = this.parse_expression(precedence - 1);
         while (this.hasAny('.')) {
           operation = this.getCurrentToken().token_type;
           line = this.getCurrentLine();
@@ -628,6 +632,7 @@ class Parser {
           }
         }
         return l;
+      }
 
       // This one gets really complicated
       case 1:
@@ -647,11 +652,12 @@ class Parser {
             return this.literalNode_new(this.tokens[this.i - 1]);
 
           // parentheses
-          case '(':
+          case '(': {
             const leftToken = this.advance();
             const expression = this.parse_expression();
+            let rightToken;
             if (this.has(")")) {
-              var rightToken = this.advance();
+              rightToken = this.advance();
             } else {
               textError('parsing', 'did not detect closing parentheses', line);
             }
@@ -663,21 +669,22 @@ class Parser {
               startIndex: leftToken.startIndex,
               endIndex: rightToken?.endIndex,
             };
+          }
 
           // ah yes, array literals....very fun
-          case '{':
-            let result = {
+          case '{': {
+            const result = {
               blockID: 'code',
               line: line,
               type: NODETYPES.ARRAY_LITERAL,
               startIndex: startIndex,
               endIndex: this.getCurrentToken().endIndex,
             };
-            var args = [];
+            const args = [];
             this.advance();
-            var loopBreak = 0;
+            let loopBreak = 0;
             while (this.hasNot('}') && loopBreak < MAX_LOOP) {
-              var param = this.parse_expression();
+              const param = this.parse_expression();
               args.push(param);
               if (this.has(',')) {
                 this.advance();
@@ -691,24 +698,26 @@ class Parser {
             result.endIndex = this.getCurrentToken().endIndex;
             this.advance();
             return result;
+          }
 
           // built-in function call
           case NODETYPES.BUILTIN_FUNCTION_CALL:
-          case 'Type':
+          case 'Type': {
             if (this.has_ahead('(')) {
               // type conversion function
               return this.parse_builtin_function_call(line);
             }
             if (this.has_ahead('[')) {
                 // create array expression
-                var elemType = this.advance().value;
+                const elemType = this.advance().value;
                 // opening bracket
                 this.advance();
+                let arrayLength;
                 if (this.has(']')) {
                     textError('parsing', "missing array length", this.getCurrentLine());
                     this.advance();
                 } else {
-                    var arrayLength = this.parse_expression();
+                    arrayLength = this.parse_expression();
                     // closing bracket
                     if (this.has(']')) {
                         this.advance();
@@ -732,13 +741,15 @@ class Parser {
             else {
               // parse as 'Location' instead (Ex: variable named max)
             }
+          }
+          // falls through
 
           // variable assignment or procedure call
-          case 'Location':
-            var l = this.parse_location();
+          case 'Location': {
+            let l = this.parse_location();
             if (this.hasAny('=', '<-', "←", "⟵")) {
               this.advance();
-              var value = this.parse_expression();
+              const value = this.parse_expression();
               l = {
                 type: l.isArray ? NODETYPES.ARRAY_REFERENCE_ASSIGNMENT : NODETYPES.ASSIGNMENT,
                 blockID: "code",
@@ -749,10 +760,10 @@ class Parser {
               }
             } else if (this.has('(')) {
               this.advance();
-              var args = [];
-              var loopBreak = 0;
+              const args = [];
+              let loopBreak = 0;
               while (this.hasNot(')') && loopBreak < MAX_LOOP) {
-                var param = this.parse_expression();
+                const param = this.parse_expression();
                 args.push(param);
                 if (this.has(',')) {
                   this.advance();
@@ -765,13 +776,13 @@ class Parser {
                 blockID: "code",
                 line: line,
                 name: l.name,
-                value: value,
                 args: args,
                 startIndex: startIndex,
               }
             }
             l.endIndex = this.tokens[this.i - 1].endIndex;
             return l;
+          }
 
           default:
             if (this.getCurrentValue() != '\n') {
@@ -826,7 +837,7 @@ class Parser {
     if (this.getCurrentValue() == '\n') {
       return;  // incomplete line
     }
-    var result = {
+    const result = {
       type: NODETYPES.LOCATION,
       name: this.getCurrentValue(),
       isArray: false,
@@ -851,10 +862,10 @@ class Parser {
   parse_funcdecl_or_vardecl() {
 
     // variable/return type
-    var isArray = false;
-    var type = NODETYPES.VARDECL;
-    var vartype = this.getCurrentToken().value;
-    var startIndex = this.getCurrentToken().startIndex;
+    let isArray = false;
+    let type = NODETYPES.VARDECL;
+    const vartype = this.getCurrentToken().value;
+    const startIndex = this.getCurrentToken().startIndex;
     this.advance();
     if (this.has('[') && this.has_ahead(']')) {
       this.advance();
@@ -864,8 +875,8 @@ class Parser {
     }
 
     // variable/procedure name
-    var location = this.parse_location();
-    var result = {
+    const location = this.parse_location();
+    const result = {
       type: type,
       varType: vartype,
       name: location?.name,
@@ -902,10 +913,10 @@ class Parser {
 
       // parameter list
       this.match_and_discard_next_token('(');
-      var params = [];
-      var stopLoop = 0;
+      const params = [];
+      let stopLoop = 0;
       while (this.hasNot(')') && stopLoop < MAX_LOOP) {
-        var param = [];
+        const param = [];
         if (this.has_type()) {
           param.push(this.getCurrentValue());
           this.advance();
@@ -984,7 +995,7 @@ class Parser {
     if (this.hasAny(...endToken)) {
       this.advance();
     } else {
-      let name = endToken[endToken.length - 1];
+      const name = endToken[endToken.length - 1];
       textError('parsing', `missing the '${name}' token`, this.getCurrentLine());
     }
 
@@ -997,7 +1008,7 @@ class Parser {
   }
 
   parse_statement() {
-    var line = this.getCurrentLine();
+    const line = this.getCurrentLine();
     let result = {
       startIndex: this.getCurrentToken().startIndex,
       endIndex: this.getCurrentToken().endIndex,

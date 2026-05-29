@@ -104,9 +104,8 @@ function initializeGlobals() {
 function registerListeners() {
   if (!configuration.embed) { // if embed mode is not on, add usual listeners
     darkModeButton.addEventListener('click', () => { darkMode ? setLight() : setDark(); });
-    manualButton.addEventListener('click', function () {
-      var linkUrl = 'pseudocode.html';
-      window.open(linkUrl, '_blank');
+    manualButton.addEventListener('click', () => {
+      window.open('pseudocode.html', '_blank');
     });
 
     //titleRefresh.addEventListener('click', function () {
@@ -117,19 +116,19 @@ function registerListeners() {
     //  textEditor.focus();
     //});
 
-    settingsButton.onclick = function () {
-      let darkmodediv = document.querySelector('.settingsOptions');
-      if (darkmodediv.style.display === 'none') {
-        darkmodediv.style.display = ''; // Show the button
+    settingsButton.onclick = () => {
+      const darkmodedivSettings = document.querySelector('.settingsOptions');
+      if (darkmodedivSettings.style.display === 'none') {
+        darkmodedivSettings.style.display = ''; // Show the button
       } else {
-        darkmodediv.style.display = 'none'; // Hide the button
+        darkmodedivSettings.style.display = 'none'; // Hide the button
       }
     }
 
     //share button
     shareButton.addEventListener('click', generateUrl);
 
-    stepIntoButton.addEventListener('mouseup', function () {
+    stepIntoButton.addEventListener('mouseup', () => {
       if (!getDebugMode()) {
         endDebugPrompt();
       }
@@ -143,31 +142,31 @@ function registerListeners() {
     toggleOutput.addEventListener('click', toggleOutputOn);
     toggleVars.addEventListener('click', toggleVarsOn);
 
-    resizeBarBott.addEventListener('mousedown', function (e) {
+    resizeBarBott.addEventListener('mousedown', () => {
       isResizingHoriz = true;
       document.addEventListener('mousemove', resizeHandler);
     });
 
-    document.addEventListener('mouseup', function (e) {
+    document.addEventListener('mouseup', () => {
       isResizingVert = false;
       document.removeEventListener('mousemove', resizeHandler);
     });
 
-    examples.addEventListener('click', function () {
+    examples.addEventListener('click', () => {
       exampleModal.style.display = 'flex';
     });
 
-    document.querySelector('.close').addEventListener('click', function () {
+    document.querySelector('.close').addEventListener('click', () => {
       exampleModal.style.display = 'none';
     });
   } else { // embed only
 
-    resizeSideInEmbed.addEventListener('mousedown', function (e) {
+    resizeSideInEmbed.addEventListener('mousedown', () => {
       isResizingVert = true;
       document.addEventListener('mousemove', resizeHandler);
     });
 
-    document.addEventListener('mouseup', function (e) {
+    document.addEventListener('mouseup', () => {
       isResizingVert = false;
       document.removeEventListener('mousemove', resizeHandler);
     });
@@ -181,25 +180,24 @@ function registerListeners() {
   textEditor.addEventListener("input", turnCodeToBlocks);
 
   //resizing things with the purple bar
-  resizeBarX.addEventListener('mousedown', function (e) {
+  resizeBarX.addEventListener('mousedown', () => {
     isResizingHoriz = true;
     document.addEventListener('mousemove', resizeHandler);
   });
 
-  resizeBarY.addEventListener('mousedown', function (e) {
+  resizeBarY.addEventListener('mousedown', () => {
     isResizingVert = true;
     document.addEventListener('mousemove', resizeHandler);
-  })
+  });
 
-
-  document.addEventListener('mouseup', function (e) {
+  document.addEventListener('mouseup', () => {
     isResizingHoriz = false;
     document.removeEventListener('mousemove', resizeHandler);
     Blockly.svgResize(workspace);
     textEditor.resize();
   });
 
-  document.addEventListener('mouseup', function (e) {
+  document.addEventListener('mouseup', () => {
     isResizingVert = false;
     document.removeEventListener('mousemove', resizeHandler);
     Blockly.svgResize(workspace);
@@ -223,7 +221,7 @@ function registerListeners() {
    * Keyboard shortcuts.
    */
 
-  document.addEventListener("keydown", function (event) {
+  document.addEventListener("keydown", (event) => {
     if (event.key === 'F5' || (event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S')) {
       event.preventDefault();  // reloading the page / opening the save dialog
       if ((!examples || exampleModal.style.display !== 'flex') && resetModal.style.display !== 'flex') {
@@ -250,15 +248,15 @@ function registerListeners() {
    * Event listeners for the main buttons along the top.
    */
 
-  runButton.addEventListener('click', function () {
+  runButton.addEventListener('click', () => {
     runTasks(false);
   });
 
-  debugButton.addEventListener('click', function () {
+  debugButton.addEventListener('click', () => {
     runTasks(true);
   });
 
-  stopButton.addEventListener('click', function () {
+  stopButton.addEventListener('click', () => {
     setStopClicked(true);
     hideDebug(configuration);
     setDebugMode(false);
@@ -346,13 +344,13 @@ function isBottomOff() {
 
 function generateTable() {
 
-  for (let i = 0; i < codeText.length; i++) {
+  for (const example of codeText) {
     const newRow = document.createElement("tr");
     const link = document.createElement("a");
     link.href = "#";
-    link.textContent = codeText[i].name;
-    link.addEventListener('click', function() {
-      textEditor.setValue(codeText[i].code.trimStart(), -1);
+    link.textContent = example.name;
+    link.addEventListener('click', () => {
+      textEditor.setValue(example.code.trimStart(), -1);
       textPane.click();
       exampleModal.style.display = 'none';
     });
@@ -360,9 +358,9 @@ function generateTable() {
     const nameCell = document.createElement("td");
     nameCell.appendChild(link);
     const difficultyCell = document.createElement("td");
-    difficultyCell.textContent = codeText[i].difficulty;
+    difficultyCell.textContent = example.difficulty;
     const topicsCell = document.createElement("td");
-    topicsCell.textContent = codeText[i].topics;
+    topicsCell.textContent = example.topics;
 
     newRow.appendChild(nameCell);
     newRow.appendChild(difficultyCell);
@@ -398,14 +396,14 @@ function clear() {
 function showResetModal() {
   resetModal.style.display = 'flex';
 
-  yesButton.addEventListener('click', function () {
+  yesButton.addEventListener('click', () => {
     resetModal.style.display = 'none';
     reset();
   });
 
-  noButton.addEventListener('click', function () {
+  noButton.addEventListener('click', () => {
     resetModal.style.display = 'none';
-  })
+  });
 }
 
 const originalUrl = window.location.href;
@@ -424,7 +422,7 @@ function reset() {
 
 function openInPraxly() {
   const code = textEditor.getValue();
-  window.open('main.html#code=' + encodeURIComponent(code), '_blank');
+  window.open(`main.html#code=${encodeURIComponent(code)}`, '_blank');
 }
 
 function refresh() {
@@ -644,8 +642,8 @@ function resizeHandler(e) {
       const topHeight = (mouseY / containerHeight) * 100;
       const bottomHeight = 100 - topHeight;
 
-      main.style.flex = topHeight + '%';
-      bottomPart.style.flex = bottomHeight + '%';
+      main.style.flex = `${topHeight}%`;
+      bottomPart.style.flex = `${bottomHeight}%`;
     }
 
   }
@@ -754,7 +752,7 @@ function parseUrlConfiguration() {
     try {
       configuration.code = decodeURIComponent(source);
     } catch (error) {
-      configuration.code = '// Unable to get code from URL\n// '+ error + '\n';
+      configuration.code = `// Unable to get code from URL\n// ${error}\n`;
     }
   } else {
     configuration.code = null;

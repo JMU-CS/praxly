@@ -51,11 +51,11 @@ export function definePraxlyBlocks(workspace) {
   //   this.sourceBlock_.setFieldValue(newValue, 'END_PROCEDURE_NAME');
   // }
   function updateProcedureName(event) {
-    var block = event.getEventWorkspace().getBlockById(event.blockId);
-    var procedureNameField = block.getField("PROCEDURE_NAME");
-    var endProcedureNameField = block.getField("END_PROCEDURE_NAME");
+    const block = event.getEventWorkspace().getBlockById(event.blockId);
+    const procedureNameField = block.getField("PROCEDURE_NAME");
+    const endProcedureNameField = block.getField("END_PROCEDURE_NAME");
 
-    var procedureName = procedureNameField.getText();
+    const procedureName = procedureNameField.getText();
     endProcedureNameField.setValue(procedureName);
   }
 

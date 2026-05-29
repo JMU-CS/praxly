@@ -94,7 +94,7 @@ export const MAX_LOOP = 100;  // prevents accidental infinite loops
 // this is the special Error type that is thrown when there is in error in the IDE.
 export class PraxlyError extends Error {
     constructor(message, line) {
-        super("runtime error occurred on line " + line + ":<br>" + message);
+        super(`runtime error occurred on line ${line}:<br>${message}`);
         textError("runtime", message, line);
     }
 }
@@ -110,7 +110,7 @@ export function textError(type, message, line) {
     if (errorOutput) {
         errorOutput += "<br><br>";
     }
-    errorOutput += type + " error occurred on line " + line + ":<br>" + message;
+    errorOutput += `${type} error occurred on line ${line}:<br>${message}`;
 }
 
 export function defaultError(message) {
@@ -207,9 +207,9 @@ export function highlightAstNode(environment, node, cssClass) {
     }
 
     // highlight the text
-    var Range = ace.require('ace/range').Range;
-    var debugRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
-    var markerId = textEditor.session.addMarker(debugRange, cssClass, 'text');
+    const Range = ace.require('ace/range').Range;
+    const debugRange = new Range(node.startIndex[0], node.startIndex[1], node.endIndex[0], node.endIndex[1]);
+    const markerId = textEditor.session.addMarker(debugRange, cssClass, 'text');
 
     // highlight the block
     if (node.blockID) {
@@ -220,12 +220,12 @@ export function highlightAstNode(environment, node, cssClass) {
 }
 
 export const lineToAceRange = (line) => {
-    var Range = ace.require('ace/range').Range;
+    const Range = ace.require('ace/range').Range;
     return new Range(line, 0, line, 1);
 };
 
 export function indexToAceRange(startIndex, endIndex) {
-    var Range = ace.require('ace/range').Range;
+    const Range = ace.require('ace/range').Range;
     return new Range(startIndex[0], startIndex[1], endIndex[0], endIndex[1]);
 };
 
@@ -287,7 +287,7 @@ export function comingSoon() {
     const ComingSoonToast = document.getElementById('comingSoon');
 
     ComingSoonToast.style.display = 'block';
-    setTimeout(function () {
+    setTimeout(() => {
         ComingSoonToast.style.display = 'none';
     }, 3000); // Hide the toast after 3 seconds (adjust as needed)
 }

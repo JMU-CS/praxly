@@ -2,13 +2,13 @@ import { textEditor } from "./common";
 
 export function generateUrl() {
     // yank the text in ace
-    var code = textEditor.getValue();
-    let encoded = encodeURIComponent(code);
+    const code = textEditor.getValue();
+    const encoded = encodeURIComponent(code);
     window.location.hash = ''; //this should clear it before replacing it
     window.location.hash = `code=${encoded}`
     saveToLocal();
-    var dummy = document.createElement('input');
-    var text = window.location.href;
+    const dummy = document.createElement('input');
+    const text = window.location.href;
     document.body.appendChild(dummy);
     dummy.value = text;
     dummy.select();
@@ -16,7 +16,7 @@ export function generateUrl() {
     document.body.removeChild(dummy);
     const toast = document.getElementById('toast');
     toast.style.display = 'block';
-    setTimeout(function () {
+    setTimeout(() => {
         toast.style.display = 'none';
     }, 3000); // Hide the toast after 3 seconds (adjust as needed)
 }
