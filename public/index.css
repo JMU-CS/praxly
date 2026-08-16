@@ -257,9 +257,11 @@ h3 {
   flex-shrink: 0;
 }
 
-.report-button .material-symbols-rounded.bug {
-  font-size: 18px;
-  display: inline-block;
+.report-button .bug {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  flex-shrink: 0;
   transform: rotate(-45deg);
   transition: transform 0.6s ease-in-out;
 }
