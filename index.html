@@ -6,6 +6,17 @@
   <title>Praxly — Pseudocode IDE for CS Teacher Preparation</title>
   <meta name="description" content="A visual programming environment that bridges the gap between pseudocode and standard programming languages, supporting the CS Praxis Test.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://praxly.cs.jmu.edu/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Praxly">
+  <meta property="og:url" content="https://praxly.cs.jmu.edu/">
+  <meta property="og:title" content="Praxly — Pseudocode IDE for CS Teacher Preparation">
+  <meta property="og:description" content="A visual programming environment that bridges the gap between pseudocode and standard programming languages, supporting the CS Praxis Test.">
+  <meta property="og:image" content="https://praxly.cs.jmu.edu/images/praxly-screenshot-full.png">
+  <meta property="og:image:alt" content="The Praxly IDE showing pseudocode and the equivalent blocks side by side.">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="stylesheet" href="index.css">
   <link rel="icon" href="fallen-leaf_1f342.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +54,7 @@
             <h2 id="v1-heading">Praxly v1</h2>
           </div>
           <div class="button-group" role="group" aria-labelledby="v1-heading">
-            <a class="btn btn-primary" href="main.html" aria-label="Open Praxly v1 editor in this tab">Open Editor</a>
+            <a class="btn btn-primary" href="main.html" aria-label="Open Editor — Praxly v1">Open Editor</a>
             <a class="btn btn-secondary" href="https://github.com/JMU-CS/praxly" target="_blank" rel="noopener" aria-label="View Praxly v1 source code on GitHub">
               <svg class="github-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
               GitHub
@@ -68,7 +79,7 @@
             <h2 id="v2-heading">Praxly v2</h2>
           </div>
           <div class="button-group" role="group" aria-labelledby="v2-heading">
-            <a class="btn btn-primary" href="https://praxly.cs.jmu.edu/v2/editor" aria-label="Open Praxly v2 editor in this tab">Open Editor</a>
+            <a class="btn btn-primary" href="https://praxly.cs.jmu.edu/v2/editor" aria-label="Open Editor — Praxly v2">Open Editor</a>
             <a class="btn btn-secondary" href="https://github.com/JMU-CS/praxly2" target="_blank" rel="noopener" aria-label="View Praxly v2 source code on GitHub">
               <svg class="github-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
               GitHub
@@ -95,40 +106,42 @@
       <section class="team-section" id="team" aria-labelledby="team-heading">
         <div class="section-label" aria-hidden="true">The People</div>
         <h2 id="team-heading">Praxly Team</h2>
-        <div class="people-container" role="list">
-          <div class="team-member" role="listitem">
+        <ul class="people-container" role="list" aria-label="Students">
+          <li class="team-member">
             <img class="member" src="people/saupp.png" alt="" width="140" height="140">
             <h3>Ben Saupp</h3>
-          </div>
-          <div class="team-member" role="listitem">
+          </li>
+          <li class="team-member">
             <img class="member" src="people/macmillan.jpg" alt="" width="140" height="140">
             <h3>Ellona Macmillan</h3>
-          </div>
-          <div class="team-member" role="listitem">
+          </li>
+          <li class="team-member">
             <img class="member" src="people/victor.png" alt="" width="140" height="140">
             <h3>Victor Del Carpio</h3>
-          </div>
-          <div class="team-member" role="listitem">
+          </li>
+          <li class="team-member">
             <img class="member" src="people/meghan.jpg" alt="" width="140" height="140">
             <h3>Meghan Riordan</h3>
-          </div>
-          <div class="team-member" role="listitem">
+          </li>
+          <li class="team-member">
             <img class="member" src="people/linnea.jpg" alt="" width="140" height="140">
             <h3>Linnea Hellner</h3>
-          </div>
-          <div class="team-member" role="listitem">
+          </li>
+        </ul>
+        <ul class="people-container" role="list" aria-label="Faculty">
+          <li class="team-member">
             <img class="member" src="people/mayfield.jpg" alt="" width="140" height="140">
             <h3>Chris Mayfield</h3>
-          </div>
-          <div class="team-member" role="listitem">
+          </li>
+          <li class="team-member">
             <img class="member" src="people/johnson.png" alt="" width="140" height="140">
             <h3>Chris Johnson</h3>
-          </div>
-          <div class="team-member" role="listitem">
+          </li>
+          <li class="team-member">
             <img class="member" src="people/stewart.jpg" alt="" width="140" height="140">
             <h3>Michael Stewart</h3>
-          </div>
-        </div>
+          </li>
+        </ul>
       </section>
 
       <section class="project-section" id="project" aria-labelledby="project-heading">
@@ -174,7 +187,7 @@
             </a>
           </div>
           <div class="publication-card">
-            <a href="praxly2-poster.pdf" target="_blank" rel="noopener" aria-label="View Praxly v2 Research Poster 2026 (opens PDF in new tab)">
+            <a href="Praxly_Poster_2026.pdf" target="_blank" rel="noopener" aria-label="View Praxly v2 Research Poster 2026 (opens PDF in new tab)">
               <img src="Praxly_Poster_2026.png" alt="Thumbnail of Praxly v2 research poster 2026" width="180" height="220">
               <div class="pub-label">Praxly v2 Research Poster · 2026</div>
             </a>
