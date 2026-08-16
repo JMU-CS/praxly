@@ -1,3 +1,11 @@
+# NOTE: this file does not set the live header. Overrides are disabled on the
+# JMU server, so the policy below is served from the main Apache config, which
+# we cannot edit. This copy is kept only to document what the server sends --
+# editing it has no effect. Ask the server admin to change the real policy, and
+# update this file to match afterward.
+#
+# Verified against https://praxly.cs.jmu.edu/ on 2026-08-16.
+
 <IfModule mod_headers.c>
-    Header set Content-Security-Policy "frame-ancestors 'self' https://*.instructure.com https://*.codevirginia.org https://*.jmu.edu;"
+    Header set Content-Security-Policy "frame-ancestors 'self' https://*.instructure.com https://*.codevirginia.org;"
 </IfModule>
