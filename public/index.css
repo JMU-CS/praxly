@@ -51,10 +51,11 @@ body {
 .skip-link:focus { top: 0; outline: none; box-shadow: var(--focus-ring); }
 
 /* ── Accessibility: focus styles ─────────────────────────────── */
+/* No border-radius here: outlines already follow the element's own radius,
+   and setting it would flatten the skip link's rounded bottom corners. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 /* Remove default outline when focus-visible is supported */
 :focus:not(:focus-visible) { outline: none; }
@@ -85,7 +86,6 @@ h3 {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   padding: 3rem 2rem 2.5rem;
-  text-align: center;
 }
 
 .site-logo {
@@ -95,7 +95,8 @@ h3 {
   margin: 0 auto 1rem;
 }
 
-.site-tagline { /* this is now h1 */
+/* The page <h1>; the logo image above it carries the product name. */
+.site-tagline {
   font-size: clamp(1.4rem, 3vw, 1.9rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -135,7 +136,6 @@ h3 {
 .editors-section {
   background: var(--color-bg);
   padding: 2.5rem 2rem 2rem;
-  text-align: center;
 }
 
 .version-stack {
@@ -269,7 +269,6 @@ h3 {
 
 /* ── Team section ────────────────────────────────────────────── */
 .team-section {
-  text-align: center;
   padding-top: 3rem;
 }
 
@@ -314,7 +313,6 @@ h3 {
 
 /* ── Project (CodeVA) section ────────────────────────────────── */
 .project-section {
-  text-align: center;
   padding-top: 2rem;
 }
 
@@ -351,10 +349,10 @@ h3 {
 
 /* ── Publications section ────────────────────────────────────── */
 .publications-section {
-  text-align: center;
   padding-top: 2rem;
 }
 
+/* role="list" is kept for the same reason as .people-container. */
 .publications-grid {
   display: flex;
   flex-wrap: wrap;
@@ -362,6 +360,8 @@ h3 {
   gap: 1.25rem;
   margin: 0 auto;
   max-width: 860px;
+  padding: 0;
+  list-style: none;
 }
 
 .publication-card {
@@ -395,7 +395,6 @@ h3 {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-text-muted);
-  text-align: center;
 }
 
 .publication-card:hover .pub-label { color: var(--color-accent); }
