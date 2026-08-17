@@ -262,10 +262,17 @@ h3 {
 .report-button:hover .bug { transform: rotate(315deg); }
 
 /* ── Page container ──────────────────────────────────────────── */
-.container {
+/* These sections used to share a .container wrapper. They now carry its
+   width and gutter themselves; the gutter is what keeps cards off the
+   screen edge on narrow viewports. Each section keeps its own padding-top.
+   .editors-section and .site-footer are self-contained and not listed. */
+.team-section,
+.project-section,
+.publications-section {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 /* ── Team section ────────────────────────────────────────────── */
