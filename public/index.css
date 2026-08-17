@@ -125,7 +125,7 @@ h3 {
 /* ── Section labels (decorative, aria-hidden) ────────────────── */
 .section-label {
   display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -270,7 +270,7 @@ h3 {
 
 /* ── Team section ────────────────────────────────────────────── */
 .team-section {
-  padding-top: 3rem;
+  padding-top: 2rem;
 }
 
 /* Two rows: students on top, faculty below. role="list" is kept on the
@@ -314,7 +314,7 @@ h3 {
 
 /* ── Project (CodeVA) section ────────────────────────────────── */
 .project-section {
-  padding-top: 2rem;
+  padding-top: 3.5rem;
 }
 
 .project-card {
@@ -349,8 +349,9 @@ h3 {
 .project-text em { font-style: italic; }
 
 /* ── Publications section ────────────────────────────────────── */
+/* Sections stack, so this padding is also the space below .project-section. */
 .publications-section {
-  padding-top: 2rem;
+  padding-top: 3.5rem;
 }
 
 /* role="list" is kept for the same reason as .people-container. */
@@ -431,7 +432,7 @@ h3 {
 }
 
 .nsf-ack {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   line-height: 1.65;
   color: var(--color-text-muted);
 }
