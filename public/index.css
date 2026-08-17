@@ -95,20 +95,21 @@ h3 {
   margin: 0 auto 1rem;
 }
 
-/* The page <h1>; the logo image above it carries the product name. */
+.site-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin: 0 auto;   /* auto keeps the 540px block centered */
+  max-width: 540px;
+}
+
+/* The page <h1>; the logo image above it carries the product name.
+   Equal margins so it sits evenly between the subtitle and the blurb. */
 .site-tagline {
   font-size: clamp(1.4rem, 3vw, 1.9rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-primary);
-  margin: 0 0 0.35rem;
-}
-
-.site-subtitle {
-  font-size: 1rem;
-  color: var(--color-text-muted);
-  margin: 0 auto 1.25rem;
-  max-width: 540px;
+  margin: 1.25rem 0;
 }
 
 .about {
