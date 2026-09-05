@@ -3,6 +3,8 @@
 # to be deployed to the same website (hosted on a JMU server) under different paths.
 
 npm run build
+ln -s v2/privacy.html dist/privacy.html
+ln -s v2/terms.html dist/terms.html
 rsync -vcaOz --chown=:praxly --delete --exclude=v2 dist/ w3:/data/praxly/
 
 # -v, --verbose               increase verbosity
